@@ -13,7 +13,8 @@
     "noEmit": true,
     "types": ["vite/client"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "shared": ["../shared/src"]
     }
   },
   "include": ["src/**/*", "test/**/*"],
