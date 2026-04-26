@@ -1,0 +1,139 @@
+import type { FastifyInstance } from 'fastify';
+import bcrypt from 'bcrypt';
+import { nanoid } from 'nanoid';
+import {
+  CreateRoomBodySchema,
+  AuthRoomBodySchema,
+  UpdateRoomBodySchema,
+  ChangePasswordBodySchema,
+  ZONE_BY_ID,
+} from 'shared';
+import { broadcast } from '../broadcast.js';
+
+const BCRYPT_ROUNDS = 12;
+
+export async function roomRoutes(app: FastifyInstance): Promise<void> {
+  // POST /api/rooms — create a room
+  app.post('/api/rooms', async (request, reply) => {
+    const parsed = CreateRoomBodySchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
+    }
+
+    const { password, homeZoneId } = parsed.data;
+
+    if (!ZONE_BY_ID.has(homeZoneId)) {
+      return reply.status(400).send({ error: 'homeZoneId not found in zone catalogue' });
+    }
+
+    const id = nanoid(12);
+    const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+    const createdAt = new Date().toISOString();
+
+    app.db.prepare(`
+      INSERT INTO rooms (id, password_hash, home_zone_id, created_at)
+      VALUES (?, ?, ?, ?)
+    `).run(id, passwordHash, homeZoneId, createdAt);
+
+    const shareUrl = `${request.protocol}://${request.hostname}/rooms/${id}`;
+    return reply.status(201).send({ id, shareUrl });
+  });
+
+  // POST /api/rooms/:id/auth — authenticate and get JWT
+  app.post<{ Params: { id: string } }>('/api/rooms/:id/auth', async (request, reply) => {
+    const { id } = request.params;
+    const parsed = AuthRoomBodySchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: 'password is required' });
+    }
+
+    const room = app.db.prepare('SELECT * FROM rooms WHERE id = ?').get(id) as
+      | { id: string; password_hash: string; home_zone_id: string; created_at: string }
+      | undefined;
+
+    if (!room) {
+      return reply.status(404).send({ error: 'Room not found' });
+    }
+
+    const valid = await bcrypt.compare(parsed.data.password, room.password_hash);
+    if (!valid) {
+      return reply.status(401).send({ error: 'Invalid password' });
+    }
+
+    const token = app.jwt.sign({ roomId: id }, { expiresIn: '24h' });
+    return reply.send({ token });
+  });
+
+  // PATCH /api/rooms/:id — update home zone
+  app.patch<{ Params: { id: string } }>('/api/rooms/:id', {
+    preHandler: [app.authenticate],
+  }, async (request, reply) => {
+    const { id } = request.params;
+    const jwtPayload = request.user as { roomId: string };
+
+    if (jwtPayload.roomId !== id) {
+      return reply.status(403).send({ error: 'Forbidden' });
+    }
+
+    const parsed = UpdateRoomBodySchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
+    }
+
+    const { homeZoneId } = parsed.data;
+    if (!ZONE_BY_ID.has(homeZoneId)) {
+      return reply.status(400).send({ error: 'homeZoneId not found in zone catalogue' });
+    }
+
+    const result = app.db.prepare('UPDATE rooms SET home_zone_id = ? WHERE id = ?').run(homeZoneId, id);
+    if (result.changes === 0) {
+      return reply.status(404).send({ error: 'Room not found' });
+    }
+
+    broadcast(id, { type: 'room_updated', homeZoneId });
+    return reply.send({ homeZoneId });
+  });
+
+  // PATCH /api/rooms/:id/password — change room password
+  app.patch<{ Params: { id: string } }>('/api/rooms/:id/password', {
+    preHandler: [app.authenticate],
+  }, async (request, reply) => {
+    const { id } = request.params;
+    const jwtPayload = request.user as { roomId: string };
+    if (jwtPayload.roomId !== id) {
+      return reply.status(403).send({ error: 'Forbidden' });
+    }
+    const parsed = ChangePasswordBodySchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
+    }
+    const { newPassword } = parsed.data;
+    const passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+    const result = app.db
+      .prepare('UPDATE rooms SET password_hash = ? WHERE id = ?')
+      .run(passwordHash, id);
+    if (result.changes === 0) {
+      return reply.status(404).send({ error: 'Room not found' });
+    }
+    return reply.send({ ok: true });
+  });
+
+  // DELETE /api/rooms/:id/connections — reset (delete all connections in room)
+  app.delete<{ Params: { id: string } }>('/api/rooms/:id/connections', {
+    preHandler: [app.authenticate],
+  }, async (request, reply) => {
+    const { id } = request.params;
+    const jwtPayload = request.user as { roomId: string };
+    if (jwtPayload.roomId !== id) {
+      return reply.status(403).send({ error: 'Forbidden' });
+    }
+    const rows = app.db
+      .prepare('SELECT id FROM connections WHERE room_id = ?')
+      .all(id) as { id: string }[];
+    app.db.prepare('DELETE FROM connections WHERE room_id = ?').run(id);
+    for (const row of rows) {
+      broadcast(id, { type: 'connection_removed', connectionId: row.id });
+    }
+    return reply.status(204).send();
+  });
+}
