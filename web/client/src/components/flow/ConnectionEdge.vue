@@ -3,6 +3,7 @@ import { computed, ref } from 'vue';
 import { BaseEdge, EdgeLabelRenderer, getStraightPath } from '@vue-flow/core';
 import type { EdgeProps } from '@vue-flow/core';
 import { connectionStyle } from '../../utils/connectionStyle.js';
+import { formatCountdown } from '../../utils/formatters.js';
 import type { Connection } from 'shared';
 
 type EdgeData = {
@@ -33,18 +34,6 @@ const path = computed(() => straight.value[0]);
 const labelX = computed(() => straight.value[1]);
 const labelY = computed(() => straight.value[2]);
 
-function formatCountdown(ms: number): string {
-  if (ms <= 0) return 'Expired';
-  const totalSeconds = Math.floor(ms / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-
-  if (hours > 0) {
-    return `${hours}h ${String(minutes).padStart(2, '0')}m`;
-  }
-  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-}
 </script>
 
 <template>

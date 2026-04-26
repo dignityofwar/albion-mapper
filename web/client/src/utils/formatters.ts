@@ -11,13 +11,24 @@ export function formatTime(d: Date): string {
 }
 
 /**
- * Formats milliseconds remaining as "Expires in: HH:MM".
+ * Formats milliseconds remaining.
+ */
+export function formatCountdown(ms: number): string {
+  if (ms <= 0) return 'Expired';
+  const totalMinutes = Math.floor(ms / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`;
+  }
+  return `${minutes}m`;
+}
+
+/**
+ * Formats milliseconds remaining.
  * Returns "Expires in: 00:00" when ms is zero or negative.
  */
 export function formatExpiresIn(ms: number): string {
   if (ms <= 0) return 'Expires in: 00:00';
-  const totalMinutes = Math.floor(ms / 60000);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
-  return `Expires in: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  return `Expires in: ${formatCountdown(ms)}`;
 }

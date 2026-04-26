@@ -20,6 +20,7 @@ const props = defineProps<{
   modelValue: string;
   placeholder?: string;
   excludeId?: string;
+  error?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -122,7 +123,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
       :ignore-filter="true"
       data-testid="zone-combobox"
     >
-      <div class="flex items-center border border-gray-600 rounded bg-gray-800 text-white">
+      <div class="flex items-center border rounded bg-gray-800 text-white" :class="error ? 'border-red-500' : 'border-gray-600'">
         <ComboboxInput
           v-model="query"
           :display-value="displayValue"
