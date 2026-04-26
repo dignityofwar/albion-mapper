@@ -2,13 +2,13 @@ import Fastify from 'fastify';
 import fastifyWebsocket from '@fastify/websocket';
 import fastifyJwt from '@fastify/jwt';
 import fastifyRateLimit from '@fastify/rate-limit';
-import type Database from 'better-sqlite3';
+import { Pool } from 'pg';
 import { roomRoutes } from './routes/rooms.js';
 import { connectionRoutes } from './routes/connections.js';
 import { wsRoutes } from './ws.js';
 
 export interface AppOptions {
-  db: Database.Database;
+  db: Pool;
   jwtSecret?: string;
   logger?: boolean;
   disableRateLimit?: boolean;

@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
+import { API_BASE_URL } from '../utils/api';
 
 const props = defineProps<{ id: string }>();
 const router = useRouter();
@@ -25,7 +26,7 @@ async function authenticate() {
   authenticating.value = true;
   authError.value = '';
   try {
-    const res = await fetch(`/api/rooms/${props.id}/auth`, {
+    const res = await fetch(`${API_BASE_URL}/api/rooms/${props.id}/auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: password.value }),

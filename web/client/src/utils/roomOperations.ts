@@ -1,3 +1,5 @@
+import { API_BASE_URL } from './api';
+
 /**
  * API operations for a room. All functions accept the room ID and auth token
  * so they can be called from any component without direct store access.
@@ -12,7 +14,7 @@ export async function setHomeZone(
   token: string,
   zoneId: string,
 ): Promise<void> {
-  await fetch(`/api/rooms/${roomId}`, {
+  await fetch(`${API_BASE_URL}/api/rooms/${roomId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +32,7 @@ export async function deleteConnection(
   token: string,
   connectionId: string,
 ): Promise<void> {
-  await fetch(`/api/rooms/${roomId}/connections/${connectionId}`, {
+  await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections/${connectionId}`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -45,7 +47,7 @@ export async function updateConnection(
   connectionId: string,
   minutesRemaining: number,
 ): Promise<void> {
-  await fetch(`/api/rooms/${roomId}/connections/${connectionId}`, {
+  await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections/${connectionId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
@@ -65,7 +67,7 @@ export async function addConnection(
   toZoneId: string,
   minutesRemaining: number,
 ): Promise<void> {
-  await fetch(`/api/rooms/${roomId}/connections`, {
+  await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

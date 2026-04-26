@@ -36,10 +36,10 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     const adminPasswordHash = await bcrypt.hash(adminPassword, BCRYPT_ROUNDS);
     const createdAt = new Date().toISOString();
 
-    app.db.prepare(`
+    await app.db.query(`
       INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, created_at)
-      VALUES (?, ?, ?, ?, ?)
-    `).run(id, passwordHash, adminPasswordHash, homeZoneId, createdAt);
+      VALUES ($1, $2, $3, $4, $5)
+    `, [id, passwordHash, adminPasswordHash, homeZoneId, createdAt]);
 
     const shareUrl = `${request.protocol}://${request.hostname}/rooms/${id}`;
     return reply.status(201).send({ id, shareUrl });
@@ -53,9 +53,11 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'password is required' });
     }
 
-    const room = app.db.prepare('SELECT * FROM rooms WHERE id = ?').get(id) as
-      | { id: string; password_hash: string; home_zone_id: string; created_at: string }
-      | undefined;
+    const { rows } = await app.db.query<{ id: string; password_hash: string; home_zone_id: string; created_at: string }>(
+      'SELECT id, password_hash, home_zone_id, created_at FROM rooms WHERE id = $1',
+      [id]
+    );
+    const room = rows[0];
 
     if (!room) {
       return reply.status(404).send({ error: 'Room not found' });
@@ -96,8 +98,8 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'homeZoneId is not a valid roads home' });
     }
 
-    const result = app.db.prepare('UPDATE rooms SET home_zone_id = ?, updated_at = ? WHERE id = ?').run(homeZoneId, new Date().toISOString(), id);
-    if (result.changes === 0) {
+    const result = await app.db.query('UPDATE rooms SET home_zone_id = $1, updated_at = $2 WHERE id = $3', [homeZoneId, new Date().toISOString(), id]);
+    if (result.rowCount === 0) {
       return reply.status(404).send({ error: 'Room not found' });
     }
 
@@ -121,7 +123,11 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     const { newPassword, adminPassword } = parsed.data;
     
     // Check adminPassword
-    const room = app.db.prepare('SELECT admin_password_hash FROM rooms WHERE id = ?').get(id) as { admin_password_hash: string };
+    const { rows } = await app.db.query<{ admin_password_hash: string }>(
+      'SELECT admin_password_hash FROM rooms WHERE id = $1',
+      [id]
+    );
+    const room = rows[0];
     if (!room) {
       return reply.status(404).send({ error: 'Room not found' });
     }
@@ -131,10 +137,11 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     }
 
     const passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
-    const result = app.db
-      .prepare('UPDATE rooms SET password_hash = ? WHERE id = ?')
-      .run(passwordHash, id);
-    if (result.changes === 0) {
+    const result = await app.db.query(
+      'UPDATE rooms SET password_hash = $1 WHERE id = $2',
+      [passwordHash, id]
+    );
+    if (result.rowCount === 0) {
       return reply.status(404).send({ error: 'Room not found' });
     }
     return reply.send({ ok: true });
@@ -152,7 +159,11 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     }
 
     // Check adminPassword
-    const room = app.db.prepare('SELECT admin_password_hash FROM rooms WHERE id = ?').get(id) as { admin_password_hash: string };
+    const { rows: rooms } = await app.db.query<{ admin_password_hash: string }>(
+      'SELECT admin_password_hash FROM rooms WHERE id = $1',
+      [id]
+    );
+    const room = rooms[0];
     if (!room) {
       return reply.status(404).send({ error: 'Room not found' });
     }
@@ -161,14 +172,15 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(401).send({ error: 'Invalid admin password' });
     }
 
-    const rows = app.db
-      .prepare('SELECT id FROM connections WHERE room_id = ?')
-      .all(id) as { id: string }[];
-    app.db.prepare('DELETE FROM connections WHERE room_id = ?').run(id);
+    await app.db.query('DELETE FROM connections WHERE room_id = $1', [id]);
     
-    const roomWithHome = app.db.prepare('SELECT home_zone_id FROM rooms WHERE id = ?').get(id) as { home_zone_id: string };
-    app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ? AND zone_id != ?').run(id, roomWithHome.home_zone_id);
-    app.db.prepare('UPDATE rooms SET updated_at = ? WHERE id = ?').run(new Date().toISOString(), id);
+    const { rows: rooms2 } = await app.db.query<{ home_zone_id: string }>(
+      'SELECT home_zone_id FROM rooms WHERE id = $1',
+      [id]
+    );
+    const roomWithHome = rooms2[0];
+    await app.db.query('DELETE FROM room_node_positions WHERE room_id = $1 AND zone_id != $2', [id, roomWithHome.home_zone_id]);
+    await app.db.query('UPDATE rooms SET updated_at = $1 WHERE id = $2', [new Date().toISOString(), id]);
 
     broadcast(id, { type: 'room_reset' });
 

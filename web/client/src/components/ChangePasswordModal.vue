@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoomStore } from '../stores/useRoomStore';
+import { API_BASE_URL } from '../utils/api';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -47,7 +48,7 @@ async function savePassword() {
   passwordError.value = '';
   passwordSuccess.value = false;
   try {
-    const res = await fetch(`/api/rooms/${store.roomId}/password`, {
+    const res = await fetch(`${API_BASE_URL}/api/rooms/${store.roomId}/password`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

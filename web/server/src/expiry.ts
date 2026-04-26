@@ -1,4 +1,4 @@
-import type Database from 'better-sqlite3';
+import { Pool } from 'pg';
 import { broadcast } from './broadcast.js';
 
 const STALE_GRACE_MS = 6 * 60 * 60 * 1000; // 6 hours
@@ -8,22 +8,23 @@ interface ExpiredRow {
   room_id: string;
 }
 
-export function startExpiryCleanup(db: Database.Database): NodeJS.Timeout {
+export function startExpiryCleanup(db: Pool): NodeJS.Timeout {
   return setInterval(() => {
-    runExpiryCleanup(db);
+    runExpiryCleanup(db).catch(console.error);
   }, 60_000);
 }
 
-export function runExpiryCleanup(db: Database.Database): void {
+export async function runExpiryCleanup(db: Pool): Promise<void> {
   const now = new Date();
   
   // 1. Notify for connections that expired since the last check
   const lastCheck = new Date(now.getTime() - 61_000).toISOString();
   const currentNow = now.toISOString();
 
-  const newlyExpired = db
-    .prepare('SELECT id, room_id FROM connections WHERE expires_at <= ? AND expires_at > ?')
-    .all(currentNow, lastCheck) as ExpiredRow[];
+  const { rows: newlyExpired } = await db.query<ExpiredRow>(
+    'SELECT id, room_id FROM connections WHERE expires_at <= $1 AND expires_at > $2',
+    [currentNow, lastCheck]
+  );
 
   for (const row of newlyExpired) {
     broadcast(row.room_id, { type: 'connection_expired', connectionId: row.id });
@@ -32,15 +33,16 @@ export function runExpiryCleanup(db: Database.Database): void {
   // 2. Cleanup (delete) connections that are past STALE_GRACE_MS
   const cutoff = new Date(now.getTime() - STALE_GRACE_MS).toISOString();
 
-  const expired = db
-    .prepare('SELECT id, room_id FROM connections WHERE expires_at <= ?')
-    .all(cutoff) as ExpiredRow[];
+  const { rows: expired } = await db.query<ExpiredRow>(
+    'SELECT id, room_id FROM connections WHERE expires_at <= $1',
+    [cutoff]
+  );
 
   if (expired.length === 0) return;
 
   const ids = expired.map((r) => r.id);
-  const placeholders = ids.map(() => '?').join(',');
-  db.prepare(`DELETE FROM connections WHERE id IN (${placeholders})`).run(...ids);
+  const placeholders = ids.map((_, i) => `$${i + 1}`).join(',');
+  await db.query(`DELETE FROM connections WHERE id IN (${placeholders})`, ids);
 
   // Broadcast removal per room for deleted connections
   const byRoom = new Map<string, string[]>();

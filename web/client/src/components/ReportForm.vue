@@ -6,6 +6,7 @@ import RoomSettings from './RoomSettings.vue';
 import TimeInput from './common/TimeInput.vue';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import { ZONE_BY_ID } from 'shared';
+import { API_BASE_URL } from '../utils/api';
 
 const store = useRoomStore();
 
@@ -52,7 +53,7 @@ async function submit() {
   submitting.value = true;
 
   try {
-    const res = await fetch(`/api/rooms/${store.roomId}/connections`, {
+    const res = await fetch(`${API_BASE_URL}/api/rooms/${store.roomId}/connections`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
+import { API_BASE_URL } from '../utils/api';
 import ChangePasswordModal from './ChangePasswordModal.vue';
 import ResetConfirmModal from './ResetConfirmModal.vue';
 
@@ -48,7 +49,7 @@ async function reset(adminPassword: string) {
   resetting.value = true;
   resetError.value = '';
   try {
-    const res = await fetch(`/api/rooms/${store.roomId}/connections`, {
+    const res = await fetch(`${API_BASE_URL}/api/rooms/${store.roomId}/connections`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

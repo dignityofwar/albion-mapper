@@ -1,9 +1,9 @@
-import type Database from 'better-sqlite3';
+import { Pool } from 'pg';
 import type { FastifyRequest, FastifyReply } from 'fastify';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    db: Database.Database;
+    db: Pool;
     authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 }

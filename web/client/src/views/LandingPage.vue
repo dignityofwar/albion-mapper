@@ -3,6 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import ZoneCombobox from '../components/ZoneCombobox.vue';
 import { useRoomStore } from '../stores/useRoomStore';
+import { API_BASE_URL } from '../utils/api';
 
 const router = useRouter();
 const route = useRoute();
@@ -48,7 +49,7 @@ async function createRoom() {
   creating.value = true;
   createError.value = '';
   try {
-    const res = await fetch('/api/rooms', {
+    const res = await fetch(`${API_BASE_URL}/api/rooms`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -65,7 +66,7 @@ async function createRoom() {
     const { id } = await res.json() as { id: string };
 
     // Authenticate immediately
-    const authRes = await fetch(`/api/rooms/${id}/auth`, {
+    const authRes = await fetch(`${API_BASE_URL}/api/rooms/${id}/auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: createPassword.value }),

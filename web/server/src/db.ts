@@ -1,75 +1,12 @@
-import Database from 'better-sqlite3';
-import path from 'node:path';
-import fs from 'node:fs';
+import pkg from 'pg';
+const { Pool } = pkg;
 
-let dbInstance: Database.Database | null = null;
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
-export function getDb(dbPath?: string): Database.Database {
-  if (dbInstance) return dbInstance;
-
-  const resolvedPath = dbPath ?? path.resolve(process.cwd(), 'data', 'roads.db');
-  const dir = path.dirname(resolvedPath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-
-  dbInstance = new Database(resolvedPath);
-  dbInstance.pragma('journal_mode = WAL');
-  dbInstance.pragma('foreign_keys = ON');
-
-  dbInstance.exec(`
-    CREATE TABLE IF NOT EXISTS rooms (
-      id TEXT PRIMARY KEY,
-      password_hash TEXT NOT NULL,
-      home_zone_id TEXT NOT NULL,
-      created_at TEXT NOT NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS connections (
-      id TEXT PRIMARY KEY,
-      room_id TEXT NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
-      from_zone_id TEXT NOT NULL,
-      to_zone_id TEXT NOT NULL,
-      expires_at TEXT NOT NULL,
-      reported_at TEXT NOT NULL,
-      reported_by TEXT
-    );
-
-    CREATE TABLE IF NOT EXISTS room_node_positions (
-      room_id TEXT NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
-      zone_id TEXT NOT NULL,
-      x REAL NOT NULL,
-      y REAL NOT NULL,
-      PRIMARY KEY (room_id, zone_id)
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_conn_room ON connections(room_id);
-    CREATE INDEX IF NOT EXISTS idx_node_positions_room ON room_node_positions(room_id);
-  `);
-
-  try {
-    dbInstance.exec('ALTER TABLE rooms ADD COLUMN admin_password_hash TEXT;');
-    dbInstance.exec('UPDATE rooms SET admin_password_hash = password_hash WHERE admin_password_hash IS NULL;');
-  } catch (e) {
-    // Column likely already exists
-  }
-
-  return dbInstance;
-}
-
-export function resetDb(): void {
-  if (dbInstance) {
-    dbInstance.close();
-    dbInstance = null;
-  }
-}
-
-export function createInMemoryDb(): Database.Database {
-  const db = new Database(':memory:');
-  db.pragma('journal_mode = WAL');
-  db.pragma('foreign_keys = ON');
-
-  db.exec(`
+export async function initDb() {
+  await pool.query(`
     CREATE TABLE IF NOT EXISTS rooms (
       id TEXT PRIMARY KEY,
       password_hash TEXT NOT NULL,
@@ -99,6 +36,6 @@ export function createInMemoryDb(): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_conn_room ON connections(room_id);
     CREATE INDEX IF NOT EXISTS idx_node_positions_room ON room_node_positions(room_id);
   `);
-
-  return db;
 }
+
+export { pool as db };
