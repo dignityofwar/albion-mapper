@@ -57,6 +57,14 @@ watch([hours, minutes, seconds], () => {
   }
 });
 
+watch(() => props.modelValue, (newVal) => {
+  if (newVal === null) {
+    hours.value = null;
+    minutes.value = null;
+    seconds.value = null;
+  }
+});
+
 const hoursEl = ref<HTMLInputElement | null>(null);
 
 function onKeydown(e: KeyboardEvent) {
