@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
 
 const store = useRoomStore();
+const router = useRouter();
 
 const open = ref(false);
 const popupEl = ref<HTMLDivElement | null>(null);
@@ -102,6 +104,11 @@ function copyLink() {
     setTimeout(() => { copied.value = false; }, 2000);
   });
 }
+
+function logout() {
+  sessionStorage.removeItem(`token:${store.roomId}`);
+  router.replace({ path: `/rooms/${store.roomId}/auth` });
+}
 </script>
 
 <template>
@@ -185,7 +192,7 @@ function copyLink() {
       </div>
 
       <!-- Copy link -->
-      <div class="p-2">
+      <div class="border-b border-gray-700 p-2">
         <button
           type="button"
           class="w-full text-left px-3 py-2 text-sm rounded text-gray-200 hover:bg-gray-700"
@@ -193,6 +200,18 @@ function copyLink() {
           @click="copyLink"
         >
           {{ copied ? '✓  Copied!' : '🔗  Copy room link' }}
+        </button>
+      </div>
+
+      <!-- Logout -->
+      <div class="p-2">
+        <hr class="border-gray-700 mb-2" />
+        <button
+          type="button"
+          class="w-full text-left px-3 py-2 text-sm rounded text-red-400 hover:bg-gray-700 hover:text-red-300"
+          @click="logout"
+        >
+          🚪 Log out
         </button>
       </div>
     </div>

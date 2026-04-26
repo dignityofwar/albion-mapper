@@ -5,7 +5,6 @@ import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
 import ReportForm from '../components/ReportForm.vue';
 import DebugTray from '../components/DebugTray.vue';
-import RoomSettings from '../components/RoomSettings.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge } from '@vue-flow/core';
@@ -231,6 +230,7 @@ watch(now, () => {
       const { remainingMs, isStale, style } = getEdgeParams(conn, now.value);
       edge.label = formatExpiresIn(remainingMs);
       edge.animated = style.animated;
+      edge.data.now = now.value;
     }
   });
 });
@@ -301,16 +301,13 @@ defineExpose({ flowNodes, onNodeDragStop });
 
     <!-- Fit view button -->
     <button
-      class="fixed bottom-20 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-lg shadow-lg"
+      class="fixed bottom-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-lg shadow-lg"
       title="Fit view"
       @click="fitView({ padding: 0.2, duration: 300 })"
     >🔄</button>
 
     <!-- Debug tray modal -->
     <DebugTray :nodes="flowNodes" :edges="flowEdges" :show="showDebug" @close="showDebug = false" />
-
-    <!-- Settings (cog + modal with log out) -->
-    <RoomSettings :room-id="id" />
 
     <!-- Toast -->
     <Transition name="toast">
