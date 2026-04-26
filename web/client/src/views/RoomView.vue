@@ -109,6 +109,9 @@ function getEdgeParams(conn: Connection, currentTime: number) {
   const remainingMs = expiresAt - currentTime;
   const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
   const style = connectionStyle(remainingMs, isStale, conn.isExpired ?? false);
+  if (conn.isExpired) {
+    style.animated = false;
+  }
   return { remainingMs, isStale, style };
 }
 

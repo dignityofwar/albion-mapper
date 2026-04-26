@@ -65,8 +65,8 @@ const labelY = computed(() => straight.value[2]);
   <BaseEdge
     :id="id"
     :path="path"
-    :animated="animated ?? false"
-    :class="{ 'animated': animated }"
+    :animated="style.animated"
+    :class="{ 'animated': style.animated }"
     :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2 }"
     class="cursor-pointer"
     @click="showPopover = !showPopover"

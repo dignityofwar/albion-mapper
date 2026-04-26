@@ -53,7 +53,7 @@ watch([hours, minutes, seconds], () => {
   if (h === 0 && m === 0 && s === 0) {
     emit('update:modelValue', null);
   } else {
-    emit('update:modelValue', Math.round(h * 60 + m + s / 60));
+    emit('update:modelValue', h * 60 + m + s / 60);
   }
 });
 

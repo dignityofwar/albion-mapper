@@ -21,7 +21,7 @@ export function connectionStyle(remainingMs: number, isStale: boolean, isExpired
   }
 
   if (isStale) {
-    return { stroke: '#acadae', strokeDasharray, animated, color: '#6b7280' }; // grey dashed
+    return { stroke: '#acadae', strokeDasharray: '2 2', animated: false, color: '#6b7280' }; // grey dashed
   }
 
   if (remainingMs < 30 * 60 * 1000) {
