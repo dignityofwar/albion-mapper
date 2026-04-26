@@ -3,17 +3,16 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import ReportForm from '../components/ReportForm.vue';
-import ZoneNode from '../components/flow/ZoneNode.vue';
+// ZoneNode is kept but not wired in — using built-in default nodes for now
 import DebugTray from '../components/DebugTray.vue';
 import RoomSettings from '../components/RoomSettings.vue';
-import { VueFlow, useVueFlow, ConnectionMode } from '@vue-flow/core';
+import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge } from '@vue-flow/core';
+import '@vue-flow/core/dist/style.css';
+import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { radialLayout } from '../utils/radialLayout.js';
-import { getConnectionStatus } from 'shared';
-import { connectionStyle } from '../utils/connectionStyle.js';
-import { formatTime, formatExpiresIn } from '../utils/formatters.js';
-import { setHomeZone, deleteConnection } from '../utils/roomOperations.js';
+import { formatTime } from '../utils/formatters.js';
+import { setHomeZone } from '../utils/roomOperations.js';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -75,24 +74,30 @@ onUnmounted(() => {
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
 const { fitView } = useVueFlow();
 
-const nodes = computed(() => {
-  const conns = store.connections.filter(
-    (c) => getConnectionStatus(c, new Date(now.value)) !== 'expired',
-  );
-  const positions = radialLayout(store.homeZoneId, conns);
-  return positions.map((p) => {
-    const isHome = p.id === store.homeZoneId;
-    return {
-      id: p.id,
-      type: 'zone',
-      position: { x: p.x, y: p.y },
-      // All nodes are the same visual size: w-40 h-20 = 160×80px
-      width: 160,
-      height: 80,
-      data: { isHome },
-    };
-  });
-});
+const nodes = ref([
+  {
+    id: 'qiient-al-nusom',
+    position: { x: 0, y: 0 },
+    label: 'qiient-al-nusom 🏠',
+    data: { isHome: true },
+  },
+  {
+    id: 'qiient-al-tersas',
+    position: { x: 220, y: 0 },
+    label: 'qiient-al-tersas',
+    data: { isHome: false },
+  },
+]);
+
+const edges = ref([
+  {
+    id: 'e1',
+    source: 'qiient-al-nusom',
+    target: 'qiient-al-tersas',
+    label: 'Expires in: 00:00',
+    type: 'smoothstep',
+  },
+]);
 
 // Re-fit the view whenever the set of nodes changes (e.g. after WS sync)
 watch(
@@ -103,31 +108,6 @@ watch(
   },
 );
 
-
-
-const edges = computed(() => {
-  const conns = store.connections.filter(
-    (c) => getConnectionStatus(c, new Date(now.value)) !== 'expired',
-  );
-  return conns.map((c) => {
-    const remainingMs = new Date(c.expiresAt).getTime() - now.value;
-    const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
-    const style = connectionStyle(remainingMs, isStale);
-    return {
-      id: c.id,
-      type: 'default',
-      source: c.fromZoneId,
-      target: c.toZoneId,
-      animated: style.animated,
-      label: formatExpiresIn(remainingMs),
-      style: { stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2 },
-      labelStyle: { fill: '#fff', fontSize: 11 },
-      labelBgStyle: { fill: '#111827', fillOpacity: 0.8 },
-      data: { connection: c, onDelete: handleDeleteConnection },
-    };
-  });
-});
-
 // ── Debug tray ───────────────────────────────────────────────────────────────
 const showDebug = ref(false);
 
@@ -137,9 +117,6 @@ function handleSetHomeZone(zoneId: string) {
   setHomeZone(props.id, store.token!, zoneId);
 }
 
-function handleDeleteConnection(connectionId: string) {
-  deleteConnection(props.id, store.token!, connectionId);
-}
 </script>
 
 <template>
@@ -165,9 +142,8 @@ function handleDeleteConnection(connectionId: string) {
     <!-- Graph -->
     <div class="flex-1 relative">
       <VueFlow
-        :nodes="nodes"
-        :edges="edges"
-        :node-types="{ zone: ZoneNode }"
+        v-model:nodes="nodes"
+        v-model:edges="edges"
         :fit-view-on-init="true"
         :connection-mode="ConnectionMode.Loose"
         class="bg-gray-950"
