@@ -12,6 +12,9 @@ import {
 import { ZONES } from 'shared';
 import type { Zone, ZoneType } from 'shared';
 import { useRoomStore } from '../stores/useRoomStore.js';
+import TagTier from './common/TagTier.vue';
+import TagZone from './common/TagZone.vue';
+import { TYPE_LABELS } from '../utils/zoneStyles';
 
 const props = defineProps<{
   modelValue: string;
@@ -29,18 +32,8 @@ const query = ref('');
 const isOpen = ref(false);
 const highlightedId = ref<string | null>(null);
 
-const TYPE_LABELS: Record<ZoneType, string> = {
-  royalBlue: 'Royal Blue',
-  royalYellow: 'Royal Yellow',
-  royalRed: 'Royal Red',
-  outlands: 'Outlands',
-  roads: 'Roads',
-  other: 'Other',
-};
-
 /** Full label including hideout distinction */
 function zoneTypeLabel(zone: Zone): string {
-  if (zone.type === 'roads' && zone.isRoadsHome) return 'Roads (Hideout)';
   return TYPE_LABELS[zone.type];
 }
 
@@ -53,15 +46,6 @@ const mappedZoneIds = computed<Set<string>>(() => {
   }
   return ids;
 });
-
-const TYPE_STYLES: Record<ZoneType, string> = {
-  royalBlue:   'background-color:rgb(5,86,190);color:#fff',
-  royalYellow: 'background-color:rgb(207,165,0);color:#fff',
-  royalRed:    'background-color:rgb(184,0,0);color:#fff',
-  outlands:    'background-color:rgb(0,0,0);color:#fff;border:1px solid #fff',
-  roads:       'background-color:rgb(107,114,128);color:#fff',
-  other:       'background-color:rgb(128,128,128);color:#fff',
-};
 
 const filteredZones = computed<Zone[]>(() => {
   const q = query.value.toLowerCase().trim();
@@ -165,13 +149,8 @@ function onWrapperKeydown(e: KeyboardEvent) {
           >
             <span class="truncate flex-1">{{ zone.name }}</span>
             <span v-if="zone.id === store.homeZoneId" class="shrink-0 text-yellow-400" title="Room home zone">🏠</span>
-            <span
-              :style="TYPE_STYLES[zone.type]"
-              class="rounded px-1 py-0.5 text-xs font-semibold shrink-0"
-            >
-              {{ zoneTypeLabel(zone) }}
-            </span>
-            <span class="text-gray-400 text-xs shrink-0">T{{ zone.tier }}</span>
+            <TagTier :tier="zone.tier" :type="zone.type" />
+            <TagZone :type="zone.type" />
             <ComboboxItemIndicator class="shrink-0 text-green-400">✓</ComboboxItemIndicator>
           </ComboboxItem>
         </ComboboxViewport>

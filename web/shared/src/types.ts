@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // ── Zone types ──────────────────────────────────────────────────────────────
 
-export type ZoneType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'other';
+export type ZoneType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'roadsHideout' | 'other';
 
 export interface Zone {
   id: string;
@@ -15,7 +15,7 @@ export interface Zone {
 
 // ── GameMap (on-disk shape from maps.json) ──────────────────────────────────
 
-export type MapType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'other';
+export type MapType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'roadsHideout' | 'other';
 
 export interface GameMap {
   mapID: string;
@@ -23,7 +23,6 @@ export interface GameMap {
   mapType: MapType;
   tier: number;
   oresAvailable?: string[];
-  isRoadsHideout?: boolean;
 }
 
 // ── Connection ───────────────────────────────────────────────────────────────
@@ -67,6 +66,7 @@ export const ZoneTypeSchema = z.enum([
   'royalRed',
   'outlands',
   'roads',
+  'roadsHideout',
   'other',
 ]);
 

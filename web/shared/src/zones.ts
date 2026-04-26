@@ -9,7 +9,7 @@ export const ZONES: Zone[] = (mapsData as GameMap[]).map((m) => ({
   type: m.mapType,
   tier: m.tier,
   ores: m.oresAvailable,
-  isRoadsHome: m.mapType === 'roads' ? isRoadsHome(m.mapName) : undefined,
+  isRoadsHome: m.mapType === 'roadsHideout' || (m.mapType === 'roads' && isRoadsHome(m.mapName)),
 }));
 
 export const ZONE_BY_ID = new Map(ZONES.map((z) => [z.id, z]));

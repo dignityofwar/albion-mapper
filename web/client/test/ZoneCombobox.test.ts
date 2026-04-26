@@ -14,6 +14,7 @@ function getFilteredZones(query: string, excludeId?: string) {
     royalRed: 'Royal Red',
     outlands: 'Outlands',
     roads: 'Roads',
+    roadsHideout: 'Roads (Hideout)',
     other: 'Other',
   };
   const q = query.toLowerCase().trim();
@@ -35,7 +36,7 @@ describe('ZoneCombobox filtering logic', () => {
     const results = getFilteredZones('Roads');
     expect(results.length).toBeGreaterThan(0);
     results.forEach((z) => {
-      expect(z.type).toBe('roads');
+      expect(['roads', 'roadsHideout']).toContain(z.type);
     });
   });
 

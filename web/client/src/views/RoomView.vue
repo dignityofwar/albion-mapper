@@ -3,7 +3,6 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import ReportForm from '../components/ReportForm.vue';
-// ZoneNode is kept but not wired in — using built-in default nodes for now
 import DebugTray from '../components/DebugTray.vue';
 import RoomSettings from '../components/RoomSettings.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
@@ -12,8 +11,10 @@ import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { formatTime } from '../utils/formatters.js';
+import { formatTime, formatExpiresIn } from '../utils/formatters.js';
 import { setHomeZone } from '../utils/roomOperations.js';
+import { radialLayout } from '../utils/radialLayout.js';
+import { ZONE_BY_ID, type Connection } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -75,43 +76,8 @@ onUnmounted(() => {
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
 const { fitView } = useVueFlow();
 
-const nodes = ref([
-  {
-    id: 'qiient-al-nusom',
-    type: 'zone',
-    position: { x: 0, y: 0 },
-    data: { isHome: true, tier: 'blue', zoneName: 'Qiient Al Nusom', isRoad: true },
-  },
-  {
-    id: 'qiient-al-tersas',
-    type: 'zone',
-    position: { x: 220, y: 0 },
-    data: { isHome: false, tier: 'blue', zoneName: 'Qiient Al Tersas', isRoad: true },
-  },
-  {
-    id: 'yellow-zone',
-    type: 'zone',
-    position: { x: 220, y: 220 },
-    data: { isHome: false, tier: 'yellow', zoneName: 'Yellow Zone', isRoad: false },
-  },
-]);
-
-const edges = ref([
-  {
-    id: 'e1',
-    source: 'qiient-al-nusom',
-    target: 'qiient-al-tersas',
-    label: 'Expires in: 1:23',
-    type: 'smoothstep',
-  },
-  {
-    id: 'e2',
-    source: 'qiient-al-tersas',
-    target: 'yellow-zone',
-    label: 'Expires in: 2:45',
-    type: 'smoothstep',
-  },
-]);
+const flowNodes = ref<Node[]>([]);
+const flowEdges = ref<Edge[]>([]);
 
 function computeHandles(sourceNode: any, targetNode: any) {
   const dx = targetNode.position.x - sourceNode.position.x;
@@ -131,23 +97,70 @@ function computeHandles(sourceNode: any, targetNode: any) {
 }
 
 watch(
-  nodes,
+  [() => store.connections, () => store.homeZoneId],
   () => {
-    edges.value = edges.value.map((edge) => {
-      const sourceNode = nodes.value.find((n) => n.id === edge.source);
-      const targetNode = nodes.value.find((n) => n.id === edge.target);
-      if (!sourceNode || !targetNode) return edge;
+    if (!store.homeZoneId) return;
 
-      const handles = computeHandles(sourceNode, targetNode);
-      return { ...edge, ...handles };
+    // 1. Compute positions
+    const positions = radialLayout(store.homeZoneId, store.connections);
+    
+    // 2. Map to VueFlow nodes
+    flowNodes.value = positions.map((pos) => {
+      const zone = ZONE_BY_ID.get(pos.id);
+      return {
+        id: pos.id,
+        type: 'zone',
+        position: { x: pos.x, y: pos.y },
+        data: {
+          isHome: pos.id === store.homeZoneId,
+          tier: zone?.tier ?? 0,
+          zoneName: zone?.name ?? pos.id,
+          type: zone?.type ?? 'other',
+        },
+      };
+    });
+
+    // 3. Map to VueFlow edges
+    flowEdges.value = store.connections.map((conn) => {
+      const sourceNode = flowNodes.value.find((n) => n.id === conn.fromZoneId);
+      const targetNode = flowNodes.value.find((n) => n.id === conn.toZoneId);
+
+      const expiresAt = new Date(conn.expiresAt).getTime();
+      const remainingMs = expiresAt - now.value;
+
+      const edge: Edge = {
+        id: conn.id,
+        source: conn.fromZoneId,
+        target: conn.toZoneId,
+        label: formatExpiresIn(remainingMs),
+        type: 'smoothstep',
+      };
+
+      if (sourceNode && targetNode) {
+        const handles = computeHandles(sourceNode, targetNode);
+        Object.assign(edge, handles);
+      }
+      return edge;
     });
   },
-  { deep: true, immediate: true },
+  { deep: true, immediate: true }
 );
 
-// Re-fit the view whenever the set of nodes changes (e.g. after WS sync)
+// Update edge labels every second based on `now`
+watch(now, () => {
+  flowEdges.value.forEach((edge) => {
+    const conn = store.connections.find((c) => c.id === edge.id);
+    if (conn) {
+      const expiresAt = new Date(conn.expiresAt).getTime();
+      const remainingMs = expiresAt - now.value;
+      edge.label = formatExpiresIn(remainingMs);
+    }
+  });
+});
+
+// Re-fit the view whenever the set of nodes changes
 watch(
-  () => nodes.value.length,
+  () => flowNodes.value.length,
   async () => {
     await nextTick();
     fitView({ padding: 0.2, duration: 300 });
@@ -188,8 +201,8 @@ function handleSetHomeZone(zoneId: string) {
     <!-- Graph -->
     <div class="flex-1 relative">
       <VueFlow
-        v-model:nodes="nodes"
-        v-model:edges="edges"
+        v-model:nodes="flowNodes"
+        v-model:edges="flowEdges"
         :node-types="{ zone: ZoneNode }"
         :fit-view-on-init="true"
         :connection-mode="ConnectionMode.Loose"
@@ -209,7 +222,7 @@ function handleSetHomeZone(zoneId: string) {
     >🐛</button>
 
     <!-- Debug tray modal -->
-    <DebugTray :nodes="nodes" :edges="edges" :show="showDebug" @close="showDebug = false" />
+    <DebugTray :nodes="flowNodes" :edges="flowEdges" :show="showDebug" @close="showDebug = false" />
 
     <!-- Settings (cog + modal with log out) -->
     <RoomSettings :room-id="id" />
