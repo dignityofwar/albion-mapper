@@ -7,7 +7,7 @@ import { ZONES } from 'shared';
 // We test the filtering logic by inspecting the component's internal computed
 // rather than fighting reka-ui's portal teleportation in jsdom.
 
-function getFilteredZones(query: string, excludeId?: string) {
+function getFilteredZones(query: string, excludedIds?: string[]) {
   const TYPE_LABELS: Record<string, string> = {
     royalBlue: 'Royal Blue',
     royalYellow: 'Royal Yellow',
@@ -19,7 +19,7 @@ function getFilteredZones(query: string, excludeId?: string) {
   };
   const q = query.toLowerCase().trim();
   return ZONES.filter((z) => {
-    if (excludeId && z.id === excludeId) return false;
+    if (excludedIds && excludedIds.includes(z.id)) return false;
     if (!q) return true;
     return (
       z.name.toLowerCase().includes(q) ||
@@ -51,14 +51,14 @@ describe('ZoneCombobox filtering logic', () => {
     expect(results.some((z) => z.type === 'outlands')).toBe(false);
   });
 
-  it('excludeId removes the zone from results', () => {
+  it('excludedIds removes the zone from results', () => {
     const firstRoadsZone = ZONES.find((z) => z.type === 'roads')!;
-    const without = getFilteredZones('', firstRoadsZone.id);
+    const without = getFilteredZones('', [firstRoadsZone.id]);
     const withoutIds = without.map((z) => z.id);
     expect(withoutIds).not.toContain(firstRoadsZone.id);
   });
 
-  it('with no excludeId, zone appears in results', () => {
+  it('with no excludedIds, zone appears in results', () => {
     const firstRoadsZone = ZONES.find((z) => z.type === 'roads')!;
     const all = getFilteredZones('');
     const allIds = all.map((z) => z.id);

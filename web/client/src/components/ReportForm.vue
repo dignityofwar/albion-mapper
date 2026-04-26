@@ -12,6 +12,12 @@ const store = useRoomStore();
 const fromZoneId = ref('');
 const isLocked = computed(() => store.connections.length === 0);
 
+const connectedToFromZone = computed(() => {
+  return store.connections
+    .filter(c => c.fromZoneId === fromZoneId.value)
+    .map(c => c.toZoneId);
+});
+
 watch([() => store.homeZoneId, isLocked], ([newHomeId, locked]) => {
   if (locked && newHomeId) {
     fromZoneId.value = newHomeId;
@@ -81,11 +87,11 @@ function onTimeKeydown(e: KeyboardEvent) {
 }
 
 const timeInputEl = ref<{ focus: () => void } | null>(null);
-const toComboboxInputEl = ref<{ $el: HTMLElement } | null>(null);
-const fromComboboxInputEl = ref<{ $el: HTMLElement } | null>(null);
+const toComboboxInputEl = ref<{ focus: () => void } | null>(null);
+const fromComboboxInputEl = ref<{ focus: () => void } | null>(null);
 
 function focusToCombobox() {
-  toComboboxInputEl.value?.$el?.querySelector('input')?.focus();
+  toComboboxInputEl.value?.focus();
 }
 
 function focusTimeInput() {
@@ -129,6 +135,7 @@ defineExpose({ minutesRemaining, fromZoneId });
         data-testid="from-combobox"
         :error="minutesRemaining !== null && !fromZoneId"
         @tab-select="focusToCombobox"
+        @select="focusToCombobox"
       />
     </div>
 
@@ -138,7 +145,7 @@ defineExpose({ minutesRemaining, fromZoneId });
         ref="toComboboxInputEl"
         v-model="toZoneId"
         placeholder="To zone…"
-        :exclude-id="fromZoneId"
+        :excluded-ids="[fromZoneId, ...connectedToFromZone]"
         data-testid="to-combobox"
         :error="minutesRemaining !== null && !toZoneId"
         @tab-select="focusTimeInput"

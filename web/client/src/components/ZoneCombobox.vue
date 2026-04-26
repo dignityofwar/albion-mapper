@@ -19,7 +19,7 @@ import { TYPE_LABELS } from '../utils/zoneStyles';
 const props = defineProps<{
   modelValue: string;
   placeholder?: string;
-  excludeId?: string;
+  excludedIds?: string[];
   error?: boolean;
 }>();
 
@@ -31,8 +31,15 @@ const emit = defineEmits<{
 
 const store = useRoomStore();
 const query = ref('');
+const comboboxInput = ref<any>(null);
 const isOpen = ref(false);
 const highlightedId = ref<string | null>(null);
+
+defineExpose({
+  focus: () => {
+    comboboxInput.value?.$el?.focus();
+  }
+});
 
 /** Full label including hideout distinction */
 function zoneTypeLabel(zone: Zone): string {
@@ -54,12 +61,12 @@ const filteredZones = computed<Zone[]>(() => {
   if (!q) {
     // No query: show zones already present in current connections + always include the home zone
     return ZONES.filter((z) => {
-      if (props.excludeId && z.id === props.excludeId) return false;
+      if (props.excludedIds && props.excludedIds.includes(z.id)) return false;
       return mappedZoneIds.value.has(z.id) || z.id === store.homeZoneId;
     });
   }
   return ZONES.filter((z) => {
-    if (props.excludeId && z.id === props.excludeId) return false;
+    if (props.excludedIds && props.excludedIds.includes(z.id)) return false;
     return (
       z.name.toLowerCase().includes(q) ||
       zoneTypeLabel(z).toLowerCase().includes(q) ||
@@ -103,14 +110,18 @@ function onInputFocus() {
  * accept it and move focus to the next field.
  */
 function onWrapperKeydown(e: KeyboardEvent) {
-  if (e.key !== 'Tab') return;
+  if (e.key !== 'Tab' && e.key !== 'Enter') return;
   const id = highlightedId.value;
   if (!id) return;
   e.preventDefault();
   emit('update:modelValue', id);
   query.value = '';
   highlightedId.value = null;
-  emit('tabSelect');
+  if (e.key === 'Tab') {
+    emit('tabSelect');
+  } else {
+    emit('select');
+  }
 }
 </script>
 
@@ -127,6 +138,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
     >
       <div class="flex items-center border rounded bg-gray-800 text-white" :class="error ? 'border-red-500' : 'border-gray-600'">
         <ComboboxInput
+          ref="comboboxInput"
           v-model="query"
           :display-value="displayValue"
           :placeholder="placeholder ?? 'Search zones…'"
