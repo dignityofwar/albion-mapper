@@ -135,6 +135,7 @@ export type ServerMessage =
   | { type: 'connection_added'; connection: Connection }
   | { type: 'connection_removed'; connectionId: string }
   | { type: 'room_updated'; homeZoneId: string }
+  | { type: 'room_reset' }
   | { type: 'node_positions_updated'; nodePositions: NodePosition[] }
   | { type: 'error'; message: string };
 

@@ -64,6 +64,13 @@ async function authenticate() {
       >
         {{ authenticating ? 'Authenticating…' : 'Enter' }}
       </button>
+      <hr class="my-4 border-gray-700" />
+      <button
+        class="w-full px-4 py-2 rounded bg-gray-700 hover:bg-gray-600 font-medium"
+        @click="router.push('/?create=true')"
+      >
+        Create a new Room
+      </button>
     </div>
   </div>
 </template>

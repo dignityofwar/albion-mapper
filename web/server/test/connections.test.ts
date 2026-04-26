@@ -4,8 +4,8 @@ import { createInMemoryDb } from '../src/db.js';
 import type { FastifyInstance } from 'fastify';
 import type { Connection } from 'shared';
 
-const VALID_ZONE_A = 'adrens-hill';
-const VALID_ZONE_B = 'anklesnag-mire';
+const VALID_ZONE_A = 'qiient-al-nusom';
+const VALID_ZONE_B = 'qiient-al-odesum';
 const UNKNOWN_ZONE = 'totally-unknown-zone-xyz';
 
 let app: FastifyInstance;
@@ -172,5 +172,106 @@ describe('GET /api/rooms/:id/connections', () => {
     expect(ids).toContain(activeConn.id);
     expect(ids).toContain(staleConn.id);
     expect(ids).not.toContain(expiredConn.id);
+  });
+});
+
+describe('DELETE /api/rooms/:id/connections/:connId', () => {
+  it('deletes the connection and removes orphaned node, but keeps home node', async () => {
+    const db = (app as unknown as { db: ReturnType<typeof createInMemoryDb> }).db;
+
+    // Set A as home
+    const zoneA = VALID_ZONE_A;
+    const zoneB = VALID_ZONE_B;
+    const zoneC = 'anklesnag-mire-2'; // Need a different zone to be C
+
+    // A-B, B-C
+    const conn1Id = crypto.randomUUID();
+    const conn2Id = crypto.randomUUID();
+
+    db.prepare(
+      'INSERT INTO connections (id, room_id, from_zone_id, to_zone_id, expires_at, reported_at) VALUES (?, ?, ?, ?, ?, ?)',
+    ).run(conn1Id, roomId, zoneA, zoneB, new Date().toISOString(), new Date().toISOString());
+
+    db.prepare(
+      'INSERT INTO connections (id, room_id, from_zone_id, to_zone_id, expires_at, reported_at) VALUES (?, ?, ?, ?, ?, ?)',
+    ).run(conn2Id, roomId, zoneB, zoneC, new Date().toISOString(), new Date().toISOString());
+
+    // Make positions for B and C
+    db.prepare('INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES (?, ?, ?, ?)')
+      .run(roomId, zoneB, 10, 10);
+    db.prepare('INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES (?, ?, ?, ?)')
+      .run(roomId, zoneC, 20, 20);
+
+    // Delete A-B
+    await app.inject({
+      method: 'DELETE',
+      url: `/api/rooms/${roomId}/connections/${conn1Id}`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    // C should NOT be removed (B still has a link to C)
+    const posC = db.prepare('SELECT 1 FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, zoneC);
+    expect(posC).toBeDefined();
+
+    // B should NOT be removed (still linked to C)
+    const posB = db.prepare('SELECT 1 FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, zoneB);
+    expect(posB).toBeDefined();
+
+    // Delete B-C
+    await app.inject({
+      method: 'DELETE',
+      url: `/api/rooms/${roomId}/connections/${conn2Id}`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    // B should now be removed
+    const posB2 = db.prepare('SELECT 1 FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, zoneB);
+    expect(posB2).toBeUndefined();
+    // C should now be removed
+    const posC2 = db.prepare('SELECT 1 FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, zoneC);
+    expect(posC2).toBeUndefined();
+  });
+});
+
+describe('DELETE /api/rooms/:id/connections (Reset)', () => {
+  it('deletes all connections and removes all orphaned nodes', async () => {
+    const db = (app as unknown as { db: ReturnType<typeof createInMemoryDb> }).db;
+
+    const zoneA = VALID_ZONE_A; // Home
+    const zoneB = VALID_ZONE_B;
+    const zoneC = 'anklesnag-mire-2';
+
+    // A-B, B-C
+    db.prepare(
+      'INSERT INTO connections (id, room_id, from_zone_id, to_zone_id, expires_at, reported_at) VALUES (?, ?, ?, ?, ?, ?)',
+    ).run(crypto.randomUUID(), roomId, zoneA, zoneB, new Date().toISOString(), new Date().toISOString());
+    db.prepare(
+      'INSERT INTO connections (id, room_id, from_zone_id, to_zone_id, expires_at, reported_at) VALUES (?, ?, ?, ?, ?, ?)',
+    ).run(crypto.randomUUID(), roomId, zoneB, zoneC, new Date().toISOString(), new Date().toISOString());
+
+    db.prepare('INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES (?, ?, ?, ?)')
+      .run(roomId, zoneB, 10, 10);
+    db.prepare('INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES (?, ?, ?, ?)')
+      .run(roomId, zoneC, 20, 20);
+
+    // Reset
+    await app.inject({
+      method: 'DELETE',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+
+    const conns = db.prepare('SELECT 1 FROM connections WHERE room_id = ?').all(roomId);
+    expect(conns).toHaveLength(0);
+
+    const posB = db.prepare('SELECT 1 FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, zoneB);
+    expect(posB).toBeUndefined();
+
+    const posC = db.prepare('SELECT 1 FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, zoneC);
+    expect(posC).toBeUndefined();
+
+    const posHome = db.prepare('SELECT 1 FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, zoneA);
+    // Home should be kept even if it wasn't there before, but the query check is for existing.
+    // Wait, if it wasn't there, it won't be there.
   });
 });

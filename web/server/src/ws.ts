@@ -111,6 +111,9 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
         }
 
         if (msg.type === 'update_node_positions') {
+          const nodeCount = app.db.prepare('SELECT COUNT(*) as count FROM room_node_positions WHERE room_id = ?').get(roomId) as { count: number };
+          if (nodeCount.count <= 1) return;
+
           const insert = app.db.prepare('INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES (?, ?, ?, ?)');
           const transaction = app.db.transaction((positions: NodePosition[]) => {
             app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ?').run(roomId);

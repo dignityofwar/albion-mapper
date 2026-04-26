@@ -4,7 +4,7 @@ import { createInMemoryDb } from '../src/db.js';
 import type { FastifyInstance } from 'fastify';
 
 // A known valid zone ID from the shared catalogue
-const VALID_ZONE_ID = 'adrens-hill';
+const VALID_ZONE_ID = 'qiient-al-nusom';
 
 let app: FastifyInstance;
 
@@ -89,6 +89,17 @@ describe('POST /api/rooms', () => {
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/zone catalogue/i);
+  });
+
+  it('rejects when homeZoneId is not a roads home', async () => {
+    const res = await app.inject({
+      method: 'POST',
+      url: '/api/rooms',
+      payload: { password: 'secret', homeZoneId: 'willow-wood' },
+    });
+    // This should fail if we want to restrict it
+    expect(res.statusCode).toBe(400);
+    expect(res.json<{ error: string }>().error).toMatch(/not a valid roads home/i);
   });
 });
 

@@ -1,13 +1,23 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import ZoneCombobox from './ZoneCombobox.vue';
 import SettingsPopup from './SettingsPopup.vue';
 import TimeInput from './common/TimeInput.vue';
 import { useRoomStore } from '../stores/useRoomStore.js';
+import { ZONE_BY_ID } from 'shared';
 
 const store = useRoomStore();
 
 const fromZoneId = ref('');
+const isLocked = computed(() => store.connections.length === 0);
+
+watch([() => store.homeZoneId, isLocked], ([newHomeId, locked]) => {
+  if (locked && newHomeId) {
+    fromZoneId.value = newHomeId;
+  }
+}, { immediate: true });
+
 const toZoneId = ref('');
 const minutesRemaining = ref<number | null>(null);
 watch([fromZoneId, toZoneId], () => {
@@ -16,6 +26,10 @@ watch([fromZoneId, toZoneId], () => {
 const reportedBy = ref('');
 const submitting = ref(false);
 const error = ref('');
+
+function getZoneName(id: string) {
+  return ZONE_BY_ID.get(id)?.name ?? id;
+}
 
 const emit = defineEmits<{
   success: [message: string];
@@ -95,7 +109,22 @@ defineExpose({ minutesRemaining });
 
     <!-- From -->
     <div class="flex-1 min-w-0">
+      <TooltipProvider v-if="isLocked" :delay-duration="0">
+        <TooltipRoot>
+          <TooltipTrigger asChild>
+            <div class="border rounded bg-gray-800 border-gray-700 px-3 py-2 text-sm text-gray-500 cursor-not-allowed truncate">
+              🏠 {{ getZoneName(fromZoneId) }}
+            </div>
+          </TooltipTrigger>
+          <TooltipPortal>
+            <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-50">
+              Locked until more zones added
+            </TooltipContent>
+          </TooltipPortal>
+        </TooltipRoot>
+      </TooltipProvider>
       <ZoneCombobox
+        v-else
         ref="fromComboboxInputEl"
         v-model="fromZoneId"
         placeholder="From zone…"

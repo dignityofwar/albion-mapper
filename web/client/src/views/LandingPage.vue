@@ -1,12 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import ZoneCombobox from '../components/ZoneCombobox.vue';
 
 const router = useRouter();
+const route = useRoute();
 
 // ── Create Room modal ────────────────────────────────────────────────────────
 const showCreate = ref(false);
+
+onMounted(() => {
+  if (route.query.create === 'true') {
+    showCreate.value = true;
+  }
+});
 const createPassword = ref('');
 const createHomeZoneId = ref('');
 const creating = ref(false);

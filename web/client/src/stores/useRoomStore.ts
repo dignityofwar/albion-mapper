@@ -45,6 +45,11 @@ export const useRoomStore = defineStore('room', () => {
         homeZoneId.value = msg.homeZoneId;
         break;
       
+      case 'room_reset':
+        connections.value = [];
+        nodePositions.value = nodePositions.value.filter(n => n.zoneId === homeZoneId.value);
+        break;
+      
       case 'node_positions_updated':
         nodePositions.value = msg.nodePositions;
         break;
@@ -106,6 +111,7 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   function updateNodePositionsInStore(positions: NodePosition[]) {
+    if (nodePositions.value.length <= 1) return;
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: positions }));
       nodePositions.value = positions; // Optimistic update

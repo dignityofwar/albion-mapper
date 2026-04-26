@@ -22,8 +22,13 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
 
     const { password, homeZoneId } = parsed.data;
 
-    if (!ZONE_BY_ID.has(homeZoneId)) {
+    const zone = ZONE_BY_ID.get(homeZoneId);
+    if (!zone) {
       return reply.status(400).send({ error: 'homeZoneId not found in zone catalogue' });
+    }
+
+    if (!zone.isRoadsHome) {
+      return reply.status(400).send({ error: 'homeZoneId is not a valid roads home' });
     }
 
     const id = nanoid(12);
@@ -81,8 +86,13 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     }
 
     const { homeZoneId } = parsed.data;
-    if (!ZONE_BY_ID.has(homeZoneId)) {
+    const zone = ZONE_BY_ID.get(homeZoneId);
+    if (!zone) {
       return reply.status(400).send({ error: 'homeZoneId not found in zone catalogue' });
+    }
+
+    if (!zone.isRoadsHome) {
+      return reply.status(400).send({ error: 'homeZoneId is not a valid roads home' });
     }
 
     const result = app.db.prepare('UPDATE rooms SET home_zone_id = ? WHERE id = ?').run(homeZoneId, id);
@@ -131,6 +141,12 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       .prepare('SELECT id FROM connections WHERE room_id = ?')
       .all(id) as { id: string }[];
     app.db.prepare('DELETE FROM connections WHERE room_id = ?').run(id);
+    
+    const room = app.db.prepare('SELECT home_zone_id FROM rooms WHERE id = ?').get(id) as { home_zone_id: string };
+    app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ? AND zone_id != ?').run(id, room.home_zone_id);
+
+    broadcast(id, { type: 'room_reset' });
+
     for (const row of rows) {
       broadcast(id, { type: 'connection_removed', connectionId: row.id });
     }

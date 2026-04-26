@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'node:crypto';
 import { CreateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus } from 'shared';
-import type { Connection } from 'shared';
+import type { Connection, NodePosition } from 'shared';
 import { broadcast } from '../broadcast.js';
 
 interface DbConnection {
@@ -121,15 +121,49 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
         return reply.status(403).send({ error: 'Forbidden' });
       }
 
-      const result = app.db
-        .prepare('DELETE FROM connections WHERE id = ? AND room_id = ?')
-        .run(connId, id);
+      const conn = app.db
+        .prepare('SELECT from_zone_id, to_zone_id FROM connections WHERE id = ? AND room_id = ?')
+        .get(connId, id) as { from_zone_id: string; to_zone_id: string } | undefined;
 
-      if (result.changes === 0) {
+      if (!conn) {
         return reply.status(404).send({ error: 'Connection not found' });
       }
 
+      app.db
+        .prepare('DELETE FROM connections WHERE id = ? AND room_id = ?')
+        .run(connId, id);
+
+      const room = app.db.prepare('SELECT home_zone_id FROM rooms WHERE id = ?').get(id) as { home_zone_id: string };
+
+      const zonesToCheck = [conn.from_zone_id, conn.to_zone_id];
+      let positionsUpdated = false;
+
+      for (const zoneId of zonesToCheck) {
+        if (zoneId === room.home_zone_id) continue;
+
+        const hasConnections = app.db
+          .prepare('SELECT 1 FROM connections WHERE room_id = ? AND (from_zone_id = ? OR to_zone_id = ?)')
+          .get(id, zoneId, zoneId);
+
+        if (!hasConnections) {
+          const res = app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ? AND zone_id = ?').run(id, zoneId);
+          if (res.changes > 0) {
+            positionsUpdated = true;
+          }
+        }
+      }
+
       broadcast(id, { type: 'connection_removed', connectionId: connId });
+
+      if (positionsUpdated) {
+        const nodePositions = (app.db
+          .prepare('SELECT zone_id, x, y FROM room_node_positions WHERE room_id = ?')
+          .all(id) as { zone_id: string; x: number; y: number }[])
+          .map(p => ({ zoneId: p.zone_id, x: p.x, y: p.y }));
+
+        broadcast(id, { type: 'node_positions_updated', nodePositions });
+      }
+
       return reply.status(204).send();
     },
   );
