@@ -2,9 +2,11 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import ZoneCombobox from '../components/ZoneCombobox.vue';
+import { useRoomStore } from '../stores/useRoomStore';
 
 const router = useRouter();
 const route = useRoute();
+const store = useRoomStore();
 
 // ── Create Room modal ────────────────────────────────────────────────────────
 const showCreate = ref(false);
@@ -13,6 +15,12 @@ const createHomeZoneId = ref('');
 const createFormKey = ref(0);
 const creating = ref(false);
 const createError = ref('');
+
+function openCreateRoom() {
+  store.disconnect();
+  showCreate.value = true;
+  resetCreateForm();
+}
 
 function resetCreateForm() {
   createPassword.value = '';
@@ -23,15 +31,13 @@ function resetCreateForm() {
 
 watch(() => route.query.create, (val) => {
   if (val === 'true') {
-    showCreate.value = true;
-    resetCreateForm();
+    openCreateRoom();
   }
 });
 
 onMounted(() => {
   if (route.query.create === 'true') {
-    showCreate.value = true;
-    resetCreateForm();
+    openCreateRoom();
   }
 });
 
@@ -97,7 +103,7 @@ function joinRoom() {
     <div class="flex gap-4">
       <button
         class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
-        @click="showCreate = true; resetCreateForm()"
+        @click="openCreateRoom()"
       >
         Create Room
       </button>
@@ -113,7 +119,6 @@ function joinRoom() {
     <div
       v-if="showCreate"
       class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-50"
-      @click.self="showCreate = false"
     >
       <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md">
         <h2 class="text-xl font-semibold mb-4">Create Room</h2>
