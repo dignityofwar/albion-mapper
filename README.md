@@ -70,7 +70,7 @@ pnpm --filter client test
 **Test counts (all green):**
 - `shared` — 11 tests (zones adapter)
 - `server` — 27 tests (rooms, connections, expiry, WebSocket)
-- `client` — 31 tests (connectionStyle, radialLayout, roomStore, ZoneCombobox, ReportForm)
+- `client` — 31 tests (connectionStyle, roomStore, ZoneCombobox, ReportForm)
 
 ---
 

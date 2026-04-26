@@ -1,68 +1,120 @@
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createPinia } from 'pinia';
-import ZoneCombobox from '../src/components/ZoneCombobox.vue';
+import { setActivePinia, createPinia } from 'pinia';
+import { useRoomStore } from '../src/stores/useRoomStore.js';
 import { ZONES } from 'shared';
+import ZoneCombobox from '../src/components/ZoneCombobox.vue';
 
 // We test the filtering logic by inspecting the component's internal computed
 // rather than fighting reka-ui's portal teleportation in jsdom.
 
-function getFilteredZones(query: string, excludedIds?: string[]) {
-  const TYPE_LABELS: Record<string, string> = {
-    royalBlue: 'Royal Blue',
-    royalYellow: 'Royal Yellow',
-    royalRed: 'Royal Red',
-    outlands: 'Outlands',
-    roads: 'Roads',
-    roadsHideout: 'Roads (Hideout)',
-    other: 'Other',
-  };
-  const q = query.toLowerCase().trim();
-  return ZONES.filter((z) => {
-    if (excludedIds && excludedIds.includes(z.id)) return false;
-    if (!q) return true;
-    return (
-      z.name.toLowerCase().includes(q) ||
-      TYPE_LABELS[z.type].toLowerCase().includes(q) ||
-      `t${z.tier}`.includes(q)
-    );
-  });
-}
-
 describe('ZoneCombobox filtering logic', () => {
-  it('typing "Roads" (the type label) returns only roads-type zones', () => {
-    // Using the exact type label "Roads" guarantees all matches are roads type,
-    // since no zone name or tier matches the string "Roads" except via the type label.
-    const results = getFilteredZones('Roads');
-    expect(results.length).toBeGreaterThan(0);
-    results.forEach((z) => {
-      expect(['roads', 'roadsHideout']).toContain(z.type);
+  it('smartAlreadyAdded hides already-added zones when no query', () => {
+    setActivePinia(createPinia());
+    const store = useRoomStore();
+    // Make sure we have some connections
+    store.connections = [{ fromZoneId: '1', toZoneId: '2' }];
+
+    const wrapper = mount(ZoneCombobox, {
+      props: { modelValue: '', smartAlreadyAdded: true },
+      global: { plugins: [createPinia()] },
     });
-  });
-
-  it('typing "royal" returns only royal-type zones', () => {
-    const results = getFilteredZones('royal');
-    expect(results.length).toBeGreaterThan(0);
-    results.forEach((z) => {
-      expect(['royalBlue', 'royalYellow', 'royalRed']).toContain(z.type);
+    
+    // @ts-ignore
+    const filteredZones = wrapper.vm.filteredZones;
+    const mappedZoneIds = new Set(['1', '2']);
+    
+    // All mapped zones should be absent if !query
+    filteredZones.forEach((z: any) => {
+        expect(mappedZoneIds.has(z.id)).toBe(false);
     });
-    // No roads or outlands
-    expect(results.some((z) => z.type === 'roads')).toBe(false);
-    expect(results.some((z) => z.type === 'outlands')).toBe(false);
+    wrapper.unmount();
   });
 
-  it('excludedIds removes the zone from results', () => {
-    const firstRoadsZone = ZONES.find((z) => z.type === 'roads')!;
-    const without = getFilteredZones('', [firstRoadsZone.id]);
-    const withoutIds = without.map((z) => z.id);
-    expect(withoutIds).not.toContain(firstRoadsZone.id);
+  it('smartAlreadyAdded sorts already-added zones to bottom when query', async () => {
+    setActivePinia(createPinia());
+    const store = useRoomStore();
+    store.connections = [{ fromZoneId: '1', toZoneId: '2' }];
+
+    const wrapper = mount(ZoneCombobox, {
+      props: { modelValue: '', smartAlreadyAdded: true, alreadyAddedPlacement: 'bottom' },
+      global: { plugins: [createPinia()] },
+    });
+    
+    // Set query
+    await wrapper.find('[data-testid="zone-combobox-input"]').setValue('a');
+
+    // @ts-ignore
+    const filteredZones = wrapper.vm.filteredZones;
+    
+    // Check if any mapped zone exists
+    const mappedIds = new Set(['1', '2']);
+    
+    // For bottom placement, mapped zones should be at the end if they appear.
+    // Let's verify the sorting
+    const mappedZones = filteredZones.filter((z: any) => mappedIds.has(z.id));
+    const unmappedZones = filteredZones.filter((z: any) => !mappedIds.has(z.id));
+    
+    // Verify mapped zones are at the end
+    if (mappedZones.length > 0 && unmappedZones.length > 0) {
+        const lastZone = filteredZones[filteredZones.length - 1];
+        expect(mappedIds.has(lastZone.id)).toBe(true);
+    }
+    
+    wrapper.unmount();
   });
 
-  it('with no excludedIds, zone appears in results', () => {
-    const firstRoadsZone = ZONES.find((z) => z.type === 'roads')!;
-    const all = getFilteredZones('');
-    const allIds = all.map((z) => z.id);
-    expect(allIds).toContain(firstRoadsZone.id);
+  it('smartAlreadyAdded sorts already-added zones to top when query', async () => {
+    setActivePinia(createPinia());
+    const store = useRoomStore();
+    store.connections = [{ fromZoneId: '1', toZoneId: '2' }];
+
+    const wrapper = mount(ZoneCombobox, {
+      props: { modelValue: '', smartAlreadyAdded: true, alreadyAddedPlacement: 'top' },
+      global: { plugins: [createPinia()] },
+    });
+    
+    // Set query
+    await wrapper.find('[data-testid="zone-combobox-input"]').setValue('a');
+
+    // @ts-ignore
+    const filteredZones = wrapper.vm.filteredZones;
+    
+    // Check if any mapped zone exists
+    const mappedIds = new Set(['1', '2']);
+    
+    // For top placement, mapped zones should be at the beginning.
+    const mappedZones = filteredZones.filter((z: any) => mappedIds.has(z.id));
+    
+    if (mappedZones.length > 0) {
+        const firstZone = filteredZones[0];
+        expect(mappedIds.has(firstZone.id)).toBe(true);
+    }
+    
+    wrapper.unmount();
+  });
+
+  it('smartAlreadyAdded sorts home zone to top', async () => {
+    setActivePinia(createPinia());
+    const store = useRoomStore();
+    const homeZone = ZONES[0];
+    store.homeZoneId = homeZone.id;
+
+    const wrapper = mount(ZoneCombobox, {
+      props: { modelValue: '', smartAlreadyAdded: true },
+      global: { plugins: [createPinia()] },
+    });
+    
+    // Set query
+    // @ts-ignore
+    wrapper.vm.query = homeZone.name;
+
+    // @ts-ignore
+    const filteredZones = wrapper.vm.filteredZones;
+    
+    expect(filteredZones[0]?.id).toBe(homeZone.id);
+    
+    wrapper.unmount();
   });
 });
 

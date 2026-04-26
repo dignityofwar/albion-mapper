@@ -42,6 +42,7 @@ export interface NodePosition {
   zoneId: string;
   x: number;
   y: number;
+  virtualGridPos?: { x: number; y: number };
 }
 
 export type ConnectionStatus = 'active' | 'stale' | 'expired';

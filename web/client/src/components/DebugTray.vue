@@ -44,6 +44,17 @@ async function addDemo() {
     await addConnection(store.roomId, store.token, conn.from, conn.to, conn.minutes);
   }
 }
+
+async function exportNodes() {
+  const data = JSON.stringify(debugNodes.value, null, 2);
+  try {
+    await navigator.clipboard.writeText(data);
+    alert('Nodes exported to clipboard!');
+  } catch (err) {
+    console.error('Failed to copy!', err);
+    alert('Failed to copy to clipboard.');
+  }
+}
 </script>
 
 <template>
@@ -58,6 +69,7 @@ async function addDemo() {
           <div class="flex items-center gap-4">
             <h2 class="text-base font-semibold">🐛 Debug Tray</h2>
             <button @click="addDemo" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs">Add Demo</button>
+            <button @click="exportNodes" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs">Export</button>
           </div>
           <button class="text-gray-400 hover:text-white text-xl leading-none" @click="emit('close')">&times;</button>
         </div>

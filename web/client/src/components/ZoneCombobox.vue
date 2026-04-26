@@ -16,12 +16,19 @@ import TagTier from './common/TagTier.vue';
 import TagZone from './common/TagZone.vue';
 import { TYPE_LABELS } from '../utils/zoneStyles';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: string;
   placeholder?: string;
   excludedIds?: string[];
+  showAlreadyAdded?: boolean;
+  smartAlreadyAdded?: boolean;
+  alreadyAddedPlacement?: 'top' | 'bottom';
   error?: boolean;
-}>();
+}>(), {
+  showAlreadyAdded: true,
+  smartAlreadyAdded: false,
+  alreadyAddedPlacement: 'bottom'
+});
 
 const emit = defineEmits<{
   'update:modelValue': [value: string];
@@ -46,7 +53,7 @@ function zoneTypeLabel(zone: Zone): string {
   return TYPE_LABELS[zone.type];
 }
 
-/** Zone IDs that appear in any current connection */
+// Zone IDs that appear in any current connection
 const mappedZoneIds = computed<Set<string>>(() => {
   const ids = new Set<string>();
   for (const c of store.connections) {
@@ -58,22 +65,42 @@ const mappedZoneIds = computed<Set<string>>(() => {
 
 const filteredZones = computed<Zone[]>(() => {
   const q = query.value.toLowerCase().trim();
-  if (!q) {
-    // No query: show zones already present in current connections + always include the home zone
-    return ZONES.filter((z) => {
-      if (props.excludedIds && props.excludedIds.includes(z.id)) return false;
-      return mappedZoneIds.value.has(z.id) || z.id === store.homeZoneId;
-    });
-  }
-  return ZONES.filter((z) => {
+  let zones = ZONES.filter((z) => {
     if (props.excludedIds && props.excludedIds.includes(z.id)) return false;
+    if (props.showAlreadyAdded === false && mappedZoneIds.value.has(z.id)) return false;
+    if (props.smartAlreadyAdded && !q && mappedZoneIds.value.has(z.id)) return false;
+    
+    if (!q) {
+      return mappedZoneIds.value.has(z.id) || z.id === store.homeZoneId;
+    }
+
     return (
       z.name.toLowerCase().includes(q) ||
       zoneTypeLabel(z).toLowerCase().includes(q) ||
       TYPE_LABELS[z.type].toLowerCase().includes(q) ||
       `t${z.tier}`.includes(q)
     );
-  }).slice(0, 100);
+  });
+
+  if (props.smartAlreadyAdded) {
+    zones.sort((a, b) => {
+      const aHome = a.id === store.homeZoneId;
+      const bHome = b.id === store.homeZoneId;
+      if (aHome && !bHome) return -1;
+      if (!aHome && bHome) return 1;
+
+      if (q) {
+        const aMapped = mappedZoneIds.value.has(a.id);
+        const bMapped = mappedZoneIds.value.has(b.id);
+        if (aMapped === bMapped) return 0;
+        const direction = props.alreadyAddedPlacement === 'top' ? -1 : 1;
+        return aMapped ? direction : -direction;
+      }
+      return 0;
+    });
+  }
+
+  return zones.slice(0, 100);
 });
 
 /** Convert a stored zone ID back to the friendly display name for the input */
@@ -163,6 +190,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
             class="flex items-center gap-2 px-3 py-2 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
           >
             <span class="truncate flex-1">{{ zone.name }}</span>
+            <span v-if="mappedZoneIds.has(zone.id)" class="shrink-0 text-green-400">✓</span>
             <span v-if="zone.id === store.homeZoneId" class="shrink-0 text-yellow-400" title="Room home zone">🏠</span>
             <TagTier :tier="zone.tier" :type="zone.type" />
             <TagZone :type="zone.type" />

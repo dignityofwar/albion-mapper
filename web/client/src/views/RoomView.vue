@@ -15,7 +15,6 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
 import { setHomeZone, deleteConnection, updateConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
-import { gridLayout } from '../utils/gridLayout.js';
 import { ZONE_BY_ID, type Connection, type NodePosition } from 'shared';
 
 const props = defineProps<{ id: string }>();
@@ -105,6 +104,7 @@ provide('openPopoverId', openPopoverId);
 
 const flowNodes = ref<Node[]>([]);
 const flowEdges = ref<Edge[]>([]);
+const isSkippingAutoLayout = ref(false);
 
 function getEdgeParams(conn: Connection, currentTime: number) {
   const expiresAt = new Date(conn.expiresAt).getTime();
@@ -134,52 +134,98 @@ function computeHandles(sourceNode: any, targetNode: any) {
   }
 }
 
-watch([homeZoneId, nodePositions, connections], () => {
+watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     if (!homeZoneId.value) return;
 
-    // 1. Compute positions
-    const layoutPositions = gridLayout(homeZoneId.value, connections.value);
-    
-    // Merge manual positions
-    const positionsMap = new Map(layoutPositions.map(p => [p.id, p]));
-    
-    nodePositions.value.forEach(p => {
-        positionsMap.set(p.zoneId, { id: p.zoneId, x: p.x, y: p.y });
-    });
-    
-    // Ensure all connected nodes exist (if not in layout, add with (0,0))
-    connections.value.forEach(conn => {
-        if (!positionsMap.has(conn.fromZoneId)) {
-            positionsMap.set(conn.fromZoneId, { id: conn.fromZoneId, x: 0, y: 0 });
-        }
-        if (!positionsMap.has(conn.toZoneId)) {
-            positionsMap.set(conn.toZoneId, { id: conn.toZoneId, x: 0, y: 0 });
-        }
-    });
-    
-    const positions = [...positionsMap.values()];
+    const newConnections = connections.value;
+    const oldConnections = oldVal ? oldVal[2] as Connection[] : [];
+    const existingNodeIds = new Set(nodePositions.value.map(np => np.zoneId));
 
-    // If new nodes were added, update the store.
-    const hasNewPositions = positions.some(p => !nodePositions.value.find(np => np.zoneId === p.id));
-    if (hasNewPositions) {
-        const updatedPositions = positions.map(p => ({ zoneId: p.id, x: p.x, y: p.y }));
-        store.updateNodePositionsInStore(updatedPositions);
+    // Find new connections
+    const addedConnections = newConnections.filter(c => !oldConnections.find(oc => oc.id === c.id));
+        
+    // 1. Compute positions
+    let positions: NodePosition[] = [...nodePositions.value];
+    let hasNewNodes = false;
+
+    for (const conn of addedConnections) {
+        let newNodeId = null;
+        let parentNodeId = null;
+
+        // Find anchor node (prefer source)
+        if (existingNodeIds.has(conn.fromZoneId)) {
+            if (!existingNodeIds.has(conn.toZoneId)) {
+                newNodeId = conn.toZoneId;
+                parentNodeId = conn.fromZoneId; // Anchor to Source
+            }
+        } else if (existingNodeIds.has(conn.toZoneId)) {
+            // Source is not in graph! This is the problematic case.
+            // But let's see if we can do something else.
+            newNodeId = conn.fromZoneId;
+            parentNodeId = conn.toZoneId; // Anchor to Target (as fallback)
+        }
+
+        if (newNodeId && parentNodeId) {
+            const parentPos = positions.find(np => np.zoneId === parentNodeId);
+            if (parentPos) {
+                const homePos = positions.find(np => np.zoneId === homeZoneId.value);
+                console.log('DEBUG: positions:', positions, 'homeZoneId:', homeZoneId.value);
+                const direction = parentPos.x >= (homePos?.x ?? 0) ? 250 : -250;
+                let newX = parentPos.x + direction;
+                let newY = parentPos.y;
+                    
+                // Collision check against ALL updated positions
+                while (positions.some(p => p.x === newX && p.y === newY)) {
+                    newY += 150;
+                }
+                    
+                positions.push({ zoneId: newNodeId, x: newX, y: newY, virtualGridPos: { x: newX, y: newY } });
+                existingNodeIds.add(newNodeId);
+                hasNewNodes = true;
+            }
+        }
+    }
+
+    if (hasNewNodes) {
+        isSkippingAutoLayout.value = true;
+        store.updateNodePositionsInStore(positions);
+    } else if (isSkippingAutoLayout.value) {
+        isSkippingAutoLayout.value = false;
+    } else {
+        // No auto-layout
+        // Ensure all connected nodes exist (if not in nodePositions, add with (0,0))
+        connections.value.forEach(conn => {
+            if (!positions.some(p => p.zoneId === conn.fromZoneId)) {
+                positions.push({ zoneId: conn.fromZoneId, x: 0, y: 0 });
+            }
+            if (!positions.some(p => p.zoneId === conn.toZoneId)) {
+                positions.push({ zoneId: conn.toZoneId, x: 0, y: 0 });
+            }
+        });
+
+        // If new nodes were added, update the store.
+        const hasNewPositions = positions.some(p => !nodePositions.value.find(np => np.zoneId === p.zoneId));
+        if (hasNewPositions) {
+            const updatedPositions = positions.map(p => ({ zoneId: p.zoneId, x: p.x, y: p.y }));
+            store.updateNodePositionsInStore(updatedPositions);
+        }
     }
     
     // 2. Map to VueFlow nodes
-    const newNodes = positions.map((pos: { id: string, x: number, y: number }) => {
-      const zone = ZONE_BY_ID.get(pos.id);
-      const isDraggable = positions.length > 1 && pos.id !== homeZoneId.value;
+    const newNodes = positions.map((pos: NodePosition) => {
+      const zone = ZONE_BY_ID.get(pos.zoneId);
+      const isDraggable = positions.length > 1 && pos.zoneId !== homeZoneId.value;
       return {
-        id: pos.id,
+        id: pos.zoneId,
         type: 'zone',
         position: { x: pos.x, y: pos.y },
         draggable: isDraggable,
         data: {
-          isHome: pos.id === homeZoneId.value,
+          isHome: pos.zoneId === homeZoneId.value,
           tier: zone?.tier ?? 0,
-          zoneName: zone?.name ?? pos.id,
+          zoneName: zone?.name ?? pos.zoneId,
           type: zone?.type ?? 'other',
+          virtualGridPos: pos.virtualGridPos,
         },
       };
     });
@@ -256,16 +302,11 @@ function onNodeDragStop() {
 
 function handleSuccess(msg: string) {
   showToast(msg);
-  resetLayout();
 }
 
 function handleSetHomeZone(zoneId: string) {
   if (zoneId === store.homeZoneId) return;
   setHomeZone(props.id, store.token!, zoneId);
-}
-
-function resetLayout() {
-  store.resetNodePositions();
 }
 
 defineExpose({ flowNodes, onNodeDragStop });
@@ -317,11 +358,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     >🐛</button>
 
     <!-- Refresh layout button -->
-    <button
-      class="fixed bottom-20 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-lg shadow-lg"
-      title="Refresh layout"
-      @click="resetLayout"
-    >📐</button>
+    <!-- Removed as per user request -->
 
     <!-- Fit view button -->
     <button
