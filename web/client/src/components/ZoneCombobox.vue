@@ -45,6 +45,12 @@ const highlightedId = ref<string | null>(null);
 defineExpose({
   focus: () => {
     comboboxInput.value?.$el?.focus();
+  },
+  flash: () => {
+    comboboxInput.value?.$el?.classList.add('flash-animation');
+    setTimeout(() => {
+      comboboxInput.value?.$el?.classList.remove('flash-animation');
+    }, 1000);
   }
 });
 

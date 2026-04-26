@@ -105,6 +105,8 @@ provide('openPopoverId', openPopoverId);
 const flowNodes = ref<Node[]>([]);
 const flowEdges = ref<Edge[]>([]);
 const isSkippingAutoLayout = ref(false);
+let wasConnected = false;
+let draggingFromNodeId: string | null = null;
 
 function getEdgeParams(conn: Connection, currentTime: number) {
   const expiresAt = new Date(conn.expiresAt).getTime();
@@ -301,8 +303,36 @@ function onNodeDragStop() {
   store.updateNodePositionsInStore(positions);
 }
 
+const reportForm = ref<InstanceType<typeof ReportForm> | null>(null);
+
 function handleSuccess(msg: string) {
   showToast(msg);
+}
+
+function handleConnect() {
+  wasConnected = true;
+}
+
+function handleConnectStart(event: any, params: any) {
+  draggingFromNodeId = event.nodeId ?? params?.nodeId ?? null;
+}
+
+function handleConnectEnd(event: any, connectionState: any) {
+  if (wasConnected) {
+    wasConnected = false;
+    draggingFromNodeId = null;
+    return;
+  }
+  
+  const fromNodeId = connectionState?.fromNode?.id ?? draggingFromNodeId;
+  
+  if (fromNodeId) {
+     reportForm.value?.setFromZoneId(fromNodeId);
+     reportForm.value?.focusToCombobox();
+     reportForm.value?.flashToCombobox();
+  }
+  
+  draggingFromNodeId = null;
 }
 
 function handleSetHomeZone(zoneId: string) {
@@ -317,7 +347,7 @@ defineExpose({ flowNodes, onNodeDragStop });
   <div class="h-screen flex flex-col bg-gray-950 text-white">
     <!-- Sticky report panel -->
     <div class="shrink-0">
-      <ReportForm @success="handleSuccess" @error="showToast" />
+      <ReportForm ref="reportForm" @success="handleSuccess" @error="showToast" />
     </div>
 
     <!-- WS status bar (always visible) -->
@@ -345,6 +375,9 @@ defineExpose({ flowNodes, onNodeDragStop });
         class="bg-gray-950"
         @node-click="(e) => handleSetHomeZone(e.node.id)"
         @node-drag-stop="onNodeDragStop"
+        @connect="handleConnect"
+        @connect-start="handleConnectStart"
+        @connect-end="handleConnectEnd"
       >
         <Background />
         <Controls />

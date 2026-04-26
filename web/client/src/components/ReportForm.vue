@@ -94,11 +94,15 @@ function focusToCombobox() {
   toComboboxInputEl.value?.focus();
 }
 
+function flashToCombobox() {
+  toComboboxInputEl.value?.flash();
+}
+
 function focusTimeInput() {
   timeInputEl.value?.focus();
 }
 
-defineExpose({ minutesRemaining, fromZoneId });
+defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => fromZoneId.value = id, focusToCombobox, flashToCombobox });
 </script>
 
 <template>
