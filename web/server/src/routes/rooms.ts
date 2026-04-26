@@ -95,7 +95,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'homeZoneId is not a valid roads home' });
     }
 
-    const result = app.db.prepare('UPDATE rooms SET home_zone_id = ? WHERE id = ?').run(homeZoneId, id);
+    const result = app.db.prepare('UPDATE rooms SET home_zone_id = ?, updated_at = ? WHERE id = ?').run(homeZoneId, new Date().toISOString(), id);
     if (result.changes === 0) {
       return reply.status(404).send({ error: 'Room not found' });
     }
@@ -144,6 +144,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     
     const room = app.db.prepare('SELECT home_zone_id FROM rooms WHERE id = ?').get(id) as { home_zone_id: string };
     app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ? AND zone_id != ?').run(id, room.home_zone_id);
+    app.db.prepare('UPDATE rooms SET updated_at = ? WHERE id = ?').run(new Date().toISOString(), id);
 
     broadcast(id, { type: 'room_reset' });
 

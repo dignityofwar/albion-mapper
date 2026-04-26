@@ -36,7 +36,9 @@ describe('RoomView', () => {
     store.applyMessage({ 
         type: 'sync', 
         connections: [], 
-        homeZoneId: 'zone-a' 
+        homeZoneId: 'zone-a',
+        nodePositions: [],
+        lastUpdatedAt: new Date().toISOString()
     });
 
     const wrapper = mount(RoomView, {
@@ -89,7 +91,8 @@ describe('RoomView', () => {
         nodePositions: [
             { zoneId: 'zone-a', x: 0, y: 0 },
             { zoneId: 'zone-b', x: 100, y: 100 }
-        ]
+        ],
+        lastUpdatedAt: new Date().toISOString()
     });
 
     const wrapper = mount(RoomView, {
@@ -148,6 +151,96 @@ describe('RoomView', () => {
 
     expect(homeNode.draggable).toBe(false);
     expect(otherNode.draggable).toBe(true);
+    
+    wrapper.unmount();
+  });
+
+  it('does not flash on initial load', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    const store = useRoomStore();
+
+    // Trigger initial sync
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [], 
+        homeZoneId: 'zone-a',
+        nodePositions: [],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    // Wait for the watcher to potentially run
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    expect(vm.lastUpdateFlash).toBe(false);
+    
+    wrapper.unmount();
+  });
+
+  it('flashes on subsequent updates', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    const store = useRoomStore();
+
+    // 1. Initial sync
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [], 
+        homeZoneId: 'zone-a',
+        nodePositions: [],
+        lastUpdatedAt: new Date().toISOString()
+    });
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(vm.lastUpdateFlash).toBe(false);
+
+    // 2. Subsequent update (should skip because it is the 2nd update)
+    store.applyMessage({ 
+      type: 'connection_added', 
+      connection: {
+        id: 'c1',
+        roomId: 'room1',
+        fromZoneId: 'zone-a',
+        toZoneId: 'zone-b',
+        expiresAt: new Date().toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    });
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(vm.lastUpdateFlash).toBe(false);
+
+    // 3. Third update (should flash)
+    store.applyMessage({ 
+      type: 'connection_added', 
+      connection: {
+        id: 'c2',
+        roomId: 'room1',
+        fromZoneId: 'zone-a',
+        toZoneId: 'zone-c',
+        expiresAt: new Date().toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    });
+
+    // Wait for the watcher to run
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    expect(vm.lastUpdateFlash).toBe(true);
     
     wrapper.unmount();
   });

@@ -18,6 +18,7 @@ interface DbRoom {
   password_hash: string;
   home_zone_id: string;
   created_at: string;
+  updated_at: string | null;
 }
 
 export async function wsRoutes(app: FastifyInstance): Promise<void> {
@@ -94,6 +95,10 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               }))
               .filter((c) => getConnectionStatus(c, now) !== 'expired');
 
+            const lastUpdatedAt = rows.reduce((max, row) => {
+              return row.reported_at > max ? row.reported_at : max;
+            }, room.updated_at || room.created_at);
+
             const nodePosRows = app.db
               .prepare('SELECT zone_id, x, y FROM room_node_positions WHERE room_id = ?')
               .all(roomId) as { zone_id: string; x: number; y: number }[];
@@ -103,7 +108,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               y: row.y,
             }));
 
-            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, nodePositions });
+            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, nodePositions, lastUpdatedAt });
           } catch {
             socket.close(4401, 'Invalid token');
           }
@@ -132,6 +137,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               }
               insert.run(roomId, pos.zoneId, x, y);
             }
+            app.db.prepare('UPDATE rooms SET updated_at = ? WHERE id = ?').run(new Date().toISOString(), roomId);
           });
           transaction(msg.nodePositions);
           broadcast(roomId, { type: 'node_positions_updated', nodePositions: msg.nodePositions }, socket);

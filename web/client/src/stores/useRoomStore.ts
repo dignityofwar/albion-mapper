@@ -23,22 +23,24 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   function applyMessage(msg: ServerMessage) {
-    lastUpdate.value = new Date();
     switch (msg.type) {
       case 'sync':
         connections.value = msg.connections;
         homeZoneId.value = msg.homeZoneId;
         nodePositions.value = msg.nodePositions;
+        lastUpdate.value = new Date(msg.lastUpdatedAt);
         break;
 
       case 'connection_added':
         if (!connections.value.find((c) => c.id === msg.connection.id)) {
           connections.value.push(msg.connection);
         }
+        lastUpdate.value = new Date(msg.connection.reportedAt);
         break;
 
       case 'connection_removed':
         connections.value = connections.value.filter((c) => c.id !== msg.connectionId);
+        lastUpdate.value = new Date();
         break;
 
       case 'connection_expired':
@@ -48,19 +50,23 @@ export const useRoomStore = defineStore('room', () => {
             conn.isExpired = true;
           }
         }
+        lastUpdate.value = new Date();
         break;
 
       case 'room_updated':
         homeZoneId.value = msg.homeZoneId;
+        lastUpdate.value = new Date();
         break;
       
       case 'room_reset':
         connections.value = [];
         nodePositions.value = nodePositions.value.filter(n => n.zoneId === homeZoneId.value);
+        lastUpdate.value = new Date();
         break;
       
       case 'node_positions_updated':
         nodePositions.value = msg.nodePositions;
+        lastUpdate.value = new Date();
         break;
     }
   }
@@ -124,6 +130,7 @@ export const useRoomStore = defineStore('room', () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: positions }));
       nodePositions.value = positions; // Optimistic update
+      lastUpdate.value = new Date();
     }
   }
 

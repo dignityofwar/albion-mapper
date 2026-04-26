@@ -63,6 +63,7 @@ export interface Room {
   passwordHash: string;
   homeZoneId: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 // ── Zod schemas ──────────────────────────────────────────────────────────────
@@ -101,6 +102,7 @@ export const RoomSchema = z.object({
   passwordHash: z.string(),
   homeZoneId: z.string(),
   createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime().optional(),
 });
 
 // ── API request schemas ───────────────────────────────────────────────────────
@@ -132,7 +134,7 @@ export const ChangePasswordBodySchema = z.object({
 
 export type ServerMessage =
   | { type: 'auth_ok' }
-  | { type: 'sync'; connections: Connection[]; homeZoneId: string; nodePositions: NodePosition[] }
+  | { type: 'sync'; connections: Connection[]; homeZoneId: string; nodePositions: NodePosition[]; lastUpdatedAt: string }
   | { type: 'connection_added'; connection: Connection }
   | { type: 'connection_removed'; connectionId: string }
   | { type: 'connection_expired'; connectionId: string }

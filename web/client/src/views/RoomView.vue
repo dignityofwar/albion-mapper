@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, watchEffect, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect, nextTick, markRaw } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
@@ -17,29 +17,34 @@ import { formatTime, formatExpiresIn } from '../utils/formatters.js';
 import { setHomeZone, deleteConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
 import { radialLayout } from '../utils/radialLayout.js';
-import { ZONE_BY_ID, type Connection } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
-const { connections, homeZoneId, nodePositions } = storeToRefs(store);
+const { connections, homeZoneId, nodePositions, lastUpdate } = storeToRefs(store);
 const router = useRouter();
 
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
 const lastUpdateFlash = ref(false);
 let flashTimeout: ReturnType<typeof setTimeout> | null = null;
+const initialUpdateCount = ref(0);
 
 // Flash animation whenever lastUpdate changes
 watch(
-  () => store.lastUpdate,
-  () => {
+  () => lastUpdate.value?.getTime(),
+  async () => {
+    if (initialUpdateCount.value < 2) {
+      initialUpdateCount.value++;
+      return;
+    }
     lastUpdateFlash.value = false;
     if (flashTimeout) clearTimeout(flashTimeout);
-    // micro-tick to reset then re-enable
-    requestAnimationFrame(() => {
+    await nextTick();
+    flashTimeout = setTimeout(() => {
       lastUpdateFlash.value = true;
       flashTimeout = setTimeout(() => (lastUpdateFlash.value = false), 2000);
-    });
+    }, 50);
   },
 );
 
@@ -130,11 +135,11 @@ watch([homeZoneId, nodePositions, connections], () => {
 
     // 1. Compute positions
     const positions = (nodePositions.value ?? []).length > 0
-      ? nodePositions.value.map((p) => ({ id: p.zoneId, x: p.x, y: p.y }))
+      ? nodePositions.value.map((p: NodePosition) => ({ id: p.zoneId, x: p.x, y: p.y }))
       : radialLayout(homeZoneId.value, connections.value);
     
     // 2. Map to VueFlow nodes
-    const newNodes = positions.map((pos) => {
+    const newNodes = positions.map((pos: { id: string, x: number, y: number }) => {
       const zone = ZONE_BY_ID.get(pos.id);
       const isDraggable = positions.length > 1 && pos.id !== homeZoneId.value;
       return {
@@ -165,7 +170,7 @@ watch([homeZoneId, nodePositions, connections], () => {
     flowNodes.value = flowNodes.value.filter(n => newNodes.find(nn => nn.id === n.id));
 
     // 3. Map to VueFlow edges
-    flowEdges.value = connections.value.map((conn) => {
+    flowEdges.value = connections.value.map((conn: Connection) => {
       const sourceNode = flowNodes.value.find((n) => n.id === conn.fromZoneId);
       const targetNode = flowNodes.value.find((n) => n.id === conn.toZoneId);
 
@@ -220,7 +225,7 @@ const showDebug = ref(false);
 
 // ── Actions ──────────────────────────────────────────────────────────────────
 function onNodeDragStop() {
-  const positions = flowNodes.value.map((n) => ({
+  const positions = flowNodes.value.map((n: Node) => ({
     zoneId: n.id,
     x: n.position.x,
     y: n.position.y,
@@ -261,8 +266,8 @@ defineExpose({ flowNodes, onNodeDragStop });
       <VueFlow
         v-model:nodes="flowNodes"
         v-model:edges="flowEdges"
-        :node-types="{ zone: ZoneNode }"
-        :edge-types="{ connection: ConnectionEdge }"
+        :node-types="{ zone: markRaw(ZoneNode) }"
+        :edge-types="{ connection: markRaw(ConnectionEdge) }"
         :fit-view-on-init="true"
         :connection-mode="ConnectionMode.Loose"
         class="bg-gray-950"
