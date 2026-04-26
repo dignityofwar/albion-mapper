@@ -258,7 +258,7 @@ defineExpose({ flowNodes, onNodeDragStop });
   <div class="h-screen flex flex-col bg-gray-950 text-white">
     <!-- Sticky report panel -->
     <div class="shrink-0">
-      <ReportForm @success="showToast" />
+      <ReportForm @success="showToast" @error="showToast" />
     </div>
 
     <!-- WS status bar (always visible) -->

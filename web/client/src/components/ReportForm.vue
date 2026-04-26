@@ -25,7 +25,6 @@ watch([fromZoneId, toZoneId], () => {
 });
 const reportedBy = ref('');
 const submitting = ref(false);
-const error = ref('');
 
 function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;
@@ -33,6 +32,7 @@ function getZoneName(id: string) {
 
 const emit = defineEmits<{
   success: [message: string];
+  error: [message: string];
 }>();
 
 // ...
@@ -44,7 +44,6 @@ const canSubmit = computed(
 async function submit() {
   if (!canSubmit.value) return;
   submitting.value = true;
-  error.value = '';
 
   try {
     const res = await fetch(`/api/rooms/${store.roomId}/connections`, {
@@ -63,7 +62,7 @@ async function submit() {
 
     if (!res.ok) {
       const body = await res.json() as { error?: string };
-      error.value = body.error ?? 'Failed to submit';
+      emit('error', body.error ?? 'Failed to submit');
       return;
     }
 
@@ -169,6 +168,5 @@ defineExpose({ minutesRemaining, fromZoneId });
     </button>
 
     <!-- Error -->
-    <span v-if="error" class="text-red-400 text-xs">{{ error }}</span>
   </form>
 </template>

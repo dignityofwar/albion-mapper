@@ -35,7 +35,7 @@ describe('ReportForm', () => {
 
   it('H:MM format "1:30" is parsed as 90 minutes', async () => {
     const wrapper = mountForm();
-    const input = wrapper.find('[data-testid="time-input"]');
+    const input = wrapper.findComponent('[data-testid="time-input"]');
     await input.setValue('1:30');
     const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
     expect(vm.minutesRemaining).toBe(90);
@@ -44,7 +44,7 @@ describe('ReportForm', () => {
 
   it('H:MM format "2:45" is parsed as 165 minutes', async () => {
     const wrapper = mountForm();
-    const input = wrapper.find('[data-testid="time-input"]');
+    const input = wrapper.findComponent('[data-testid="time-input"]');
     await input.setValue('2:45');
     const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
     expect(vm.minutesRemaining).toBe(165);
@@ -53,7 +53,7 @@ describe('ReportForm', () => {
 
   it('plain minutes "90" parses to 90', async () => {
     const wrapper = mountForm();
-    const input = wrapper.find('[data-testid="time-input"]');
+    const input = wrapper.findComponent('[data-testid="time-input"]');
     await input.setValue('90');
     const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
     expect(vm.minutesRemaining).toBe(90);
@@ -62,7 +62,7 @@ describe('ReportForm', () => {
 
   it('"0:00" and empty string parse to null (invalid)', async () => {
     const wrapper = mountForm();
-    const input = wrapper.find('[data-testid="time-input"]');
+    const input = wrapper.findComponent('[data-testid="time-input"]');
     const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
 
     await input.setValue('0:00');
@@ -75,7 +75,7 @@ describe('ReportForm', () => {
 
   it('"6:00" parses to 360, "6:01" parses to null (exceeds max)', async () => {
     const wrapper = mountForm();
-    const input = wrapper.find('[data-testid="time-input"]');
+    const input = wrapper.findComponent('[data-testid="time-input"]');
     const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
 
     await input.setValue('6:00');
@@ -88,7 +88,7 @@ describe('ReportForm', () => {
 
   it('invalid seconds ":75" and letters parse to null', async () => {
     const wrapper = mountForm();
-    const input = wrapper.find('[data-testid="time-input"]');
+    const input = wrapper.findComponent('[data-testid="time-input"]');
     const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
 
     await input.setValue('1:75');
