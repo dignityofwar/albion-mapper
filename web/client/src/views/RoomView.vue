@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
-import { useRoomStore } from '../stores/useRoomStore.js';
+import { useRoomStore } from '@/stores/useRoomStore';
 import ReportForm from '../components/ReportForm.vue';
 import DebugTray from '../components/DebugTray.vue';
 import RoomSettings from '../components/RoomSettings.vue';
@@ -99,12 +99,14 @@ function computeHandles(sourceNode: any, targetNode: any) {
 }
 
 watch(
-  [() => store.connections, () => store.homeZoneId],
+  [() => store.connections, () => store.homeZoneId, () => store.nodePositions],
   () => {
     if (!store.homeZoneId) return;
 
     // 1. Compute positions
-    const positions = radialLayout(store.homeZoneId, store.connections);
+    const positions = (store.nodePositions ?? []).length > 0
+      ? store.nodePositions.map((p) => ({ id: p.zoneId, x: p.x, y: p.y }))
+      : radialLayout(store.homeZoneId, store.connections);
     
     // 2. Map to VueFlow nodes
     flowNodes.value = positions.map((pos) => {
@@ -185,6 +187,15 @@ watch(
 const showDebug = ref(false);
 
 // ── Actions ──────────────────────────────────────────────────────────────────
+function onNodeDragStop() {
+  const positions = flowNodes.value.map((n) => ({
+    zoneId: n.id,
+    x: n.position.x,
+    y: n.position.y,
+  }));
+  store.updateNodePositionsInStore(positions);
+}
+
 function handleSetHomeZone(zoneId: string) {
   if (zoneId === store.homeZoneId) return;
   setHomeZone(props.id, store.token!, zoneId);
@@ -223,6 +234,7 @@ function handleSetHomeZone(zoneId: string) {
         :connection-mode="ConnectionMode.Loose"
         class="bg-gray-950"
         @node-click="(e) => handleSetHomeZone(e.node.id)"
+        @node-drag-stop="onNodeDragStop"
       >
         <Background />
         <Controls />

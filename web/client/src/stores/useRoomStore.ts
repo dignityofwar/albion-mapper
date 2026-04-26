@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Connection, ServerMessage } from 'shared';
+import type { Connection, ServerMessage, NodePosition } from 'shared';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected';
 
 export const useRoomStore = defineStore('room', () => {
   const connections = ref<Connection[]>([]);
   const homeZoneId = ref<string>('');
+  const nodePositions = ref<NodePosition[]>([]);
   const wsStatus = ref<WsStatus>('disconnected');
   const lastUpdate = ref<Date | null>(null);
   const token = ref<string>('');
@@ -27,6 +28,7 @@ export const useRoomStore = defineStore('room', () => {
       case 'sync':
         connections.value = msg.connections;
         homeZoneId.value = msg.homeZoneId;
+        nodePositions.value = msg.nodePositions;
         break;
 
       case 'connection_added':
@@ -41,6 +43,10 @@ export const useRoomStore = defineStore('room', () => {
 
       case 'room_updated':
         homeZoneId.value = msg.homeZoneId;
+        break;
+      
+      case 'node_positions_updated':
+        nodePositions.value = msg.nodePositions;
         break;
     }
   }
@@ -99,15 +105,24 @@ export const useRoomStore = defineStore('room', () => {
     homeZoneId.value = '';
   }
 
+  function updateNodePositionsInStore(positions: NodePosition[]) {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: positions }));
+      nodePositions.value = positions; // Optimistic update
+    }
+  }
+
   return {
     connections,
     homeZoneId,
+    nodePositions,
     wsStatus,
     lastUpdate,
     token,
     roomId,
     setCredentials,
     applyMessage,
+    updateNodePositionsInStore,
     connect,
     disconnect,
   };

@@ -35,7 +35,16 @@ export function getDb(dbPath?: string): Database.Database {
       reported_by TEXT
     );
 
+    CREATE TABLE IF NOT EXISTS room_node_positions (
+      room_id TEXT NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
+      zone_id TEXT NOT NULL,
+      x REAL NOT NULL,
+      y REAL NOT NULL,
+      PRIMARY KEY (room_id, zone_id)
+    );
+
     CREATE INDEX IF NOT EXISTS idx_conn_room ON connections(room_id);
+    CREATE INDEX IF NOT EXISTS idx_node_positions_room ON room_node_positions(room_id);
   `);
 
   return dbInstance;
@@ -71,7 +80,16 @@ export function createInMemoryDb(): Database.Database {
       reported_by TEXT
     );
 
+    CREATE TABLE IF NOT EXISTS room_node_positions (
+      room_id TEXT NOT NULL REFERENCES rooms(id) ON DELETE CASCADE,
+      zone_id TEXT NOT NULL,
+      x REAL NOT NULL,
+      y REAL NOT NULL,
+      PRIMARY KEY (room_id, zone_id)
+    );
+
     CREATE INDEX IF NOT EXISTS idx_conn_room ON connections(room_id);
+    CREATE INDEX IF NOT EXISTS idx_node_positions_room ON room_node_positions(room_id);
   `);
 
   return db;

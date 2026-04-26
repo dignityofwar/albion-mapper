@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { getConnectionStatus } from 'shared';
-import type { Connection, ClientMessage, ServerMessage } from 'shared';
+import type { Connection, ClientMessage, ServerMessage, NodePosition } from 'shared';
 import { addSocket, removeSocket, broadcast } from './broadcast.js';
 
 interface DbConnection {
@@ -94,10 +94,32 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               }))
               .filter((c) => getConnectionStatus(c, now) !== 'expired');
 
-            send({ type: 'sync', connections, homeZoneId: room.home_zone_id });
+            const nodePosRows = app.db
+              .prepare('SELECT zone_id, x, y FROM room_node_positions WHERE room_id = ?')
+              .all(roomId) as { zone_id: string; x: number; y: number }[];
+            const nodePositions: NodePosition[] = nodePosRows.map((row) => ({
+              zoneId: row.zone_id,
+              x: row.x,
+              y: row.y,
+            }));
+
+            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, nodePositions });
           } catch {
             socket.close(4401, 'Invalid token');
           }
+          return;
+        }
+
+        if (msg.type === 'update_node_positions') {
+          const insert = app.db.prepare('INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES (?, ?, ?, ?)');
+          const transaction = app.db.transaction((positions: NodePosition[]) => {
+            app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ?').run(roomId);
+            for (const pos of positions) {
+              insert.run(roomId, pos.zoneId, pos.x, pos.y);
+            }
+          });
+          transaction(msg.nodePositions);
+          broadcast(roomId, { type: 'node_positions_updated', nodePositions: msg.nodePositions }, socket);
           return;
         }
 
