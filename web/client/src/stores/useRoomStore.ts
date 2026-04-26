@@ -123,6 +123,7 @@ export const useRoomStore = defineStore('room', () => {
     wsStatus.value = 'disconnected';
     connections.value = [];
     homeZoneId.value = '';
+    nodePositions.value = [];
   }
 
   function updateNodePositionsInStore(positions: NodePosition[]) {

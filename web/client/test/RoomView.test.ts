@@ -2,13 +2,14 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import RoomView from '../src/views/RoomView.vue';
-import { useRoomStore } from '../src/stores/useRoomStore.js';
+import { useRoomStore } from '../src/stores/useRoomStore';
 import { nextTick } from 'vue';
 
 // Mock VueFlow and router to avoid complex setup
 vi.mock('@vue-flow/core', () => ({
   useVueFlow: () => ({
     fitView: vi.fn(),
+    updateNode: vi.fn(),
   }),
   VueFlow: { template: '<div></div>' },
   ConnectionMode: { Loose: 'loose' },
@@ -68,6 +69,9 @@ describe('RoomView', () => {
     // Wait for the watcher to run
     await nextTick();
     await nextTick(); // watchers might need a couple ticks
+    
+    console.log('connections:', store.connections);
+    console.log('flowEdges:', vm.flowEdges);
 
     expect(vm.flowEdges).toHaveLength(1);
     expect(vm.flowEdges[0].id).toBe('c1');
@@ -241,6 +245,109 @@ describe('RoomView', () => {
     await new Promise(resolve => setTimeout(resolve, 100));
     
     expect(vm.lastUpdateFlash).toBe(true);
+    
+    wrapper.unmount();
+  });
+
+  it('ensures all nodes in connections are present in flowNodes', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+    
+    // Initial state: room exists with home node, and an existing connection (zone-a to zone-b)
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [{
+            id: 'c1',
+            roomId: 'room1',
+            fromZoneId: 'zone-a',
+            toZoneId: 'zone-b',
+            expiresAt: new Date().toISOString(),
+            reportedAt: new Date().toISOString(),
+        }], 
+        homeZoneId: 'zone-a',
+        nodePositions: [],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+      }
+    });
+
+    // Simulate adding a connection between zone-c and zone-d (not connected to zone-a)
+    store.applyMessage({ 
+      type: 'connection_added', 
+      connection: {
+        id: 'c2',
+        roomId: 'room1',
+        fromZoneId: 'zone-c',
+        toZoneId: 'zone-d',
+        expiresAt: new Date().toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    });
+
+    // Wait for the watcher to run
+    await nextTick();
+    await nextTick();
+    
+    const vm = wrapper.vm as any;
+    // Verify nodes exist
+    expect(vm.flowNodes.find((n: any) => n.id === 'zone-c')).toBeDefined();
+    expect(vm.flowNodes.find((n: any) => n.id === 'zone-d')).toBeDefined();
+    expect(vm.flowEdges).toHaveLength(2);
+    
+    wrapper.unmount();
+  });
+
+  it('positions new nodes away from the home node when added', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+    
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [], 
+        homeZoneId: 'zone-a',
+        nodePositions: [{ zoneId: 'zone-a', x: 0, y: 0 }],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+      }
+    });
+
+    // Simulate adding a connection between zone-a and zone-b
+    store.applyMessage({ 
+      type: 'connection_added', 
+      connection: {
+        id: 'c1',
+        roomId: 'room1',
+        fromZoneId: 'zone-a',
+        toZoneId: 'zone-b',
+        expiresAt: new Date().toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    });
+
+    // Wait for the watcher to run
+    await nextTick();
+    await nextTick();
+    
+    const vm = wrapper.vm as any;
+    const zoneBNode = vm.flowNodes.find((n: any) => n.id === 'zone-b');
+    
+    // Check if it's not at (0,0)
+    expect(zoneBNode).toBeDefined();
+    expect(zoneBNode.position).not.toEqual({ x: 0, y: 0 });
     
     wrapper.unmount();
   });

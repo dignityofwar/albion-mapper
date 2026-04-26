@@ -134,9 +134,33 @@ watch([homeZoneId, nodePositions, connections], () => {
     if (!homeZoneId.value) return;
 
     // 1. Compute positions
-    const positions = (nodePositions.value ?? []).length > 0
-      ? nodePositions.value.map((p: NodePosition) => ({ id: p.zoneId, x: p.x, y: p.y }))
-      : radialLayout(homeZoneId.value, connections.value);
+    const layoutPositions = radialLayout(homeZoneId.value, connections.value);
+    
+    // Merge manual positions
+    const positionsMap = new Map(layoutPositions.map(p => [p.id, p]));
+    
+    nodePositions.value.forEach(p => {
+        positionsMap.set(p.zoneId, { id: p.zoneId, x: p.x, y: p.y });
+    });
+    
+    // Ensure all connected nodes exist (if not in layout, add with (0,0))
+    connections.value.forEach(conn => {
+        if (!positionsMap.has(conn.fromZoneId)) {
+            positionsMap.set(conn.fromZoneId, { id: conn.fromZoneId, x: 0, y: 0 });
+        }
+        if (!positionsMap.has(conn.toZoneId)) {
+            positionsMap.set(conn.toZoneId, { id: conn.toZoneId, x: 0, y: 0 });
+        }
+    });
+    
+    const positions = [...positionsMap.values()];
+
+    // If new nodes were added, update the store.
+    const hasNewPositions = positions.some(p => !nodePositions.value.find(np => np.zoneId === p.id));
+    if (hasNewPositions) {
+        const updatedPositions = positions.map(p => ({ zoneId: p.id, x: p.x, y: p.y }));
+        store.updateNodePositionsInStore(updatedPositions);
+    }
     
     // 2. Map to VueFlow nodes
     const newNodes = positions.map((pos: { id: string, x: number, y: number }) => {
@@ -197,7 +221,7 @@ watch([homeZoneId, nodePositions, connections], () => {
       }
       return edge;
     });
-}, { immediate: true });
+}, { immediate: true, deep: true });
 
 // Update edge labels every second based on `now`
 watch(now, () => {
@@ -210,17 +234,6 @@ watch(now, () => {
     }
   });
 });
-
-// Re-fit the view whenever the set of nodes changes
-watch(
-  () => flowNodes.value.length,
-  async () => {
-    await nextTick();
-    fitView({ padding: 0.2, duration: 300 });
-  },
-);
-
-// ── Debug tray ───────────────────────────────────────────────────────────────
 const showDebug = ref(false);
 
 // ── Actions ──────────────────────────────────────────────────────────────────
@@ -285,6 +298,13 @@ defineExpose({ flowNodes, onNodeDragStop });
       title="Debug tray"
       @click="showDebug = true"
     >🐛</button>
+
+    <!-- Fit view button -->
+    <button
+      class="fixed bottom-20 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-lg shadow-lg"
+      title="Fit view"
+      @click="fitView({ padding: 0.2, duration: 300 })"
+    >🔄</button>
 
     <!-- Debug tray modal -->
     <DebugTray :nodes="flowNodes" :edges="flowEdges" :show="showDebug" @close="showDebug = false" />
