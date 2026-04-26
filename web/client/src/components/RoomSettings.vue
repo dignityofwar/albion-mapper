@@ -79,9 +79,9 @@ function copyLink() {
 }
 
 function logout() {
-  store.disconnect();
   sessionStorage.removeItem(`token:${store.roomId}`);
-  router.replace({ path: `/rooms/${store.roomId}/auth` });
+  store.disconnect();
+  router.replace({ path: '/' });
 }
 </script>
 

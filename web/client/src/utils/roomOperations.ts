@@ -54,3 +54,23 @@ export async function updateConnection(
     body: JSON.stringify({ minutesRemaining: Number(minutesRemaining) }),
   });
 }
+
+/**
+ * Adds a connection to the given room.
+ */
+export async function addConnection(
+  roomId: string,
+  token: string,
+  fromZoneId: string,
+  toZoneId: string,
+  minutesRemaining: number,
+): Promise<void> {
+  await fetch(`/api/rooms/${roomId}/connections`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ fromZoneId, toZoneId, minutesRemaining }),
+  });
+}

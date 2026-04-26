@@ -15,7 +15,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
 import { setHomeZone, deleteConnection, updateConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
-import { radialLayout } from '../utils/radialLayout.js';
+import { gridLayout } from '../utils/gridLayout.js';
 import { ZONE_BY_ID, type Connection, type NodePosition } from 'shared';
 
 const props = defineProps<{ id: string }>();
@@ -138,7 +138,7 @@ watch([homeZoneId, nodePositions, connections], () => {
     if (!homeZoneId.value) return;
 
     // 1. Compute positions
-    const layoutPositions = radialLayout(homeZoneId.value, connections.value);
+    const layoutPositions = gridLayout(homeZoneId.value, connections.value);
     
     // Merge manual positions
     const positionsMap = new Map(layoutPositions.map(p => [p.id, p]));
@@ -254,9 +254,18 @@ function onNodeDragStop() {
   store.updateNodePositionsInStore(positions);
 }
 
+function handleSuccess(msg: string) {
+  showToast(msg);
+  resetLayout();
+}
+
 function handleSetHomeZone(zoneId: string) {
   if (zoneId === store.homeZoneId) return;
   setHomeZone(props.id, store.token!, zoneId);
+}
+
+function resetLayout() {
+  store.resetNodePositions();
 }
 
 defineExpose({ flowNodes, onNodeDragStop });
@@ -266,7 +275,7 @@ defineExpose({ flowNodes, onNodeDragStop });
   <div class="h-screen flex flex-col bg-gray-950 text-white">
     <!-- Sticky report panel -->
     <div class="shrink-0">
-      <ReportForm @success="showToast" @error="showToast" />
+      <ReportForm @success="handleSuccess" @error="showToast" />
     </div>
 
     <!-- WS status bar (always visible) -->
@@ -306,6 +315,13 @@ defineExpose({ flowNodes, onNodeDragStop });
       title="Debug tray"
       @click="showDebug = true"
     >🐛</button>
+
+    <!-- Refresh layout button -->
+    <button
+      class="fixed bottom-20 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-lg shadow-lg"
+      title="Refresh layout"
+      @click="resetLayout"
+    >📐</button>
 
     <!-- Fit view button -->
     <button

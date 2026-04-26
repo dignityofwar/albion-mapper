@@ -10,4 +10,5 @@ html, body, #app {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: rgb(3 7 18);
 }

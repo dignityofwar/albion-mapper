@@ -134,6 +134,8 @@ export const useRoomStore = defineStore('room', () => {
     connections.value = [];
     homeZoneId.value = '';
     nodePositions.value = [];
+    roomId.value = '';
+    token.value = '';
   }
 
   function updateNodePositionsInStore(positions: NodePosition[]) {
@@ -141,6 +143,14 @@ export const useRoomStore = defineStore('room', () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: positions }));
       nodePositions.value = positions; // Optimistic update
+      lastUpdate.value = new Date();
+    }
+  }
+
+  function resetNodePositions() {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: [] }));
+      nodePositions.value = []; // Optimistic update
       lastUpdate.value = new Date();
     }
   }
@@ -156,6 +166,7 @@ export const useRoomStore = defineStore('room', () => {
     setCredentials,
     applyMessage,
     updateNodePositionsInStore,
+    resetNodePositions,
     connect,
     disconnect,
   };

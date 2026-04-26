@@ -6,70 +6,104 @@ export interface NodePosition {
   y: number;
 }
 
-const RADIUS_1 = 300; // direct neighbours
-const RADIUS_2 = 600; // second-degree neighbours
-
 /**
  * Computes radial node positions for the graph.
- * Home zone is at (0,0). Direct neighbours at radius 300,
- * second-degree at radius 600.
  */
 export function radialLayout(homeZoneId: string, connections: Connection[]): NodePosition[] {
   const positions = new Map<string, NodePosition>();
   positions.set(homeZoneId, { id: homeZoneId, x: 0, y: 0 });
 
-  // Gather direct neighbours of home zone
-  const directNeighbours = new Set<string>();
+  // 1. Build adjacency
+  const adj = new Map<string, Set<string>>();
   for (const conn of connections) {
-    if (conn.fromZoneId === homeZoneId) directNeighbours.add(conn.toZoneId);
-    else if (conn.toZoneId === homeZoneId) directNeighbours.add(conn.fromZoneId);
+    if (!adj.has(conn.fromZoneId)) adj.set(conn.fromZoneId, new Set());
+    if (!adj.has(conn.toZoneId)) adj.set(conn.toZoneId, new Set());
+    adj.get(conn.fromZoneId)!.add(conn.toZoneId);
+    adj.get(conn.toZoneId)!.add(conn.fromZoneId);
   }
 
-  const directArr = [...directNeighbours];
-  directArr.forEach((zoneId, i) => {
-    const angle = (2 * Math.PI * i) / directArr.length;
+  // 2. Traversal/Placement
+  const neighbours = [...(adj.get(homeZoneId) ?? [])];
+  
+  const neighboursWithSizes = neighbours.map((zoneId) => ({
+    zoneId,
+    branchSize: getBranchSize(zoneId, homeZoneId, adj, new Set([homeZoneId])),
+  }));
+  neighboursWithSizes.sort((a, b) => b.branchSize - a.branchSize);
+  
+  const sortedNeighbours = neighboursWithSizes.map((n) => n.zoneId);
+  const branchSizes = neighboursWithSizes.map((n) => n.branchSize);
+  const totalDescendants = branchSizes.reduce((sum, size) => sum + size, 0);
+
+  let currentAngle = 0;
+  sortedNeighbours.forEach((zoneId, i) => {
+    const branchSize = branchSizes[i];
+    const angleRange = (branchSize / totalDescendants) * 2 * Math.PI;
+    const angle = currentAngle + angleRange / 2;
+    currentAngle += angleRange;
+
+    const radius = 300;
     positions.set(zoneId, {
       id: zoneId,
-      x: RADIUS_1 * Math.cos(angle),
-      y: RADIUS_1 * Math.sin(angle),
+      x: radius * Math.cos(angle),
+      y: radius * Math.sin(angle),
     });
+    
+    // Recurse for children
+    placeChildren(zoneId, angle, angleRange, radius, adj, positions);
   });
-
-  // Gather second-degree neighbours (connected to direct neighbours, not yet placed)
-  const secondDegree = new Map<string, string>(); // zoneId → parent (direct neighbour)
-  for (const conn of connections) {
-    const { fromZoneId, toZoneId } = conn;
-    if (directNeighbours.has(fromZoneId) && !positions.has(toZoneId) && toZoneId !== homeZoneId) {
-      secondDegree.set(toZoneId, fromZoneId);
-    }
-    if (directNeighbours.has(toZoneId) && !positions.has(fromZoneId) && fromZoneId !== homeZoneId) {
-      secondDegree.set(fromZoneId, toZoneId);
-    }
-  }
-
-  // Group second-degree nodes by parent
-  const byParent = new Map<string, string[]>();
-  for (const [zoneId, parent] of secondDegree) {
-    if (!byParent.has(parent)) byParent.set(parent, []);
-    byParent.get(parent)!.push(zoneId);
-  }
-
-  for (const [parent, children] of byParent) {
-    const parentPos = positions.get(parent)!;
-    const parentAngle = Math.atan2(parentPos.y, parentPos.x);
-
-    // Spread children around the parent's radial direction
-    const spread = Math.PI / 4;
-    children.forEach((childId, i) => {
-      const offset = children.length === 1 ? 0 : -spread / 2 + (spread * i) / (children.length - 1);
-      const angle = parentAngle + offset;
-      positions.set(childId, {
-        id: childId,
-        x: RADIUS_2 * Math.cos(angle),
-        y: RADIUS_2 * Math.sin(angle),
-      });
-    });
-  }
-
+  
   return [...positions.values()];
+}
+
+function getBranchSize(nodeId: string, parentId: string | null, adj: Map<string, Set<string>>, visited: Set<string>): number {
+  if (visited.has(nodeId)) return 0;
+  const newVisited = new Set(visited);
+  newVisited.add(nodeId);
+
+  const neighbors = [...(adj.get(nodeId) ?? [])];
+  const children = neighbors.filter(id => id !== parentId);
+  return 1 + children.reduce((sum, childId) => sum + getBranchSize(childId, nodeId, adj, newVisited), 0);
+}
+
+function placeChildren(parentId: string, parentAngle: number, angularRange: number, parentRadius: number, adj: Map<string, Set<string>>, positions: Map<string, NodePosition>) {
+  const children = [...(adj.get(parentId) ?? [])].filter(id => !positions.has(id));
+  if (children.length === 0) return;
+  
+  const childrenWithSizes = children.map(childId => ({
+    childId,
+    branchSize: getBranchSize(childId, parentId, adj, new Set([parentId])),
+  }));
+  childrenWithSizes.sort((a, b) => b.branchSize - a.branchSize);
+  
+  const sortedChildren = childrenWithSizes.map(c => c.childId);
+  const sortedBranchSizes = childrenWithSizes.map(c => c.branchSize);
+  const totalBranchSize = sortedBranchSizes.reduce((sum, size) => sum + size, 0);
+  
+  const parentPos = positions.get(parentId)!;
+  // Try to constrain the range if children <= 3
+  const effectiveAngularRange = children.length <= 3 ? Math.PI / 2 : angularRange;
+  
+  const radius = parentRadius + 300;
+  
+  // Shift children above if they are 3 or less
+  const offsetShift = children.length <= 3 ? -Math.PI / 2 : 0;
+  let currentOffset = -effectiveAngularRange / 2 + offsetShift;
+  
+  sortedChildren.forEach((childId, i) => {
+    const branchSize = sortedBranchSizes[i];
+    const childAngularRange = (branchSize / totalBranchSize) * effectiveAngularRange;
+    const offset = currentOffset + childAngularRange / 2;
+    currentOffset += childAngularRange;
+
+    const angle = parentAngle + offset;
+    
+    positions.set(childId, {
+      id: childId,
+      x: radius * Math.cos(angle),
+      y: radius * Math.sin(angle),
+    });
+    
+    placeChildren(childId, angle, childAngularRange, radius, adj, positions);
+  });
 }
