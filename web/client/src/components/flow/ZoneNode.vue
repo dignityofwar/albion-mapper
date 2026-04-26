@@ -1,16 +1,33 @@
 <script setup lang="ts">
 import { Handle, Position } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import type { ZoneType } from 'shared';
+import type { ZoneType, NodeFeatures } from 'shared';
 import TagTier from '../common/TagTier.vue';
 import TagZone from '../common/TagZone.vue';
+import { useRoomStore } from '../../stores/useRoomStore';
+import { NodeToolbar } from '@vue-flow/node-toolbar';
+import { computed } from 'vue';
 
 const props = defineProps<NodeProps<{ 
   isHome: boolean; 
   tier: number; 
   zoneName: string; 
   type: string; 
+  features?: NodeFeatures;
 }>>();
+
+const store = useRoomStore();
+
+const hasActiveFeatures = computed(() => {
+  const f = props.data.features;
+  return !!(f?.enemySighted || f?.powercoreBlue || f?.powercorePurple);
+});
+
+function toggleFeature(feature: keyof NodeFeatures) {
+  const currentFeatures = props.data.features || {};
+  const features = { ...currentFeatures, [feature]: !currentFeatures[feature] };
+  store.updateNodeFeatures(props.id, features);
+}
 
 function getBorderClass(type: string): string {
   switch (type) {
@@ -26,6 +43,12 @@ function getBorderClass(type: string): string {
 
 <template>
   <div class="zone-node">
+    <NodeToolbar :is-visible="props.selected || hasActiveFeatures" position="top" class="flex gap-1">
+      <button @click="toggleFeature('enemySighted')" :class="props.data.features?.enemySighted ? 'bg-red-500' : 'bg-gray-700'" class="text-white rounded p-1">👁️</button>
+      <button @click="toggleFeature('powercoreBlue')" :class="props.data.features?.powercoreBlue ? 'bg-blue-500' : 'bg-gray-700'" class="text-white rounded p-1">🔵</button>
+      <button @click="toggleFeature('powercorePurple')" :class="props.data.features?.powercorePurple ? 'bg-purple-500' : 'bg-gray-700'" class="text-white rounded p-1">🟣</button>
+    </NodeToolbar>
+
     <Handle type="source" :position="Position.Top" id="top" />
     <Handle type="source" :position="Position.Right" id="right" />
     <Handle type="source" :position="Position.Bottom" id="bottom" />

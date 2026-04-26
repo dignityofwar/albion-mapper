@@ -15,7 +15,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
 import { setHomeZone, deleteConnection, updateConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
-import { ZONE_BY_ID, type Connection, type NodePosition } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -226,6 +226,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           zoneName: zone?.name ?? pos.zoneId,
           type: zone?.type ?? 'other',
           virtualGridPos: pos.virtualGridPos,
+          features: pos.features,
         },
       };
     });

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Connection, ServerMessage, NodePosition } from 'shared';
+import type { Connection, ServerMessage, NodePosition, NodeFeatures } from 'shared';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected';
 
@@ -155,6 +155,16 @@ export const useRoomStore = defineStore('room', () => {
     }
   }
 
+  function updateNodeFeatures(zoneId: string, features: NodeFeatures) {
+    const node = nodePositions.value.find(n => n.zoneId === zoneId);
+    if (!node) return;
+    node.features = features;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value }));
+      lastUpdate.value = new Date();
+    }
+  }
+
   return {
     connections,
     homeZoneId,
@@ -166,6 +176,7 @@ export const useRoomStore = defineStore('room', () => {
     setCredentials,
     applyMessage,
     updateNodePositionsInStore,
+    updateNodeFeatures,
     resetNodePositions,
     connect,
     disconnect,

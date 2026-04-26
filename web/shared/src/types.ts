@@ -43,6 +43,13 @@ export interface NodePosition {
   x: number;
   y: number;
   virtualGridPos?: { x: number; y: number };
+  features?: NodeFeatures;
+}
+
+export interface NodeFeatures {
+  enemySighted?: boolean;
+  powercoreBlue?: boolean;
+  powercorePurple?: boolean;
 }
 
 export type ConnectionStatus = 'active' | 'stale' | 'expired';
