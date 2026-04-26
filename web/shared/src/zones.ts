@@ -1,4 +1,4 @@
-import mapsData from '../data/maps.json' assert { type: 'json' };
+import mapsData from '../data/maps.json' with { type: 'json' };
 import type { GameMap, Zone } from './types.js';
 
 const isRoadsHome = (name: string) => /^[^-\s]+-[^-\s]+-[^-\s]+$/.test(name);

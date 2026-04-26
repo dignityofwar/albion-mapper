@@ -1,0 +1,29 @@
+# Dependency directories
+node_modules/
+.pnpm-store/
+
+# Version control
+.git/
+.gitignore
+
+# IDE / Editor folders
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build outputs
+web/client/dist/
+web/server/dist/
+web/shared/dist/
+
+# Local data and secrets
+web/server/data/
+.env
+.env.*
+!.env.example
+
+# Miscellaneous
+README.md
+LICENSE
+provisioning/

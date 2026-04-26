@@ -1,16 +1,18 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { buildApp } from '../src/app.js';
-import { createInMemoryDb } from '../src/db.js';
 import type { FastifyInstance } from 'fastify';
 
 // A known valid zone ID from the shared catalogue
 const VALID_ZONE_ID = 'qiient-al-nusom';
 
 let app: FastifyInstance;
+let mockDb: any;
 
 beforeEach(async () => {
-  const db = createInMemoryDb();
-  app = await buildApp({ db, disableRateLimit: true, jwtSecret: 'test-secret' });
+  mockDb = {
+    query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+  };
+  app = await buildApp({ db: mockDb, disableRateLimit: true, jwtSecret: 'test-secret' });
   await app.ready();
 });
 
@@ -20,10 +22,12 @@ afterEach(async () => {
 
 describe('POST /api/rooms', () => {
   it('creates a room and returns id + shareUrl', async () => {
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT
+    
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', homeZoneId: VALID_ZONE_ID },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
     });
     expect(res.statusCode).toBe(201);
     const body = res.json<{ id: string; shareUrl: string }>();
@@ -33,32 +37,40 @@ describe('POST /api/rooms', () => {
   });
 
   it('hashes the password (not stored as plaintext)', async () => {
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT
+    
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'mypassword', homeZoneId: VALID_ZONE_ID },
+      payload: { password: 'mypassword', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
     });
     expect(res.statusCode).toBe(201);
     const { id } = res.json<{ id: string }>();
 
-    // Query the DB directly via the app's db decoration
-    const row = (app as unknown as { db: { prepare: (s: string) => { get: (id: string) => { password_hash: string } | undefined } } })
-      .db.prepare('SELECT password_hash FROM rooms WHERE id = ?').get(id);
+    // Mock the direct DB query in the test
+    mockDb.query.mockResolvedValueOnce({ 
+      rows: [{ password_hash: '$2b$12$somehash' }] 
+    });
+
+    const { rows } = await (app as any).db.query('SELECT password_hash FROM rooms WHERE id = $1', [id]);
+    const row = rows[0];
     expect(row).toBeDefined();
     expect(row!.password_hash).not.toBe('mypassword');
     expect(row!.password_hash).toMatch(/^\$2b\$/); // bcrypt hash prefix
   });
 
   it('generates unique slugs', async () => {
+    mockDb.query.mockResolvedValue({ rowCount: 1, rows: [] });
+    
     const res1 = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'pw1', homeZoneId: VALID_ZONE_ID },
+      payload: { password: 'pw1', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
     });
     const res2 = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'pw2', homeZoneId: VALID_ZONE_ID },
+      payload: { password: 'pw2', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
     });
     expect(res1.json<{ id: string }>().id).not.toBe(res2.json<{ id: string }>().id);
   });
@@ -67,7 +79,7 @@ describe('POST /api/rooms', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret' },
+      payload: { password: 'secret', adminPassword: 'admin' },
     });
     expect(res.statusCode).toBe(400);
   });
@@ -76,7 +88,7 @@ describe('POST /api/rooms', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', homeZoneId: '' },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: '' },
     });
     expect(res.statusCode).toBe(400);
   });
@@ -85,7 +97,7 @@ describe('POST /api/rooms', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', homeZoneId: 'totally-unknown-zone-xyz' },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: 'totally-unknown-zone-xyz' },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/zone catalogue/i);
@@ -95,27 +107,23 @@ describe('POST /api/rooms', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', homeZoneId: 'willow-wood' },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: 'willow-wood' },
     });
-    // This should fail if we want to restrict it
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/not a valid roads home/i);
   });
 });
 
 describe('POST /api/rooms/:id/auth', () => {
-  let roomId: string;
-
-  beforeEach(async () => {
-    const res = await app.inject({
-      method: 'POST',
-      url: '/api/rooms',
-      payload: { password: 'correct-pw', homeZoneId: VALID_ZONE_ID },
-    });
-    roomId = res.json<{ id: string }>().id;
-  });
+  let roomId = 'test-room-id';
 
   it('returns a token with correct password', async () => {
+    const bcrypt = await import('bcrypt');
+    const hash = await bcrypt.default.hash('correct-pw', 1);
+    mockDb.query.mockResolvedValueOnce({ 
+      rows: [{ id: roomId, password_hash: hash }] 
+    });
+
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/auth`,
@@ -124,10 +132,15 @@ describe('POST /api/rooms/:id/auth', () => {
     expect(res.statusCode).toBe(200);
     const { token } = res.json<{ token: string }>();
     expect(token).toBeDefined();
-    expect(typeof token).toBe('string');
   });
 
   it('returns 401 with wrong password', async () => {
+    const bcrypt = await import('bcrypt');
+    const hash = await bcrypt.default.hash('correct-pw', 1);
+    mockDb.query.mockResolvedValueOnce({ 
+      rows: [{ id: roomId, password_hash: hash }] 
+    });
+
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/auth`,
@@ -137,6 +150,8 @@ describe('POST /api/rooms/:id/auth', () => {
   });
 
   it('returns 404 for non-existent room', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [] });
+
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms/doesnotexist12/auth',

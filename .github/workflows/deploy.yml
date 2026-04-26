@@ -1,0 +1,16 @@
+name: Trigger Deployment Webhook
+
+on:
+  workflow_call:
+
+jobs:
+  send-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger webhook
+        uses: ramzzisudip/secure-github-webhook@0.3.0
+        with:
+          url: "${{ secrets.WEBHOOK_URL }}"
+          data: '{ "application": "dig-roadmap" }'
+          timeout: 2000
+          hmacSecret: "${{ secrets.WEBHOOK_SECRET }}"

@@ -105,15 +105,9 @@ importers:
       '@fastify/websocket':
         specifier: ^11.0.0
         version: 11.2.0
-      '@types/pg':
-        specifier: ^8.20.0
-        version: 8.20.0
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
-      better-sqlite3:
-        specifier: ^11.3.0
-        version: 11.10.0
       fastify:
         specifier: ^5.2.0
         version: 5.8.5
@@ -139,12 +133,18 @@ importers:
       '@types/node':
         specifier: ^22.7.4
         version: 22.19.17
+      '@types/pg':
+        specifier: ^8.20.0
+        version: 8.20.0
       '@types/supertest':
         specifier: ^6.0.2
         version: 6.0.3
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
+      better-sqlite3:
+        specifier: ^11.3.0
+        version: 11.10.0
       supertest:
         specifier: ^7.0.0
         version: 7.2.2

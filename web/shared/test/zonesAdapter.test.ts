@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { ZONES, ZONE_BY_ID } from '../src/zones.js';
-import mapsData from '../data/maps.json' assert { type: 'json' };
+import mapsData from '../data/maps.json' with { type: 'json' };
 import type { GameMap } from '../src/types.js';
 
 const maps = mapsData as GameMap[];
