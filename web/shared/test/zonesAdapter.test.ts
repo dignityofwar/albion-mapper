@@ -43,7 +43,7 @@ describe('zones adapter', () => {
     // Find zones with X-X-X pattern (exactly 3 hyphen-separated parts, no spaces)
     const xXxPattern = /^[^-\s]+-[^-\s]+-[^-\s]+$/;
     const homeRoadsZones = ZONES.filter(
-      (z) => z.type === 'roads' && xXxPattern.test(z.name),
+      (z) => (z.type === 'roads' || z.type === 'roadsHideout') && xXxPattern.test(z.name),
     );
     homeRoadsZones.forEach((z) => {
       expect(z.isRoadsHome).toBe(true);
@@ -63,7 +63,7 @@ describe('zones adapter', () => {
   });
 
   it('sets isRoadsHome to undefined for non-roads zones', () => {
-    const nonRoadsZones = ZONES.filter((z) => z.type !== 'roads');
+    const nonRoadsZones = ZONES.filter((z) => z.type !== 'roads' && z.type !== 'roadsHideout');
     nonRoadsZones.forEach((z) => {
       expect(z.isRoadsHome).toBeUndefined();
     });
