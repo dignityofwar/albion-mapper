@@ -6,13 +6,13 @@ export interface NodePosition {
   y: number;
 }
 
-const RADIUS_1 = 220; // direct neighbours
-const RADIUS_2 = 440; // second-degree neighbours
+const RADIUS_1 = 300; // direct neighbours
+const RADIUS_2 = 600; // second-degree neighbours
 
 /**
  * Computes radial node positions for the graph.
- * Home zone is at (0,0). Direct neighbours at radius 220,
- * second-degree at radius 440.
+ * Home zone is at (0,0). Direct neighbours at radius 300,
+ * second-degree at radius 600.
  */
 export function radialLayout(homeZoneId: string, connections: Connection[]): NodePosition[] {
   const positions = new Map<string, NodePosition>();

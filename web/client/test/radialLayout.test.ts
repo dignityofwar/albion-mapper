@@ -32,23 +32,23 @@ describe('radialLayout', () => {
     expect(positions[0].id).toBe(HOME);
   });
 
-  it('places direct neighbours at radius ~220', () => {
+  it('places direct neighbours at radius ~300', () => {
     const conn = makeConn(HOME, ZONE_A);
     const positions = radialLayout(HOME, [conn]);
     const neighbour = positions.find((p) => p.id === ZONE_A);
     expect(neighbour).toBeDefined();
     const dist = Math.sqrt(neighbour!.x ** 2 + neighbour!.y ** 2);
-    expect(dist).toBeCloseTo(220, 0);
+    expect(dist).toBeCloseTo(300, 0);
   });
 
-  it('places second-degree neighbours at radius ~440', () => {
+  it('places second-degree neighbours at radius ~600', () => {
     const conn1 = makeConn(HOME, ZONE_A);
     const conn2 = makeConn(ZONE_A, ZONE_B);
     const positions = radialLayout(HOME, [conn1, conn2]);
     const second = positions.find((p) => p.id === ZONE_B);
     expect(second).toBeDefined();
     const dist = Math.sqrt(second!.x ** 2 + second!.y ** 2);
-    expect(dist).toBeCloseTo(440, 0);
+    expect(dist).toBeCloseTo(600, 0);
   });
 
   it('returns deterministic positions for same input', () => {
@@ -67,6 +67,6 @@ describe('radialLayout', () => {
     const neighbour = positions.find((p) => p.id === ZONE_A);
     expect(neighbour).toBeDefined();
     const dist = Math.sqrt(neighbour!.x ** 2 + neighbour!.y ** 2);
-    expect(dist).toBeCloseTo(220, 0);
+    expect(dist).toBeCloseTo(300, 0);
   });
 });
