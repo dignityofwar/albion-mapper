@@ -47,6 +47,13 @@ export function getDb(dbPath?: string): Database.Database {
     CREATE INDEX IF NOT EXISTS idx_node_positions_room ON room_node_positions(room_id);
   `);
 
+  try {
+    dbInstance.exec('ALTER TABLE rooms ADD COLUMN admin_password_hash TEXT;');
+    dbInstance.exec('UPDATE rooms SET admin_password_hash = password_hash WHERE admin_password_hash IS NULL;');
+  } catch (e) {
+    // Column likely already exists
+  }
+
   return dbInstance;
 }
 
@@ -66,6 +73,7 @@ export function createInMemoryDb(): Database.Database {
     CREATE TABLE IF NOT EXISTS rooms (
       id TEXT PRIMARY KEY,
       password_hash TEXT NOT NULL,
+      admin_password_hash TEXT NOT NULL,
       home_zone_id TEXT NOT NULL,
       created_at TEXT NOT NULL
     );

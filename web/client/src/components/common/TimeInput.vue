@@ -57,7 +57,7 @@ watch([hours, minutes, seconds], () => {
     seconds.value = s;
   }
   
-  emit('update:modelValue', h * 60 + m + s / 60);
+  emit('update:modelValue', Math.round(h * 60 + m + s / 60));
 });
 
 watch(() => props.modelValue, (newVal) => {

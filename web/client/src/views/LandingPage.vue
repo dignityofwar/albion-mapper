@@ -11,6 +11,7 @@ const store = useRoomStore();
 // ── Create Room modal ────────────────────────────────────────────────────────
 const showCreate = ref(false);
 const createPassword = ref('');
+const createAdminPassword = ref('');
 const createHomeZoneId = ref('');
 const createFormKey = ref(0);
 const creating = ref(false);
@@ -24,6 +25,7 @@ function openCreateRoom() {
 
 function resetCreateForm() {
   createPassword.value = '';
+  createAdminPassword.value = '';
   createHomeZoneId.value = '';
   createError.value = '';
   createFormKey.value++;
@@ -42,14 +44,18 @@ onMounted(() => {
 });
 
 async function createRoom() {
-  if (!createPassword.value || !createHomeZoneId.value) return;
+  if (!createPassword.value || !createAdminPassword.value || !createHomeZoneId.value) return;
   creating.value = true;
   createError.value = '';
   try {
     const res = await fetch('/api/rooms', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: createPassword.value, homeZoneId: createHomeZoneId.value }),
+      body: JSON.stringify({
+        password: createPassword.value,
+        adminPassword: createAdminPassword.value,
+        homeZoneId: createHomeZoneId.value
+      }),
     });
     if (!res.ok) {
       const body = await res.json() as { error?: string };
@@ -133,12 +139,22 @@ function joinRoom() {
             />
           </div>
           <div>
+            <label class="block text-sm text-gray-400 mb-1">Admin Password</label>
+            <input
+              v-model="createAdminPassword"
+              type="password"
+              placeholder="Choose an admin password"
+              class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white outline-none"
+            />
+            <p class="text-xs text-yellow-600 mt-1">If you lose this password, you cannot change the room's password or wipe connections!</p>
+          </div>
+          <div>
             <label class="block text-sm text-gray-400 mb-1">Home Zone</label>
             <ZoneCombobox :key="createFormKey" v-model="createHomeZoneId" placeholder="Search home zone…" />
           </div>
           <p v-if="createError" class="text-red-400 text-sm">{{ createError }}</p>
           <button
-            :disabled="!createPassword || !createHomeZoneId || creating"
+            :disabled="!createPassword || !createAdminPassword || !createHomeZoneId || creating"
             class="px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             @click="createRoom"
           >

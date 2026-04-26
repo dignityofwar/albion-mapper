@@ -61,6 +61,7 @@ export function getConnectionStatus(connection: Connection, now: Date = new Date
 export interface Room {
   id: string;
   passwordHash: string;
+  adminPasswordHash: string;
   homeZoneId: string;
   createdAt: string;
   updatedAt?: string;
@@ -100,6 +101,7 @@ export const ConnectionSchema = z.object({
 export const RoomSchema = z.object({
   id: z.string(),
   passwordHash: z.string(),
+  adminPasswordHash: z.string(),
   homeZoneId: z.string(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime().optional(),
@@ -109,6 +111,7 @@ export const RoomSchema = z.object({
 
 export const CreateRoomBodySchema = z.object({
   password: z.string().min(1),
+  adminPassword: z.string().min(1),
   homeZoneId: z.string().min(1),
 });
 
@@ -132,6 +135,7 @@ export const UpdateRoomBodySchema = z.object({
 });
 export const ChangePasswordBodySchema = z.object({
   newPassword: z.string().min(1),
+  adminPassword: z.string().min(1),
 });
 
 // ── WebSocket message types ───────────────────────────────────────────────────

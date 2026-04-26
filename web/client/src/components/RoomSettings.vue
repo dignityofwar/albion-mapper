@@ -2,6 +2,8 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
+import ChangePasswordModal from './ChangePasswordModal.vue';
+import ResetConfirmModal from './ResetConfirmModal.vue';
 
 const store = useRoomStore();
 const router = useRouter();
@@ -10,11 +12,8 @@ const open = ref(false);
 const popupEl = ref<HTMLDivElement | null>(null);
 
 // Change password state
-const showPasswordForm = ref(false);
-const newPassword = ref('');
-const passwordError = ref('');
-const passwordSuccess = ref(false);
-const savingPassword = ref(false);
+const showChangePasswordModal = ref(false);
+const showResetConfirmModal = ref(false);
 
 // Reset state
 const resetting = ref(false);
@@ -29,10 +28,8 @@ function toggleOpen() {
 }
 
 function resetSubForms() {
-  showPasswordForm.value = false;
-  newPassword.value = '';
-  passwordError.value = '';
-  passwordSuccess.value = false;
+  showChangePasswordModal.value = false;
+  showResetConfirmModal.value = false;
   resetError.value = '';
   copied.value = false;
 }
@@ -47,13 +44,17 @@ function onClickOutside(e: MouseEvent) {
 onMounted(() => document.addEventListener('click', onClickOutside));
 onBeforeUnmount(() => document.removeEventListener('click', onClickOutside));
 
-async function reset() {
+async function reset(adminPassword: string) {
   resetting.value = true;
   resetError.value = '';
   try {
     const res = await fetch(`/api/rooms/${store.roomId}/connections`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${store.token}` },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${store.token}`,
+      },
+      body: JSON.stringify({ adminPassword }),
     });
     if (!res.ok) {
       const body = await res.json() as { error?: string };
@@ -67,35 +68,7 @@ async function reset() {
   }
 }
 
-async function savePassword() {
-  if (!newPassword.value.trim()) return;
-  savingPassword.value = true;
-  passwordError.value = '';
-  passwordSuccess.value = false;
-  try {
-    const res = await fetch(`/api/rooms/${store.roomId}/password`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${store.token}`,
-      },
-      body: JSON.stringify({ newPassword: newPassword.value }),
-    });
-    if (!res.ok) {
-      const body = await res.json() as { error?: string };
-      passwordError.value = body.error ?? 'Failed to change password';
-      return;
-    }
-    passwordSuccess.value = true;
-    newPassword.value = '';
-    setTimeout(() => {
-      passwordSuccess.value = false;
-      showPasswordForm.value = false;
-    }, 1500);
-  } finally {
-    savingPassword.value = false;
-  }
-}
+// savePassword function removed from here, it's now in ChangePasswordModal.vue
 
 function copyLink() {
   const url = `${window.location.origin}/rooms/${store.roomId}`;
@@ -136,13 +109,12 @@ function logout() {
     >
       <!-- Reset -->
       <div class="border-b border-gray-700 p-2">
-        <p v-if="resetError" class="text-red-400 text-xs mb-1">{{ resetError }}</p>
         <button
           type="button"
           :disabled="resetting"
           class="w-full text-left px-3 py-2 text-sm rounded text-red-400 hover:bg-gray-700 hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
           data-testid="settings-reset"
-          @click="reset"
+          @click="showResetConfirmModal = true"
         >
           {{ resetting ? 'Resetting…' : '⟳  Reset all connections' }}
         </button>
@@ -151,45 +123,13 @@ function logout() {
       <!-- Change password -->
       <div class="border-b border-gray-700 p-2">
         <button
-          v-if="!showPasswordForm"
           type="button"
           class="w-full text-left px-3 py-2 text-sm rounded text-gray-200 hover:bg-gray-700"
           data-testid="settings-change-password-toggle"
-          @click="showPasswordForm = true"
+          @click="showChangePasswordModal = true"
         >
           🔒  Change password
         </button>
-        <div v-else class="flex flex-col gap-1">
-          <input
-            v-model="newPassword"
-            type="password"
-            placeholder="New password"
-            class="bg-gray-800 border border-gray-600 text-white text-sm rounded px-2 py-1 outline-none w-full"
-            data-testid="settings-new-password"
-            @keydown.enter="savePassword"
-            @keydown.esc="showPasswordForm = false"
-          />
-          <p v-if="passwordError" class="text-red-400 text-xs">{{ passwordError }}</p>
-          <p v-if="passwordSuccess" class="text-green-400 text-xs">Password updated!</p>
-          <div class="flex gap-1">
-            <button
-              type="button"
-              :disabled="savingPassword || !newPassword.trim()"
-              class="flex-1 text-sm px-2 py-1 rounded bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              data-testid="settings-save-password"
-              @click="savePassword"
-            >
-              {{ savingPassword ? 'Saving…' : 'Save' }}
-            </button>
-            <button
-              type="button"
-              class="flex-1 text-sm px-2 py-1 rounded bg-gray-700 text-gray-300 hover:bg-gray-600"
-              @click="showPasswordForm = false"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
       </div>
 
       <!-- Copy link -->
@@ -216,4 +156,11 @@ function logout() {
       </div>
     </div>
   </div>
+  <ChangePasswordModal v-model="showChangePasswordModal" />
+  <ResetConfirmModal
+    v-model="showResetConfirmModal"
+    :error="resetError"
+    :resetting="resetting"
+    @confirmed="reset"
+  />
 </template>

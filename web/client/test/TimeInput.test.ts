@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils';
 import TimeInput from '../src/components/common/TimeInput.vue';
 
 describe('TimeInput', () => {
-  it('should parse 30 seconds as 0.5 minutes', async () => {
+  it('should parse 30 seconds as 1 minute', async () => {
     const wrapper = mount(TimeInput, {
       props: {
         modelValue: null,
@@ -36,7 +36,7 @@ describe('TimeInput', () => {
     const emitted = wrapper.emitted('update:modelValue');
     expect(emitted).toBeDefined();
     // The last emitted value
-    expect(emitted![emitted!.length - 1][0]).toBe(0.5);
+    expect(emitted![emitted!.length - 1][0]).toBe(1);
   });
 
   it('should emit null when all inputs are empty', async () => {

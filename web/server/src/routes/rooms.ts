@@ -20,7 +20,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
     }
 
-    const { password, homeZoneId } = parsed.data;
+    const { password, adminPassword, homeZoneId } = parsed.data;
 
     const zone = ZONE_BY_ID.get(homeZoneId);
     if (!zone) {
@@ -33,12 +33,13 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
 
     const id = nanoid(12);
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
+    const adminPasswordHash = await bcrypt.hash(adminPassword, BCRYPT_ROUNDS);
     const createdAt = new Date().toISOString();
 
     app.db.prepare(`
-      INSERT INTO rooms (id, password_hash, home_zone_id, created_at)
-      VALUES (?, ?, ?, ?)
-    `).run(id, passwordHash, homeZoneId, createdAt);
+      INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(id, passwordHash, adminPasswordHash, homeZoneId, createdAt);
 
     const shareUrl = `${request.protocol}://${request.hostname}/rooms/${id}`;
     return reply.status(201).send({ id, shareUrl });
@@ -117,7 +118,18 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     if (!parsed.success) {
       return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
     }
-    const { newPassword } = parsed.data;
+    const { newPassword, adminPassword } = parsed.data;
+    
+    // Check adminPassword
+    const room = app.db.prepare('SELECT admin_password_hash FROM rooms WHERE id = ?').get(id) as { admin_password_hash: string };
+    if (!room) {
+      return reply.status(404).send({ error: 'Room not found' });
+    }
+    const validAdmin = await bcrypt.compare(adminPassword, room.admin_password_hash);
+    if (!validAdmin) {
+      return reply.status(401).send({ error: 'Invalid admin password' });
+    }
+
     const passwordHash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
     const result = app.db
       .prepare('UPDATE rooms SET password_hash = ? WHERE id = ?')
@@ -129,28 +141,37 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
   });
 
   // DELETE /api/rooms/:id/connections — reset (delete all connections in room)
-  app.delete<{ Params: { id: string } }>('/api/rooms/:id/connections', {
+  app.delete<{ Params: { id: string }, Body: { adminPassword: string } }>('/api/rooms/:id/connections', {
     preHandler: [app.authenticate],
   }, async (request, reply) => {
     const { id } = request.params;
+    const { adminPassword } = request.body;
     const jwtPayload = request.user as { roomId: string };
     if (jwtPayload.roomId !== id) {
       return reply.status(403).send({ error: 'Forbidden' });
     }
+
+    // Check adminPassword
+    const room = app.db.prepare('SELECT admin_password_hash FROM rooms WHERE id = ?').get(id) as { admin_password_hash: string };
+    if (!room) {
+      return reply.status(404).send({ error: 'Room not found' });
+    }
+    const validAdmin = await bcrypt.compare(adminPassword, room.admin_password_hash);
+    if (!validAdmin) {
+      return reply.status(401).send({ error: 'Invalid admin password' });
+    }
+
     const rows = app.db
       .prepare('SELECT id FROM connections WHERE room_id = ?')
       .all(id) as { id: string }[];
     app.db.prepare('DELETE FROM connections WHERE room_id = ?').run(id);
     
-    const room = app.db.prepare('SELECT home_zone_id FROM rooms WHERE id = ?').get(id) as { home_zone_id: string };
-    app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ? AND zone_id != ?').run(id, room.home_zone_id);
+    const roomWithHome = app.db.prepare('SELECT home_zone_id FROM rooms WHERE id = ?').get(id) as { home_zone_id: string };
+    app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ? AND zone_id != ?').run(id, roomWithHome.home_zone_id);
     app.db.prepare('UPDATE rooms SET updated_at = ? WHERE id = ?').run(new Date().toISOString(), id);
 
     broadcast(id, { type: 'room_reset' });
 
-    for (const row of rows) {
-      broadcast(id, { type: 'connection_removed', connectionId: row.id });
-    }
     return reply.status(204).send();
   });
 }
