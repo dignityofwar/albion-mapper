@@ -9,7 +9,9 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "vitest run",
-    "lint": "eslint src test --ext .ts"
+    "lint": "eslint src test --ext .ts",
+    "seed": "tsx fixtures/seed.ts",
+    "migrate": "node-pg-migrate"
   },
   "dependencies": {
     "@fastify/jwt": "^9.0.0",
@@ -18,6 +20,7 @@
     "bcrypt": "^5.1.1",
     "fastify": "^5.2.0",
     "nanoid": "^5.0.7",
+    "node-pg-migrate": "^8.0.4",
     "pg": "^8.20.0",
     "shared": "workspace:*",
     "zod": "^3.23.8"

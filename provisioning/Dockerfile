@@ -25,6 +25,8 @@ RUN pnpm install --prod --frozen-lockfile --filter server...
 
 # Copy built application, shared data and workspace files from builder
 COPY --from=builder /app/web/server/dist ./web/server/dist
+COPY --from=builder /app/web/server/migrations ./web/server/migrations
+COPY --from=builder /app/web/server/fixtures ./web/server/fixtures
 COPY --from=builder /app/web/shared/dist ./web/shared/dist
 COPY --from=builder /app/web/shared/data ./web/shared/data
 

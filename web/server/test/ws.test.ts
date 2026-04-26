@@ -1,33 +1,27 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { buildApp } from '../src/app.js';
-import { createInMemoryDb } from '../src/db.js';
 import type { FastifyInstance } from 'fastify';
 
 const VALID_ZONE_A = 'adrens-hill';
 const VALID_ZONE_B = 'anklesnag-mire';
 
 let app: FastifyInstance;
-let roomId: string;
+let roomId = 'test-room-id';
 let token: string;
+let mockDb: any;
 
 beforeEach(async () => {
-  const db = createInMemoryDb();
-  app = await buildApp({ db, disableRateLimit: true, jwtSecret: 'test-secret' });
+  mockDb = {
+    query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+    connect: vi.fn().mockResolvedValue({
+      query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+      release: vi.fn(),
+    }),
+  };
+  app = await buildApp({ db: mockDb, disableRateLimit: true, jwtSecret: 'test-secret' });
   await app.ready();
 
-  const createRes = await app.inject({
-    method: 'POST',
-    url: '/api/rooms',
-    payload: { password: 'pw', homeZoneId: VALID_ZONE_A },
-  });
-  roomId = createRes.json<{ id: string }>().id;
-
-  const authRes = await app.inject({
-    method: 'POST',
-    url: `/api/rooms/${roomId}/auth`,
-    payload: { password: 'pw' },
-  });
-  token = authRes.json<{ token: string }>().token;
+  token = app.jwt.sign({ roomId });
 });
 
 afterEach(async () => {
@@ -74,6 +68,10 @@ describe('WebSocket authentication', () => {
   });
 
   it('responds with auth_ok when valid token is sent', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId, home_zone_id: VALID_ZONE_A, created_at: new Date().toISOString() }] }); // room
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // node positions
+
     await app.listen({ port: 0 });
 
     const { socket } = await connectWs(roomId);
@@ -88,6 +86,10 @@ describe('WebSocket authentication', () => {
   });
 
   it('sends sync message after auth_ok', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId, home_zone_id: VALID_ZONE_A, created_at: new Date().toISOString() }] }); // room
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // node positions
+
     await app.listen({ port: 0 });
 
     const { socket } = await connectWs(roomId);
@@ -127,21 +129,21 @@ describe('WebSocket authentication', () => {
   });
 
   it('only fans out to clients in the same room', async () => {
+    // room 1 sync mocks
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId, home_zone_id: VALID_ZONE_A, created_at: new Date().toISOString() }] });
+    mockDb.query.mockResolvedValueOnce({ rows: [] });
+    mockDb.query.mockResolvedValueOnce({ rows: [] });
+
     await app.listen({ port: 0 });
 
     // Create a second room
-    const createRes2 = await app.inject({
-      method: 'POST',
-      url: '/api/rooms',
-      payload: { password: 'pw2', homeZoneId: VALID_ZONE_B },
-    });
-    const roomId2 = createRes2.json<{ id: string }>().id;
-    const authRes2 = await app.inject({
-      method: 'POST',
-      url: `/api/rooms/${roomId2}/auth`,
-      payload: { password: 'pw2' },
-    });
-    const token2 = authRes2.json<{ token: string }>().token;
+    const roomId2 = 'room-2';
+    const token2 = app.jwt.sign({ roomId: roomId2 });
+
+    // room 2 sync mocks
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId2, home_zone_id: VALID_ZONE_B, created_at: new Date().toISOString() }] });
+    mockDb.query.mockResolvedValueOnce({ rows: [] });
+    mockDb.query.mockResolvedValueOnce({ rows: [] });
 
     const ws1 = await connectWs(roomId);
     const ws2 = await connectWs(roomId2);
@@ -163,6 +165,9 @@ describe('WebSocket authentication', () => {
     const beforeCount2 = room2Messages.length;
 
     // Post a connection to room 1 only
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+    
     await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,

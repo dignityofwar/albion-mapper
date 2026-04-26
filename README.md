@@ -11,7 +11,7 @@ Multiple users join a shared, password-protected room and contribute connection 
 | Layer | Technologies |
 |---|---|
 | Language | TypeScript (strict mode) |
-| Backend | Fastify, `@fastify/websocket`, `better-sqlite3`, `bcrypt`, `zod` |
+| Backend | Fastify, `@fastify/websocket`, `pg`, `bcrypt`, `zod` |
 | Frontend | Vite + Vue 3 (`<script setup>`), TailwindCSS, `@vue-flow/core`, `reka-ui`, Pinia |
 | Testing | `vitest`, `@testing-library/vue`, `@vue/test-utils`, `supertest` |
 | Tooling | pnpm workspaces, `tsx` |
@@ -41,8 +41,10 @@ albion-mapper/
 │   ├── client/         # Vue 3 SPA — components, stores, composables
 │   │   ├── src/
 │   │   └── test/
-│   ├── server/         # Fastify API — HTTP routes, WS, SQLite, expiry
+│   ├── server/         # Fastify API — HTTP routes, WS, PostgreSQL, expiry
 │   │   ├── src/
+│   │   ├── migrations/ # Database migrations (node-pg-migrate)
+│   │   ├── fixtures/   # Data seeding
 │   │   └── test/
 │   └── shared/         # Domain types, Zod schemas, zones adapter
 │       ├── src/
@@ -101,6 +103,7 @@ WebSocket at `/ws/rooms/:id`. Authenticated via JWT (sent as first `auth` messag
 
 | Variable | Default | Description |
 |---|---|---|
+| `DATABASE_URL` | - | PostgreSQL connection string (required) |
 | `JWT_SECRET` | `change-me-in-production` | HMAC secret for JWT signing |
 | `PORT` | `3001` | Server listen port |
 | `HOST` | `0.0.0.0` | Server listen host |
