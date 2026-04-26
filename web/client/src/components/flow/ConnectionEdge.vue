@@ -1,21 +1,32 @@
 <script setup lang="ts">
-import { computed, ref, watch, onUnmounted, nextTick } from 'vue';
+import { computed, ref, watch, onUnmounted, nextTick, inject, type Ref } from 'vue';
 import { BaseEdge, EdgeLabelRenderer, getStraightPath } from '@vue-flow/core';
 import type { EdgeProps } from '@vue-flow/core';
 import { connectionStyle } from '../../utils/connectionStyle.js';
 import { formatCountdown } from '../../utils/formatters.js';
-import type { Connection } from 'shared';
+import TimeInput from '../common/TimeInput.vue';
+import { ZONE_BY_ID, type Connection } from 'shared';
 
 type EdgeData = {
   connection: Connection;
   now: number; // epoch ms, updated by parent interval
   onDelete: (id: string) => void;
+  onUpdate: (id: string, minutesRemaining: number) => void;
 };
 
 const props = defineProps<EdgeProps<EdgeData>>();
 
 const showPopover = ref(false);
 const popoverRef = ref<HTMLElement | null>(null);
+const newMinutesRemaining = ref<number | null>(null);
+
+const openPopoverId = inject<Ref<string | null>>('openPopoverId');
+
+watch(openPopoverId!, (newId) => {
+  if (newId !== props.id) {
+    showPopover.value = false;
+  }
+});
 
 function closePopover(event: MouseEvent) {
   if (showPopover.value) {
@@ -23,11 +34,18 @@ function closePopover(event: MouseEvent) {
     if (target.closest('[data-trigger="true"]')) return;
     if (popoverRef.value && popoverRef.value.contains(target)) return;
     showPopover.value = false;
+    if (openPopoverId && openPopoverId.value === props.id) {
+      openPopoverId.value = null;
+    }
   }
 }
 
 watch(showPopover, (val) => {
   if (val) {
+    if (openPopoverId) {
+      openPopoverId.value = props.id;
+    }
+    newMinutesRemaining.value = null;
     nextTick(() => {
       document.addEventListener('click', closePopover);
     });
@@ -46,6 +64,10 @@ const isStale = computed(() => remainingMs.value < 0 && remainingMs.value > -6 *
 const isExpired = computed(() => props.data.connection.isExpired ?? false);
 
 const style = computed(() => connectionStyle(remainingMs.value, isStale.value, isExpired.value));
+
+function getZoneName(id: string) {
+  return ZONE_BY_ID.get(id)?.name ?? id;
+}
 
 const straight = computed(() =>
   getStraightPath({
@@ -103,16 +125,31 @@ const labelY = computed(() => straight.value[2]);
         >
           ✕
         </button>
+        <div class="text-sm font-bold mb-2 text-center">
+          <div>{{ getZoneName(data.connection.fromZoneId) }}</div>
+          <div class="text-xs text-gray-400 font-normal">to</div>
+          <div>{{ getZoneName(data.connection.toZoneId) }}</div>
+        </div>
         <div v-if="data.connection.reportedBy" class="mb-1">
           <span class="text-gray-400">By:</span> {{ data.connection.reportedBy }}
         </div>
         <div class="mb-1">
-          <span class="text-gray-400">At:</span>
+          <span class="text-gray-400">Created:</span>
           {{ new Date(data.connection.reportedAt).toLocaleTimeString() }}
         </div>
         <div class="mb-2">
           <span class="text-gray-400">Expires:</span>
           {{ new Date(data.connection.expiresAt).toLocaleTimeString() }}
+          <div class="mt-2">
+            <TimeInput v-model="newMinutesRemaining" />
+            <button
+              :disabled="newMinutesRemaining === null"
+              class="w-full mt-2 px-2 py-1 rounded bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-medium disabled:opacity-50"
+              @click.stop="data.onUpdate(id, newMinutesRemaining!); showPopover = false"
+            >
+              Update
+            </button>
+          </div>
         </div>
         <button
           class="w-full px-2 py-1 rounded bg-red-700 hover:bg-red-600 text-white text-xs font-medium"

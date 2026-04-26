@@ -90,13 +90,13 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex items-center gap-2 bg-gray-800 border border-gray-600 rounded px-3 py-2">
+  <div class="flex items-center justify-center bg-gray-800 border border-gray-600 rounded px-3 py-2">
     <input
       ref="hoursEl"
       type="number"
-      v-model="hours"
-      placeholder="H"
-      class="w-10 bg-transparent text-white text-sm outline-none text-center"
+      v-model.number="hours"
+      placeholder="HH"
+      class="w-8 bg-transparent text-white text-sm outline-none text-center"
       min="0"
       max="23"
       @keydown="onKeydown"
@@ -104,9 +104,9 @@ defineExpose({
     <span class="text-gray-400">:</span>
     <input
       type="number"
-      v-model="minutes"
+      v-model.number="minutes"
       placeholder="MM"
-      class="w-10 bg-transparent text-white text-sm outline-none text-center"
+      class="w-8 bg-transparent text-white text-sm outline-none text-center"
       min="0"
       max="59"
       @keydown="onKeydown"
@@ -114,12 +114,26 @@ defineExpose({
     <span class="text-gray-400">:</span>
     <input
       type="number"
-      v-model="seconds"
+      v-model.number="seconds"
       placeholder="SS"
-      class="w-10 bg-transparent text-white text-sm outline-none text-center"
+      class="w-8 bg-transparent text-white text-sm outline-none text-center"
       min="0"
       max="59"
       @keydown="onKeydown"
     />
   </div>
 </template>
+
+<style scoped>
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+</style>

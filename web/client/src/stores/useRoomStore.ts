@@ -38,6 +38,16 @@ export const useRoomStore = defineStore('room', () => {
         lastUpdate.value = new Date(msg.connection.reportedAt);
         break;
 
+      case 'connection_updated':
+        {
+          const index = connections.value.findIndex((c) => c.id === msg.connection.id);
+          if (index !== -1) {
+            connections.value[index] = msg.connection;
+          }
+        }
+        lastUpdate.value = new Date();
+        break;
+
       case 'connection_removed':
         connections.value = connections.value.filter((c) => c.id !== msg.connectionId);
         lastUpdate.value = new Date();

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, watchEffect, nextTick, markRaw } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect, nextTick, markRaw, provide } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
@@ -13,7 +13,7 @@ import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
-import { setHomeZone, deleteConnection } from '../utils/roomOperations.js';
+import { setHomeZone, deleteConnection, updateConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
 import { radialLayout } from '../utils/radialLayout.js';
 import { ZONE_BY_ID, type Connection, type NodePosition } from 'shared';
@@ -100,6 +100,8 @@ onUnmounted(() => {
 
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
 const { fitView, updateNode } = useVueFlow();
+const openPopoverId = ref<string | null>(null);
+provide('openPopoverId', openPopoverId);
 
 const flowNodes = ref<Node[]>([]);
 const flowEdges = ref<Edge[]>([]);
@@ -213,6 +215,9 @@ watch([homeZoneId, nodePositions, connections], () => {
           now: now.value,
           onDelete: async (id: string) => {
             await deleteConnection(props.id, store.token!, id);
+          },
+          onUpdate: async (id: string, minutesRemaining: number) => {
+            await updateConnection(props.id, store.token!, id, minutesRemaining);
           },
         },
       };

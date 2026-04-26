@@ -55,7 +55,7 @@ async function submit() {
       body: JSON.stringify({
         fromZoneId: fromZoneId.value,
         toZoneId: toZoneId.value,
-        minutesRemaining: minutesRemaining.value!,
+        minutesRemaining: Number(minutesRemaining.value!),
         reportedBy: reportedBy.value || undefined,
       }),
     });
@@ -97,7 +97,7 @@ defineExpose({ minutesRemaining, fromZoneId });
 
 <template>
   <form
-    class="relative flex flex-col md:flex-row md:items-center gap-2 p-2 bg-gray-900 border-b border-gray-700"
+    class="relative flex flex-col md:flex-row md:items-center gap-1 p-2 bg-gray-900 border-b border-gray-700"
     style="z-index:10"
     data-testid="report-form"
     @submit.prevent="submit"

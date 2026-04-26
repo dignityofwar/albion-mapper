@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import { CreateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus } from 'shared';
+import { CreateConnectionBodySchema, UpdateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus } from 'shared';
 import type { Connection, NodePosition } from 'shared';
 import { broadcast } from '../broadcast.js';
 
@@ -165,6 +165,53 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       }
 
       return reply.status(204).send();
+    },
+  );
+
+  // PATCH /api/rooms/:id/connections/:connId — update a connection
+  app.patch<{ Params: { id: string; connId: string } }>(
+    '/api/rooms/:id/connections/:connId',
+    {
+      preHandler: [app.authenticate],
+    },
+    async (request, reply) => {
+      const { id, connId } = request.params;
+      const jwtPayload = request.user as { roomId: string };
+
+      if (jwtPayload.roomId !== id) {
+        return reply.status(403).send({ error: 'Forbidden' });
+      }
+
+      const parsed = UpdateConnectionBodySchema.safeParse(request.body);
+      if (!parsed.success) {
+        return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
+      }
+
+      const { minutesRemaining } = parsed.data;
+
+      const conn = app.db
+        .prepare('SELECT id FROM connections WHERE id = ? AND room_id = ?')
+        .get(connId, id) as { id: string } | undefined;
+
+      if (!conn) {
+        return reply.status(404).send({ error: 'Connection not found' });
+      }
+
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + minutesRemaining * 60 * 1000).toISOString();
+
+      app.db
+        .prepare('UPDATE connections SET expires_at = ? WHERE id = ? AND room_id = ?')
+        .run(expiresAt, connId, id);
+
+      const updatedConn = app.db
+        .prepare('SELECT * FROM connections WHERE id = ? AND room_id = ?')
+        .get(connId, id) as DbConnection;
+
+      const connection = dbRowToConnection(updatedConn);
+
+      broadcast(id, { type: 'connection_updated', connection });
+      return reply.send(connection);
     },
   );
 }

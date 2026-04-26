@@ -20,7 +20,7 @@ afterEach(() => {
 
 function mountForm() {
   return mount(ReportForm, {
-    global: { plugins: [createPinia()] },
+    global: { plugins: [createPinia()], stubs: ['RoomSettings'] },
     attachTo,
   });
 }

@@ -35,3 +35,22 @@ export async function deleteConnection(
     headers: { Authorization: `Bearer ${token}` },
   });
 }
+
+/**
+ * Updates a connection's expiration time.
+ */
+export async function updateConnection(
+  roomId: string,
+  token: string,
+  connectionId: string,
+  minutesRemaining: number,
+): Promise<void> {
+  await fetch(`/api/rooms/${roomId}/connections/${connectionId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ minutesRemaining: Number(minutesRemaining) }),
+  });
+}

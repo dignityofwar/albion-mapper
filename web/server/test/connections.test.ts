@@ -116,6 +116,29 @@ describe('POST /api/rooms/:id/connections', () => {
     });
     expect(res.statusCode).toBe(401);
   });
+
+  it('updates a connection', async () => {
+    // Create a connection
+    const createRes = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, minutesRemaining: 60 },
+    });
+    const conn = createRes.json<Connection>();
+
+    // Update it
+    const updateRes = await app.inject({
+      method: 'PATCH',
+      url: `/api/rooms/${roomId}/connections/${conn.id}`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { minutesRemaining: 120 },
+    });
+    
+    expect(updateRes.statusCode).toBe(200);
+    const updatedConn = updateRes.json<Connection>();
+    expect(new Date(updatedConn.expiresAt).getTime()).toBeGreaterThan(new Date(conn.expiresAt).getTime());
+  });
 });
 
 describe('GET /api/rooms/:id/connections', () => {

@@ -123,6 +123,10 @@ export const CreateConnectionBodySchema = z.object({
   reportedBy: z.string().optional(),
 });
 
+export const UpdateConnectionBodySchema = z.object({
+  minutesRemaining: z.number().int().min(1).max(1440),
+});
+
 export const UpdateRoomBodySchema = z.object({
   homeZoneId: z.string().min(1),
 });
@@ -136,6 +140,7 @@ export type ServerMessage =
   | { type: 'auth_ok' }
   | { type: 'sync'; connections: Connection[]; homeZoneId: string; nodePositions: NodePosition[]; lastUpdatedAt: string }
   | { type: 'connection_added'; connection: Connection }
+  | { type: 'connection_updated'; connection: Connection }
   | { type: 'connection_removed'; connectionId: string }
   | { type: 'connection_expired'; connectionId: string }
   | { type: 'room_updated'; homeZoneId: string }
