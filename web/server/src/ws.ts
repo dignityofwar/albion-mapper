@@ -71,16 +71,18 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
             send({ type: 'auth_ok' });
 
             // Send initial sync
-            const room = app.db.prepare('SELECT * FROM rooms WHERE id = ?').get(roomId) as DbRoom | undefined;
+            const { rows: roomRows } = await app.db.query<DbRoom>('SELECT * FROM rooms WHERE id = $1', [roomId]);
+            const room = roomRows[0];
             if (!room) {
               send({ type: 'error', message: 'Room not found' });
               socket.close(1008, 'Room not found');
               return;
             }
 
-            const rows = app.db
-              .prepare('SELECT * FROM connections WHERE room_id = ?')
-              .all(roomId) as DbConnection[];
+            const { rows: rows } = await app.db.query<DbConnection>(
+              'SELECT * FROM connections WHERE room_id = $1',
+              [roomId]
+            );
 
             const now = new Date();
             const connections: Connection[] = rows
@@ -99,9 +101,10 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               return row.reported_at > max ? row.reported_at : max;
             }, room.updated_at || room.created_at);
 
-            const nodePosRows = app.db
-              .prepare('SELECT zone_id, x, y FROM room_node_positions WHERE room_id = ?')
-              .all(roomId) as { zone_id: string; x: number; y: number }[];
+            const { rows: nodePosRows } = await app.db.query<{ zone_id: string; x: number; y: number }>(
+              'SELECT zone_id, x, y FROM room_node_positions WHERE room_id = $1',
+              [roomId]
+            );
             const nodePositions: NodePosition[] = nodePosRows.map((row) => ({
               zoneId: row.zone_id,
               x: row.x,
@@ -118,15 +121,24 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
         if (msg.type === 'update_node_positions') {
           if (msg.nodePositions.length <= 1) return;
 
-          const homeZoneIdRow = app.db.prepare('SELECT home_zone_id FROM rooms WHERE id = ?').get(roomId) as { home_zone_id: string } | undefined;
+          const { rows: homeZoneIdRows } = await app.db.query<{ home_zone_id: string }>(
+            'SELECT home_zone_id FROM rooms WHERE id = $1',
+            [roomId]
+          );
+          const homeZoneIdRow = homeZoneIdRows[0];
+          
           const homePos = homeZoneIdRow 
-            ? (app.db.prepare('SELECT x, y FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, homeZoneIdRow.home_zone_id) as { x: number, y: number } | undefined)
+            ? (await app.db.query<{ x: number; y: number }>(
+              'SELECT x, y FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
+              [roomId, homeZoneIdRow.home_zone_id]
+            )).rows[0]
             : undefined;
 
-          const insert = app.db.prepare('INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES (?, ?, ?, ?)');
-          const transaction = app.db.transaction((positions: NodePosition[]) => {
-            app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ?').run(roomId);
-            for (const pos of positions) {
+          const client = await app.db.connect();
+          try {
+            await client.query('BEGIN');
+            await client.query('DELETE FROM room_node_positions WHERE room_id = $1', [roomId]);
+            for (const pos of msg.nodePositions) {
               let x = pos.x;
               let y = pos.y;
               if (homePos && homeZoneIdRow && pos.zoneId === homeZoneIdRow.home_zone_id) {
@@ -135,11 +147,23 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
                 pos.x = x;
                 pos.y = y;
               }
-              insert.run(roomId, pos.zoneId, x, y);
+              await client.query(
+                'INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES ($1, $2, $3, $4)',
+                [roomId, pos.zoneId, x, y]
+              );
             }
-            app.db.prepare('UPDATE rooms SET updated_at = ? WHERE id = ?').run(new Date().toISOString(), roomId);
-          });
-          transaction(msg.nodePositions);
+            await client.query(
+              'UPDATE rooms SET updated_at = $1 WHERE id = $2',
+              [new Date().toISOString(), roomId]
+            );
+            await client.query('COMMIT');
+          } catch (e) {
+            await client.query('ROLLBACK');
+            throw e;
+          } finally {
+            client.release();
+          }
+
           broadcast(roomId, { type: 'node_positions_updated', nodePositions: msg.nodePositions }, socket);
           return;
         }

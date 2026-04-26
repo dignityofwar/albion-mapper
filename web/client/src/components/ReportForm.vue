@@ -88,7 +88,7 @@ function onTimeKeydown(e: KeyboardEvent) {
 }
 
 const timeInputEl = ref<{ focus: () => void } | null>(null);
-const toComboboxInputEl = ref<{ focus: () => void } | null>(null);
+const toComboboxInputEl = ref<{ focus: () => void; flash: () => void } | null>(null);
 const fromComboboxInputEl = ref<{ focus: () => void } | null>(null);
 
 function focusToCombobox() {

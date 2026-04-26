@@ -18,7 +18,8 @@ describe('useRoomStore', () => {
       type: 'sync',
       connections: [{ id: 'c1', roomId: 'r1', fromZoneId: 'a', toZoneId: 'b', expiresAt: new Date().toISOString(), reportedAt: new Date().toISOString() }],
       homeZoneId: 'home',
-      nodePositions: [{ zoneId: 'home', x: 0, y: 0 }, { zoneId: 'b', x: 10, y: 10 }]
+      nodePositions: [{ zoneId: 'home', x: 0, y: 0 }, { zoneId: 'b', x: 10, y: 10 }],
+      lastUpdatedAt: new Date().toISOString()
     });
 
     store.applyMessage({ type: 'room_reset' });

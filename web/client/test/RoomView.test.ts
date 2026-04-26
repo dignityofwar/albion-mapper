@@ -136,7 +136,8 @@ describe('RoomView', () => {
         nodePositions: [
             { zoneId: 'zone-a', x: 0, y: 0 },
             { zoneId: 'zone-b', x: 10, y: 10 }
-        ]
+        ],
+        lastUpdatedAt: new Date().toISOString()
     });
 
     const wrapper = mount(RoomView, {

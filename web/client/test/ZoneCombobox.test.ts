@@ -13,7 +13,14 @@ describe('ZoneCombobox filtering logic', () => {
     setActivePinia(createPinia());
     const store = useRoomStore();
     // Make sure we have some connections
-    store.connections = [{ fromZoneId: '1', toZoneId: '2' }];
+    store.connections = [{
+      id: '550e8400-e29b-41d4-a716-446655440000',
+      roomId: 'room1',
+      fromZoneId: '1',
+      toZoneId: '2',
+      expiresAt: new Date().toISOString(),
+      reportedAt: new Date().toISOString(),
+    }];
 
     const wrapper = mount(ZoneCombobox, {
       props: { modelValue: '', smartAlreadyAdded: true },
@@ -34,7 +41,14 @@ describe('ZoneCombobox filtering logic', () => {
   it('smartAlreadyAdded sorts already-added zones to bottom when query', async () => {
     setActivePinia(createPinia());
     const store = useRoomStore();
-    store.connections = [{ fromZoneId: '1', toZoneId: '2' }];
+    store.connections = [{
+      id: '550e8400-e29b-41d4-a716-446655440000',
+      roomId: 'room1',
+      fromZoneId: '1',
+      toZoneId: '2',
+      expiresAt: new Date().toISOString(),
+      reportedAt: new Date().toISOString(),
+    }];
 
     const wrapper = mount(ZoneCombobox, {
       props: { modelValue: '', smartAlreadyAdded: true, alreadyAddedPlacement: 'bottom' },
@@ -67,7 +81,14 @@ describe('ZoneCombobox filtering logic', () => {
   it('smartAlreadyAdded sorts already-added zones to top when query', async () => {
     setActivePinia(createPinia());
     const store = useRoomStore();
-    store.connections = [{ fromZoneId: '1', toZoneId: '2' }];
+    store.connections = [{
+      id: '550e8400-e29b-41d4-a716-446655440000',
+      roomId: 'room1',
+      fromZoneId: '1',
+      toZoneId: '2',
+      expiresAt: new Date().toISOString(),
+      reportedAt: new Date().toISOString(),
+    }];
 
     const wrapper = mount(ZoneCombobox, {
       props: { modelValue: '', smartAlreadyAdded: true, alreadyAddedPlacement: 'top' },

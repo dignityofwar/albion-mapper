@@ -7,7 +7,7 @@ import ReportForm from '../components/ReportForm.vue';
 import DebugTray from '../components/DebugTray.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
-import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge } from '@vue-flow/core';
+import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
@@ -295,7 +295,7 @@ const showDebug = ref(false);
 
 // ── Actions ──────────────────────────────────────────────────────────────────
 function onNodeDragStop() {
-  const positions = flowNodes.value.map((n: Node) => ({
+  const positions: NodePosition[] = flowNodes.value.map((n: any) => ({
     zoneId: n.id,
     x: n.position.x,
     y: n.position.y,
@@ -313,18 +313,18 @@ function handleConnect() {
   wasConnected = true;
 }
 
-function handleConnectStart(event: any, params: any) {
-  draggingFromNodeId = event.nodeId ?? params?.nodeId ?? null;
+function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent }) {
+  draggingFromNodeId = params.nodeId ?? null;
 }
 
-function handleConnectEnd(event: any, connectionState: any) {
+function handleConnectEnd(event?: MouseEvent) {
   if (wasConnected) {
     wasConnected = false;
     draggingFromNodeId = null;
     return;
   }
   
-  const fromNodeId = connectionState?.fromNode?.id ?? draggingFromNodeId;
+  const fromNodeId = draggingFromNodeId;
   
   if (fromNodeId) {
      reportForm.value?.setFromZoneId(fromNodeId);

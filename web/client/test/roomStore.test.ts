@@ -22,7 +22,13 @@ describe('useRoomStore', () => {
   it('applies sync message — sets connections and homeZoneId', () => {
     const store = useRoomStore();
     const conn = makeConn('c1');
-    store.applyMessage({ type: 'sync', connections: [conn], homeZoneId: 'zone-a' });
+    store.applyMessage({ 
+      type: 'sync', 
+      connections: [conn], 
+      homeZoneId: 'zone-a',
+      nodePositions: [],
+      lastUpdatedAt: new Date().toISOString()
+    });
 
     expect(store.connections).toHaveLength(1);
     expect(store.connections[0].id).toBe('c1');
@@ -76,7 +82,13 @@ describe('useRoomStore', () => {
 
   it('applies room_updated — changes homeZoneId', () => {
     const store = useRoomStore();
-    store.applyMessage({ type: 'sync', connections: [], homeZoneId: 'zone-a' });
+    store.applyMessage({ 
+      type: 'sync', 
+      connections: [], 
+      homeZoneId: 'zone-a',
+      nodePositions: [],
+      lastUpdatedAt: new Date().toISOString()
+    });
     store.applyMessage({ type: 'room_updated', homeZoneId: 'zone-b' });
 
     expect(store.homeZoneId).toBe('zone-b');
