@@ -12,9 +12,16 @@ const minutes = ref<number | null>(null);
 const seconds = ref<number | null>(null);
 
 watch([hours, minutes, seconds], () => {
-  let h = hours.value ?? 0;
-  let m = minutes.value ?? 0;
-  let s = seconds.value ?? 0;
+  let h = Number(hours.value ?? 0);
+  let m = Number(minutes.value ?? 0);
+  let s = Number(seconds.value ?? 0);
+  
+  const isEmpty = (val: number | null | string) => val === null || val === '';
+  
+  if (isEmpty(hours.value) && isEmpty(minutes.value) && isEmpty(seconds.value)) {
+    emit('update:modelValue', null);
+    return;
+  }
   
   let clamped = false;
   if (h > 23) {
@@ -50,11 +57,7 @@ watch([hours, minutes, seconds], () => {
     seconds.value = s;
   }
   
-  if (h === 0 && m === 0 && s === 0) {
-    emit('update:modelValue', null);
-  } else {
-    emit('update:modelValue', h * 60 + m + s / 60);
-  }
+  emit('update:modelValue', h * 60 + m + s / 60);
 });
 
 watch(() => props.modelValue, (newVal) => {
