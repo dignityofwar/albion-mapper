@@ -1,21 +1,17 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { EdgeLabelRenderer, getBezierPath } from '@vue-flow/core';
+import { BaseEdge, EdgeLabelRenderer, getStraightPath } from '@vue-flow/core';
+import type { EdgeProps } from '@vue-flow/core';
 import { connectionStyle } from '../../utils/connectionStyle.js';
 import type { Connection } from 'shared';
 
-const props = defineProps<{
-  id: string;
-  sourceX: number;
-  sourceY: number;
-  targetX: number;
-  targetY: number;
-  data: {
-    connection: Connection;
-    now: number; // epoch ms, updated by parent interval
-    onDelete: (id: string) => void;
-  };
-}>();
+type EdgeData = {
+  connection: Connection;
+  now: number; // epoch ms, updated by parent interval
+  onDelete: (id: string) => void;
+};
+
+const props = defineProps<EdgeProps<EdgeData>>();
 
 const showPopover = ref(false);
 
@@ -25,12 +21,17 @@ const isStale = computed(() => remainingMs.value < 0 && remainingMs.value > -6 *
 
 const style = computed(() => connectionStyle(remainingMs.value, isStale.value));
 
-const [path, labelX, labelY] = getBezierPath({
-  sourceX: props.sourceX,
-  sourceY: props.sourceY,
-  targetX: props.targetX,
-  targetY: props.targetY,
-});
+const straight = computed(() =>
+  getStraightPath({
+    sourceX: props.sourceX,
+    sourceY: props.sourceY,
+    targetX: props.targetX,
+    targetY: props.targetY,
+  }),
+);
+const path = computed(() => straight.value[0]);
+const labelX = computed(() => straight.value[1]);
+const labelY = computed(() => straight.value[2]);
 
 function formatCountdown(ms: number): string {
   if (ms <= 0) return 'Expired';
@@ -47,13 +48,10 @@ function formatCountdown(ms: number): string {
 </script>
 
 <template>
-  <path
+  <BaseEdge
     :id="id"
-    :d="path"
-    :stroke="style.stroke"
-    :stroke-dasharray="style.strokeDasharray"
-    stroke-width="2"
-    fill="none"
+    :path="path"
+    :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2 }"
     class="cursor-pointer"
     @click="showPopover = !showPopover"
   />

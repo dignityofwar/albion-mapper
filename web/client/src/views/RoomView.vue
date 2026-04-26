@@ -1,23 +1,25 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import ReportForm from '../components/ReportForm.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
-import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
-import { VueFlow, useVueFlow } from '@vue-flow/core';
+import DebugTray from '../components/DebugTray.vue';
+import RoomSettings from '../components/RoomSettings.vue';
+import { VueFlow, useVueFlow, ConnectionMode } from '@vue-flow/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { radialLayout } from '../utils/radialLayout.js';
 import { getConnectionStatus } from 'shared';
+import { connectionStyle } from '../utils/connectionStyle.js';
+import { formatTime, formatExpiresIn } from '../utils/formatters.js';
+import { setHomeZone, deleteConnection } from '../utils/roomOperations.js';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
+const router = useRouter();
 
-// ── Auth gate ────────────────────────────────────────────────────────────────
-const password = ref('');
-const authError = ref('');
-const authenticating = ref(false);
-const isAuthenticated = ref(false);
+// ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
 const lastUpdateFlash = ref(false);
 let flashTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -36,46 +38,22 @@ watch(
   },
 );
 
-onMounted(async () => {
-  // Check session storage for a pre-existing token (from create flow)
+onMounted(() => {
   const stored = sessionStorage.getItem(`token:${props.id}`);
+  if (!stored) {
+    router.replace({ path: `/rooms/${props.id}/auth` });
+    return;
+  }
+  store.setCredentials(props.id, stored);
+  store.connect();
   const shareUrl = sessionStorage.getItem(`shareUrl:${props.id}`);
-  if (stored) {
-    store.setCredentials(props.id, stored);
-    isAuthenticated.value = true;
-    store.connect();
-    if (shareUrl) {
-      showToast(`Share URL: ${shareUrl}`);
-      sessionStorage.removeItem(`shareUrl:${props.id}`);
-    }
+  if (shareUrl) {
+    showToast(`Share URL: ${shareUrl}`);
+    sessionStorage.removeItem(`shareUrl:${props.id}`);
   }
 });
 
-async function authenticate() {
-  if (!password.value) return;
-  authenticating.value = true;
-  authError.value = '';
-  try {
-    const res = await fetch(`/api/rooms/${props.id}/auth`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: password.value }),
-    });
-    if (!res.ok) {
-      authError.value = 'Invalid password';
-      return;
-    }
-    const { token } = await res.json() as { token: string };
-    sessionStorage.setItem(`token:${props.id}`, token);
-    store.setCredentials(props.id, token);
-    isAuthenticated.value = true;
-    store.connect();
-  } finally {
-    authenticating.value = false;
-  }
-}
-
-// ── Toast ────────────────────────────────────────────────────────────────────
+// ── Toast (kept below) ───────────────────────────────────────────────────────
 let toastTimeout: ReturnType<typeof setTimeout> | null = null;
 function showToast(msg: string) {
   toast.value = msg;
@@ -93,14 +71,6 @@ onUnmounted(() => {
   if (flashTimeout) clearTimeout(flashTimeout);
 });
 
-function formatTime(d: Date): string {
-  const day   = String(d.getDate()).padStart(2, '0');
-  const month = d.toLocaleString('en-GB', { month: 'short' }); // "Apr", "Jan", …
-  const hh    = String(d.getHours()).padStart(2, '0');
-  const mm    = String(d.getMinutes()).padStart(2, '0');
-  const ss    = String(d.getSeconds()).padStart(2, '0');
-  return `${day}/${month} ${hh}:${mm}:${ss}`;
-}
 
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
 const { fitView } = useVueFlow();
@@ -110,116 +80,116 @@ const nodes = computed(() => {
     (c) => getConnectionStatus(c, new Date(now.value)) !== 'expired',
   );
   const positions = radialLayout(store.homeZoneId, conns);
-  return positions.map((p) => ({
-    id: p.id,
-    type: 'zone',
-    position: { x: p.x, y: p.y },
-    data: { isHome: p.id === store.homeZoneId },
-  }));
+  return positions.map((p) => {
+    const isHome = p.id === store.homeZoneId;
+    return {
+      id: p.id,
+      type: 'zone',
+      position: { x: p.x, y: p.y },
+      // All nodes are the same visual size: w-40 h-20 = 160×80px
+      width: 160,
+      height: 80,
+      data: { isHome },
+    };
+  });
 });
+
+// Re-fit the view whenever the set of nodes changes (e.g. after WS sync)
+watch(
+  () => nodes.value.length,
+  async () => {
+    await nextTick();
+    fitView({ padding: 0.2, duration: 300 });
+  },
+);
+
+
 
 const edges = computed(() => {
   const conns = store.connections.filter(
     (c) => getConnectionStatus(c, new Date(now.value)) !== 'expired',
   );
-  return conns.map((c) => ({
-    id: c.id,
-    type: 'connection',
-    source: c.fromZoneId,
-    target: c.toZoneId,
-    data: {
-      connection: c,
-      now: now.value,
-      onDelete: deleteConnection,
-    },
-  }));
+  return conns.map((c) => {
+    const remainingMs = new Date(c.expiresAt).getTime() - now.value;
+    const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
+    const style = connectionStyle(remainingMs, isStale);
+    return {
+      id: c.id,
+      type: 'default',
+      source: c.fromZoneId,
+      target: c.toZoneId,
+      animated: style.animated,
+      label: formatExpiresIn(remainingMs),
+      style: { stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2 },
+      labelStyle: { fill: '#fff', fontSize: 11 },
+      labelBgStyle: { fill: '#111827', fillOpacity: 0.8 },
+      data: { connection: c, onDelete: handleDeleteConnection },
+    };
+  });
 });
 
+// ── Debug tray ───────────────────────────────────────────────────────────────
+const showDebug = ref(false);
+
 // ── Actions ──────────────────────────────────────────────────────────────────
-async function setHomeZone(zoneId: string) {
+function handleSetHomeZone(zoneId: string) {
   if (zoneId === store.homeZoneId) return;
-  await fetch(`/api/rooms/${props.id}`, {
-    method: 'PATCH',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${store.token}`,
-    },
-    body: JSON.stringify({ homeZoneId: zoneId }),
-  });
+  setHomeZone(props.id, store.token!, zoneId);
 }
 
-async function deleteConnection(connectionId: string) {
-  await fetch(`/api/rooms/${props.id}/connections/${connectionId}`, {
-    method: 'DELETE',
-    headers: { Authorization: `Bearer ${store.token}` },
-  });
+function handleDeleteConnection(connectionId: string) {
+  deleteConnection(props.id, store.token!, connectionId);
 }
 </script>
 
 <template>
   <div class="h-screen flex flex-col bg-gray-950 text-white">
-    <!-- Auth gate -->
-    <div
-      v-if="!isAuthenticated"
-      class="flex-1 flex items-center justify-center p-6"
-    >
-      <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-sm">
-        <h2 class="text-xl font-semibold mb-4">Enter Room Password</h2>
-        <p class="text-gray-400 text-sm mb-4">Room: <code class="text-indigo-300">{{ id }}</code></p>
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white outline-none mb-3"
-          @keydown.enter="authenticate"
-        />
-        <p v-if="authError" class="text-red-400 text-sm mb-3">{{ authError }}</p>
-        <button
-          :disabled="!password || authenticating"
-          class="w-full px-4 py-2 rounded bg-indigo-600 hover:bg-indigo-500 font-medium disabled:opacity-50"
-          @click="authenticate"
-        >
-          {{ authenticating ? 'Authenticating…' : 'Enter' }}
-        </button>
-      </div>
+    <!-- Sticky report panel -->
+    <div class="shrink-0">
+      <ReportForm @success="showToast" />
     </div>
 
-    <!-- Main mapper -->
-    <template v-else>
-      <!-- Sticky report panel -->
-      <div class="shrink-0">
-        <ReportForm @success="showToast" />
-      </div>
+    <!-- WS status bar (always visible) -->
+    <div class="shrink-0 px-3 py-1 text-xs flex items-center justify-center" :class="store.wsStatus === 'connected' ? 'bg-green-900 text-green-300' : store.wsStatus === 'connecting' ? 'bg-yellow-900 text-yellow-300' : 'bg-red-900 text-red-300'">
+      <span v-if="store.wsStatus === 'connected'">
+        ● Connected – Last update
+        <span
+          class="status-update-time"
+          :class="{ 'status-update-flash': lastUpdateFlash }"
+        >{{ store.lastUpdate ? formatTime(store.lastUpdate) : '…' }}</span>
+      </span>
+      <span v-else-if="store.wsStatus === 'connecting'">⟳ Connecting…</span>
+      <span v-else>⚠ Disconnected — reconnecting…</span>
+    </div>
 
-      <!-- WS status bar (always visible) -->
-      <div class="shrink-0 px-3 py-1 text-xs flex items-center justify-center" :class="store.wsStatus === 'connected' ? 'bg-green-900 text-green-300' : store.wsStatus === 'connecting' ? 'bg-yellow-900 text-yellow-300' : 'bg-red-900 text-red-300'">
-        <span v-if="store.wsStatus === 'connected'">
-          ● Connected – Last update
-          <span
-            class="status-update-time"
-            :class="{ 'status-update-flash': lastUpdateFlash }"
-          >{{ store.lastUpdate ? formatTime(store.lastUpdate) : '…' }}</span>
-        </span>
-        <span v-else-if="store.wsStatus === 'connecting'">⟳ Connecting…</span>
-        <span v-else>⚠ Disconnected — reconnecting…</span>
-      </div>
+    <!-- Graph -->
+    <div class="flex-1 relative">
+      <VueFlow
+        :nodes="nodes"
+        :edges="edges"
+        :node-types="{ zone: ZoneNode }"
+        :fit-view-on-init="true"
+        :connection-mode="ConnectionMode.Loose"
+        class="bg-gray-950"
+        @node-click="(e) => handleSetHomeZone(e.node.id)"
+      >
+        <Background />
+        <Controls />
+      </VueFlow>
+    </div>
 
-      <!-- Graph -->
-      <div class="flex-1 relative">
-        <VueFlow
-          :nodes="nodes"
-          :edges="edges"
-          :node-types="{ zone: ZoneNode }"
-          :edge-types="{ connection: ConnectionEdge }"
-          :fit-view-on-init="true"
-          class="bg-gray-950"
-          @node-click="(e) => setHomeZone(e.node.id)"
-        >
-          <Background />
-          <Controls />
-        </VueFlow>
-      </div>
-    </template>
+    <!-- Debug tray button -->
+    <button
+      class="fixed bottom-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-lg shadow-lg"
+      title="Debug tray"
+      @click="showDebug = true"
+    >🐛</button>
+
+    <!-- Debug tray modal -->
+    <DebugTray :nodes="nodes" :edges="edges" :show="showDebug" @close="showDebug = false" />
+
+    <!-- Settings (cog + modal with log out) -->
+    <RoomSettings :room-id="id" />
 
     <!-- Toast -->
     <Transition name="toast">
