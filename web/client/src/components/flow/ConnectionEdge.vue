@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch, onUnmounted, nextTick } from 'vue';
 import { BaseEdge, EdgeLabelRenderer, getStraightPath } from '@vue-flow/core';
 import type { EdgeProps } from '@vue-flow/core';
 import { connectionStyle } from '../../utils/connectionStyle.js';
@@ -15,6 +15,30 @@ type EdgeData = {
 const props = defineProps<EdgeProps<EdgeData>>();
 
 const showPopover = ref(false);
+const popoverRef = ref<HTMLElement | null>(null);
+
+function closePopover(event: MouseEvent) {
+  if (showPopover.value) {
+    const target = event.target as HTMLElement;
+    if (target.closest('[data-trigger="true"]')) return;
+    if (popoverRef.value && popoverRef.value.contains(target)) return;
+    showPopover.value = false;
+  }
+}
+
+watch(showPopover, (val) => {
+  if (val) {
+    nextTick(() => {
+      document.addEventListener('click', closePopover);
+    });
+  } else {
+    document.removeEventListener('click', closePopover);
+  }
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', closePopover);
+});
 
 const expiresMs = computed(() => new Date(props.data.connection.expiresAt).getTime());
 const remainingMs = computed(() => expiresMs.value - props.data.now);
@@ -54,10 +78,11 @@ const labelY = computed(() => straight.value[2]);
         transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
         pointerEvents: 'all',
       }"
-      class="absolute nodrag nopan"
+      class="absolute nodrag nopan z-[5000]"
     >
       <!-- Countdown label -->
       <div
+        data-trigger="true"
         class="text-xs px-2 py-0.5 rounded-full text-white cursor-pointer shadow-sm"
         :style="{ backgroundColor: style.color, border: `1px solid ${style.stroke}` }"
         @click="showPopover = !showPopover"
@@ -68,8 +93,16 @@ const labelY = computed(() => straight.value[2]);
       <!-- Popover -->
       <div
         v-if="showPopover"
-        class="absolute top-6 left-1/2 -translate-x-1/2 z-50 w-48 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
+        ref="popoverRef"
+        class="absolute top-6 left-1/2 -translate-x-1/2 z-[6000] w-48 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
+        @click.stop
       >
+        <button
+          class="absolute top-1 right-1 text-gray-400 hover:text-white"
+          @click.stop="showPopover = false"
+        >
+          ✕
+        </button>
         <div v-if="data.connection.reportedBy" class="mb-1">
           <span class="text-gray-400">By:</span> {{ data.connection.reportedBy }}
         </div>
@@ -86,12 +119,6 @@ const labelY = computed(() => straight.value[2]);
           @click.stop="data.onDelete(id); showPopover = false"
         >
           Delete
-        </button>
-        <button
-          class="w-full mt-1 px-2 py-1 rounded bg-gray-700 hover:bg-gray-600 text-white text-xs"
-          @click.stop="showPopover = false"
-        >
-          Close
         </button>
       </div>
     </div>
