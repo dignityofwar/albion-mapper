@@ -37,6 +37,12 @@ export interface Connection {
   reportedBy?: string;
 }
 
+export interface NodePosition {
+  zoneId: string;
+  x: number;
+  y: number;
+}
+
 export type ConnectionStatus = 'active' | 'stale' | 'expired';
 
 export function getConnectionStatus(connection: Connection, now: Date = new Date()): ConnectionStatus {
@@ -125,10 +131,14 @@ export const ChangePasswordBodySchema = z.object({
 
 export type ServerMessage =
   | { type: 'auth_ok' }
-  | { type: 'sync'; connections: Connection[]; homeZoneId: string }
+  | { type: 'sync'; connections: Connection[]; homeZoneId: string; nodePositions: NodePosition[] }
   | { type: 'connection_added'; connection: Connection }
   | { type: 'connection_removed'; connectionId: string }
   | { type: 'room_updated'; homeZoneId: string }
+  | { type: 'node_positions_updated'; nodePositions: NodePosition[] }
   | { type: 'error'; message: string };
 
-export type ClientMessage = { type: 'auth'; token: string } | { type: 'ping' };
+export type ClientMessage =
+  | { type: 'auth'; token: string }
+  | { type: 'ping' }
+  | { type: 'update_node_positions'; nodePositions: NodePosition[] };

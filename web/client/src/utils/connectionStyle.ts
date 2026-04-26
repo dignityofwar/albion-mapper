@@ -2,6 +2,7 @@ export interface ConnectionStyle {
   stroke: string;
   strokeDasharray?: string;
   animated: boolean;
+  color: string;
 }
 
 /**
@@ -10,20 +11,24 @@ export interface ConnectionStyle {
  * @param isStale     - true when connection has expired but is within the 6-hour grace window
  */
 export function connectionStyle(remainingMs: number, isStale: boolean): ConnectionStyle {
-  if (isStale) {
-    return { stroke: '#6b7280', strokeDasharray: '6 3', animated: false }; // grey dashed
-  }
+  // All connections should be dashed and animated as requested.
+  const strokeDasharray = '6 3';
+  const animated = true;
 
-  if (remainingMs < 10 * 60 * 1000) {
-    // < 10 minutes — red dashed
-    return { stroke: '#ef4444', strokeDasharray: '6 3', animated: true };
+  if (isStale) {
+    return { stroke: '#acadae', strokeDasharray, animated, color: '#6b7280' }; // grey dashed
   }
 
   if (remainingMs < 30 * 60 * 1000) {
-    // 10–30 minutes — amber
-    return { stroke: '#f59e0b', animated: true };
+    // < 30 minutes — red
+    return { stroke: '#ef4444', strokeDasharray, animated, color: '#ef4444' };
   }
 
-  // > 30 minutes — green
-  return { stroke: '#22c55e', animated: true };
+  if (remainingMs < 60 * 60 * 1000) {
+    // 30–60 minutes — orange
+    return { stroke: '#f59e0b', strokeDasharray, animated, color: '#f59e0b' };
+  }
+
+  // > 60 minutes — green
+  return { stroke: '#0ee25e', strokeDasharray, animated, color: '#22c55e' };
 }

@@ -6,13 +6,15 @@ import ReportForm from '../components/ReportForm.vue';
 import DebugTray from '../components/DebugTray.vue';
 import RoomSettings from '../components/RoomSettings.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
+import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
-import { setHomeZone } from '../utils/roomOperations.js';
+import { setHomeZone, deleteConnection } from '../utils/roomOperations.js';
+import { connectionStyle } from '../utils/connectionStyle.js';
 import { radialLayout } from '../utils/radialLayout.js';
 import { ZONE_BY_ID, type Connection } from 'shared';
 
@@ -127,13 +129,22 @@ watch(
 
       const expiresAt = new Date(conn.expiresAt).getTime();
       const remainingMs = expiresAt - now.value;
+      const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
+      const style = connectionStyle(remainingMs, isStale);
 
       const edge: Edge = {
         id: conn.id,
         source: conn.fromZoneId,
         target: conn.toZoneId,
-        label: formatExpiresIn(remainingMs),
-        type: 'smoothstep',
+        type: 'connection',
+        animated: style.animated,
+        data: {
+          connection: conn,
+          now: now.value,
+          onDelete: async (id: string) => {
+            await deleteConnection(props.id, store.token!, id);
+          },
+        },
       };
 
       if (sourceNode && targetNode) {
@@ -153,7 +164,10 @@ watch(now, () => {
     if (conn) {
       const expiresAt = new Date(conn.expiresAt).getTime();
       const remainingMs = expiresAt - now.value;
+      const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
+      const style = connectionStyle(remainingMs, isStale);
       edge.label = formatExpiresIn(remainingMs);
+      edge.animated = style.animated;
     }
   });
 });
@@ -204,6 +218,7 @@ function handleSetHomeZone(zoneId: string) {
         v-model:nodes="flowNodes"
         v-model:edges="flowEdges"
         :node-types="{ zone: ZoneNode }"
+        :edge-types="{ connection: ConnectionEdge }"
         :fit-view-on-init="true"
         :connection-mode="ConnectionMode.Loose"
         class="bg-gray-950"

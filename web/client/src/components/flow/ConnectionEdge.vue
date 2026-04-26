@@ -51,6 +51,8 @@ function formatCountdown(ms: number): string {
   <BaseEdge
     :id="id"
     :path="path"
+    :animated="animated ?? false"
+    :class="{ 'animated': animated }"
     :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2 }"
     class="cursor-pointer"
     @click="showPopover = !showPopover"
@@ -66,7 +68,8 @@ function formatCountdown(ms: number): string {
     >
       <!-- Countdown label -->
       <div
-        class="text-xs px-1 rounded bg-gray-900/80 text-white cursor-pointer"
+        class="text-xs px-2 py-0.5 rounded-full text-white cursor-pointer shadow-sm"
+        :style="{ backgroundColor: style.color, border: `1px solid ${style.stroke}` }"
         @click="showPopover = !showPopover"
       >
         {{ formatCountdown(remainingMs) }}
@@ -104,3 +107,15 @@ function formatCountdown(ms: number): string {
     </div>
   </EdgeLabelRenderer>
 </template>
+
+<style scoped>
+.animated .vue-flow__edge-path {
+  animation: dash 1s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -9;
+  }
+}
+</style>
