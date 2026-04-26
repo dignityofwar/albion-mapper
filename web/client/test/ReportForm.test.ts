@@ -113,4 +113,45 @@ describe('ReportForm', () => {
     expect(vi.mocked(global.fetch)).not.toHaveBeenCalled();
     wrapper.unmount();
   });
+
+  it('fromZoneId does not auto-update to toZoneId after submission', async () => {
+    const mockResponse = {
+      ok: true,
+      json: async () => ({}),
+    };
+    global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
+
+    const wrapper = mountForm();
+    const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; minutesRemaining: number | null; submit: () => Promise<void> };
+
+    vm.fromZoneId = 'zoneA';
+    vm.toZoneId = 'zoneB';
+    vm.minutesRemaining = 30;
+
+    await vm.submit();
+
+    expect(vm.fromZoneId).toBe('zoneA'); // Should not change
+    expect(vm.toZoneId).toBe(''); // Should reset
+    wrapper.unmount();
+  });
+
+  it('minutesRemaining is reset after successful submission', async () => {
+    const mockResponse = {
+      ok: true,
+      json: async () => ({}),
+    };
+    global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
+
+    const wrapper = mountForm();
+    const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; minutesRemaining: number | null; submit: () => Promise<void> };
+
+    vm.fromZoneId = 'zoneA';
+    vm.toZoneId = 'zoneB';
+    vm.minutesRemaining = 30;
+
+    await vm.submit();
+
+    expect(vm.minutesRemaining).toBeNull(); // Should reset
+    wrapper.unmount();
+  });
 });

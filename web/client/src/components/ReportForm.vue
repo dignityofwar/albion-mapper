@@ -70,7 +70,6 @@ async function submit() {
     emit('success', 'Connection added!');
 
     // To becomes the new From, reset time
-    fromZoneId.value = toZoneId.value;
     toZoneId.value = '';
     minutesRemaining.value = null;
   } finally {
@@ -94,7 +93,7 @@ function focusTimeInput() {
   timeInputEl.value?.focus();
 }
 
-defineExpose({ minutesRemaining });
+defineExpose({ minutesRemaining, fromZoneId });
 </script>
 
 <template>
@@ -144,6 +143,7 @@ defineExpose({ minutesRemaining });
         data-testid="to-combobox"
         :error="minutesRemaining !== null && !toZoneId"
         @tab-select="focusTimeInput"
+        @select="focusTimeInput"
       />
     </div>
 

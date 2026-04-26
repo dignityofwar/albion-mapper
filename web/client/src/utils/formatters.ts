@@ -15,13 +15,14 @@ export function formatTime(d: Date): string {
  */
 export function formatCountdown(ms: number): string {
   if (ms <= 0) return 'Expired';
-  const totalMinutes = Math.floor(ms / 60000);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
   if (hours > 0) {
     return `${hours}h ${minutes}m`;
   }
-  return `${minutes}m`;
+  return `${minutes}m ${seconds}s`;
 }
 
 /**

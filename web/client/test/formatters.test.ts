@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { formatExpiresIn } from '../src/utils/formatters';
 
 describe('formatExpiresIn', () => {
-  it('should format sub-hour values as "m"', () => {
-    expect(formatExpiresIn(50 * 60 * 1000)).toBe('Expires in: 50m');
-    expect(formatExpiresIn(5 * 60 * 1000)).toBe('Expires in: 5m');
+  it('should format sub-hour values as "m s"', () => {
+    expect(formatExpiresIn(50 * 60 * 1000)).toBe('Expires in: 50m 0s');
+    expect(formatExpiresIn(5 * 60 * 1000 + 30 * 1000)).toBe('Expires in: 5m 30s');
   });
 
   it('should format hour-based values as "h m"', () => {

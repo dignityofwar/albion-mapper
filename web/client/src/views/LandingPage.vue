@@ -8,16 +8,23 @@ const route = useRoute();
 
 // ── Create Room modal ────────────────────────────────────────────────────────
 const showCreate = ref(false);
-
-onMounted(() => {
-  if (route.query.create === 'true') {
-    showCreate.value = true;
-  }
-});
 const createPassword = ref('');
 const createHomeZoneId = ref('');
 const creating = ref(false);
 const createError = ref('');
+
+function resetCreateForm() {
+  createPassword.value = '';
+  createHomeZoneId.value = '';
+  createError.value = '';
+}
+
+onMounted(() => {
+  if (route.query.create === 'true') {
+    showCreate.value = true;
+    resetCreateForm();
+  }
+});
 
 async function createRoom() {
   if (!createPassword.value || !createHomeZoneId.value) return;
@@ -46,6 +53,7 @@ async function createRoom() {
 
     sessionStorage.setItem(`token:${id}`, token);
     sessionStorage.setItem(`shareUrl:${id}`, `${window.location.origin}/rooms/${id}`);
+    resetCreateForm();
     await router.push(`/rooms/${id}`);
   } finally {
     creating.value = false;
@@ -55,6 +63,10 @@ async function createRoom() {
 // ── Join Room modal ──────────────────────────────────────────────────────────
 const showJoin = ref(false);
 const joinInput = ref('');
+
+function resetJoinForm() {
+  joinInput.value = '';
+}
 
 function joinRoom() {
   const value = joinInput.value.trim();
@@ -76,13 +88,13 @@ function joinRoom() {
     <div class="flex gap-4">
       <button
         class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
-        @click="showCreate = true"
+        @click="showCreate = true; resetCreateForm()"
       >
         Create Room
       </button>
       <button
         class="px-6 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 font-medium transition-colors"
-        @click="showJoin = true"
+        @click="showJoin = true; resetJoinForm()"
       >
         Join Room
       </button>

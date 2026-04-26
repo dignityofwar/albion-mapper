@@ -115,7 +115,7 @@ watch(
         id: pos.id,
         type: 'zone',
         position: { x: pos.x, y: pos.y },
-        draggable: (store.nodePositions ?? []).length > 1,
+        draggable: positions.length > 1 && pos.id !== store.homeZoneId,
         data: {
           isHome: pos.id === store.homeZoneId,
           tier: zone?.tier ?? 0,

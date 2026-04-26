@@ -26,6 +26,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:modelValue': [value: string];
   tabSelect: [];
+  select: [];
 }>();
 
 const store = useRoomStore();
@@ -77,6 +78,7 @@ function displayValue(id: unknown): string {
 function onSelect(val: string | null) {
   if (val !== null) {
     emit('update:modelValue', val);
+    emit('select');
     query.value = '';
   }
 }

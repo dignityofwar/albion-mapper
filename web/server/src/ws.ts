@@ -111,14 +111,26 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
         }
 
         if (msg.type === 'update_node_positions') {
-          const nodeCount = app.db.prepare('SELECT COUNT(*) as count FROM room_node_positions WHERE room_id = ?').get(roomId) as { count: number };
-          if (nodeCount.count <= 1) return;
+          if (msg.nodePositions.length <= 1) return;
+
+          const homeZoneIdRow = app.db.prepare('SELECT home_zone_id FROM rooms WHERE id = ?').get(roomId) as { home_zone_id: string } | undefined;
+          const homePos = homeZoneIdRow 
+            ? (app.db.prepare('SELECT x, y FROM room_node_positions WHERE room_id = ? AND zone_id = ?').get(roomId, homeZoneIdRow.home_zone_id) as { x: number, y: number } | undefined)
+            : undefined;
 
           const insert = app.db.prepare('INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES (?, ?, ?, ?)');
           const transaction = app.db.transaction((positions: NodePosition[]) => {
             app.db.prepare('DELETE FROM room_node_positions WHERE room_id = ?').run(roomId);
             for (const pos of positions) {
-              insert.run(roomId, pos.zoneId, pos.x, pos.y);
+              let x = pos.x;
+              let y = pos.y;
+              if (homePos && homeZoneIdRow && pos.zoneId === homeZoneIdRow.home_zone_id) {
+                x = homePos.x;
+                y = homePos.y;
+                pos.x = x;
+                pos.y = y;
+              }
+              insert.run(roomId, pos.zoneId, x, y);
             }
           });
           transaction(msg.nodePositions);
