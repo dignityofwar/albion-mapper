@@ -1,7 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { createInMemoryDb } from '../src/db.js';
 import { runExpiryCleanup } from '../src/expiry.js';
+import { broadcast } from '../src/broadcast.js';
 import type Database from 'better-sqlite3';
+
+vi.mock('../src/broadcast.js', () => ({
+  broadcast: vi.fn(),
+}));
 
 const ROOM_ID = 'test-room-001';
 const ZONE_A = 'adrens-hill';
@@ -32,6 +37,7 @@ function connectionExists(id: string): boolean {
 beforeEach(() => {
   db = createInMemoryDb();
   insertRoom(ROOM_ID);
+  vi.clearAllMocks();
 });
 
 describe('runExpiryCleanup', () => {
@@ -63,14 +69,6 @@ describe('runExpiryCleanup', () => {
   });
 
   it('broadcasts connection_removed for each deleted connection', () => {
-    const broadcasts: Array<{ roomId: string; msg: { type: string; connectionId?: string } }> = [];
-
-    vi.doMock('../src/broadcast.js', () => ({
-      broadcast: (roomId: string, msg: { type: string; connectionId?: string }) => {
-        broadcasts.push({ roomId, msg });
-      },
-    }));
-
     const now = new Date();
     const connId = crypto.randomUUID();
     const expiresAt = new Date(now.getTime() - 7 * 60 * 60 * 1000);
@@ -79,6 +77,19 @@ describe('runExpiryCleanup', () => {
     runExpiryCleanup(db);
 
     expect(connectionExists(connId)).toBe(false);
+    expect(broadcast).toHaveBeenCalledWith(ROOM_ID, expect.objectContaining({ type: 'connection_removed', connectionId: connId }));
+  });
+
+  it('broadcasts connection_expired immediately upon expiry', () => {
+    const now = new Date();
+    const connId = crypto.randomUUID();
+    const expiresAt = new Date(now.getTime() - 60 * 1000);
+    insertConnection(connId, expiresAt);
+
+    runExpiryCleanup(db);
+
+    expect(broadcast).toHaveBeenCalledWith(ROOM_ID, expect.objectContaining({ type: 'connection_expired', connectionId: connId }));
+    expect(connectionExists(connId)).toBe(true);
   });
 
   it('keeps active connections untouched', () => {

@@ -65,6 +65,15 @@ describe('useRoomStore', () => {
     expect(store.connections).toHaveLength(1);
   });
 
+  it('applies connection_expired — marks connection as expired', () => {
+    const store = useRoomStore();
+    store.applyMessage({ type: 'connection_added', connection: makeConn('c1') });
+    store.applyMessage({ type: 'connection_expired', connectionId: 'c1' });
+
+    expect(store.connections).toHaveLength(1);
+    expect(store.connections[0].isExpired).toBe(true);
+  });
+
   it('applies room_updated — changes homeZoneId', () => {
     const store = useRoomStore();
     store.applyMessage({ type: 'sync', connections: [], homeZoneId: 'zone-a' });

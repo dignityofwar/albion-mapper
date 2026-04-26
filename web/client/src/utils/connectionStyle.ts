@@ -9,11 +9,16 @@ export interface ConnectionStyle {
  * Returns the visual style for an edge based on time remaining and stale status.
  * @param remainingMs - milliseconds until expiry (negative = already expired)
  * @param isStale     - true when connection has expired but is within the 6-hour grace window
+ * @param isExpired   - true when connection is officially marked as expired
  */
-export function connectionStyle(remainingMs: number, isStale: boolean): ConnectionStyle {
+export function connectionStyle(remainingMs: number, isStale: boolean, isExpired: boolean): ConnectionStyle {
   // All connections should be dashed and animated as requested.
   const strokeDasharray = '6 3';
   const animated = true;
+
+  if (isExpired) {
+    return { stroke: '#374151', strokeDasharray: '2 2', animated: false, color: '#1f2937' };
+  }
 
   if (isStale) {
     return { stroke: '#acadae', strokeDasharray, animated, color: '#6b7280' }; // grey dashed

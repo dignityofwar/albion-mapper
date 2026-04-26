@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import ZoneCombobox from '../components/ZoneCombobox.vue';
 
@@ -10,6 +10,7 @@ const route = useRoute();
 const showCreate = ref(false);
 const createPassword = ref('');
 const createHomeZoneId = ref('');
+const createFormKey = ref(0);
 const creating = ref(false);
 const createError = ref('');
 
@@ -17,7 +18,15 @@ function resetCreateForm() {
   createPassword.value = '';
   createHomeZoneId.value = '';
   createError.value = '';
+  createFormKey.value++;
 }
+
+watch(() => route.query.create, (val) => {
+  if (val === 'true') {
+    showCreate.value = true;
+    resetCreateForm();
+  }
+});
 
 onMounted(() => {
   if (route.query.create === 'true') {
@@ -120,7 +129,7 @@ function joinRoom() {
           </div>
           <div>
             <label class="block text-sm text-gray-400 mb-1">Home Zone</label>
-            <ZoneCombobox v-model="createHomeZoneId" placeholder="Search home zone…" />
+            <ZoneCombobox :key="createFormKey" v-model="createHomeZoneId" placeholder="Search home zone…" />
           </div>
           <p v-if="createError" class="text-red-400 text-sm">{{ createError }}</p>
           <button

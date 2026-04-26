@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
 import ReportForm from '../components/ReportForm.vue';
 import DebugTray from '../components/DebugTray.vue';
@@ -20,6 +21,7 @@ import { ZONE_BY_ID, type Connection } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
+const { connections, homeZoneId, nodePositions } = storeToRefs(store);
 const router = useRouter();
 
 // ── Toast ────────────────────────────────────────────────────────────────────
@@ -42,6 +44,15 @@ watch(
 );
 
 onMounted(() => {
+  initializeRoom();
+});
+
+watch(() => props.id, () => {
+  store.disconnect();
+  initializeRoom();
+});
+
+function initializeRoom() {
   const stored = sessionStorage.getItem(`token:${props.id}`);
   if (!stored) {
     router.replace({ path: `/rooms/${props.id}/auth` });
@@ -54,10 +65,18 @@ onMounted(() => {
     showToast(`Share URL: ${shareUrl}`);
     sessionStorage.removeItem(`shareUrl:${props.id}`);
   }
-});
+}
 
 // ── Toast (kept below) ───────────────────────────────────────────────────────
 let toastTimeout: ReturnType<typeof setTimeout> | null = null;
+const isShareUrl = computed(() => toast.value.startsWith('Share URL: '));
+const shareUrl = computed(() => toast.value.replace('Share URL: ', ''));
+
+async function copyShareUrl() {
+  await navigator.clipboard.writeText(shareUrl.value);
+  showToast('Copied to clipboard!');
+}
+
 function showToast(msg: string) {
   toast.value = msg;
   if (toastTimeout) clearTimeout(toastTimeout);
@@ -76,10 +95,18 @@ onUnmounted(() => {
 
 
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
-const { fitView } = useVueFlow();
+const { fitView, updateNode } = useVueFlow();
 
 const flowNodes = ref<Node[]>([]);
 const flowEdges = ref<Edge[]>([]);
+
+function getEdgeParams(conn: Connection, currentTime: number) {
+  const expiresAt = new Date(conn.expiresAt).getTime();
+  const remainingMs = expiresAt - currentTime;
+  const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
+  const style = connectionStyle(remainingMs, isStale, conn.isExpired ?? false);
+  return { remainingMs, isStale, style };
+}
 
 function computeHandles(sourceNode: any, targetNode: any) {
   const dx = targetNode.position.x - sourceNode.position.x;
@@ -98,26 +125,25 @@ function computeHandles(sourceNode: any, targetNode: any) {
   }
 }
 
-watch(
-  [() => store.connections, () => store.homeZoneId, () => store.nodePositions],
-  () => {
-    if (!store.homeZoneId) return;
+watch([homeZoneId, nodePositions, connections], () => {
+    if (!homeZoneId.value) return;
 
     // 1. Compute positions
-    const positions = (store.nodePositions ?? []).length > 0
-      ? store.nodePositions.map((p) => ({ id: p.zoneId, x: p.x, y: p.y }))
-      : radialLayout(store.homeZoneId, store.connections);
+    const positions = (nodePositions.value ?? []).length > 0
+      ? nodePositions.value.map((p) => ({ id: p.zoneId, x: p.x, y: p.y }))
+      : radialLayout(homeZoneId.value, connections.value);
     
     // 2. Map to VueFlow nodes
-    flowNodes.value = positions.map((pos) => {
+    const newNodes = positions.map((pos) => {
       const zone = ZONE_BY_ID.get(pos.id);
+      const isDraggable = positions.length > 1 && pos.id !== homeZoneId.value;
       return {
         id: pos.id,
         type: 'zone',
         position: { x: pos.x, y: pos.y },
-        draggable: positions.length > 1 && pos.id !== store.homeZoneId,
+        draggable: isDraggable,
         data: {
-          isHome: pos.id === store.homeZoneId,
+          isHome: pos.id === homeZoneId.value,
           tier: zone?.tier ?? 0,
           zoneName: zone?.name ?? pos.id,
           type: zone?.type ?? 'other',
@@ -125,15 +151,25 @@ watch(
       };
     });
 
+    // Update nodes using VueFlow's updateNode for reactivity
+    newNodes.forEach(newNode => {
+        const existingNode = flowNodes.value.find(n => n.id === newNode.id);
+        if (existingNode) {
+            updateNode(newNode.id, newNode);
+        } else {
+            flowNodes.value.push(newNode);
+        }
+    });
+
+    // Remove nodes that are no longer present
+    flowNodes.value = flowNodes.value.filter(n => newNodes.find(nn => nn.id === n.id));
+
     // 3. Map to VueFlow edges
-    flowEdges.value = store.connections.map((conn) => {
+    flowEdges.value = connections.value.map((conn) => {
       const sourceNode = flowNodes.value.find((n) => n.id === conn.fromZoneId);
       const targetNode = flowNodes.value.find((n) => n.id === conn.toZoneId);
 
-      const expiresAt = new Date(conn.expiresAt).getTime();
-      const remainingMs = expiresAt - now.value;
-      const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
-      const style = connectionStyle(remainingMs, isStale);
+      const { style } = getEdgeParams(conn, now.value);
 
       const edge: Edge = {
         id: conn.id,
@@ -156,19 +192,14 @@ watch(
       }
       return edge;
     });
-  },
-  { deep: true, immediate: true }
-);
+}, { immediate: true });
 
 // Update edge labels every second based on `now`
 watch(now, () => {
   flowEdges.value.forEach((edge) => {
     const conn = store.connections.find((c) => c.id === edge.id);
     if (conn) {
-      const expiresAt = new Date(conn.expiresAt).getTime();
-      const remainingMs = expiresAt - now.value;
-      const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
-      const style = connectionStyle(remainingMs, isStale);
+      const { remainingMs, isStale, style } = getEdgeParams(conn, now.value);
       edge.label = formatExpiresIn(remainingMs);
       edge.animated = style.animated;
     }
@@ -202,6 +233,7 @@ function handleSetHomeZone(zoneId: string) {
   setHomeZone(props.id, store.token!, zoneId);
 }
 
+defineExpose({ flowNodes, onNodeDragStop });
 </script>
 
 <template>
@@ -259,9 +291,16 @@ function handleSetHomeZone(zoneId: string) {
     <Transition name="toast">
       <div
         v-if="toast"
-        class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-sm text-white shadow-lg"
+        class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3"
       >
-        {{ toast }}
+        <span>{{ toast }}</span>
+        <button
+          v-if="isShareUrl"
+          class="text-indigo-400 hover:text-indigo-300 font-medium underline"
+          @click="copyShareUrl"
+        >
+          Copy
+        </button>
       </div>
     </Transition>
   </div>

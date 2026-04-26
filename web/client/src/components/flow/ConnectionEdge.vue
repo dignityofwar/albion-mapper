@@ -19,8 +19,9 @@ const showPopover = ref(false);
 const expiresMs = computed(() => new Date(props.data.connection.expiresAt).getTime());
 const remainingMs = computed(() => expiresMs.value - props.data.now);
 const isStale = computed(() => remainingMs.value < 0 && remainingMs.value > -6 * 60 * 60 * 1000);
+const isExpired = computed(() => props.data.connection.isExpired ?? false);
 
-const style = computed(() => connectionStyle(remainingMs.value, isStale.value));
+const style = computed(() => connectionStyle(remainingMs.value, isStale.value, isExpired.value));
 
 const straight = computed(() =>
   getStraightPath({

@@ -41,6 +41,15 @@ export const useRoomStore = defineStore('room', () => {
         connections.value = connections.value.filter((c) => c.id !== msg.connectionId);
         break;
 
+      case 'connection_expired':
+        {
+          const conn = connections.value.find((c) => c.id === msg.connectionId);
+          if (conn) {
+            conn.isExpired = true;
+          }
+        }
+        break;
+
       case 'room_updated':
         homeZoneId.value = msg.homeZoneId;
         break;

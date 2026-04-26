@@ -35,6 +35,7 @@ export interface Connection {
   expiresAt: string;
   reportedAt: string;
   reportedBy?: string;
+  isExpired?: boolean;
 }
 
 export interface NodePosition {
@@ -134,6 +135,7 @@ export type ServerMessage =
   | { type: 'sync'; connections: Connection[]; homeZoneId: string; nodePositions: NodePosition[] }
   | { type: 'connection_added'; connection: Connection }
   | { type: 'connection_removed'; connectionId: string }
+  | { type: 'connection_expired'; connectionId: string }
   | { type: 'room_updated'; homeZoneId: string }
   | { type: 'room_reset' }
   | { type: 'node_positions_updated'; nodePositions: NodePosition[] }
