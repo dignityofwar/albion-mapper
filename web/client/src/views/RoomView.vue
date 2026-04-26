@@ -6,6 +6,7 @@ import ReportForm from '../components/ReportForm.vue';
 // ZoneNode is kept but not wired in — using built-in default nodes for now
 import DebugTray from '../components/DebugTray.vue';
 import RoomSettings from '../components/RoomSettings.vue';
+import ZoneNode from '../components/flow/ZoneNode.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
@@ -77,15 +78,21 @@ const { fitView } = useVueFlow();
 const nodes = ref([
   {
     id: 'qiient-al-nusom',
+    type: 'zone',
     position: { x: 0, y: 0 },
-    label: 'qiient-al-nusom 🏠',
-    data: { isHome: true },
+    data: { isHome: true, tier: 'blue', zoneName: 'Qiient Al Nusom', isRoad: true },
   },
   {
     id: 'qiient-al-tersas',
+    type: 'zone',
     position: { x: 220, y: 0 },
-    label: 'qiient-al-tersas',
-    data: { isHome: false },
+    data: { isHome: false, tier: 'blue', zoneName: 'Qiient Al Tersas', isRoad: true },
+  },
+  {
+    id: 'yellow-zone',
+    type: 'zone',
+    position: { x: 220, y: 220 },
+    data: { isHome: false, tier: 'yellow', zoneName: 'Yellow Zone', isRoad: false },
   },
 ]);
 
@@ -94,10 +101,49 @@ const edges = ref([
     id: 'e1',
     source: 'qiient-al-nusom',
     target: 'qiient-al-tersas',
-    label: 'Expires in: 00:00',
+    label: 'Expires in: 1:23',
+    type: 'smoothstep',
+  },
+  {
+    id: 'e2',
+    source: 'qiient-al-tersas',
+    target: 'yellow-zone',
+    label: 'Expires in: 2:45',
     type: 'smoothstep',
   },
 ]);
+
+function computeHandles(sourceNode: any, targetNode: any) {
+  const dx = targetNode.position.x - sourceNode.position.x;
+  const dy = targetNode.position.y - sourceNode.position.y;
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    return {
+      sourceHandle: dx > 0 ? 'right' : 'left',
+      targetHandle: dx > 0 ? 'left' : 'right',
+    };
+  } else {
+    return {
+      sourceHandle: dy > 0 ? 'bottom' : 'top',
+      targetHandle: dy > 0 ? 'top' : 'bottom',
+    };
+  }
+}
+
+watch(
+  nodes,
+  () => {
+    edges.value = edges.value.map((edge) => {
+      const sourceNode = nodes.value.find((n) => n.id === edge.source);
+      const targetNode = nodes.value.find((n) => n.id === edge.target);
+      if (!sourceNode || !targetNode) return edge;
+
+      const handles = computeHandles(sourceNode, targetNode);
+      return { ...edge, ...handles };
+    });
+  },
+  { deep: true, immediate: true },
+);
 
 // Re-fit the view whenever the set of nodes changes (e.g. after WS sync)
 watch(
@@ -144,6 +190,7 @@ function handleSetHomeZone(zoneId: string) {
       <VueFlow
         v-model:nodes="nodes"
         v-model:edges="edges"
+        :node-types="{ zone: ZoneNode }"
         :fit-view-on-init="true"
         :connection-mode="ConnectionMode.Loose"
         class="bg-gray-950"
