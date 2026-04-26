@@ -2,7 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import ZoneCombobox from './ZoneCombobox.vue';
-import SettingsPopup from './SettingsPopup.vue';
+import RoomSettings from './RoomSettings.vue';
 import TimeInput from './common/TimeInput.vue';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import { ZONE_BY_ID } from 'shared';
@@ -103,7 +103,7 @@ defineExpose({ minutesRemaining, fromZoneId });
     @submit.prevent="submit"
   >
     <!-- Settings cog -->
-    <SettingsPopup />
+    <RoomSettings />
 
     <!-- From -->
     <div class="flex-1 min-w-0">
