@@ -111,12 +111,8 @@ let draggingFromNodeId: string | null = null;
 function getEdgeParams(conn: Connection, currentTime: number) {
   const expiresAt = new Date(conn.expiresAt).getTime();
   const remainingMs = expiresAt - currentTime;
-  const isStale = remainingMs < 0 && remainingMs > -6 * 60 * 60 * 1000;
-  const style = connectionStyle(remainingMs, isStale, conn.isExpired ?? false);
-  if (conn.isExpired) {
-    style.animated = false;
-  }
-  return { remainingMs, isStale, style };
+  const style = connectionStyle(remainingMs, conn.isExpired ?? false);
+  return { remainingMs, style };
 }
 
 function computeHandles(sourceNode: any, targetNode: any) {
@@ -290,7 +286,7 @@ watch(now, () => {
   flowEdges.value.forEach((edge) => {
     const conn = store.connections.find((c) => c.id === edge.id);
     if (conn) {
-      const { remainingMs, isStale, style } = getEdgeParams(conn, now.value);
+      const { remainingMs, style } = getEdgeParams(conn, now.value);
       edge.label = formatExpiresIn(remainingMs);
       edge.animated = style.animated;
       edge.data.now = now.value;

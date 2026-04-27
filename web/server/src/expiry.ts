@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 import { broadcast } from './broadcast.js';
 
-const STALE_GRACE_MS = 6 * 60 * 60 * 1000; // 6 hours
+const EXPIRE_GRACE_MS = 6 * 60 * 60 * 1000; // 6 hours
 
 interface ExpiredRow {
   id: string;
@@ -30,8 +30,8 @@ export async function runExpiryCleanup(db: Pool): Promise<void> {
     broadcast(row.room_id, { type: 'connection_expired', connectionId: row.id });
   }
 
-  // 2. Cleanup (delete) connections that are past STALE_GRACE_MS
-  const cutoff = new Date(now.getTime() - STALE_GRACE_MS).toISOString();
+  // 2. Cleanup (delete) connections that are past EXPIRE_GRACE_MS
+  const cutoff = new Date(now.getTime() - EXPIRE_GRACE_MS).toISOString();
 
   const { rows: expired } = await db.query<ExpiredRow>(
     'SELECT id, room_id FROM connections WHERE expires_at <= $1',

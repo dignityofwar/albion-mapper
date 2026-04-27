@@ -60,10 +60,9 @@ onUnmounted(() => {
 
 const expiresMs = computed(() => new Date(props.data.connection.expiresAt).getTime());
 const remainingMs = computed(() => expiresMs.value - props.data.now);
-const isStale = computed(() => remainingMs.value < 0 && remainingMs.value > -6 * 60 * 60 * 1000);
 const isExpired = computed(() => props.data.connection.isExpired ?? false);
 
-const style = computed(() => connectionStyle(remainingMs.value, isStale.value, isExpired.value));
+const style = computed(() => connectionStyle(remainingMs.value, isExpired.value));
 
 function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;

@@ -20,18 +20,18 @@ beforeEach(() => {
 });
 
 describe('runExpiryCleanup', () => {
-  it('a connection becomes stale at expiresAt but is NOT deleted yet (within 6h)', async () => {
+  it('a connection becomes expired at expiresAt but is NOT deleted yet (within 6h)', async () => {
     const now = new Date();
     const connId = 'conn-1';
 
-    // Expired 1 minute ago — stale, not yet past the 6h grace window
+    // Expired 1 minute ago — not yet past the 6h grace window
     const expiresAt = new Date(now.getTime() - 60 * 1000);
     
     // Mock newlyExpired
     mockDb.query.mockResolvedValueOnce({ 
       rows: [{ id: connId, room_id: ROOM_ID }] 
     });
-    // Mock past STALE_GRACE_MS (empty)
+    // Mock past grace cutoff (empty)
     mockDb.query.mockResolvedValueOnce({ rows: [] });
 
     await runExpiryCleanup(mockDb);

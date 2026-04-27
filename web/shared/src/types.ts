@@ -53,15 +53,13 @@ export interface NodeFeatures {
   powercoreGreen?: boolean;
 }
 
-export type ConnectionStatus = 'active' | 'stale' | 'expired';
+export type ConnectionStatus = 'active' | 'expired';
 
 export function getConnectionStatus(connection: Connection, now: Date = new Date()): ConnectionStatus {
   const expiresAt = new Date(connection.expiresAt).getTime();
   const nowMs = now.getTime();
-  const staleUntil = expiresAt + 6 * 60 * 60 * 1000;
 
   if (nowMs < expiresAt) return 'active';
-  if (nowMs < staleUntil) return 'stale';
   return 'expired';
 }
 

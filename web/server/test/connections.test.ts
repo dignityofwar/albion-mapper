@@ -143,7 +143,7 @@ describe('POST /api/rooms/:id/connections', () => {
 });
 
 describe('GET /api/rooms/:id/connections', () => {
-  it('returns active and stale connections, omits expired', async () => {
+  it('returns active and expired connections, omits deleted ones', async () => {
     const now = Date.now();
 
     const activeConn = {
@@ -156,8 +156,8 @@ describe('GET /api/rooms/:id/connections', () => {
       reported_by: null,
     };
 
-    const staleConn = {
-      id: 'stale',
+    const expiredConn = {
+      id: 'expired',
       room_id: roomId,
       from_zone_id: VALID_ZONE_A,
       to_zone_id: VALID_ZONE_B,
@@ -166,8 +166,8 @@ describe('GET /api/rooms/:id/connections', () => {
       reported_by: null,
     };
 
-    const expiredConn = {
-      id: 'expired',
+    const deletedConn = {
+      id: 'deleted',
       room_id: roomId,
       from_zone_id: VALID_ZONE_A,
       to_zone_id: VALID_ZONE_B,
@@ -177,7 +177,7 @@ describe('GET /api/rooms/:id/connections', () => {
     };
 
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
-    mockDb.query.mockResolvedValueOnce({ rows: [activeConn, staleConn, expiredConn] });
+    mockDb.query.mockResolvedValueOnce({ rows: [activeConn, expiredConn, deletedConn] });
 
     const res = await app.inject({
       method: 'GET',
@@ -188,8 +188,8 @@ describe('GET /api/rooms/:id/connections', () => {
     const ids = connections.map((c) => c.id);
 
     expect(ids).toContain(activeConn.id);
-    expect(ids).toContain(staleConn.id);
-    expect(ids).not.toContain(expiredConn.id);
+    expect(ids).toContain(expiredConn.id);
+    expect(ids).not.toContain(deletedConn.id);
   });
 });
 
