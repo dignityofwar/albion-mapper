@@ -87,7 +87,6 @@ const labelY = computed(() => straight.value[2]);
     :id="id"
     :path="path"
     :animated="style.animated"
-    :class="{ 'animated': style.animated }"
     :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2 }"
     class="cursor-pointer"
     @click="showPopover = !showPopover"
@@ -162,13 +161,16 @@ const labelY = computed(() => straight.value[2]);
 </template>
 
 <style scoped>
-.animated .vue-flow__edge-path {
+:deep(.vue-flow__edge-path.animated) {
   animation: dash 1s linear infinite;
 }
 
 @keyframes dash {
+  from {
+    stroke-dashoffset: 0;
+  }
   to {
-    stroke-dashoffset: -9;
+    stroke-dashoffset: -18;
   }
 }
 </style>

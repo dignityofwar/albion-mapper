@@ -18,14 +18,14 @@ export function connectionStyle(remainingMs: number, isExpired: boolean): Connec
 
   if (remainingMs < 30 * 60 * 1000) {
     // < 30m / red = dotted and animated
-    return { stroke: '#ef4444', strokeDasharray: '2 4', animated: true, color: '#ef4444' };
+    return { stroke: '#ef4444', strokeDasharray: '2 4', animated: true, color: '#a30000' };
   }
 
   if (remainingMs < 60 * 60 * 1000) {
     // <1hr / orange = dashed and animated
-    return { stroke: '#f59e0b', strokeDasharray: '6 3', animated: true, color: '#f59e0b' };
+    return { stroke: '#f59e0b', strokeDasharray: '6 3', animated: true, color: '#ac6900' };
   }
 
   // Green (> 60m) = solid
-  return { stroke: '#0ee25e', animated: false, color: '#22c55e' };
+  return { stroke: '#0ee25e', animated: false, color: '#038c36' };
 }
