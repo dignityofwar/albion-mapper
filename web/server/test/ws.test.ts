@@ -172,7 +172,7 @@ describe('WebSocket authentication', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, minutesRemaining: 30 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
     });
 
     await new Promise((r) => setTimeout(r, 100));

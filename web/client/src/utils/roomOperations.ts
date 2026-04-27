@@ -27,7 +27,7 @@ export async function updateConnection(
   roomId: string,
   token: string,
   connectionId: string,
-  minutesRemaining: number,
+  secondsRemaining: number,
 ): Promise<void> {
   await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections/${connectionId}`, {
     method: 'PATCH',
@@ -35,7 +35,7 @@ export async function updateConnection(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ minutesRemaining: Number(minutesRemaining) }),
+    body: JSON.stringify({ secondsRemaining: Number(secondsRemaining) }),
   });
 }
 
@@ -47,7 +47,7 @@ export async function addConnection(
   token: string,
   fromZoneId: string,
   toZoneId: string,
-  minutesRemaining: number,
+  secondsRemaining: number,
 ): Promise<void> {
   await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections`, {
     method: 'POST',
@@ -55,6 +55,6 @@ export async function addConnection(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ fromZoneId, toZoneId, minutesRemaining }),
+    body: JSON.stringify({ fromZoneId, toZoneId, secondsRemaining }),
   });
 }

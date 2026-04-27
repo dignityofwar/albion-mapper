@@ -27,9 +27,9 @@ watch([() => store.homeZoneId, isLocked], ([newHomeId, locked]) => {
 }, { immediate: true });
 
 const toZoneId = ref('');
-const minutesRemaining = ref<number | null>(null);
+const secondsRemaining = ref<number | null>(null);
 watch([fromZoneId, toZoneId], () => {
-  minutesRemaining.value = null;
+  secondsRemaining.value = null;
 });
 const reportedBy = ref('');
 const submitting = ref(false);
@@ -46,7 +46,7 @@ const emit = defineEmits<{
 // ...
 
 const canSubmit = computed(
-  () => fromZoneId.value && toZoneId.value && minutesRemaining.value !== null && !submitting.value,
+  () => fromZoneId.value && toZoneId.value && secondsRemaining.value !== null && !submitting.value,
 );
 
 async function submit() {
@@ -63,7 +63,7 @@ async function submit() {
       body: JSON.stringify({
         fromZoneId: fromZoneId.value,
         toZoneId: toZoneId.value,
-        minutesRemaining: Number(minutesRemaining.value!),
+        secondsRemaining: Number(secondsRemaining.value!),
         reportedBy: reportedBy.value || undefined,
       }),
     });
@@ -78,7 +78,7 @@ async function submit() {
 
     // To becomes the new From, reset time
     toZoneId.value = '';
-    minutesRemaining.value = null;
+    secondsRemaining.value = null;
   } finally {
     submitting.value = false;
   }
@@ -104,7 +104,7 @@ function focusTimeInput() {
   timeInputEl.value?.focus();
 }
 
-defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => fromZoneId.value = id, focusToCombobox, flashToCombobox });
+defineExpose({ secondsRemaining, fromZoneId, setFromZoneId: (id: string) => fromZoneId.value = id, focusToCombobox, flashToCombobox });
 </script>
 
 <template>
@@ -128,7 +128,7 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
                   data-testid="from-combobox"
                   :smart-already-added="true"
                   already-added-placement="top"
-                  :error="minutesRemaining !== null && !fromZoneId"
+                  :error="secondsRemaining !== null && !fromZoneId"
                   :disabled="true"
                   icon="🏠"
                   @tab-select="focusToCombobox"
@@ -151,7 +151,7 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
           data-testid="from-combobox"
           :smart-already-added="true"
           already-added-placement="top"
-          :error="minutesRemaining !== null && !fromZoneId"
+          :error="secondsRemaining !== null && !fromZoneId"
           @tab-select="focusToCombobox"
           @select="focusToCombobox"
         />
@@ -167,7 +167,7 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
           :smart-already-added="true"
           already-added-placement="bottom"
           data-testid="to-combobox"
-          :error="minutesRemaining !== null && !toZoneId"
+          :error="secondsRemaining !== null && !toZoneId"
           @tab-select="focusTimeInput"
           @select="focusTimeInput"
         />
@@ -178,7 +178,7 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
         <label class="text-gray-400 text-sm whitespace-nowrap">Expires:</label>
         <TimeInput
           ref="timeInputEl"
-          v-model="minutesRemaining"
+          v-model="secondsRemaining"
           data-testid="time-input"
           @keydown="onTimeKeydown"
         />

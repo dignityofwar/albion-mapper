@@ -271,8 +271,8 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           onDelete: async (id: string) => {
             await deleteConnection(props.id, store.token!, id);
           },
-          onUpdate: async (id: string, minutesRemaining: number) => {
-            await updateConnection(props.id, store.token!, id, minutesRemaining);
+          onUpdate: async (id: string, secondsRemaining: number) => {
+            await updateConnection(props.id, store.token!, id, secondsRemaining);
           },
         },
       };

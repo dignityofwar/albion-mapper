@@ -38,7 +38,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, minutesRemaining: 30 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
     });
     expect(res.statusCode).toBe(201);
     const conn = res.json<Connection>();
@@ -56,7 +56,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_A, minutesRemaining: 30 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_A, secondsRemaining: 1800 },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/different/i);
@@ -68,7 +68,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: UNKNOWN_ZONE, toZoneId: VALID_ZONE_B, minutesRemaining: 30 },
+      payload: { fromZoneId: UNKNOWN_ZONE, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/zone catalogue/i);
@@ -80,30 +80,30 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: UNKNOWN_ZONE, minutesRemaining: 30 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: UNKNOWN_ZONE, secondsRemaining: 1800 },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/zone catalogue/i);
   });
 
-  it('rejects minutesRemaining = 0', async () => {
+  it('rejects secondsRemaining = 0', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, minutesRemaining: 0 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 0 },
     });
     expect(res.statusCode).toBe(400);
   });
 
-  it('rejects minutesRemaining > 1440', async () => {
+  it('rejects secondsRemaining > 86400', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, minutesRemaining: 1441 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 86401 },
     });
     expect(res.statusCode).toBe(400);
   });
@@ -112,7 +112,7 @@ describe('POST /api/rooms/:id/connections', () => {
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, minutesRemaining: 30 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
     });
     expect(res.statusCode).toBe(401);
   });
@@ -133,7 +133,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'PATCH',
       url: `/api/rooms/${roomId}/connections/${connId}`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { minutesRemaining: 120 },
+      payload: { secondsRemaining: 7200 },
     });
     
     expect(updateRes.statusCode).toBe(200);

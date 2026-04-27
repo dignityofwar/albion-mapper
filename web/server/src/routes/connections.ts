@@ -74,7 +74,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
     }
 
-    const { fromZoneId, toZoneId, minutesRemaining, reportedBy } = parsed.data;
+    const { fromZoneId, toZoneId, secondsRemaining, reportedBy } = parsed.data;
 
     if (fromZoneId === toZoneId) {
       return reply.status(400).send({ error: 'fromZoneId and toZoneId must be different' });
@@ -91,7 +91,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
     const now = new Date();
     const connId = randomUUID();
     const reportedAt = now.toISOString();
-    const expiresAt = new Date(now.getTime() + minutesRemaining * 60 * 1000).toISOString();
+    const expiresAt = new Date(now.getTime() + secondsRemaining * 1000).toISOString();
 
     await app.db.query(`
       INSERT INTO connections (id, room_id, from_zone_id, to_zone_id, expires_at, reported_at, reported_by)
@@ -198,7 +198,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
         return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
       }
 
-      const { minutesRemaining } = parsed.data;
+      const { secondsRemaining } = parsed.data;
 
       const { rows } = await app.db.query<{ id: string }>(
         'SELECT id FROM connections WHERE id = $1 AND room_id = $2',
@@ -211,7 +211,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       }
 
       const now = new Date();
-      const expiresAt = new Date(now.getTime() + minutesRemaining * 60 * 1000).toISOString();
+      const expiresAt = new Date(now.getTime() + secondsRemaining * 1000).toISOString();
 
       await app.db.query(
         'UPDATE connections SET expires_at = $1 WHERE id = $2 AND room_id = $3',

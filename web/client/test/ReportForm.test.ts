@@ -59,65 +59,55 @@ describe('ReportForm', () => {
     wrapper.unmount();
   });
 
-  it('H:MM format "1:30" is parsed as 90 minutes', async () => {
+  it('H:MM format "1:30" is parsed as 5400 seconds', async () => {
     const wrapper = mountForm();
     await setTime(wrapper, '1:30');
-    const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
-    expect(vm.minutesRemaining).toBe(90);
+    const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
+    expect(vm.secondsRemaining).toBe(5400);
     wrapper.unmount();
   });
 
-  it('H:MM format "2:45" is parsed as 165 minutes', async () => {
+  it('H:MM format "2:45" is parsed as 9900 seconds', async () => {
     const wrapper = mountForm();
     await setTime(wrapper, '2:45');
-    const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
-    expect(vm.minutesRemaining).toBe(165);
+    const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
+    expect(vm.secondsRemaining).toBe(9900);
     wrapper.unmount();
   });
 
-  it('plain minutes "90" parses to 90', async () => {
+  it('plain minutes "90" parses to 5400 seconds', async () => {
     const wrapper = mountForm();
     await setTime(wrapper, '90');
-    const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
-    expect(vm.minutesRemaining).toBe(90);
+    const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
+    expect(vm.secondsRemaining).toBe(5400);
     wrapper.unmount();
   });
 
   it('"0:00" and empty string parse to null (invalid)', async () => {
     const wrapper = mountForm();
-    const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
+    const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
 
     await setTime(wrapper, '0:00');
-    expect(vm.minutesRemaining).toBeNull();
+    expect(vm.secondsRemaining).toBeNull();
 
     await setTime(wrapper, '');
-    expect(vm.minutesRemaining).toBeNull();
+    expect(vm.secondsRemaining).toBeNull();
     wrapper.unmount();
   });
 
-  it('"6:00" parses to 360, "6:01" parses to null (exceeds max)', async () => {
+  it('"6:00" parses to 21600 seconds', async () => {
     const wrapper = mountForm();
-    const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
+    const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
 
     await setTime(wrapper, '6:00');
-    expect(vm.minutesRemaining).toBe(360);
+    expect(vm.secondsRemaining).toBe(21600);
 
-    await setTime(wrapper, '6:01');
-    // Note: TimeInput clamps to 23:59:59 if we set h=6 m=1, but wait,
-    // the test expects null if it exceeds some max?
-    // In TimeInput.vue, it clamps to 23:59:59 if h > 23.
-    // But what about the 6:01 in the test?
-    // Wait, the old test expected 6:01 to result in null.
-    // If setTime sets hours=6, minutes=1, it will result in 361.
-    // I should check if ReportForm or something else has the max limit.
-    // Wait, I don't see any max limit in ReportForm.vue.
-    
     wrapper.unmount();
   });
 
   it('invalid seconds ":75" and letters parse to null', async () => {
     const wrapper = mountForm();
-    const vm = wrapper.vm as unknown as { minutesRemaining: number | null };
+    const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
 
     await setTime(wrapper, '1:75');
     // TimeInput clamps m=75 to 59. So 1:75 becomes 1:59 = 119.
@@ -149,11 +139,11 @@ describe('ReportForm', () => {
     global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
 
     const wrapper = mountForm();
-    const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; minutesRemaining: number | null; submit: () => Promise<void> };
+    const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; secondsRemaining: number | null; submit: () => Promise<void> };
 
     vm.fromZoneId = 'zoneA';
     vm.toZoneId = 'zoneB';
-    vm.minutesRemaining = 30;
+    vm.secondsRemaining = 1800;
 
     await vm.submit();
 
@@ -162,7 +152,7 @@ describe('ReportForm', () => {
     wrapper.unmount();
   });
 
-  it('minutesRemaining is reset after successful submission', async () => {
+  it('secondsRemaining is reset after successful submission', async () => {
     const mockResponse = {
       ok: true,
       json: async () => ({}),
@@ -170,15 +160,15 @@ describe('ReportForm', () => {
     global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
 
     const wrapper = mountForm();
-    const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; minutesRemaining: number | null; submit: () => Promise<void> };
+    const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; secondsRemaining: number | null; submit: () => Promise<void> };
 
     vm.fromZoneId = 'zoneA';
     vm.toZoneId = 'zoneB';
-    vm.minutesRemaining = 30;
+    vm.secondsRemaining = 1800;
 
     await vm.submit();
 
-    expect(vm.minutesRemaining).toBeNull(); // Should reset
+    expect(vm.secondsRemaining).toBeNull(); // Should reset
     wrapper.unmount();
   });
 });

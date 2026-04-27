@@ -11,7 +11,7 @@ type EdgeData = {
   connection: Connection;
   now: number; // epoch ms, updated by parent interval
   onDelete: (id: string) => void;
-  onUpdate: (id: string, minutesRemaining: number) => void;
+  onUpdate: (id: string, secondsRemaining: number) => void;
 };
 
 const props = defineProps<EdgeProps<EdgeData>>();
@@ -19,7 +19,7 @@ const { setCenter } = useVueFlow();
 
 const showPopover = ref(false);
 const popoverRef = ref<HTMLElement | null>(null);
-const newMinutesRemaining = ref<number | null>(null);
+const newSecondsRemaining = ref<number | null>(null);
 
 const openPopoverId = inject<Ref<string | null>>('openPopoverId');
 
@@ -46,7 +46,7 @@ watch(showPopover, (val) => {
     if (openPopoverId) {
       openPopoverId.value = props.id;
     }
-    newMinutesRemaining.value = null;
+    newSecondsRemaining.value = null;
     nextTick(() => {
       document.addEventListener('click', closePopover);
       if (window.innerWidth < 768) {
@@ -146,7 +146,7 @@ defineExpose({
           <span class="text-gray-400">Expires:</span>
           {{ new Date(data.connection.expiresAt).toLocaleTimeString() }}
           <div class="mt-2">
-            <TimeInput v-model="newMinutesRemaining" compact />
+            <TimeInput v-model="newSecondsRemaining" compact />
           </div>
         </div>
         <div class="flex gap-2 mt-3">
@@ -157,9 +157,9 @@ defineExpose({
             Delete
           </button>
           <button
-            :disabled="newMinutesRemaining === null"
+            :disabled="newSecondsRemaining === null"
             class="flex-1 px-2 py-1.5 rounded bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-medium disabled:opacity-50"
-            @click.stop="data.onUpdate(id, newMinutesRemaining!); showPopover = false"
+            @click.stop="data.onUpdate(id, newSecondsRemaining!); showPopover = false"
           >
             Update
           </button>

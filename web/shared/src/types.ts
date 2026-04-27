@@ -135,12 +135,12 @@ export const AuthRoomBodySchema = z.object({
 export const CreateConnectionBodySchema = z.object({
   fromZoneId: z.string().min(1),
   toZoneId: z.string().min(1),
-  minutesRemaining: z.number().int().min(1).max(1440),
+  secondsRemaining: z.number().int().min(1).max(86400),
   reportedBy: z.string().optional(),
 });
 
 export const UpdateConnectionBodySchema = z.object({
-  minutesRemaining: z.number().int().min(1).max(1440),
+  secondsRemaining: z.number().int().min(1).max(86400),
 });
 
 export const ChangePasswordBodySchema = z.object({
