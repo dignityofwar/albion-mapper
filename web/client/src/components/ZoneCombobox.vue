@@ -220,7 +220,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
             <span v-if="mappedZoneIds.has(zone.id)" class="shrink-0 text-green-400">✓</span>
             <span v-if="zone.id === store.homeZoneId" class="shrink-0 text-yellow-400" title="Room home zone">🏠</span>
             <TagTier :tier="zone.tier" :type="zone.type" />
-            <TagZone :type="zone.type" />
+            <TagZone :type="zone.type" :category="zone.category" />
             <ComboboxItemIndicator class="shrink-0 text-green-400">✓</ComboboxItemIndicator>
           </ComboboxItem>
         </ComboboxViewport>

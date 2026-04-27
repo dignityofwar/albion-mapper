@@ -14,6 +14,7 @@ const props = defineProps<NodeProps<{
   zoneName: string; 
   type: string; 
   features?: NodeFeatures;
+  category?: string;
 }>>();
 
 const store = useRoomStore();
@@ -62,7 +63,7 @@ function getBorderClass(type: string): string {
       </div>
       <div class="flex items-center justify-center gap-1 mt-1">
         <TagTier :tier="props.data.tier" :type="props.data.type as ZoneType" />
-        <TagZone :type="props.data.type as ZoneType" />
+        <TagZone :type="props.data.type as ZoneType" :category="props.data.category" />
       </div>
     </div>
   </div>

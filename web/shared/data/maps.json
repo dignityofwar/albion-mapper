@@ -17,7 +17,7 @@
     "mapName": "Aspenwood",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "astolat",
@@ -65,7 +65,7 @@
     "mapName": "Battlebrae Meadow",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "battlebrae-peaks",
@@ -79,7 +79,7 @@
     "mapName": "Battlebrae Plain",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "bellever-tor",
@@ -93,7 +93,7 @@
     "mapName": "Birchcopse",
     "mapType": "royalBlue",
     "tier": 4,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "birken-fell",
@@ -213,7 +213,7 @@
     "mapName": "Brons Hill",
     "mapType": "royalYellow",
     "tier": 6,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "bryn-gorge",
@@ -282,7 +282,7 @@
     "mapName": "Carns Hill",
     "mapType": "royalYellow",
     "tier": 6,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "cases-ugumlos",
@@ -679,7 +679,7 @@
     "mapName": "Cracked Earth",
     "mapType": "royalBlue",
     "tier": 3,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "creag-dhor",
@@ -837,7 +837,7 @@
     "mapName": "Deadpine Forest",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "deadvein-gully",
@@ -871,7 +871,7 @@
     "mapName": "Deeproot Wood",
     "mapType": "royalYellow",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "deepwood-copse",
@@ -919,21 +919,21 @@
     "mapName": "Driftwood Glen",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "driftwood-hollow",
     "mapName": "Driftwood Hollow",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "driftwood-vale",
     "mapName": "Driftwood Vale",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "drownfield-course",
@@ -1017,7 +1017,7 @@
     "mapName": "Dryfield Meadow",
     "mapType": "royalBlue",
     "tier": 4,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "drystone-channel",
@@ -1072,7 +1072,7 @@
     "mapName": "Dryvein Plain",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "dryvein-riverbed",
@@ -1086,14 +1086,14 @@
     "mapName": "Dryvein Steppe",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "drywater-meadow",
     "mapName": "Drywater Meadow",
     "mapType": "royalBlue",
     "tier": 4,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "dusklight-fen",
@@ -1177,7 +1177,7 @@
     "mapName": "Everwinter Plain",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "everwinter-reach",
@@ -1198,7 +1198,7 @@
     "mapName": "Eye of the Forest",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "falsestep-marsh",
@@ -1212,14 +1212,14 @@
     "mapName": "Farshore Bay",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "farshore-cape",
     "mapName": "Farshore Cape",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "farshore-drylands",
@@ -1358,7 +1358,7 @@
     "mapName": "Ferndell",
     "mapType": "royalBlue",
     "tier": 4,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "feros-oyuctum",
@@ -1564,7 +1564,7 @@
     "mapName": "Flimmerair Steppe",
     "mapType": "royalRed",
     "tier": 6,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "floatshoal-bight",
@@ -1592,7 +1592,7 @@
     "mapName": "Flynsdell",
     "mapType": "royalBlue",
     "tier": 4,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "fog-fen",
@@ -1644,7 +1644,7 @@
     "mapName": "Forest Burrow",
     "mapType": "royalRed",
     "tier": 7,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "foritos-aiaylos",
@@ -1723,7 +1723,7 @@
     "mapName": "Fractured Ground",
     "mapType": "royalBlue",
     "tier": 3,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "frostbite-chasm",
@@ -1937,7 +1937,7 @@
     "mapName": "Giantweald Woods",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "glacierbreak-summit",
@@ -1993,14 +1993,14 @@
     "mapName": "Goffers Knoll",
     "mapType": "royalBlue",
     "tier": 3,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "goldshimmer-plain",
     "mapName": "Goldshimmer Plain",
     "mapType": "royalYellow",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "gravemound-brim",
@@ -2257,7 +2257,7 @@
     "mapName": "Highbole Glen",
     "mapType": "royalRed",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "highstone-grassland",
@@ -2278,7 +2278,7 @@
     "mapName": "Highstone Meadow",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "highstone-mound",
@@ -2292,7 +2292,7 @@
     "mapName": "Highstone Plains",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "highstone-plateau",
@@ -2306,84 +2306,84 @@
     "mapName": "Hightree Borderlands",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-cliffs",
     "mapName": "Hightree Cliffs",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-dale",
     "mapName": "Hightree Dale",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-enclave",
     "mapName": "Hightree Enclave",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-glade",
     "mapName": "Hightree Glade",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-hillock",
     "mapName": "Hightree Hillock",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-isle",
     "mapName": "Hightree Isle",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-lake",
     "mapName": "Hightree Lake",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-levee",
     "mapName": "Hightree Levee",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-pass",
     "mapName": "Hightree Pass",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-steep",
     "mapName": "Hightree Steep",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hightree-strand",
     "mapName": "Hightree Strand",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "hiles-izizaum",
@@ -2480,7 +2480,7 @@
     "mapName": "Hornbeam Wood",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "horos-ohenlum",
@@ -2690,21 +2690,21 @@
     "mapName": "Inis Mon",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "kilmar-tor",
     "mapName": "Kilmar Tor",
     "mapType": "royalBlue",
     "tier": 5,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "kindlegrass-steppe",
     "mapName": "Kindlegrass Steppe",
     "mapType": "royalRed",
     "tier": 6,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "larchroad",
@@ -2718,7 +2718,7 @@
     "mapName": "Lazygrass Plain",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "lewsdon-hill",
@@ -2753,21 +2753,21 @@
     "mapName": "Longmarch Meadow",
     "mapType": "royalBlue",
     "tier": 4,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "longshadow-plain",
     "mapName": "Longshadow Plain",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "longtimber-glen",
     "mapName": "Longtimber Glen",
     "mapType": "royalRed",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "malag-crevasse",
@@ -2848,7 +2848,7 @@
     "mapName": "Munten Rise",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "munten-tundra",
@@ -2910,7 +2910,7 @@
     "mapName": "Nightbloom Forest",
     "mapType": "royalRed",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "nightcreak-marsh",
@@ -2938,7 +2938,7 @@
     "mapName": "Oakcopse",
     "mapType": "royalBlue",
     "tier": 5,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "oasitos-aoeuam",
@@ -3164,7 +3164,7 @@
     "mapName": "Owlsong Glen",
     "mapType": "royalRed",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "oynites-araosum",
@@ -3232,7 +3232,7 @@
     "mapName": "Parchthroat Plain",
     "mapType": "royalYellow",
     "tier": 6,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "pasos-avosam",
@@ -4039,14 +4039,14 @@
     "mapName": "Redlake",
     "mapType": "royalBlue",
     "tier": 3,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "redstone-plain",
     "mapName": "Redstone Plain",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "redtree-enclave",
@@ -4088,7 +4088,7 @@
     "mapName": "Roastcorpse Steppe",
     "mapType": "royalRed",
     "tier": 6,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "rock-adit",
@@ -4101,7 +4101,7 @@
     "mapName": "Rowanwood",
     "mapType": "royalYellow",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "runnel-sink",
@@ -4147,7 +4147,7 @@
     "mapName": "Saddle Tor",
     "mapType": "royalBlue",
     "tier": 5,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "sandgust-cleft",
@@ -4188,49 +4188,49 @@
     "mapName": "Sandrift Coast",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "sandrift-dunes",
     "mapName": "Sandrift Dunes",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "sandrift-expanse",
     "mapName": "Sandrift Expanse",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "sandrift-fringe",
     "mapName": "Sandrift Fringe",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "sandrift-prairie",
     "mapName": "Sandrift Prairie",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "sandrift-shore",
     "mapName": "Sandrift Shore",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "sandrift-steppe",
     "mapName": "Sandrift Steppe",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "sases-aoarsum",
@@ -4943,7 +4943,7 @@
     "mapName": "Skullmarsh Lower",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "skullmarsh-upper",
@@ -5020,7 +5020,7 @@
     "mapName": "Slowtree Plain",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "smoothfloor-cleft",
@@ -5155,7 +5155,7 @@
     "mapName": "Spindlewood",
     "mapType": "royalYellow",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "springsump-basin",
@@ -5169,7 +5169,7 @@
     "mapName": "Springsump Melt",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "springsump-wetland",
@@ -5183,14 +5183,14 @@
     "mapName": "Stagbourne",
     "mapType": "royalBlue",
     "tier": 3,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "steelhide-meadow",
     "mapName": "Steelhide Meadow",
     "mapType": "royalBlue",
     "tier": 5,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "stinkhag",
@@ -5203,7 +5203,7 @@
     "mapName": "Stonelake Fields",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "stonelake-hillock",
@@ -5287,7 +5287,7 @@
     "mapName": "Sunkenbough Woods",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "sunstrand-delta",
@@ -5399,7 +5399,7 @@
     "mapName": "Swiftsands Plain",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "synites-aoarsum",
@@ -5562,7 +5562,7 @@
     "mapName": "Thirstwater Steppe",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Briddgewatch Portal"
+    "category": "Bridgewatch Portal"
   },
   {
     "mapID": "thirstwater-waste",
@@ -5590,7 +5590,7 @@
     "mapName": "Thunderrock Rapids",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "thunderrock-upland",
@@ -5685,7 +5685,7 @@
     "mapName": "Timbertop Wood",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "tiros-odoxlum",
@@ -5872,7 +5872,7 @@
     "mapName": "Vixen Tor",
     "mapType": "royalBlue",
     "tier": 4,
-    "category": "Briddgewatch RC"
+    "category": "Bridgewatch RC"
   },
   {
     "mapID": "wailing-bulwark",
@@ -5893,28 +5893,28 @@
     "mapName": "Watchwood Bluffs",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "watchwood-grove",
     "mapName": "Watchwood Grove",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "watchwood-lakeside",
     "mapName": "Watchwood Lakeside",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "watchwood-precipice",
     "mapName": "Watchwood Precipice",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurt Portal"
+    "category": "Lymhurst Portal"
   },
   {
     "mapID": "westweald-shore",
@@ -6110,7 +6110,7 @@
     "mapName": "Willow Wood",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "willowshade-hills",
@@ -6236,7 +6236,7 @@
     "mapName": "Wyre Forest",
     "mapType": "royalRed",
     "tier": 6,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   },
   {
     "mapID": "xases-ataglos",
@@ -6485,6 +6485,6 @@
     "mapName": "Yew Wood",
     "mapType": "royalYellow",
     "tier": 5,
-    "category": "Lymhurt RC"
+    "category": "Lymhurst RC"
   }
 ]

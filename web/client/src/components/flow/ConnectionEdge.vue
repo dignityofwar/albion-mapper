@@ -110,7 +110,7 @@ defineExpose({
       <!-- Countdown label -->
       <div
         data-trigger="true"
-        class="text-xs px-3 py-1.5 rounded-full text-white cursor-pointer shadow-sm"
+        class="text-xs px-3 h-7 inline-flex items-center justify-center rounded-full text-white cursor-pointer shadow-sm leading-none"
         :style="{ backgroundColor: style.color, border: `1px solid ${style.stroke}` }"
         @click="showPopover = !showPopover"
       >

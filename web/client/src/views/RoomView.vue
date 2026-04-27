@@ -230,6 +230,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           tier: zone?.tier ?? 0,
           zoneName: zone?.name ?? pos.zoneId,
           type: zone?.type ?? 'other',
+          category: zone?.category,
           virtualGridPos: pos.virtualGridPos,
           features: pos.features,
         },

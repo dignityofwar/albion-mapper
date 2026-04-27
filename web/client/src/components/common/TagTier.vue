@@ -12,7 +12,7 @@ const classes = computed(() => getTierClasses(props.type));
 </script>
 
 <template>
-  <span class="px-1 rounded text-white font-medium" :class="classes">
+  <span class="inline-flex items-center h-5 px-1 rounded text-white font-medium leading-none" :class="classes">
     T{{ tier }}
   </span>
 </template>

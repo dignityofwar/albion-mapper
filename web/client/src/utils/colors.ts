@@ -18,3 +18,4 @@ export const getTierClasses = (zoneType: ZoneType): string => {
 
   return 'bg-gray-700';
 };
+

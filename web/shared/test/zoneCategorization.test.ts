@@ -32,40 +32,40 @@ describe('zone categorization', () => {
       });
     });
 
-    describe('Briddgewatch RC', () => {
+    describe('Bridgewatch RC', () => {
       it('categorizes by keywords: Plain, Steppe, Meadow', () => {
-        expect(getZoneCategory('Feltand Plain', 'royalYellow')).toBe('Briddgewatch RC');
-        expect(getZoneCategory('Drytop Steppe', 'royalBlue')).toBe('Briddgewatch RC');
-        expect(getZoneCategory('Lazygrass Meadow', 'royalYellow')).toBe('Briddgewatch RC');
+        expect(getZoneCategory('Feltand Plain', 'royalYellow')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Drytop Steppe', 'royalBlue')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Lazygrass Meadow', 'royalYellow')).toBe('Bridgewatch RC');
       });
 
       it('handles exceptions: Vixen Tor, Goffers Knoll, Carns Hill, etc.', () => {
-        expect(getZoneCategory('Vixen Tor', 'royalRed')).toBe('Briddgewatch RC');
-        expect(getZoneCategory('Goffers Knoll', 'royalBlue')).toBe('Briddgewatch RC');
-        expect(getZoneCategory('Kilmar Tor', 'royalRed')).toBe('Briddgewatch RC');
-        expect(getZoneCategory('Saddle Tor', 'royalYellow')).toBe('Briddgewatch RC');
-        expect(getZoneCategory('Carns Hill', 'royalBlue')).toBe('Briddgewatch RC');
-        expect(getZoneCategory('Brons Hill', 'royalYellow')).toBe('Briddgewatch RC');
-        expect(getZoneCategory('Fractured Ground', 'royalRed')).toBe('Briddgewatch RC');
+        expect(getZoneCategory('Vixen Tor', 'royalRed')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Goffers Knoll', 'royalBlue')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Kilmar Tor', 'royalRed')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Saddle Tor', 'royalYellow')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Carns Hill', 'royalBlue')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Brons Hill', 'royalYellow')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Fractured Ground', 'royalRed')).toBe('Bridgewatch RC');
       });
     });
 
-    describe('Lymhurt RC', () => {
+    describe('Lymhurst RC', () => {
       it('categorizes by keywords: Wood, Forest, Ferndell, Glen, Inis Mon, etc.', () => {
-        expect(getZoneCategory('Aspenwood', 'royalYellow')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Wyre Forest', 'royalRed')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Ferndell', 'royalRed')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Birchcopse', 'royalBlue')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Owlsong Glen', 'royalYellow')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Highbole Glen', 'royalRed')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Inis Mon', 'royalRed')).toBe('Lymhurt RC');
+        expect(getZoneCategory('Aspenwood', 'royalYellow')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Wyre Forest', 'royalRed')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Ferndell', 'royalRed')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Birchcopse', 'royalBlue')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Owlsong Glen', 'royalYellow')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Highbole Glen', 'royalRed')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Inis Mon', 'royalRed')).toBe('Lymhurst RC');
       });
 
       it('handles exceptions: Goldshimmer Plain, Steelhide Meadow, etc.', () => {
-        expect(getZoneCategory('Goldshimmer Plain', 'royalYellow')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Steelhide Meadow', 'royalRed')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Dryfield Meadow', 'royalYellow')).toBe('Lymhurt RC');
-        expect(getZoneCategory('Cracked Earth', 'royalRed')).toBe('Lymhurt RC');
+        expect(getZoneCategory('Goldshimmer Plain', 'royalYellow')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Steelhide Meadow', 'royalRed')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Dryfield Meadow', 'royalYellow')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Cracked Earth', 'royalRed')).toBe('Lymhurst RC');
       });
     });
 
@@ -90,14 +90,14 @@ describe('zone categorization', () => {
     it('categorizes portals correctly', () => {
       expect(getZoneCategory('Thetford Portal', 'outlands')).toBe('Thetford Portal');
       expect(getZoneCategory('Fort Stirling Portal', 'outlands')).toBe('Fort Stirling Portal');
-      expect(getZoneCategory('Lymhurst Portal', 'outlands')).toBe('Lymhurt Portal');
-      expect(getZoneCategory('Bridgewatch Portal', 'outlands')).toBe('Briddgewatch Portal');
+      expect(getZoneCategory('Lymhurst Portal', 'outlands')).toBe('Lymhurst Portal');
+      expect(getZoneCategory('Bridgewatch Portal', 'outlands')).toBe('Bridgewatch Portal');
       expect(getZoneCategory('Martlock Portal', 'outlands')).toBe('Martlock Portal');
     });
 
     it('handles misspellings/variations in portal names', () => {
-      expect(getZoneCategory('Lymhurt Portal', 'outlands')).toBe('Lymhurt Portal');
-      expect(getZoneCategory('Briddgewatch Portal', 'outlands')).toBe('Briddgewatch Portal');
+      expect(getZoneCategory('Lymhurst Portal', 'outlands')).toBe('Lymhurst Portal');
+      expect(getZoneCategory('Bridgewatch Portal', 'outlands')).toBe('Bridgewatch Portal');
     });
 
     it('categorizes specific portal zones by prefix/list', () => {
@@ -112,12 +112,12 @@ describe('zone categorization', () => {
       expect(getZoneCategory('Frostbite Mountain', 'outlands')).toBe('Martlock Portal');
 
       // Bridgewatch
-      expect(getZoneCategory('Sandrift', 'outlands')).toBe('Briddgewatch Portal');
-      expect(getZoneCategory('Farshore Bay', 'outlands')).toBe('Briddgewatch Portal');
+      expect(getZoneCategory('Sandrift', 'outlands')).toBe('Bridgewatch Portal');
+      expect(getZoneCategory('Farshore Bay', 'outlands')).toBe('Bridgewatch Portal');
 
       // Lymhurst
-      expect(getZoneCategory('Hightree Lake', 'outlands')).toBe('Lymhurt Portal');
-      expect(getZoneCategory('Watchwood', 'outlands')).toBe('Lymhurt Portal');
+      expect(getZoneCategory('Hightree Lake', 'outlands')).toBe('Lymhurst Portal');
+      expect(getZoneCategory('Watchwood', 'outlands')).toBe('Lymhurst Portal');
 
       // Fort Stirling
       expect(getZoneCategory('Whitebank Wall', 'outlands')).toBe('Fort Stirling Portal');
@@ -129,8 +129,8 @@ describe('zone categorization', () => {
     it('categorizes keyword-based outlands zones as portals', () => {
       expect(getZoneCategory('Widemoor Fen', 'outlands')).toBe('Thetford Portal');
       expect(getZoneCategory('Willowshade Hills', 'outlands')).toBe('Thetford Portal');
-      expect(getZoneCategory('Battlebrae Meadow', 'outlands')).toBe('Briddgewatch Portal');
-      expect(getZoneCategory('Southgrove Wood', 'outlands')).toBe('Lymhurt Portal');
+      expect(getZoneCategory('Battlebrae Meadow', 'outlands')).toBe('Bridgewatch Portal');
+      expect(getZoneCategory('Southgrove Wood', 'outlands')).toBe('Lymhurst Portal');
       expect(getZoneCategory('Deepwood Gorge', 'outlands')).toBe('Fort Stirling Portal');
     });
   });
@@ -166,29 +166,29 @@ describe('zone categorization', () => {
 
     it('Bridgewatch', () => {
       // City
-      expect(getZoneCategory('Vixen Tor', 'royalRed')).toBe('Briddgewatch RC');
-      expect(getZoneCategory('Kilmar Tor', 'royalRed')).toBe('Briddgewatch RC');
-      expect(getZoneCategory('Carns Hill', 'royalBlue')).toBe('Briddgewatch RC');
-      expect(getZoneCategory('Brons Hill', 'royalYellow')).toBe('Briddgewatch RC');
-      expect(getZoneCategory('Fractured Ground', 'royalRed')).toBe('Briddgewatch RC');
-      expect(getZoneCategory('Slowtree Plain', 'royalYellow')).toBe('Briddgewatch RC');
+      expect(getZoneCategory('Vixen Tor', 'royalRed')).toBe('Bridgewatch RC');
+      expect(getZoneCategory('Kilmar Tor', 'royalRed')).toBe('Bridgewatch RC');
+      expect(getZoneCategory('Carns Hill', 'royalBlue')).toBe('Bridgewatch RC');
+      expect(getZoneCategory('Brons Hill', 'royalYellow')).toBe('Bridgewatch RC');
+      expect(getZoneCategory('Fractured Ground', 'royalRed')).toBe('Bridgewatch RC');
+      expect(getZoneCategory('Slowtree Plain', 'royalYellow')).toBe('Bridgewatch RC');
       // Portal
-      expect(getZoneCategory('Sandrift Steppe', 'outlands')).toBe('Briddgewatch Portal');
-      expect(getZoneCategory('Sandrift Prairie', 'outlands')).toBe('Briddgewatch Portal');
-      expect(getZoneCategory('Stonelake Fields', 'outlands')).toBe('Briddgewatch Portal');
+      expect(getZoneCategory('Sandrift Steppe', 'outlands')).toBe('Bridgewatch Portal');
+      expect(getZoneCategory('Sandrift Prairie', 'outlands')).toBe('Bridgewatch Portal');
+      expect(getZoneCategory('Stonelake Fields', 'outlands')).toBe('Bridgewatch Portal');
     });
 
     it('Lymhurst', () => {
       // Portal
-      expect(getZoneCategory('Hightree Cliffs', 'outlands')).toBe('Lymhurt Portal');
-      expect(getZoneCategory('Watchwood Precipice', 'outlands')).toBe('Lymhurt Portal');
-      expect(getZoneCategory('Munten Rise', 'outlands')).toBe('Lymhurt Portal');
+      expect(getZoneCategory('Hightree Cliffs', 'outlands')).toBe('Lymhurst Portal');
+      expect(getZoneCategory('Watchwood Precipice', 'outlands')).toBe('Lymhurst Portal');
+      expect(getZoneCategory('Munten Rise', 'outlands')).toBe('Lymhurst Portal');
       // City
-      expect(getZoneCategory('Ferndell', 'royalRed')).toBe('Lymhurt RC');
-      expect(getZoneCategory('Yew Wood', 'royalYellow')).toBe('Lymhurt RC');
-      expect(getZoneCategory('Owlsong Glen', 'royalYellow')).toBe('Lymhurt RC');
-      expect(getZoneCategory('Highbole Glen', 'royalRed')).toBe('Lymhurt RC');
-      expect(getZoneCategory('Inis Mon', 'royalRed')).toBe('Lymhurt RC');
+      expect(getZoneCategory('Ferndell', 'royalRed')).toBe('Lymhurst RC');
+      expect(getZoneCategory('Yew Wood', 'royalYellow')).toBe('Lymhurst RC');
+      expect(getZoneCategory('Owlsong Glen', 'royalYellow')).toBe('Lymhurst RC');
+      expect(getZoneCategory('Highbole Glen', 'royalRed')).toBe('Lymhurst RC');
+      expect(getZoneCategory('Inis Mon', 'royalRed')).toBe('Lymhurst RC');
     });
 
     it('Fort Stirling', () => {
