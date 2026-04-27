@@ -1,6 +1,18 @@
 import { setActivePinia, createPinia } from 'pinia';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useRoomStore } from '../src/stores/useRoomStore';
+
+// Mock WebSocket
+if (typeof global.WebSocket === 'undefined') {
+  (global as any).WebSocket = class {
+    static OPEN = 1;
+    readyState = 1;
+    send() {}
+    close() {}
+    addEventListener() {}
+    removeEventListener() {}
+  };
+}
 
 describe('useRoomStore', () => {
   beforeEach(() => {
@@ -27,6 +39,24 @@ describe('useRoomStore', () => {
     // Verify state
     expect(store.connections).toEqual([]);
     expect(store.homeZoneId).toBe('');
-    expect(store.nodePositions).toEqual([]); // This should fail if not fixed
+    expect(store.nodePositions).toEqual([]);
+  });
+
+  it('should update node features and update local state', () => {
+    const store = useRoomStore();
+    
+    // Setup initial state
+    store.roomId = 'room1';
+    store.token = 'token1';
+    store.nodePositions = [
+      { zoneId: 'z1', x: 0, y: 0 },
+      { zoneId: 'z2', x: 10, y: 10 }
+    ];
+
+    const features = { enemySighted: true, powercoreGreen: true };
+    store.updateNodeFeatures('z1', features);
+
+    // Verify local state update (optimistic)
+    expect(store.nodePositions[0].features).toEqual(features);
   });
 });
