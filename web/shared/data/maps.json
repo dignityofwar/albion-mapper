@@ -3518,7 +3518,7 @@
   {
     "mapID": "qiient-al-nusom",
     "mapName": "Qiient-Al-Nusom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3528,7 +3528,7 @@
   {
     "mapID": "qiient-al-odesum",
     "mapName": "Qiient-Al-Odesum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3538,7 +3538,7 @@
   {
     "mapID": "qiient-al-qinsis",
     "mapName": "Qiient-Al-Qinsis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3548,7 +3548,7 @@
   {
     "mapID": "qiient-al-tersas",
     "mapName": "Qiient-Al-Tersas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3556,7 +3556,7 @@
   {
     "mapID": "qiient-al-viesis",
     "mapName": "Qiient-Al-Viesis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3564,7 +3564,7 @@
   {
     "mapID": "qiient-al-vynsis",
     "mapName": "Qiient-Al-Vynsis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3574,7 +3574,7 @@
   {
     "mapID": "qiient-et-nusas",
     "mapName": "Qiient-Et-Nusas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3584,7 +3584,7 @@
   {
     "mapID": "qiient-et-odetis",
     "mapName": "Qiient-Et-Odetis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3592,7 +3592,7 @@
   {
     "mapID": "qiient-et-qinsum",
     "mapName": "Qiient-Et-Qinsum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3602,7 +3602,7 @@
   {
     "mapID": "qiient-et-tertum",
     "mapName": "Qiient-Et-Tertum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3610,7 +3610,7 @@
   {
     "mapID": "qiient-in-nutis",
     "mapName": "Qiient-In-Nutis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3618,7 +3618,7 @@
   {
     "mapID": "qiient-in-odetum",
     "mapName": "Qiient-In-Odetum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3626,7 +3626,7 @@
   {
     "mapID": "qiient-in-qinsis",
     "mapName": "Qiient-In-Qinsis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3634,7 +3634,7 @@
   {
     "mapID": "qiient-in-tersom",
     "mapName": "Qiient-In-Tersom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3642,7 +3642,7 @@
   {
     "mapID": "qiient-in-viesis",
     "mapName": "Qiient-In-Viesis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3650,7 +3650,7 @@
   {
     "mapID": "qiient-in-vyntum",
     "mapName": "Qiient-In-Vyntum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3668,7 +3668,7 @@
   {
     "mapID": "qiient-oc-odetum",
     "mapName": "Qiient-Oc-Odetum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3686,7 +3686,7 @@
   {
     "mapID": "qiient-qi-nusom",
     "mapName": "Qiient-Qi-Nusom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3696,7 +3696,7 @@
   {
     "mapID": "qiient-qi-odesas",
     "mapName": "Qiient-Qi-Odesas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3706,7 +3706,7 @@
   {
     "mapID": "qiient-qi-tersas",
     "mapName": "Qiient-Qi-Tersas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3714,7 +3714,7 @@
   {
     "mapID": "qiient-qi-vynsis",
     "mapName": "Qiient-Qi-Vynsis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3729,7 +3729,7 @@
   {
     "mapID": "qiient-sa-odetis",
     "mapName": "Qiient-Sa-Odetis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3740,7 +3740,7 @@
   {
     "mapID": "qiient-si-nusas",
     "mapName": "Qiient-Si-Nusas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3748,7 +3748,7 @@
   {
     "mapID": "qiient-si-odesum",
     "mapName": "Qiient-Si-Odesum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3758,7 +3758,7 @@
   {
     "mapID": "qiient-si-tertum",
     "mapName": "Qiient-Si-Tertum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3786,7 +3786,7 @@
   {
     "mapID": "qiitun-al-duosum",
     "mapName": "Qiitun-Al-Duosum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3803,7 +3803,7 @@
   {
     "mapID": "qiitun-et-vietis",
     "mapName": "Qiitun-Et-Vietis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3813,7 +3813,7 @@
   {
     "mapID": "qiitun-et-vynsom",
     "mapName": "Qiitun-Et-Vynsom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3821,7 +3821,7 @@
   {
     "mapID": "qiitun-si-vynsom",
     "mapName": "Qiitun-Si-Vynsom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3838,7 +3838,7 @@
   {
     "mapID": "quaent-al-nusis",
     "mapName": "Quaent-Al-Nusis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3848,7 +3848,7 @@
   {
     "mapID": "quaent-al-odesum",
     "mapName": "Quaent-Al-Odesum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3856,7 +3856,7 @@
   {
     "mapID": "quaent-al-qintis",
     "mapName": "Quaent-Al-Qintis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3864,7 +3864,7 @@
   {
     "mapID": "quaent-al-tersis",
     "mapName": "Quaent-Al-Tersis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3872,7 +3872,7 @@
   {
     "mapID": "quaent-al-viesom",
     "mapName": "Quaent-Al-Viesom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3882,7 +3882,7 @@
   {
     "mapID": "quaent-al-vynsum",
     "mapName": "Quaent-Al-Vynsum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -3890,7 +3890,7 @@
   {
     "mapID": "quaent-in-nusis",
     "mapName": "Quaent-In-Nusis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3900,7 +3900,7 @@
   {
     "mapID": "quaent-in-odesum",
     "mapName": "Quaent-In-Odesum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3943,7 +3943,7 @@
   {
     "mapID": "quatun-et-nusas",
     "mapName": "Quatun-Et-Nusas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -3953,7 +3953,7 @@
   {
     "mapID": "quatun-et-odetum",
     "mapName": "Quatun-Et-Odetum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4358,7 +4358,7 @@
   {
     "mapID": "secent-ai-odetis",
     "mapName": "Secent-AI-Odetis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4368,7 +4368,7 @@
   {
     "mapID": "secent-al-duosom",
     "mapName": "Secent-Al-Duosom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4379,7 +4379,7 @@
   {
     "mapID": "secent-al-nutum",
     "mapName": "Secent-Al-Nutum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4387,7 +4387,7 @@
   {
     "mapID": "secent-al-odetis",
     "mapName": "Secent-Al-Odetis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4395,7 +4395,7 @@
   {
     "mapID": "secent-al-qinsom",
     "mapName": "Secent-Al-Qinsom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4403,7 +4403,7 @@
   {
     "mapID": "secent-al-tersum",
     "mapName": "Secent-Al-Tersum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4413,7 +4413,7 @@
   {
     "mapID": "secent-al-viesum",
     "mapName": "Secent-Al-Viesum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4428,7 +4428,7 @@
   {
     "mapID": "secent-et-odesis",
     "mapName": "Secent-Et-Odesis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4438,7 +4438,7 @@
   {
     "mapID": "secent-et-qinsas",
     "mapName": "Secent-Et-Qinsas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4446,7 +4446,7 @@
   {
     "mapID": "secent-et-vyntum",
     "mapName": "Secent-Et-Vyntum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4456,7 +4456,7 @@
   {
     "mapID": "secent-in-tersum",
     "mapName": "Secent-In-Tersum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4484,7 +4484,7 @@
   {
     "mapID": "secent-qi-odesom",
     "mapName": "Secent-Qi-Odesom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4492,7 +4492,7 @@
   {
     "mapID": "secent-qi-qinsom",
     "mapName": "Secent-Qi-Qinsom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4503,7 +4503,7 @@
   {
     "mapID": "secent-sa-odesis",
     "mapName": "Secent-Sa-Odesis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4513,7 +4513,7 @@
   {
     "mapID": "secent-si-odetis",
     "mapName": "Secent-Si-Odetis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4521,7 +4521,7 @@
   {
     "mapID": "secent-si-qinsas",
     "mapName": "Secent-Si-Qinsas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4545,7 +4545,7 @@
   {
     "mapID": "sectun-al-vyntis",
     "mapName": "Sectun-Al-Vyntis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4553,7 +4553,7 @@
   {
     "mapID": "sectun-et-tersas",
     "mapName": "Sectun-Et-Tersas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4561,7 +4561,7 @@
   {
     "mapID": "sectun-in-odesis",
     "mapName": "Sectun-In-Odesis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4571,7 +4571,7 @@
   {
     "mapID": "sectun-in-qinsom",
     "mapName": "Sectun-In-Qinsom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4579,7 +4579,7 @@
   {
     "mapID": "sectun-in-vyntis",
     "mapName": "Sectun-In-Vyntis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4589,7 +4589,7 @@
   {
     "mapID": "sectun-oc-odesis",
     "mapName": "Sectun-Oc-Odesis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4636,7 +4636,7 @@
   {
     "mapID": "setent-al-duosas",
     "mapName": "Setent-Al-Duosas",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4647,7 +4647,7 @@
   {
     "mapID": "setent-al-qinsum",
     "mapName": "Setent-Al-Qinsum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4655,7 +4655,7 @@
   {
     "mapID": "setent-al-vietis",
     "mapName": "Setent-Al-Vietis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4672,7 +4672,7 @@
   {
     "mapID": "setent-et-nusum",
     "mapName": "Setent-Et-Nusum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4683,7 +4683,7 @@
   {
     "mapID": "setent-et-qintis",
     "mapName": "Setent-Et-Qintis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4693,7 +4693,7 @@
   {
     "mapID": "setent-in-qinsum",
     "mapName": "Setent-In-Qinsum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4764,7 +4764,7 @@
   {
     "mapID": "settun-al-nusis",
     "mapName": "Settun-AL-Nusis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4772,7 +4772,7 @@
   {
     "mapID": "settun-al-odetum",
     "mapName": "Settun-Al-Odetum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
@@ -4782,7 +4782,7 @@
   {
     "mapID": "settun-al-tersom",
     "mapName": "Settun-Al-Tersom",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4790,7 +4790,7 @@
   {
     "mapID": "settun-al-vynsis",
     "mapName": "Settun-Al-Vynsis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4798,7 +4798,7 @@
   {
     "mapID": "settun-et-odetum",
     "mapName": "Settun-Et-Odetum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4806,7 +4806,7 @@
   {
     "mapID": "settun-in-nusis",
     "mapName": "Settun-In-Nusis",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": []
@@ -4814,7 +4814,7 @@
   {
     "mapID": "settun-in-odetum",
     "mapName": "Settun-In-Odetum",
-    "mapType": "roads",
+    "mapType": "roadsHideout",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [

@@ -60,7 +60,10 @@ function isHideout(name: string): boolean {
 function classifyMapType(raw: RawEntry): MapType | null {
   const { name, color, icons } = raw;
 
-  if (TWO_HYPHEN_RE.test(name) || ONE_HYPHEN_RE.test(name)) {
+  if (TWO_HYPHEN_RE.test(name)) {
+    return 'roadsHideout';
+  }
+  if (ONE_HYPHEN_RE.test(name)) {
     return 'roads';
   }
 
@@ -228,7 +231,7 @@ async function main(): Promise<void> {
         tier: tierNum,
         category: getZoneCategory(mapName, mapType!),
       };
-      if (mapType === 'roads') {
+      if (mapType === 'roads' || mapType === 'roadsHideout') {
         if (isHideout(mapName)) gameMap.isRoadsHideout = true;
         gameMap.oresAvailable = extractOres(raw.icons);
       }
@@ -251,7 +254,7 @@ async function main(): Promise<void> {
       category: getZoneCategory(mapName, mapType),
     };
 
-    if (mapType === 'roads') {
+    if (mapType === 'roads' || mapType === 'roadsHideout') {
       if (isHideout(mapName)) gameMap.isRoadsHideout = true;
       gameMap.oresAvailable = extractOres(raw.icons);
     }

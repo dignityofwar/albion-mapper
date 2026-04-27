@@ -83,7 +83,8 @@ const warnings: string[] = [];
 
 function classify(raw: RawEntry): MapType | 'WARN_OTHER' {
   const { name, color, icons } = raw;
-  if (TWO_HYPHEN_RE.test(name) || ONE_HYPHEN_RE.test(name)) return 'roads';
+  if (TWO_HYPHEN_RE.test(name)) return 'roadsHideout';
+  if (ONE_HYPHEN_RE.test(name)) return 'roads';
   if (color !== undefined) {
     switch (color.toLowerCase()) {
       case 'blue':   return 'royalBlue';
@@ -119,7 +120,7 @@ function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } |
   const mapType: MapType = typeResult === 'WARN_OTHER' ? 'other' : typeResult;
   const mapID = raw.name.toLowerCase().replace(/\s+/g, '-');
   const result: GameMap = { mapID, mapName: raw.name, mapType, tier: tierNum };
-  if (mapType === 'roads') {
+  if (mapType === 'roads' || mapType === 'roadsHideout') {
     if (isHideout(raw.name)) result.isRoadsHideout = true;
     result.oresAvailable = extractOres(raw.icons);
   }
@@ -129,8 +130,8 @@ function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } |
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe('classification', () => {
-  it('two-hyphen name → roads', () => {
-    expect(classify({ name: 'Qiient-In-Odetum', tier: 6, icons: [] })).toBe('roads');
+  it('two-hyphen name → roadsHideout', () => {
+    expect(classify({ name: 'Qiient-In-Odetum', tier: 6, icons: [] })).toBe('roadsHideout');
   });
 
   it('one-hyphen name → roads', () => {
@@ -212,7 +213,7 @@ describe('processEntry — truth table', () => {
     expect(result).toEqual({
       mapID: 'qiient-in-odetum',
       mapName: 'Qiient-In-Odetum',
-      mapType: 'roads',
+      mapType: 'roadsHideout',
       tier: 6,
       isRoadsHideout: true,
       oresAvailable: [],

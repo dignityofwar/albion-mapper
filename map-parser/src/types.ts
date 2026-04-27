@@ -6,6 +6,7 @@ export type MapType =
   | 'royalRed'
   | 'outlands'
   | 'roads'
+  | 'roadsHideout'
   | 'other';
 
 export interface GameMap {
@@ -24,6 +25,7 @@ export const MapTypeSchema = z.enum([
   'royalRed',
   'outlands',
   'roads',
+  'roadsHideout',
   'other',
 ]);
 
