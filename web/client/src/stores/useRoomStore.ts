@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Connection, ServerMessage, NodePosition, NodeFeatures } from 'shared';
+import { API_BASE_URL } from '../utils/api';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected';
 
@@ -86,8 +87,9 @@ export const useRoomStore = defineStore('room', () => {
     if (ws && ws.readyState === WebSocket.OPEN) return;
 
     wsStatus.value = 'connecting';
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    ws = new WebSocket(`${protocol}//${window.location.host}/ws/rooms/${roomId.value}`);
+    const url = new URL(`${API_BASE_URL}/ws/rooms/${roomId.value}`);
+    url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+    ws = new WebSocket(url.toString());
 
     ws.addEventListener('open', () => {
       ws!.send(JSON.stringify({ type: 'auth', token: token.value }));
