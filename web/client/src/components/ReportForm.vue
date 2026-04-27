@@ -108,30 +108,42 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
 
 <template>
   <form
-    class="relative flex flex-col md:flex-row md:items-center gap-1 p-3 md:p-2 bg-gray-900 border-b border-gray-700"
+    class="relative flex flex-col md:flex-row md:items-center gap-2 p-2.5 bg-gray-900 border-b border-gray-700"
     style="z-index:10"
     data-testid="report-form"
     @submit.prevent="submit"
   >
     <!-- Settings cog -->
-    <RoomSettings />
+    <RoomSettings class="hidden md:block" />
 
     <!-- From -->
     <div class="flex-1 min-w-0">
-      <TooltipProvider v-if="isLocked" :delay-duration="0">
-        <TooltipRoot>
-          <TooltipTrigger asChild>
-            <div class="border rounded bg-gray-800 border-gray-700 px-3 py-2 text-sm text-gray-500 cursor-not-allowed truncate">
-              🏠 {{ getZoneName(fromZoneId) }}
-            </div>
-          </TooltipTrigger>
-          <TooltipPortal>
-            <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-50">
-              Locked until more zones added
-            </TooltipContent>
-          </TooltipPortal>
-        </TooltipRoot>
-      </TooltipProvider>
+      <template v-if="isLocked">
+        <TooltipProvider :delay-duration="0">
+          <TooltipRoot>
+            <TooltipTrigger asChild>
+              <ZoneCombobox
+                ref="fromComboboxInputEl"
+                v-model="fromZoneId"
+                placeholder="From zone…"
+                data-testid="from-combobox"
+                :smart-already-added="true"
+                already-added-placement="top"
+                :error="minutesRemaining !== null && !fromZoneId"
+                :disabled="true"
+                icon="🏠"
+                @tab-select="focusToCombobox"
+                @select="focusToCombobox"
+              />
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-50">
+                Locked until more zones added
+              </TooltipContent>
+            </TooltipPortal>
+          </TooltipRoot>
+        </TooltipProvider>
+      </template>
       <ZoneCombobox
         v-else
         ref="fromComboboxInputEl"
@@ -171,17 +183,16 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
         data-testid="time-input"
         @keydown="onTimeKeydown"
       />
+      <!-- Submit -->
+      <button
+        type="submit"
+        :disabled="!canSubmit"
+        class="ml-1 px-4 py-3 md:py-2.5 rounded border border-transparent bg-indigo-600 text-white text-sm font-medium leading-none hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 md:flex-none"
+        data-testid="submit-button"
+      >
+        Add
+      </button>
     </div>
-
-    <!-- Submit -->
-    <button
-      type="submit"
-      :disabled="!canSubmit"
-      class="px-4 py-3 md:py-2 rounded bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
-      data-testid="submit-button"
-    >
-      Add
-    </button>
 
     <!-- Error -->
   </form>

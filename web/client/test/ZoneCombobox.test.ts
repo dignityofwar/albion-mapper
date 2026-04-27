@@ -150,4 +150,26 @@ describe('ZoneCombobox component renders', () => {
     expect((input.element as HTMLInputElement).placeholder).toBe('Search zones…');
     wrapper.unmount();
   });
+
+  it('renders with icon when provided', () => {
+    const wrapper = mount(ZoneCombobox, {
+      props: { modelValue: '', icon: '🏠' },
+      global: { plugins: [createPinia()] },
+    });
+    expect(wrapper.text()).toContain('🏠');
+    wrapper.unmount();
+  });
+
+  it('applies disabled styles', () => {
+    const wrapper = mount(ZoneCombobox, {
+      props: { modelValue: '', disabled: true },
+      global: { plugins: [createPinia()] },
+    });
+    const container = wrapper.find('.cursor-not-allowed');
+    expect(container.exists()).toBe(true);
+    
+    const input = wrapper.find('[data-testid="zone-combobox-input"]');
+    expect(input.classes()).toContain('cursor-not-allowed');
+    wrapper.unmount();
+  });
 });

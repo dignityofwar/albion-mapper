@@ -24,10 +24,13 @@ const props = withDefaults(defineProps<{
   smartAlreadyAdded?: boolean;
   alreadyAddedPlacement?: 'top' | 'bottom';
   error?: boolean;
+  disabled?: boolean;
+  icon?: string;
 }>(), {
   showAlreadyAdded: true,
   smartAlreadyAdded: false,
-  alreadyAddedPlacement: 'bottom'
+  alreadyAddedPlacement: 'bottom',
+  disabled: false
 });
 
 const emit = defineEmits<{
@@ -167,33 +170,48 @@ function onWrapperKeydown(e: KeyboardEvent) {
       @update:model-value="onSelect"
       @highlight="onHighlight"
       :ignore-filter="true"
+      :disabled="disabled"
       data-testid="zone-combobox"
     >
-      <div class="flex items-center border rounded bg-gray-800 text-white" :class="error ? 'border-red-500' : 'border-gray-600'">
+      <div 
+        class="flex items-center border rounded bg-gray-800 text-white px-3 py-2.5 md:py-2" 
+        :class="[
+          error ? 'border-red-500' : 'border-gray-600',
+          disabled ? 'cursor-not-allowed text-gray-400' : ''
+        ]"
+      >
+        <span v-if="icon" class="mr-2 text-sm leading-none shrink-0">{{ icon }}</span>
         <ComboboxInput
           ref="comboboxInput"
           v-model="query"
           :display-value="displayValue"
           :placeholder="placeholder ?? 'Search zones…'"
-          class="flex-1 bg-transparent px-3 py-2 outline-none text-sm min-w-0"
+          class="flex-1 bg-transparent py-0 outline-none text-sm leading-none min-w-0"
+          :class="disabled ? 'cursor-not-allowed opacity-75' : ''"
           data-testid="zone-combobox-input"
           @focus="onInputFocus"
         />
-        <ComboboxTrigger class="px-3 py-2 text-gray-400 hover:text-white">▾</ComboboxTrigger>
+        <ComboboxTrigger 
+          class="pl-3 py-0 text-gray-400 text-sm leading-none"
+          :class="disabled ? 'cursor-not-allowed' : 'hover:text-white'"
+          :disabled="disabled"
+        >
+          ▾
+        </ComboboxTrigger>
       </div>
 
       <ComboboxContent
         class="absolute z-50 mt-1 w-full bg-gray-900 border border-gray-600 rounded shadow-lg max-h-64 overflow-hidden"
       >
         <ComboboxViewport class="overflow-y-auto max-h-64">
-          <div v-if="filteredZones.length === 0" class="px-3 py-2 text-sm text-gray-400">
+          <div v-if="filteredZones.length === 0" class="px-3 text-sm text-gray-400">
             {{ query ? 'No zones found' : 'Type to search all zones…' }}
           </div>
           <ComboboxItem
             v-for="zone in filteredZones"
             :key="zone.id"
             :value="zone.id"
-            class="flex items-center gap-2 px-3 py-3 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
+            class="flex items-center gap-2 px-3 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
           >
             <span class="truncate flex-1">{{ zone.name }}</span>
             <span v-if="mappedZoneIds.has(zone.id)" class="shrink-0 text-green-400">✓</span>

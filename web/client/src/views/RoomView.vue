@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
 import ReportForm from '../components/ReportForm.vue';
+import RoomSettings from '../components/RoomSettings.vue';
 import DebugTray from '../components/DebugTray.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
@@ -239,6 +240,8 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     newNodes.forEach(newNode => {
         const existingNode = flowNodes.value.find(n => n.id === newNode.id);
         if (existingNode) {
+            existingNode.position = newNode.position;
+            existingNode.data = newNode.data;
             updateNode(newNode.id, newNode);
         } else {
             flowNodes.value.push(newNode);
@@ -392,12 +395,18 @@ defineExpose({ flowNodes, onNodeDragStop });
     <!-- Refresh layout button -->
     <!-- Removed as per user request -->
 
-    <!-- Fit view button -->
-    <button
-      class="fixed bottom-4 right-4 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
-      title="Fit view"
-      @click="fitView({ padding: 0.2, duration: 300 })"
-    >🔄</button>
+    <!-- Tray buttons -->
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-4">
+      <!-- Fit view button -->
+      <button
+        class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
+        title="Fit view"
+        @click="fitView({ padding: 0.2, duration: 300 })"
+      >🔄</button>
+
+      <!-- Settings button (mobile only) -->
+      <RoomSettings tray class="md:hidden" />
+    </div>
 
     <!-- Debug tray modal -->
     <DebugTray :nodes="flowNodes" :edges="flowEdges" :show="showDebug" @close="showDebug = false" />

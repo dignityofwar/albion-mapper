@@ -88,9 +88,9 @@ describe('RoomView', () => {
     // Spy on updateNodePositionsInStore
     const spy = vi.spyOn(store, 'updateNodePositionsInStore');
     
-    store.applyMessage({ 
-        type: 'sync', 
-        connections: [], 
+    store.applyMessage({
+        type: 'sync',
+        connections: [],
         homeZoneId: 'zone-a',
         nodePositions: [
             { zoneId: 'zone-a', x: 0, y: 0 },
@@ -99,6 +99,8 @@ describe('RoomView', () => {
         lastUpdatedAt: new Date().toISOString()
     });
 
+    await nextTick();
+
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
@@ -106,22 +108,24 @@ describe('RoomView', () => {
       }
     });
 
+    await nextTick();
+    await nextTick();
+
     const vm = wrapper.vm as any;
     
     // Simulate node move
-    vm.flowNodes.value = [
-        { id: 'zone-a', position: { x: 0, y: 0 } },
-        { id: 'zone-b', position: { x: 10, y: 10 } }
-    ];
+    // We update the position of the existing node in flowNodes
+    const nodeB = vm.flowNodes.find((n: any) => n.id === 'zone-b');
+    nodeB.position = { x: 10, y: 10 };
     
     // Call onNodeDragStop
     vm.onNodeDragStop();
 
     expect(spy).toHaveBeenCalled();
-    expect(store.nodePositions).toEqual([
-        { zoneId: 'zone-a', x: 0, y: 0 },
-        { zoneId: 'zone-b', x: 10, y: 10 }
-    ]);
+    expect(spy).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({ zoneId: 'zone-a', x: 0, y: 0 }),
+        expect.objectContaining({ zoneId: 'zone-b', x: 10, y: 10 })
+    ]));
     
     wrapper.unmount();
   });

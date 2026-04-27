@@ -57,27 +57,27 @@ describe('RoomView node positioning', () => {
     await nextTick();
     await nextTick();
     
-    // Position of 'new-node' should be 'home'.x + 250 = 250
+    // Position of 'new-node' should be 'home'.x + 300 = 300
     const newNode = vm.flowNodes.find((n: any) => n.id === 'new-node');
     expect(newNode).toBeDefined();
-    expect(newNode.position.x).toBe(250);
+    expect(newNode.position.x).toBe(300);
     expect(newNode.position.y).toBe(0);
     
     wrapper.unmount();
   });
 
-  it('should place new nodes to the RIGHT of the SOURCE node when source is at X 250', async () => {
+  it('should place new nodes to the RIGHT of the SOURCE node when source is at X 300', async () => {
     setActivePinia(createPinia());
     const store = useRoomStore();
 
-    // Setup initial state: Home node at (0,0), Source node at (250, 0)
+    // Setup initial state: Home node at (0,0), Source node at (300, 0)
     store.applyMessage({ 
         type: 'sync', 
         connections: [], 
         homeZoneId: 'home',
         nodePositions: [
             { zoneId: 'home', x: 0, y: 0 },
-            { zoneId: 'source', x: 250, y: 0 }
+            { zoneId: 'source', x: 300, y: 0 }
         ],
         lastUpdatedAt: new Date().toISOString()
     });
@@ -104,10 +104,10 @@ describe('RoomView node positioning', () => {
     await nextTick();
     await nextTick();
     
-    // Position of 'new-node' should be 'source'.x + 250 = 500
+    // Position of 'new-node' should be 'source'.x + 300 = 600
     const newNode = vm.flowNodes.find((n: any) => n.id === 'new-node');
     expect(newNode).toBeDefined();
-    expect(newNode.position.x).toBe(500);
+    expect(newNode.position.x).toBe(600);
     expect(newNode.position.y).toBe(0);
     
     wrapper.unmount();
@@ -151,11 +151,11 @@ describe('RoomView node positioning', () => {
     await nextTick();
     await nextTick();
 
-    // Position of 'new-node' should be 'source'.x - 250 = 250
+    // Position of 'new-node' should be 'source'.x - 300 = 200
     // Because parentPos.x (500) < homePos.x (1000)
     const newNode = vm.flowNodes.find((n: any) => n.id === 'new-node');
     expect(newNode).toBeDefined();
-    expect(newNode.position.x).toBe(250);
+    expect(newNode.position.x).toBe(200);
     expect(newNode.position.y).toBe(0);
 
     wrapper.unmount();

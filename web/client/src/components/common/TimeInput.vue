@@ -90,33 +90,33 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex items-center justify-center bg-gray-800 border border-gray-600 rounded px-3 py-2">
+  <div class="flex items-center justify-center bg-gray-800 border border-gray-600 rounded px-3 py-2.5 md:py-2">
     <input
       ref="hoursEl"
       type="number"
       v-model.number="hours"
       placeholder="HH"
-      class="w-8 bg-transparent text-white text-sm outline-none text-center"
+      class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
       min="0"
       max="23"
       @keydown="onKeydown"
     />
-    <span class="text-gray-400">:</span>
+    <span class="text-gray-400 leading-none">:</span>
     <input
       type="number"
       v-model.number="minutes"
       placeholder="MM"
-      class="w-8 bg-transparent text-white text-sm outline-none text-center"
+      class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
       min="0"
       max="59"
       @keydown="onKeydown"
     />
-    <span class="text-gray-400">:</span>
+    <span class="text-gray-400 leading-none">:</span>
     <input
       type="number"
       v-model.number="seconds"
       placeholder="SS"
-      class="w-8 bg-transparent text-white text-sm outline-none text-center"
+      class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
       min="0"
       max="59"
       @keydown="onKeydown"
