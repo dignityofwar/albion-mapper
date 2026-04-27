@@ -195,8 +195,8 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
 
       <!-- Error -->
     </form>
-    <div class="max-w-[1100px] mx-auto xl:ml-auto xl:mr-0 2xl:mx-auto px-2.5 md:px-3 pb-2 md:pb-2.5 -mt-2 text-[11px] text-gray-400 text-center">
-      Hint: Press <span class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-mono uppercase">tab</span> to quickly move between fields
+    <div class="max-w-[1100px] hidden md:block mx-auto xl:ml-auto xl:mr-0 2xl:mx-auto px-2.5 md:px-3 pb-2 md:pb-2.5 -mt-2 text-[11px] text-gray-400 text-center">
+      Hint: Press <span class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-mono uppercase">tab</span> to quickly move between fields,  <span class="bg-gray-700 text-white px-1.5 py-0.5 rounded text-[10px] font-mono uppercase">enter</span> to choose values. You can drag from the circles on a node to quickly add new ones.
     </div>
   </div>
 </template>
