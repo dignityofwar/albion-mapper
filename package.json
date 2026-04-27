@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "pnpm --parallel --filter client --filter server dev",
+    "db:up": "./scripts/start-local-db.sh",
+    "db:down": "./scripts/stop-local-db.sh",
     "build": "pnpm --filter shared build && pnpm --filter server build && pnpm --filter client build",
     "test": "pnpm --recursive test",
     "lint": "pnpm --recursive lint",

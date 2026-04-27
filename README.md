@@ -19,17 +19,22 @@ Multiple users join a shared, password-protected room and contribute connection 
 ## Quick Start
 
 ```bash
-# 1. Install all dependencies
+# 1. Start the local database (Postgres in Docker)
+pnpm db:up
+
+# 2. Install all dependencies
 pnpm install
 
-# 2. Populate the zone catalogue
+# 3. Populate the zone catalogue
 pnpm --filter shared sync-maps   # writes web/shared/data/maps.json
 
-# 3. Start both server and client (concurrently)
+# 4. Start both server and client (concurrently)
 pnpm dev
 ```
 
 The client dev server runs on **http://localhost:5173** (proxied to the API server on **:3001**).
+
+Note: Ensure you have a `.env` file in `web/server` (you can copy `.env.example`) with `DATABASE_URL=postgres://user:password@localhost:5432/dbname` (matching the defaults in `provisioning/docker-compose.yml`).
 
 ---
 

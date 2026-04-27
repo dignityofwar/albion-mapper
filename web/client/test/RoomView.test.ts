@@ -353,3 +353,36 @@ describe('RoomView', () => {
     wrapper.unmount();
   });
 });
+
+describe('RoomView Home Zone Protection', () => {
+  it('should NOT have handleSetHomeZone and should NOT allow changing home zone on click', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+    
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [], 
+        homeZoneId: 'home-zone',
+        nodePositions: [
+            { zoneId: 'home-zone', x: 0, y: 0 },
+            { zoneId: 'other-zone', x: 100, y: 100 }
+        ],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'Background', 'Controls']
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    
+    // Check that handleSetHomeZone is NOT present
+    expect(vm.handleSetHomeZone).toBeUndefined();
+    
+    wrapper.unmount();
+  });
+});

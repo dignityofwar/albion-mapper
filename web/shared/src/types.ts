@@ -139,9 +139,6 @@ export const UpdateConnectionBodySchema = z.object({
   minutesRemaining: z.number().int().min(1).max(1440),
 });
 
-export const UpdateRoomBodySchema = z.object({
-  homeZoneId: z.string().min(1),
-});
 export const ChangePasswordBodySchema = z.object({
   newPassword: z.string().min(1),
   adminPassword: z.string().min(1),

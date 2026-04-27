@@ -2,13 +2,13 @@ import type { ZoneType } from 'shared';
 import { ZONE_TYPE_CLASSES } from './colors';
 
 export const TYPE_LABELS: Record<ZoneType, string> = {
-  royalBlue: 'Royal Cont',
-  royalYellow: 'Royal Cont',
-  royalRed: 'Royal Cont',
+  royalBlue: 'Royal Continent',
+  royalYellow: 'Royal Continent',
+  royalRed: 'Royal Continent',
   outlands: 'Outlands',
   roads: 'Roads',
   roadsHideout: 'Roads (Hideout)',
-  other: 'Other',
+  other: 'Other / Outlands',
 };
 
 export function getZoneTypeDisplay(type: ZoneType) {

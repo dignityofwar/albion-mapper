@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import pkg from 'pg';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -8,11 +9,11 @@ const { Pool } = pkg;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: typeof process !== 'undefined' ? process.env?.DATABASE_URL : undefined,
 });
 
 export async function initDb() {
-  const databaseUrl = process.env.DATABASE_URL;
+  const databaseUrl = typeof process !== 'undefined' ? process.env?.DATABASE_URL : undefined;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL environment variable is not set');
   }

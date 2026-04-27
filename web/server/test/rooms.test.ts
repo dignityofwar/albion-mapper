@@ -160,3 +160,22 @@ describe('POST /api/rooms/:id/auth', () => {
     expect(res.statusCode).toBe(404);
   });
 });
+
+describe('Home Zone Node Protection', () => {
+  it('should NOT allow changing home zone via PATCH /api/rooms/:id', async () => {
+    const roomId = 'test-room-id';
+    const token = app.jwt.sign({ roomId });
+
+    const res = await app.inject({
+      method: 'PATCH',
+      url: `/api/rooms/${roomId}`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      payload: { homeZoneId: 'qiient-et-tertum' },
+    });
+
+    // It should now return 404 since the route is removed
+    expect(res.statusCode).toBe(404);
+  });
+});

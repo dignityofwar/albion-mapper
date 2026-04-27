@@ -4,7 +4,6 @@ import { nanoid } from 'nanoid';
 import {
   CreateRoomBodySchema,
   AuthRoomBodySchema,
-  UpdateRoomBodySchema,
   ChangePasswordBodySchema,
   ZONE_BY_ID,
 } from 'shared';
@@ -72,40 +71,6 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     return reply.send({ token });
   });
 
-  // PATCH /api/rooms/:id — update home zone
-  app.patch<{ Params: { id: string } }>('/api/rooms/:id', {
-    preHandler: [app.authenticate],
-  }, async (request, reply) => {
-    const { id } = request.params;
-    const jwtPayload = request.user as { roomId: string };
-
-    if (jwtPayload.roomId !== id) {
-      return reply.status(403).send({ error: 'Forbidden' });
-    }
-
-    const parsed = UpdateRoomBodySchema.safeParse(request.body);
-    if (!parsed.success) {
-      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
-    }
-
-    const { homeZoneId } = parsed.data;
-    const zone = ZONE_BY_ID.get(homeZoneId);
-    if (!zone) {
-      return reply.status(400).send({ error: 'homeZoneId not found in zone catalogue' });
-    }
-
-    if (!zone.isRoadsHome) {
-      return reply.status(400).send({ error: 'homeZoneId is not a valid roads home' });
-    }
-
-    const result = await app.db.query('UPDATE rooms SET home_zone_id = $1, updated_at = $2 WHERE id = $3', [homeZoneId, new Date().toISOString(), id]);
-    if (result.rowCount === 0) {
-      return reply.status(404).send({ error: 'Room not found' });
-    }
-
-    broadcast(id, { type: 'room_updated', homeZoneId });
-    return reply.send({ homeZoneId });
-  });
 
   // PATCH /api/rooms/:id/password — change room password
   app.patch<{ Params: { id: string } }>('/api/rooms/:id/password', {

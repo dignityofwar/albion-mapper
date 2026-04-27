@@ -18,7 +18,7 @@ export interface AppOptions {
 export async function buildApp(options: AppOptions) {
   const {
     db,
-    jwtSecret = process.env['JWT_SECRET'] ?? 'change-me-in-production',
+    jwtSecret = (typeof process !== 'undefined' ? process.env?.['JWT_SECRET'] : undefined) ?? 'change-me-in-production',
     logger = false,
     disableRateLimit = false,
   } = options;

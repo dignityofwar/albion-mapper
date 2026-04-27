@@ -13,7 +13,7 @@ import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
-import { setHomeZone, deleteConnection, updateConnection } from '../utils/roomOperations.js';
+import { deleteConnection, updateConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
 import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures } from 'shared';
 
@@ -336,10 +336,6 @@ function handleConnectEnd(event?: MouseEvent) {
   draggingFromNodeId = null;
 }
 
-function handleSetHomeZone(zoneId: string) {
-  if (zoneId === store.homeZoneId) return;
-  setHomeZone(props.id, store.token!, zoneId);
-}
 
 defineExpose({ flowNodes, onNodeDragStop });
 </script>
@@ -374,7 +370,6 @@ defineExpose({ flowNodes, onNodeDragStop });
         :fit-view-on-init="true"
         :connection-mode="ConnectionMode.Loose"
         class="bg-gray-950"
-        @node-click="(e) => handleSetHomeZone(e.node.id)"
         @node-drag-stop="onNodeDragStop"
         @connect="handleConnect"
         @connect-start="handleConnectStart"
