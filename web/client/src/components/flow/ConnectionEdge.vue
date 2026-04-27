@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onUnmounted, nextTick, inject, type Ref } from 'vue';
-import { BaseEdge, EdgeLabelRenderer, getStraightPath } from '@vue-flow/core';
+import { BaseEdge, EdgeLabelRenderer, getStraightPath, useVueFlow } from '@vue-flow/core';
 import type { EdgeProps } from '@vue-flow/core';
 import { connectionStyle } from '../../utils/connectionStyle.js';
 import { formatCountdown } from '../../utils/formatters.js';
@@ -15,6 +15,7 @@ type EdgeData = {
 };
 
 const props = defineProps<EdgeProps<EdgeData>>();
+const { setCenter } = useVueFlow();
 
 const showPopover = ref(false);
 const popoverRef = ref<HTMLElement | null>(null);
@@ -48,6 +49,9 @@ watch(showPopover, (val) => {
     newMinutesRemaining.value = null;
     nextTick(() => {
       document.addEventListener('click', closePopover);
+      if (window.innerWidth < 768) {
+        setCenter(labelX.value, labelY.value + 100, { duration: 600, zoom: 1.4 });
+      }
     });
   } else {
     document.removeEventListener('click', closePopover);
