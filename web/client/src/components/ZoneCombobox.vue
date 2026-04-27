@@ -26,11 +26,13 @@ const props = withDefaults(defineProps<{
   error?: boolean;
   disabled?: boolean;
   icon?: string;
+  onlyRoadsHideout?: boolean;
 }>(), {
   showAlreadyAdded: true,
   smartAlreadyAdded: false,
   alreadyAddedPlacement: 'bottom',
-  disabled: false
+  disabled: false,
+  onlyRoadsHideout: false,
 });
 
 const emit = defineEmits<{
@@ -76,11 +78,13 @@ const mappedZoneIds = computed<Set<string>>(() => {
 const filteredZones = computed<Zone[]>(() => {
   const q = query.value.toLowerCase().trim();
   let zones = ZONES.filter((z) => {
+    if (props.onlyRoadsHideout && !z.isRoadsHome) return false;
     if (props.excludedIds && props.excludedIds.includes(z.id)) return false;
     if (props.showAlreadyAdded === false && mappedZoneIds.value.has(z.id)) return false;
     if (props.smartAlreadyAdded && !q && mappedZoneIds.value.has(z.id)) return false;
     
     if (!q) {
+      if (props.onlyRoadsHideout) return true;
       return mappedZoneIds.value.has(z.id) || z.id === store.homeZoneId;
     }
 

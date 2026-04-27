@@ -137,6 +137,30 @@ describe('ZoneCombobox filtering logic', () => {
     
     wrapper.unmount();
   });
+
+  it('onlyRoadsHideout filters zones to only roads hideouts', async () => {
+    setActivePinia(createPinia());
+    const wrapper = mount(ZoneCombobox, {
+      props: { modelValue: '', onlyRoadsHideout: true },
+      global: { plugins: [createPinia()] },
+    });
+    
+    // No query set - should still show hideouts
+    
+    // @ts-ignore
+    const filteredZones = wrapper.vm.filteredZones;
+    
+    expect(filteredZones.length).toBeGreaterThan(0);
+    filteredZones.forEach((z: any) => {
+        expect(z.isRoadsHome).toBe(true);
+    });
+    
+    // Verify some non-hideout zones are NOT in the list
+    const hasRoyal = filteredZones.some((z: any) => z.type.startsWith('royal'));
+    expect(hasRoyal).toBe(false);
+
+    wrapper.unmount();
+  });
 });
 
 describe('ZoneCombobox component renders', () => {
