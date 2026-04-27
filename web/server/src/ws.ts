@@ -15,6 +15,7 @@ interface DbConnection {
 
 interface DbRoom {
   id: string;
+  title: string | null;
   password_hash: string;
   home_zone_id: string;
   created_at: string;
@@ -85,6 +86,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
             );
 
             const now = new Date();
+            const EXPIRE_GRACE_MS = 6 * 60 * 60 * 1000;
             const connections: Connection[] = rows
               .map((row) => ({
                 id: row.id,
@@ -95,7 +97,10 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
                 reportedAt: row.reported_at,
                 reportedBy: row.reported_by ?? undefined,
               }))
-              .filter((c) => getConnectionStatus(c, now) !== 'expired');
+              .filter((c) => {
+                const expiresAt = new Date(c.expiresAt).getTime();
+                return now.getTime() - expiresAt < EXPIRE_GRACE_MS;
+              });
 
             const lastUpdatedAt = rows.reduce((max, row) => {
               return row.reported_at > max ? row.reported_at : max;
@@ -112,7 +117,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               features: row.features,
             }));
 
-            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, nodePositions, lastUpdatedAt });
+            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, title: room.title || undefined, nodePositions, lastUpdatedAt });
           } catch {
             socket.close(4401, 'Invalid token');
           }

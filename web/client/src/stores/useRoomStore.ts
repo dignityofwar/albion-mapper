@@ -9,6 +9,7 @@ export const useRoomStore = defineStore('room', () => {
   const connections = ref<Connection[]>([]);
   const homeZoneId = ref<string>('');
   const nodePositions = ref<NodePosition[]>([]);
+  const roomTitle = ref<string>('');
   const wsStatus = ref<WsStatus>('disconnected');
   const lastUpdate = ref<Date | null>(null);
   const token = ref<string>('');
@@ -28,8 +29,10 @@ export const useRoomStore = defineStore('room', () => {
       case 'sync':
         connections.value = msg.connections;
         homeZoneId.value = msg.homeZoneId;
+        roomTitle.value = msg.title || '';
         nodePositions.value = msg.nodePositions;
         lastUpdate.value = new Date(msg.lastUpdatedAt);
+        addToRecentRooms(roomId.value, roomTitle.value);
         break;
 
       case 'connection_added':
@@ -139,6 +142,7 @@ export const useRoomStore = defineStore('room', () => {
     wsStatus.value = 'disconnected';
     connections.value = [];
     homeZoneId.value = '';
+    roomTitle.value = '';
     nodePositions.value = [];
     roomId.value = '';
     token.value = '';
@@ -173,14 +177,40 @@ export const useRoomStore = defineStore('room', () => {
     }
   }
 
+  // Recently Viewed Rooms
+  interface RecentRoom {
+    id: string;
+    title: string;
+  }
+
+  const recentlyViewedRooms = ref<RecentRoom[]>(JSON.parse(localStorage.getItem('recentRooms') || '[]'));
+
+  function addToRecentRooms(id: string, title: string) {
+    if (!id) return;
+    const existing = recentlyViewedRooms.value.findIndex(r => r.id === id);
+    if (existing !== -1) {
+      recentlyViewedRooms.value.splice(existing, 1);
+    }
+    recentlyViewedRooms.value.unshift({ id, title: title || id });
+    recentlyViewedRooms.value = recentlyViewedRooms.value.slice(0, 10); // Keep last 10
+    localStorage.setItem('recentRooms', JSON.stringify(recentlyViewedRooms.value));
+  }
+
+  function removeFromRecentRooms(id: string) {
+    recentlyViewedRooms.value = recentlyViewedRooms.value.filter(r => r.id !== id);
+    localStorage.setItem('recentRooms', JSON.stringify(recentlyViewedRooms.value));
+  }
+
   return {
     connections,
     homeZoneId,
+    roomTitle,
     nodePositions,
     wsStatus,
     lastUpdate,
     token,
     roomId,
+    recentlyViewedRooms,
     setCredentials,
     applyMessage,
     updateNodePositionsInStore,
@@ -188,5 +218,6 @@ export const useRoomStore = defineStore('room', () => {
     resetNodePositions,
     connect,
     disconnect,
+    removeFromRecentRooms,
   };
 });

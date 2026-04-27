@@ -20,7 +20,7 @@ import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures } fro
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
-const { connections, homeZoneId, nodePositions, lastUpdate } = storeToRefs(store);
+const { connections, homeZoneId, roomTitle, nodePositions, lastUpdate } = storeToRefs(store);
 const router = useRouter();
 
 // ── Toast ────────────────────────────────────────────────────────────────────
@@ -347,8 +347,20 @@ defineExpose({ flowNodes, onNodeDragStop });
 
 <template>
   <div class="h-screen flex flex-col bg-gray-950 text-white">
+    <!-- Tablet Header -->
+    <div class="hidden md:flex xl:hidden items-center px-4 py-3 bg-gray-900 border-b border-gray-700 shrink-0 gap-4" data-testid="tablet-header">
+      <RoomSettings />
+      <h1 v-if="roomTitle" class="text-lg font-semibold text-indigo-400 truncate leading-none" data-testid="room-title-tablet">{{ roomTitle }}</h1>
+    </div>
+
     <!-- Sticky report panel -->
-    <div class="shrink-0">
+    <div class="shrink-0 relative">
+      <!-- Desktop side title & settings -->
+      <div class="hidden xl:flex absolute left-4 inset-y-0 z-50 items-center gap-4 xl:max-w-[calc(100vw_-_1132px)] 2xl:max-w-[calc((100vw_-_1100px)_/_2_-_32px)] pointer-events-none" data-testid="desktop-side-header">
+        <RoomSettings class="pointer-events-auto" />
+        <h1 v-if="roomTitle" class="text-2xl font-bold text-gray-200 truncate leading-none min-w-0 pointer-events-auto" :title="roomTitle" data-testid="room-title-desktop">{{ roomTitle }}</h1>
+      </div>
+
       <ReportForm ref="reportForm" @success="handleSuccess" @error="showToast" />
     </div>
 

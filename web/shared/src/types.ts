@@ -67,6 +67,7 @@ export function getConnectionStatus(connection: Connection, now: Date = new Date
 
 export interface Room {
   id: string;
+  title?: string;
   passwordHash: string;
   adminPasswordHash: string;
   homeZoneId: string;
@@ -107,6 +108,7 @@ export const ConnectionSchema = z.object({
 
 export const RoomSchema = z.object({
   id: z.string(),
+  title: z.string().max(50).optional(),
   passwordHash: z.string(),
   adminPasswordHash: z.string(),
   homeZoneId: z.string(),
@@ -120,6 +122,7 @@ export const CreateRoomBodySchema = z.object({
   password: z.string().min(1),
   adminPassword: z.string().min(1),
   homeZoneId: z.string().min(1),
+  title: z.string().max(50).optional(),
 });
 
 export const AuthRoomBodySchema = z.object({
@@ -146,7 +149,7 @@ export const ChangePasswordBodySchema = z.object({
 
 export type ServerMessage =
   | { type: 'auth_ok' }
-  | { type: 'sync'; connections: Connection[]; homeZoneId: string; nodePositions: NodePosition[]; lastUpdatedAt: string }
+  | { type: 'sync'; connections: Connection[]; homeZoneId: string; title?: string; nodePositions: NodePosition[]; lastUpdatedAt: string }
   | { type: 'connection_added'; connection: Connection }
   | { type: 'connection_updated'; connection: Connection }
   | { type: 'connection_removed'; connectionId: string }

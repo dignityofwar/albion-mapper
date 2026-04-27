@@ -74,6 +74,12 @@ async function exportNodes() {
           <button class="text-gray-400 hover:text-white text-xl leading-none" @click="emit('close')">&times;</button>
         </div>
         <div class="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-mono">
+          <div class="bg-gray-800 rounded-lg p-3 font-sans">
+            <div class="text-[10px] uppercase text-gray-500 font-bold mb-1">Room Title</div>
+            <div class="text-sm font-semibold" :class="store.roomTitle ? 'text-indigo-400' : 'text-red-400'">
+              {{ store.roomTitle || 'NO TITLE' }}
+            </div>
+          </div>
           <details class="bg-gray-800 rounded-lg">
             <summary class="p-3 font-sans font-bold cursor-pointer">Nodes ({{ debugNodes.length }})</summary>
             <div class="p-3 space-y-2">

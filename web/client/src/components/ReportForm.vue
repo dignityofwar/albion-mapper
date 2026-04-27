@@ -2,11 +2,12 @@
 import { ref, computed, watch } from 'vue';
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import ZoneCombobox from './ZoneCombobox.vue';
-import RoomSettings from './RoomSettings.vue';
 import TimeInput from './common/TimeInput.vue';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import { ZONE_BY_ID } from 'shared';
 import { API_BASE_URL } from '../utils/api';
+
+const props = defineProps<{}>();
 
 const store = useRoomStore();
 
@@ -109,12 +110,10 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
 <template>
   <div class="bg-gray-900 border-b border-gray-700 relative z-10">
     <form
-      class="max-w-[1200px] mx-auto flex flex-col md:flex-row md:items-center gap-2 md:gap-2 p-2.5 md:p-2"
+      class="max-w-[1100px] mx-auto xl:ml-auto xl:mr-0 2xl:mx-auto flex flex-col md:flex-row md:items-center gap-2 md:gap-2 p-2.5 md:p-3"
       data-testid="report-form"
       @submit.prevent="submit"
     >
-      <!-- Settings cog -->
-      <RoomSettings class="hidden md:block" />
 
       <!-- From -->
       <div class="flex-1 min-w-0">

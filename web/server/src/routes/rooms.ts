@@ -19,7 +19,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
     }
 
-    const { password, adminPassword, homeZoneId } = parsed.data;
+    const { password, adminPassword, homeZoneId, title } = parsed.data;
 
     const zone = ZONE_BY_ID.get(homeZoneId);
     if (!zone) {
@@ -39,9 +39,9 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     try {
       await client.query('BEGIN');
       await client.query(`
-        INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, created_at)
-        VALUES ($1, $2, $3, $4, $5)
-      `, [id, passwordHash, adminPasswordHash, homeZoneId, createdAt]);
+        INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, title, created_at)
+        VALUES ($1, $2, $3, $4, $5, $6)
+      `, [id, passwordHash, adminPasswordHash, homeZoneId, title || null, createdAt]);
 
       await client.query(`
         INSERT INTO room_node_positions (room_id, zone_id, x, y, features)

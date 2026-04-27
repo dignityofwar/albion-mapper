@@ -42,9 +42,13 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
     );
 
     const now = new Date();
+    const EXPIRE_GRACE_MS = 6 * 60 * 60 * 1000;
     const connections = rows
       .map(dbRowToConnection)
-      .filter((c) => getConnectionStatus(c, now) !== 'expired');
+      .filter((c) => {
+        const expiresAt = new Date(c.expiresAt).getTime();
+        return now.getTime() - expiresAt < EXPIRE_GRACE_MS;
+      });
 
     return reply.send(connections);
   });

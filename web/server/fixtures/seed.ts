@@ -22,8 +22,8 @@ async function seed() {
     if (rows.length === 0) {
       console.log(`Creating demo room: ${roomId}`);
       await db.query(
-        'INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, created_at) VALUES ($1, $2, $3, $4, $5)',
-        [roomId, passwordHash, adminPasswordHash, homeZoneId, new Date().toISOString()]
+        'INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, title, created_at) VALUES ($1, $2, $3, $4, $5, $6)',
+        [roomId, passwordHash, adminPasswordHash, homeZoneId, 'Demo Room', new Date().toISOString()]
       );
 
       // Add some sample connections

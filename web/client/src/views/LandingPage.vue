@@ -14,6 +14,7 @@ const showCreate = ref(false);
 const createPassword = ref('');
 const createAdminPassword = ref('');
 const createHomeZoneId = ref('');
+const createTitle = ref('');
 const createFormKey = ref(0);
 const creating = ref(false);
 const createError = ref('');
@@ -28,6 +29,7 @@ function resetCreateForm() {
   createPassword.value = '';
   createAdminPassword.value = '';
   createHomeZoneId.value = '';
+  createTitle.value = '';
   createError.value = '';
   createFormKey.value++;
 }
@@ -55,7 +57,8 @@ async function createRoom() {
       body: JSON.stringify({
         password: createPassword.value,
         adminPassword: createAdminPassword.value,
-        homeZoneId: createHomeZoneId.value
+        homeZoneId: createHomeZoneId.value,
+        title: createTitle.value
       }),
     });
     if (!res.ok) {
@@ -107,6 +110,31 @@ function joinRoom() {
       Collaborate with your guild in real-time to track Roads of Avalon portal connections.
     </p>
 
+    <div v-if="store.recentlyViewedRooms.length > 0" class="w-full max-w-md bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+      <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Recently Viewed</h2>
+      <div class="flex flex-col gap-2">
+        <div
+          v-for="room in store.recentlyViewedRooms"
+          :key="room.id"
+          class="group flex items-center justify-between bg-gray-800/50 hover:bg-gray-800 border border-gray-700/50 rounded-lg p-3 transition-colors cursor-pointer"
+          @click="router.push(`/rooms/${room.id}`)"
+        >
+          <div class="flex flex-col">
+            <span class="font-medium text-gray-200">{{ room.title }}</span>
+            <span class="text-xs text-gray-500">{{ room.id }}</span>
+          </div>
+          <button
+            class="p-1 text-gray-500 hover:text-red-400 opacity-60 hover:opacity-100 transition-all"
+            @click.stop="store.removeFromRecentRooms(room.id)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="flex gap-4">
       <button
         class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
@@ -130,6 +158,16 @@ function joinRoom() {
       <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md">
         <h2 class="text-xl font-semibold mb-4">Create Room</h2>
         <div class="flex flex-col gap-4">
+          <div>
+            <label class="block text-sm text-gray-400 mb-1">Title (Optional)</label>
+            <input
+              v-model="createTitle"
+              type="text"
+              placeholder="e.g. My Guild Room"
+              maxlength="50"
+              class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white outline-none"
+            />
+          </div>
           <div>
             <label class="block text-sm text-gray-400 mb-1">Password</label>
             <input

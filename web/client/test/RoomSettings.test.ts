@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
-import ReportForm from '../src/components/ReportForm.vue';
+import RoomSettings from '../src/components/RoomSettings.vue';
 
 let attachTo: HTMLDivElement;
 
@@ -15,9 +15,9 @@ afterEach(() => {
   document.body.removeChild(attachTo);
 });
 
-describe('ReportForm with RoomSettings', () => {
-  it('RoomSettings closes when clicking outside', async () => {
-    const wrapper = mount(ReportForm, { attachTo });
+describe('RoomSettings', () => {
+  it('closes when clicking outside', async () => {
+    const wrapper = mount(RoomSettings, { attachTo });
     
     // Find the gear icon
     const cog = wrapper.find('[data-testid="settings-cog"]');
@@ -36,8 +36,8 @@ describe('ReportForm with RoomSettings', () => {
     wrapper.unmount();
   });
 
-  it('RoomSettings does not close when clicking inside', async () => {
-    const wrapper = mount(ReportForm, { attachTo });
+  it('does not close when clicking inside', async () => {
+    const wrapper = mount(RoomSettings, { attachTo });
     
     // Find the gear icon
     const cog = wrapper.find('[data-testid="settings-cog"]');
