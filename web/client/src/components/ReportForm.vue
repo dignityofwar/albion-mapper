@@ -107,93 +107,94 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
 </script>
 
 <template>
-  <form
-    class="relative flex flex-col md:flex-row md:items-center gap-2 p-2.5 bg-gray-900 border-b border-gray-700"
-    style="z-index:10"
-    data-testid="report-form"
-    @submit.prevent="submit"
-  >
-    <!-- Settings cog -->
-    <RoomSettings class="hidden md:block" />
+  <div class="bg-gray-900 border-b border-gray-700 relative z-10">
+    <form
+      class="max-w-[1200px] mx-auto flex flex-col md:flex-row md:items-center gap-2 md:gap-2 p-2.5 md:p-2"
+      data-testid="report-form"
+      @submit.prevent="submit"
+    >
+      <!-- Settings cog -->
+      <RoomSettings class="hidden md:block" />
 
-    <!-- From -->
-    <div class="flex-1 min-w-0">
-      <template v-if="isLocked">
-        <TooltipProvider :delay-duration="0">
-          <TooltipRoot>
-            <TooltipTrigger asChild>
-              <ZoneCombobox
-                ref="fromComboboxInputEl"
-                v-model="fromZoneId"
-                placeholder="From zone…"
-                data-testid="from-combobox"
-                :smart-already-added="true"
-                already-added-placement="top"
-                :error="minutesRemaining !== null && !fromZoneId"
-                :disabled="true"
-                icon="🏠"
-                @tab-select="focusToCombobox"
-                @select="focusToCombobox"
-              />
-            </TooltipTrigger>
-            <TooltipPortal>
-              <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-50">
-                Locked until more zones added
-              </TooltipContent>
-            </TooltipPortal>
-          </TooltipRoot>
-        </TooltipProvider>
-      </template>
-      <ZoneCombobox
-        v-else
-        ref="fromComboboxInputEl"
-        v-model="fromZoneId"
-        placeholder="From zone…"
-        data-testid="from-combobox"
-        :smart-already-added="true"
-        already-added-placement="top"
-        :error="minutesRemaining !== null && !fromZoneId"
-        @tab-select="focusToCombobox"
-        @select="focusToCombobox"
-      />
-    </div>
+      <!-- From -->
+      <div class="flex-1 min-w-0">
+        <template v-if="isLocked">
+          <TooltipProvider :delay-duration="0">
+            <TooltipRoot>
+              <TooltipTrigger asChild>
+                <ZoneCombobox
+                  ref="fromComboboxInputEl"
+                  v-model="fromZoneId"
+                  placeholder="From zone…"
+                  data-testid="from-combobox"
+                  :smart-already-added="true"
+                  already-added-placement="top"
+                  :error="minutesRemaining !== null && !fromZoneId"
+                  :disabled="true"
+                  icon="🏠"
+                  @tab-select="focusToCombobox"
+                  @select="focusToCombobox"
+                />
+              </TooltipTrigger>
+              <TooltipPortal>
+                <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-50">
+                  Locked until more zones added
+                </TooltipContent>
+              </TooltipPortal>
+            </TooltipRoot>
+          </TooltipProvider>
+        </template>
+        <ZoneCombobox
+          v-else
+          ref="fromComboboxInputEl"
+          v-model="fromZoneId"
+          placeholder="From zone…"
+          data-testid="from-combobox"
+          :smart-already-added="true"
+          already-added-placement="top"
+          :error="minutesRemaining !== null && !fromZoneId"
+          @tab-select="focusToCombobox"
+          @select="focusToCombobox"
+        />
+      </div>
 
-    <!-- To -->
-    <div class="flex-1 min-w-0">
-      <ZoneCombobox
-        ref="toComboboxInputEl"
-        v-model="toZoneId"
-        placeholder="To zone…"
-        :excluded-ids="[fromZoneId, ...connectedToFromZone]"
-        :smart-already-added="true"
-        already-added-placement="bottom"
-        data-testid="to-combobox"
-        :error="minutesRemaining !== null && !toZoneId"
-        @tab-select="focusTimeInput"
-        @select="focusTimeInput"
-      />
-    </div>
+      <!-- To -->
+      <div class="flex-1 min-w-0">
+        <ZoneCombobox
+          ref="toComboboxInputEl"
+          v-model="toZoneId"
+          placeholder="To zone…"
+          :excluded-ids="[fromZoneId, ...connectedToFromZone]"
+          :smart-already-added="true"
+          already-added-placement="bottom"
+          data-testid="to-combobox"
+          :error="minutesRemaining !== null && !toZoneId"
+          @tab-select="focusTimeInput"
+          @select="focusTimeInput"
+        />
+      </div>
 
-    <!-- Time -->
-    <div class="flex items-center gap-1 shrink-0">
-      <label class="text-gray-400 text-sm whitespace-nowrap">Expires:</label>
-      <TimeInput
-        ref="timeInputEl"
-        v-model="minutesRemaining"
-        data-testid="time-input"
-        @keydown="onTimeKeydown"
-      />
-      <!-- Submit -->
-      <button
-        type="submit"
-        :disabled="!canSubmit"
-        class="ml-1 px-4 py-3 md:py-2.5 rounded border border-transparent bg-indigo-600 text-white text-sm font-medium leading-none hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 md:flex-none"
-        data-testid="submit-button"
-      >
-        Add
-      </button>
-    </div>
+      <!-- Time -->
+      <div class="flex items-center gap-1 shrink-0">
+        <label class="text-gray-400 text-sm whitespace-nowrap">Expires:</label>
+        <TimeInput
+          ref="timeInputEl"
+          v-model="minutesRemaining"
+          data-testid="time-input"
+          @keydown="onTimeKeydown"
+        />
+        <!-- Submit -->
+        <button
+          type="submit"
+          :disabled="!canSubmit"
+          class="ml-1 px-6 py-3 md:py-2.5 rounded border border-transparent bg-indigo-600 text-white text-sm font-medium leading-none hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed flex-1 md:flex-none"
+          data-testid="submit-button"
+        >
+          Add
+        </button>
+      </div>
 
-    <!-- Error -->
-  </form>
+      <!-- Error -->
+    </form>
+  </div>
 </template>

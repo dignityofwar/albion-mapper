@@ -204,14 +204,14 @@ function onWrapperKeydown(e: KeyboardEvent) {
         class="absolute z-50 mt-1 w-full bg-gray-900 border border-gray-600 rounded shadow-lg max-h-64 overflow-hidden"
       >
         <ComboboxViewport class="overflow-y-auto max-h-64">
-          <div v-if="filteredZones.length === 0" class="px-3 text-sm text-gray-400">
+          <div v-if="filteredZones.length === 0" class="px-3 py-2 text-sm text-gray-400">
             {{ query ? 'No zones found' : 'Type to search all zones…' }}
           </div>
           <ComboboxItem
             v-for="zone in filteredZones"
             :key="zone.id"
             :value="zone.id"
-            class="flex items-center gap-2 px-3 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
+            class="flex items-center gap-2 px-3 py-2 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
           >
             <span class="truncate flex-1">{{ zone.name }}</span>
             <span v-if="mappedZoneIds.has(zone.id)" class="shrink-0 text-green-400">✓</span>
