@@ -24,8 +24,10 @@ interface RunResult {
   exitCode: number;
 }
 
+const TEST_OUTPUT_PATH = join(FIXTURE_DIR, 'maps.json');
+
 function runSync(fixturePath: string, extra: string[] = []): RunResult {
-  const flags = ['--source', fixturePath, ...extra].join(' ');
+  const flags = ['--source', fixturePath, '--output', TEST_OUTPUT_PATH, ...extra].join(' ');
   try {
     const stdout = execSync(`npx tsx ${SCRIPT} ${flags} 2>/tmp/syncMaps-stderr.txt`, {
       cwd: resolve(__dirname, '..'),
@@ -47,10 +49,8 @@ function runSync(fixturePath: string, extra: string[] = []): RunResult {
   }
 }
 
-const OUTPUT_PATH = resolve(__dirname, '../data/maps.json');
-
 function readOutput(): unknown[] {
-  return JSON.parse(readFileSync(OUTPUT_PATH, 'utf8'));
+  return JSON.parse(readFileSync(TEST_OUTPUT_PATH, 'utf8'));
 }
 
 // ── Unit-level helpers (import the pure functions directly) ────────────────────
@@ -425,10 +425,10 @@ describe('script integration (via --source fixture)', () => {
     ]);
 
     runSync(fixture);
-    const first = readFileSync(OUTPUT_PATH, 'utf8');
+    const first = readFileSync(TEST_OUTPUT_PATH, 'utf8');
 
     runSync(fixture);
-    const second = readFileSync(OUTPUT_PATH, 'utf8');
+    const second = readFileSync(TEST_OUTPUT_PATH, 'utf8');
 
     expect(first).toBe(second);
   });

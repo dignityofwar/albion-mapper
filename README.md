@@ -26,7 +26,7 @@ pnpm db:up
 pnpm install
 
 # 3. Populate the zone catalogue
-pnpm --filter shared sync-maps   # writes web/shared/data/maps.json
+pnpm --filter map-parser sync-maps   # writes web/shared/data/maps.json
 
 # 4. Start both server and client (concurrently)
 pnpm dev
@@ -55,7 +55,7 @@ albion-mapper/
 │       ├── src/
 │       ├── data/       # maps.json (committed, updated by sync-maps)
 │       └── test/
-├── map-parser/         # Standalone parser that produces maps.json
+├── map-parser/         # Standalone parser that populates web/shared/data/maps.json
 ├── package.json
 └── pnpm-workspace.yaml
 ```
@@ -69,13 +69,15 @@ albion-mapper/
 pnpm test
 
 # Individual packages
+pnpm --filter map-parser test
 pnpm --filter shared test
 pnpm --filter server test
 pnpm --filter client test
 ```
 
 **Test counts (all green):**
-- `shared` — 11 tests (zones adapter)
+- `map-parser` — 42 tests (data classification, sync logic)
+- `shared` — 32 tests (zones adapter, categorization)
 - `server` — 27 tests (rooms, connections, expiry, WebSocket)
 - `client` — 31 tests (connectionStyle, roomStore, ZoneCombobox, ReportForm)
 

@@ -1,5 +1,6 @@
 packages:
   - 'web/*'
+  - 'map-parser'
 allowBuilds:
   bcrypt: true
   vue-demi: true

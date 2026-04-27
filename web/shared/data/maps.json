@@ -3,7 +3,8 @@
     "mapID": "adrens-hill",
     "mapName": "Adrens Hill",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Martlock RC"
   },
   {
     "mapID": "anklesnag-mire",
@@ -15,7 +16,8 @@
     "mapID": "aspenwood",
     "mapName": "Aspenwood",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "astolat",
@@ -26,98 +28,114 @@
   {
     "mapID": "avalanche-incline",
     "mapName": "Avalanche Incline",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "avalanche-ravine",
     "mapName": "Avalanche Ravine",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "battlebrae-flatland",
     "mapName": "Battlebrae Flatland",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "battlebrae-grassland",
     "mapName": "Battlebrae Grassland",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "battlebrae-lake",
     "mapName": "Battlebrae Lake",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "battlebrae-meadow",
     "mapName": "Battlebrae Meadow",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "battlebrae-peaks",
     "mapName": "Battlebrae Peaks",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "battlebrae-plain",
     "mapName": "Battlebrae Plain",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "bellever-tor",
     "mapName": "Bellever Tor",
     "mapType": "royalBlue",
-    "tier": 5
+    "tier": 5,
+    "category": "Martlock RC"
   },
   {
     "mapID": "birchcopse",
     "mapName": "Birchcopse",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "birken-fell",
     "mapName": "Birken Fell",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Martlock RC"
   },
   {
     "mapID": "black-monastery",
     "mapName": "Black Monastery",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "blackthorn-quarry",
     "mapName": "Blackthorn Quarry",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Martlock RC"
   },
   {
     "mapID": "bleachskull-desert",
     "mapName": "Bleachskull Desert",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "bleachskull-steppe",
     "mapName": "Bleachskull Steppe",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "bonepool-marsh",
     "mapName": "Bonepool Marsh",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Thetford RC"
   },
   {
     "mapID": "boulder-deep",
@@ -129,25 +147,29 @@
     "mapID": "bowscale-fell",
     "mapName": "Bowscale Fell",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Martlock RC"
   },
   {
     "mapID": "braemore-lowland",
     "mapName": "Braemore Lowland",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "braemore-upland",
     "mapName": "Braemore Upland",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "brambleshore-hinterlands",
     "mapName": "Brambleshore Hinterlands",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "brecilien-copse",
@@ -183,61 +205,71 @@
     "mapID": "broken-fell",
     "mapName": "Broken Fell",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Martlock RC"
   },
   {
     "mapID": "brons-hill",
     "mapName": "Brons Hill",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "bryn-gorge",
     "mapName": "Bryn Gorge",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "cairn-camain",
     "mapName": "Cairn Camain",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "cairn-cloch",
     "mapName": "Cairn Cloch",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Thetford RC"
   },
   {
     "mapID": "cairn-darg",
     "mapName": "Cairn Darg",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "cairn-drain",
     "mapName": "Cairn Drain",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "cairn-fidair",
     "mapName": "Cairn Fidair",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "cairn-glascore",
     "mapName": "Cairn Glascore",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "cairn-gorm",
     "mapName": "Cairn Gorm",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "camlann",
@@ -249,7 +281,8 @@
     "mapID": "carns-hill",
     "mapName": "Carns Hill",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "cases-ugumlos",
@@ -330,7 +363,8 @@
     "mapID": "caulder-fissure",
     "mapName": "Caulder Fissure",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "cebitos-aeaylum",
@@ -357,7 +391,8 @@
     "mapID": "cedarcopse",
     "mapName": "Cedarcopse",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "ceres-iooinum",
@@ -439,7 +474,8 @@
     "mapID": "chillhag",
     "mapName": "Chillhag",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Martlock RC"
   },
   {
     "mapID": "cieites-ugumlos",
@@ -533,8 +569,9 @@
   {
     "mapID": "citadel-of-ash",
     "mapName": "Citadel of Ash",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "conitos-ofailos",
@@ -641,49 +678,57 @@
     "mapID": "cracked-earth",
     "mapName": "Cracked Earth",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "creag-dhor",
     "mapName": "Creag Dhor",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "creag-garr",
     "mapName": "Creag Garr",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "creag-meagir",
     "mapName": "Creag Meagir",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "creag-morr",
     "mapName": "Creag Morr",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "creag's-way",
     "mapName": "Creag's Way",
     "mapType": "royalRed",
-    "tier": 7
+    "tier": 7,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "croker-hill",
     "mapName": "Croker Hill",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Martlock RC"
   },
   {
     "mapID": "crose-gorge",
     "mapName": "Crose Gorge",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "curites-exakrom",
@@ -706,7 +751,8 @@
     "mapID": "curlew-fen",
     "mapName": "Curlew Fen",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Martlock RC"
   },
   {
     "mapID": "curos-avulsum",
@@ -768,26 +814,30 @@
   {
     "mapID": "daemonium-keep",
     "mapName": "Daemonium Keep",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "darkbough-snag",
     "mapName": "Darkbough Snag",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "darkground-swamp",
     "mapName": "Darkground Swamp",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Thetford RC"
   },
   {
     "mapID": "deadpine-forest",
     "mapName": "Deadpine Forest",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "deadvein-gully",
@@ -798,56 +848,65 @@
   {
     "mapID": "deathreach-priory",
     "mapName": "Deathreach Priory",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "deathwisp-bog",
     "mapName": "Deathwisp Bog",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "deathwisp-sink",
     "mapName": "Deathwisp Sink",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "deeproot-wood",
     "mapName": "Deeproot Wood",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "deepwood-copse",
     "mapName": "Deepwood Copse",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "deepwood-dell",
     "mapName": "Deepwood Dell",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "deepwood-gorge",
     "mapName": "Deepwood Gorge",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "deepwood-pines",
     "mapName": "Deepwood Pines",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "dewleaf-fen",
     "mapName": "Dewleaf Fen",
     "mapType": "royalBlue",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "domhain-chasm",
@@ -858,92 +917,107 @@
   {
     "mapID": "driftwood-glen",
     "mapName": "Driftwood Glen",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "driftwood-hollow",
     "mapName": "Driftwood Hollow",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "driftwood-vale",
     "mapName": "Driftwood Vale",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "drownfield-course",
     "mapName": "Drownfield Course",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "drownfield-fen",
     "mapName": "Drownfield Fen",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "drownfield-mire",
     "mapName": "Drownfield Mire",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "drownfield-quag",
     "mapName": "Drownfield Quag",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "drownfield-rut",
     "mapName": "Drownfield Rut",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "drownfield-sink",
     "mapName": "Drownfield Sink",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "drownfield-slough",
     "mapName": "Drownfield Slough",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "drownfield-wetland",
     "mapName": "Drownfield Wetland",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "drownhorse-basin",
     "mapName": "Drownhorse Basin",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "drybasin-oasis",
     "mapName": "Drybasin Oasis",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "drybasin-riverbed",
     "mapName": "Drybasin Riverbed",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "dryfield-meadow",
     "mapName": "Dryfield Meadow",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "drystone-channel",
@@ -954,194 +1028,226 @@
   {
     "mapID": "drytop-pillars",
     "mapName": "Drytop Pillars",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "drytop-riverbed",
     "mapName": "Drytop Riverbed",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "dryvein-confluence",
     "mapName": "Dryvein Confluence",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "dryvein-cross",
     "mapName": "Dryvein Cross",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "dryvein-end",
     "mapName": "Dryvein End",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "dryvein-oasis",
     "mapName": "Dryvein Oasis",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "dryvein-plain",
     "mapName": "Dryvein Plain",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "dryvein-riverbed",
     "mapName": "Dryvein Riverbed",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "dryvein-steppe",
     "mapName": "Dryvein Steppe",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "drywater-meadow",
     "mapName": "Drywater Meadow",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "dusklight-fen",
     "mapName": "Dusklight Fen",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Thetford RC"
   },
   {
     "mapID": "dusktree-swamp",
     "mapName": "Dusktree Swamp",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Thetford RC"
   },
   {
     "mapID": "eldersleep",
     "mapName": "Eldersleep",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "eldon-hill",
     "mapName": "Eldon Hill",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Martlock RC"
   },
   {
     "mapID": "everwinter-crossing",
     "mapName": "Everwinter Crossing",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-expanse",
     "mapName": "Everwinter Expanse",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-gap",
     "mapName": "Everwinter Gap",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-gorge",
     "mapName": "Everwinter Gorge",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "everwinter-incline",
     "mapName": "Everwinter Incline",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-passage",
     "mapName": "Everwinter Passage",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-peak",
     "mapName": "Everwinter Peak",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-plain",
     "mapName": "Everwinter Plain",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "everwinter-reach",
     "mapName": "Everwinter Reach",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-shores",
     "mapName": "Everwinter Shores",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "eye-of-the-forest",
     "mapName": "Eye of the Forest",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "falsestep-marsh",
     "mapName": "Falsestep Marsh",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "farshore-bay",
     "mapName": "Farshore Bay",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "farshore-cape",
     "mapName": "Farshore Cape",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "farshore-drylands",
     "mapName": "Farshore Drylands",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "farshore-esker",
     "mapName": "Farshore Esker",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "farshore-heath",
     "mapName": "Farshore Heath",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "farshore-lagoon",
     "mapName": "Farshore Lagoon",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "fasites-azazsum",
@@ -1216,7 +1322,8 @@
     "mapID": "felniks-hill",
     "mapName": "Felniks Hill",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Martlock RC"
   },
   {
     "mapID": "ferites-ohohtum",
@@ -1250,7 +1357,8 @@
     "mapID": "ferndell",
     "mapName": "Ferndell",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "feros-oyuctum",
@@ -1352,14 +1460,16 @@
   {
     "mapID": "firesink-caldera",
     "mapName": "Firesink Caldera",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "firesink-trench",
     "mapName": "Firesink Trench",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "firitos-alodrom",
@@ -1411,20 +1521,23 @@
   {
     "mapID": "flammog-desolation",
     "mapName": "Flammog Desolation",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "flammog-fork",
     "mapName": "Flammog Fork",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "flammog-valley",
     "mapName": "Flammog Valley",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "flatriver-trough",
@@ -1435,50 +1548,58 @@
   {
     "mapID": "flatrock-cliffs",
     "mapName": "Flatrock Cliffs",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "flatrock-plateau",
     "mapName": "Flatrock Plateau",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "flimmerair-steppe",
     "mapName": "Flimmerair Steppe",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "floatshoal-bight",
     "mapName": "Floatshoal Bight",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "floatshoal-fissure",
     "mapName": "Floatshoal Fissure",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "floatshoal-floe",
     "mapName": "Floatshoal Floe",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "flynsdell",
     "mapName": "Flynsdell",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "fog-fen",
     "mapName": "Fog Fen",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Thetford RC"
   },
   {
     "mapID": "fones-opavun",
@@ -1522,7 +1643,8 @@
     "mapID": "forest-burrow",
     "mapName": "Forest Burrow",
     "mapType": "royalRed",
-    "tier": 7
+    "tier": 7,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "foritos-aiaylos",
@@ -1600,55 +1722,64 @@
     "mapID": "fractured-ground",
     "mapName": "Fractured Ground",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "frostbite-chasm",
     "mapName": "Frostbite Chasm",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "frostbite-mountain",
     "mapName": "Frostbite Mountain",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "frostpeak-ascent",
     "mapName": "Frostpeak Ascent",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "frostpeak-vista",
     "mapName": "Frostpeak Vista",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "frostseep-crevasse",
     "mapName": "Frostseep Crevasse",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "frostseep-ravine",
     "mapName": "Frostseep Ravine",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "frostspring-passage",
     "mapName": "Frostspring Passage",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "frostspring-volcano",
     "mapName": "Frostspring Volcano",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "furitos-aiavam",
@@ -1763,169 +1894,197 @@
     "mapID": "garrow-fell",
     "mapName": "Garrow Fell",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Martlock RC"
   },
   {
     "mapID": "giantweald-copse",
     "mapName": "Giantweald Copse",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "giantweald-dale",
     "mapName": "Giantweald Dale",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "giantweald-edge",
     "mapName": "Giantweald Edge",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "giantweald-glade",
     "mapName": "Giantweald Glade",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "giantweald-roots",
     "mapName": "Giantweald Roots",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "giantweald-woods",
     "mapName": "Giantweald Woods",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "glacierbreak-summit",
     "mapName": "Glacierbreak Summit",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "glacierfall-canyon",
     "mapName": "Glacierfall Canyon",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "glacierfall-cross",
     "mapName": "Glacierfall Cross",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "glacierfall-fissure",
     "mapName": "Glacierfall Fissure",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "glacierfall-pass",
     "mapName": "Glacierfall Pass",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "glacierfall-passage",
     "mapName": "Glacierfall Passage",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "glacierfall-valley",
     "mapName": "Glacierfall Valley",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "goffers-knoll",
     "mapName": "Goffers Knoll",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "goldshimmer-plain",
     "mapName": "Goldshimmer Plain",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "gravemound-brim",
     "mapName": "Gravemound Brim",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "gravemound-cliffs",
     "mapName": "Gravemound Cliffs",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "gravemound-hills",
     "mapName": "Gravemound Hills",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "gravemound-knoll",
     "mapName": "Gravemound Knoll",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "gravemound-slope",
     "mapName": "Gravemound Slope",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "greenhollow-copse",
     "mapName": "Greenhollow Copse",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "greenhollow-vale",
     "mapName": "Greenhollow Vale",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "greenshore-bay",
     "mapName": "Greenshore Bay",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "greenshore-peninsula",
     "mapName": "Greenshore Peninsula",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "gutras-hill",
     "mapName": "Gutras Hill",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Martlock RC"
   },
   {
     "mapID": "gwan-gorge",
     "mapName": "Gwan Gorge",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "haldon-tor",
     "mapName": "Haldon Tor",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Martlock RC"
   },
   {
     "mapID": "hasitos-avaolum",
@@ -1999,7 +2158,8 @@
     "mapID": "haytor",
     "mapName": "Haytor",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Martlock RC"
   },
   {
     "mapID": "hebes-ouaylos",
@@ -2096,115 +2256,134 @@
     "mapID": "highbole-glen",
     "mapName": "Highbole Glen",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "highstone-grassland",
     "mapName": "Highstone Grassland",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "highstone-loch",
     "mapName": "Highstone Loch",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "highstone-meadow",
     "mapName": "Highstone Meadow",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "highstone-mound",
     "mapName": "Highstone Mound",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "highstone-plains",
     "mapName": "Highstone Plains",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "highstone-plateau",
     "mapName": "Highstone Plateau",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "hightree-borderlands",
     "mapName": "Hightree Borderlands",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-cliffs",
     "mapName": "Hightree Cliffs",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-dale",
     "mapName": "Hightree Dale",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-enclave",
     "mapName": "Hightree Enclave",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-glade",
     "mapName": "Hightree Glade",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-hillock",
     "mapName": "Hightree Hillock",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-isle",
     "mapName": "Hightree Isle",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-lake",
     "mapName": "Hightree Lake",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-levee",
     "mapName": "Hightree Levee",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-pass",
     "mapName": "Hightree Pass",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-steep",
     "mapName": "Hightree Steep",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hightree-strand",
     "mapName": "Hightree Strand",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "hiles-izizaum",
@@ -2300,7 +2479,8 @@
     "mapID": "hornbeam-wood",
     "mapName": "Hornbeam Wood",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "horos-ohenlum",
@@ -2480,98 +2660,114 @@
   {
     "mapID": "iceburn-cliffs",
     "mapName": "Iceburn Cliffs",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "iceburn-firth",
     "mapName": "Iceburn Firth",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "iceburn-peaks",
     "mapName": "Iceburn Peaks",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "iceburn-tundra",
     "mapName": "Iceburn Tundra",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "inis-mon",
     "mapName": "Inis Mon",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "kilmar-tor",
     "mapName": "Kilmar Tor",
     "mapType": "royalBlue",
-    "tier": 5
+    "tier": 5,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "kindlegrass-steppe",
     "mapName": "Kindlegrass Steppe",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "larchroad",
     "mapName": "Larchroad",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "lazygrass-plain",
     "mapName": "Lazygrass Plain",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "lewsdon-hill",
     "mapName": "Lewsdon Hill",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Martlock RC"
   },
   {
     "mapID": "longfen-arms",
     "mapName": "Longfen Arms",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "longfen-marsh",
     "mapName": "Longfen Marsh",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "longfen-veins",
     "mapName": "Longfen Veins",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "longmarch-meadow",
     "mapName": "Longmarch Meadow",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "longshadow-plain",
     "mapName": "Longshadow Plain",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "longtimber-glen",
     "mapName": "Longtimber Glen",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "malag-crevasse",
@@ -2595,91 +2791,106 @@
     "mapID": "mawar-gorge",
     "mapName": "Mawar Gorge",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "meltwater-bog",
     "mapName": "Meltwater Bog",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "meltwater-channel",
     "mapName": "Meltwater Channel",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "meltwater-delta",
     "mapName": "Meltwater Delta",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "meltwater-sump",
     "mapName": "Meltwater Sump",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "mudfoot-mounds",
     "mapName": "Mudfoot Mounds",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "mudfoot-sump",
     "mapName": "Mudfoot Sump",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "munten-fell",
     "mapName": "Munten Fell",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "munten-rise",
     "mapName": "Munten Rise",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "munten-tundra",
     "mapName": "Munten Tundra",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "murdergulch-cross",
     "mapName": "Murdergulch Cross",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "murdergulch-divide",
     "mapName": "Murdergulch Divide",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "murdergulch-gap",
     "mapName": "Murdergulch Gap",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "murdergulch-ravine",
     "mapName": "Murdergulch Ravine",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "murdergulch-trail",
     "mapName": "Murdergulch Trail",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "murkweald",
@@ -2691,37 +2902,43 @@
     "mapID": "murky-fen",
     "mapName": "Murky Fen",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Thetford RC"
   },
   {
     "mapID": "nightbloom-forest",
     "mapName": "Nightbloom Forest",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "nightcreak-marsh",
     "mapName": "Nightcreak Marsh",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "northstrand-beach",
     "mapName": "Northstrand Beach",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "northstrand-dunes",
     "mapName": "Northstrand Dunes",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "oakcopse",
     "mapName": "Oakcopse",
     "mapType": "royalBlue",
-    "tier": 5
+    "tier": 5,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "oasitos-aoeuam",
@@ -2946,7 +3163,8 @@
     "mapID": "owlsong-glen",
     "mapName": "Owlsong Glen",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "oynites-araosum",
@@ -2998,20 +3216,23 @@
   {
     "mapID": "parchsand-cliffs",
     "mapName": "Parchsand Cliffs",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "parchsand-drought",
     "mapName": "Parchsand Drought",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "parchthroat-plain",
     "mapName": "Parchthroat Plain",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "pasos-avosam",
@@ -3033,31 +3254,36 @@
     "mapID": "pen-fenair",
     "mapName": "Pen Fenair",
     "mapType": "royalBlue",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "pen-garn",
     "mapName": "Pen Garn",
     "mapType": "royalBlue",
-    "tier": 5
+    "tier": 5,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "pen-gent",
     "mapName": "Pen Gent",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "pen-kerrig",
     "mapName": "Pen Kerrig",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "pen-uchaf",
     "mapName": "Pen Uchaf",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "peritos-avosam",
@@ -3226,7 +3452,8 @@
     "mapID": "prospector's-hope",
     "mapName": "Prospector's Hope",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Martlock RC"
   },
   {
     "mapID": "pures-ouozlum",
@@ -3291,8 +3518,9 @@
   {
     "mapID": "qiient-al-nusom",
     "mapName": "Qiient-Al-Nusom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
     ]
@@ -3300,8 +3528,9 @@
   {
     "mapID": "qiient-al-odesum",
     "mapName": "Qiient-Al-Odesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
     ]
@@ -3309,8 +3538,9 @@
   {
     "mapID": "qiient-al-qinsis",
     "mapName": "Qiient-Al-Qinsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -3318,22 +3548,25 @@
   {
     "mapID": "qiient-al-tersas",
     "mapName": "Qiient-Al-Tersas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-al-viesis",
     "mapName": "Qiient-Al-Viesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-al-vynsis",
     "mapName": "Qiient-Al-Vynsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
     ]
@@ -3341,8 +3574,9 @@
   {
     "mapID": "qiient-et-nusas",
     "mapName": "Qiient-Et-Nusas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
     ]
@@ -3350,15 +3584,17 @@
   {
     "mapID": "qiient-et-odetis",
     "mapName": "Qiient-Et-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-et-qinsum",
     "mapName": "Qiient-Et-Qinsum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
     ]
@@ -3366,50 +3602,57 @@
   {
     "mapID": "qiient-et-tertum",
     "mapName": "Qiient-Et-Tertum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-in-nutis",
     "mapName": "Qiient-In-Nutis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-in-odetum",
     "mapName": "Qiient-In-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-in-qinsis",
     "mapName": "Qiient-In-Qinsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-in-tersom",
     "mapName": "Qiient-In-Tersom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-in-viesis",
     "mapName": "Qiient-In-Viesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-in-vyntum",
     "mapName": "Qiient-In-Vyntum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -3425,8 +3668,9 @@
   {
     "mapID": "qiient-oc-odetum",
     "mapName": "Qiient-Oc-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ORE"
@@ -3442,8 +3686,9 @@
   {
     "mapID": "qiient-qi-nusom",
     "mapName": "Qiient-Qi-Nusom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
     ]
@@ -3451,8 +3696,9 @@
   {
     "mapID": "qiient-qi-odesas",
     "mapName": "Qiient-Qi-Odesas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
     ]
@@ -3460,15 +3706,17 @@
   {
     "mapID": "qiient-qi-tersas",
     "mapName": "Qiient-Qi-Tersas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-qi-vynsis",
     "mapName": "Qiient-Qi-Vynsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -3481,8 +3729,9 @@
   {
     "mapID": "qiient-sa-odetis",
     "mapName": "Qiient-Sa-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "HIDE",
       "ROCK"
@@ -3491,15 +3740,17 @@
   {
     "mapID": "qiient-si-nusas",
     "mapName": "Qiient-Si-Nusas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiient-si-odesum",
     "mapName": "Qiient-Si-Odesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
     ]
@@ -3507,8 +3758,9 @@
   {
     "mapID": "qiient-si-tertum",
     "mapName": "Qiient-Si-Tertum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "LOGS"
@@ -3534,8 +3786,9 @@
   {
     "mapID": "qiitun-al-duosum",
     "mapName": "Qiitun-Al-Duosum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -3550,8 +3803,9 @@
   {
     "mapID": "qiitun-et-vietis",
     "mapName": "Qiitun-Et-Vietis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -3559,15 +3813,17 @@
   {
     "mapID": "qiitun-et-vynsom",
     "mapName": "Qiitun-Et-Vynsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "qiitun-si-vynsom",
     "mapName": "Qiitun-Si-Vynsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -3582,8 +3838,9 @@
   {
     "mapID": "quaent-al-nusis",
     "mapName": "Quaent-Al-Nusis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -3591,29 +3848,33 @@
   {
     "mapID": "quaent-al-odesum",
     "mapName": "Quaent-Al-Odesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "quaent-al-qintis",
     "mapName": "Quaent-Al-Qintis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "quaent-al-tersis",
     "mapName": "Quaent-Al-Tersis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "quaent-al-viesom",
     "mapName": "Quaent-Al-Viesom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
     ]
@@ -3621,15 +3882,17 @@
   {
     "mapID": "quaent-al-vynsum",
     "mapName": "Quaent-Al-Vynsum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "quaent-in-nusis",
     "mapName": "Quaent-In-Nusis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -3637,8 +3900,9 @@
   {
     "mapID": "quaent-in-odesum",
     "mapName": "Quaent-In-Odesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ROCK"
@@ -3679,8 +3943,9 @@
   {
     "mapID": "quatun-et-nusas",
     "mapName": "Quatun-Et-Nusas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -3688,8 +3953,9 @@
   {
     "mapID": "quatun-et-odetum",
     "mapName": "Quatun-Et-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -3715,98 +3981,114 @@
   {
     "mapID": "razorrock-bank",
     "mapName": "Razorrock Bank",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "razorrock-chasm",
     "mapName": "Razorrock Chasm",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "razorrock-edge",
     "mapName": "Razorrock Edge",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "razorrock-gulch",
     "mapName": "Razorrock Gulch",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "razorrock-passage",
     "mapName": "Razorrock Passage",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "razorrock-ravine",
     "mapName": "Razorrock Ravine",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "razorrock-valley",
     "mapName": "Razorrock Valley",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "razorrock-verge",
     "mapName": "Razorrock Verge",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "redlake",
     "mapName": "Redlake",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "redstone-plain",
     "mapName": "Redstone Plain",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "redtree-enclave",
     "mapName": "Redtree Enclave",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "rivercopse-crossing",
     "mapName": "Rivercopse Crossing",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "rivercopse-curve",
     "mapName": "Rivercopse Curve",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "rivercopse-fount",
     "mapName": "Rivercopse Fount",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "rivercopse-path",
     "mapName": "Rivercopse Path",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "roastcorpse-steppe",
     "mapName": "Roastcorpse Steppe",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "rock-adit",
@@ -3818,7 +4100,8 @@
     "mapID": "rowanwood",
     "mapName": "Rowanwood",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "runnel-sink",
@@ -3829,20 +4112,23 @@
   {
     "mapID": "runnelvein-bog",
     "mapName": "Runnelvein Bog",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "runnelvein-sink",
     "mapName": "Runnelvein Sink",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "runnelvein-slough",
     "mapName": "Runnelvein Slough",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "russerdell",
@@ -3860,7 +4146,8 @@
     "mapID": "saddle-tor",
     "mapName": "Saddle Tor",
     "mapType": "royalBlue",
-    "tier": 5
+    "tier": 5,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "sandgust-cleft",
@@ -3871,68 +4158,79 @@
   {
     "mapID": "sandmount-ascent",
     "mapName": "Sandmount Ascent",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "sandmount-desert",
     "mapName": "Sandmount Desert",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "sandmount-esker",
     "mapName": "Sandmount Esker",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "sandmount-strand",
     "mapName": "Sandmount Strand",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "sandrift-coast",
     "mapName": "Sandrift Coast",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "sandrift-dunes",
     "mapName": "Sandrift Dunes",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "sandrift-expanse",
     "mapName": "Sandrift Expanse",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "sandrift-fringe",
     "mapName": "Sandrift Fringe",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "sandrift-prairie",
     "mapName": "Sandrift Prairie",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "sandrift-shore",
     "mapName": "Sandrift Shore",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "sandrift-steppe",
     "mapName": "Sandrift Steppe",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "sases-aoarsum",
@@ -4010,20 +4308,23 @@
   {
     "mapID": "scuttlesink-marsh",
     "mapName": "Scuttlesink Marsh",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "scuttlesink-mouth",
     "mapName": "Scuttlesink Mouth",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "scuttlesink-pools",
     "mapName": "Scuttlesink Pools",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "sebos-avoirom",
@@ -4057,8 +4358,9 @@
   {
     "mapID": "secent-ai-odetis",
     "mapName": "Secent-AI-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -4066,8 +4368,9 @@
   {
     "mapID": "secent-al-duosom",
     "mapName": "Secent-Al-Duosom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ORE"
@@ -4076,29 +4379,33 @@
   {
     "mapID": "secent-al-nutum",
     "mapName": "Secent-Al-Nutum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "secent-al-odetis",
     "mapName": "Secent-Al-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "secent-al-qinsom",
     "mapName": "Secent-Al-Qinsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "secent-al-tersum",
     "mapName": "Secent-Al-Tersum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
     ]
@@ -4106,8 +4413,9 @@
   {
     "mapID": "secent-al-viesum",
     "mapName": "Secent-Al-Viesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -4120,8 +4428,9 @@
   {
     "mapID": "secent-et-odesis",
     "mapName": "Secent-Et-Odesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
     ]
@@ -4129,15 +4438,17 @@
   {
     "mapID": "secent-et-qinsas",
     "mapName": "Secent-Et-Qinsas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "secent-et-vyntum",
     "mapName": "Secent-Et-Vyntum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
     ]
@@ -4145,8 +4456,9 @@
   {
     "mapID": "secent-in-tersum",
     "mapName": "Secent-In-Tersum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -4172,15 +4484,17 @@
   {
     "mapID": "secent-qi-odesom",
     "mapName": "Secent-Qi-Odesom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "secent-qi-qinsom",
     "mapName": "Secent-Qi-Qinsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ORE"
@@ -4189,8 +4503,9 @@
   {
     "mapID": "secent-sa-odesis",
     "mapName": "Secent-Sa-Odesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
     ]
@@ -4198,15 +4513,17 @@
   {
     "mapID": "secent-si-odetis",
     "mapName": "Secent-Si-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "secent-si-qinsas",
     "mapName": "Secent-Si-Qinsas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -4228,22 +4545,25 @@
   {
     "mapID": "sectun-al-vyntis",
     "mapName": "Sectun-Al-Vyntis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "sectun-et-tersas",
     "mapName": "Sectun-Et-Tersas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "sectun-in-odesis",
     "mapName": "Sectun-In-Odesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -4251,15 +4571,17 @@
   {
     "mapID": "sectun-in-qinsom",
     "mapName": "Sectun-In-Qinsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "sectun-in-vyntis",
     "mapName": "Sectun-In-Vyntis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -4267,8 +4589,9 @@
   {
     "mapID": "sectun-oc-odesis",
     "mapName": "Sectun-Oc-Odesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -4313,8 +4636,9 @@
   {
     "mapID": "setent-al-duosas",
     "mapName": "Setent-Al-Duosas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ORE"
@@ -4323,15 +4647,17 @@
   {
     "mapID": "setent-al-qinsum",
     "mapName": "Setent-Al-Qinsum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "setent-al-vietis",
     "mapName": "Setent-Al-Vietis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
     ]
@@ -4346,8 +4672,9 @@
   {
     "mapID": "setent-et-nusum",
     "mapName": "Setent-Et-Nusum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ROCK"
@@ -4356,8 +4683,9 @@
   {
     "mapID": "setent-et-qintis",
     "mapName": "Setent-Et-Qintis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
     ]
@@ -4365,8 +4693,9 @@
   {
     "mapID": "setent-in-qinsum",
     "mapName": "Setent-In-Qinsum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
@@ -4435,15 +4764,17 @@
   {
     "mapID": "settun-al-nusis",
     "mapName": "Settun-AL-Nusis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "settun-al-odetum",
     "mapName": "Settun-Al-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
     ]
@@ -4451,36 +4782,41 @@
   {
     "mapID": "settun-al-tersom",
     "mapName": "Settun-Al-Tersom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "settun-al-vynsis",
     "mapName": "Settun-Al-Vynsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "settun-et-odetum",
     "mapName": "Settun-Et-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "settun-in-nusis",
     "mapName": "Settun-In-Nusis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": []
   },
   {
     "mapID": "settun-in-odetum",
     "mapName": "Settun-In-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ROCK"
@@ -4515,14 +4851,16 @@
   {
     "mapID": "shaleheath-hills",
     "mapName": "Shaleheath Hills",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "shaleheath-steep",
     "mapName": "Shaleheath Steep",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "shiftshadow-expanse",
@@ -4603,74 +4941,86 @@
   {
     "mapID": "skullmarsh-lower",
     "mapName": "Skullmarsh Lower",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "skullmarsh-upper",
     "mapName": "Skullmarsh Upper",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "skylake-bridge",
     "mapName": "Skylake Bridge",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "skylake-hinterlands",
     "mapName": "Skylake Hinterlands",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "skysand-plateau",
     "mapName": "Skysand Plateau",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "skysand-ridge",
     "mapName": "Skysand Ridge",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "slakesands-canyon",
     "mapName": "Slakesands Canyon",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "slakesands-mesa",
     "mapName": "Slakesands Mesa",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "sleetwater-basin",
     "mapName": "Sleetwater Basin",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "slimehag",
     "mapName": "Slimehag",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Martlock RC"
   },
   {
     "mapID": "slithertail-marsh",
     "mapName": "Slithertail Marsh",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "slowtree-plain",
     "mapName": "Slowtree Plain",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "smoothfloor-cleft",
@@ -4776,20 +5126,23 @@
   {
     "mapID": "southgrove-copse",
     "mapName": "Southgrove Copse",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "southgrove-escarp",
     "mapName": "Southgrove Escarp",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "southgrove-thicket",
     "mapName": "Southgrove Thicket",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "spectral-sump",
@@ -4801,37 +5154,43 @@
     "mapID": "spindlewood",
     "mapName": "Spindlewood",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "springsump-basin",
     "mapName": "Springsump Basin",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "springsump-melt",
     "mapName": "Springsump Melt",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "springsump-wetland",
     "mapName": "Springsump Wetland",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "stagbourne",
     "mapName": "Stagbourne",
     "mapType": "royalBlue",
-    "tier": 3
+    "tier": 3,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "steelhide-meadow",
     "mapName": "Steelhide Meadow",
     "mapType": "royalBlue",
-    "tier": 5
+    "tier": 5,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "stinkhag",
@@ -4842,104 +5201,121 @@
   {
     "mapID": "stonelake-fields",
     "mapName": "Stonelake Fields",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "stonelake-hillock",
     "mapName": "Stonelake Hillock",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "stonemouth-bay",
     "mapName": "Stonemouth Bay",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "stonemouth-northbluff",
     "mapName": "Stonemouth Northbluff",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "stonemouth-southbluff",
     "mapName": "Stonemouth Southbluff",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "stumprot-swamp",
     "mapName": "Stumprot Swamp",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Thetford RC"
   },
   {
     "mapID": "sunfang-approach",
     "mapName": "Sunfang Approach",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "sunfang-cliffs",
     "mapName": "Sunfang Cliffs",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "sunfang-dawn",
     "mapName": "Sunfang Dawn",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "sunfang-ravine",
     "mapName": "Sunfang Ravine",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "sunfang-wasteland",
     "mapName": "Sunfang Wasteland",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "sunkenbough-spring",
     "mapName": "Sunkenbough Spring",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "sunkenbough-woods",
     "mapName": "Sunkenbough Woods",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "sunstrand-delta",
     "mapName": "Sunstrand Delta",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "sunstrand-dunes",
     "mapName": "Sunstrand Dunes",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "sunstrand-quicksands",
     "mapName": "Sunstrand Quicksands",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "sunstrand-shoal",
     "mapName": "Sunstrand Shoal",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "suyites-avuotum",
@@ -5001,25 +5377,29 @@
     "mapID": "swamp-burrow",
     "mapName": "Swamp Burrow",
     "mapType": "royalRed",
-    "tier": 7
+    "tier": 7,
+    "category": "Thetford RC"
   },
   {
     "mapID": "swiftsands-basin",
     "mapName": "Swiftsands Basin",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "swiftsands-chaparral",
     "mapName": "Swiftsands Chaparral",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "swiftsands-plain",
     "mapName": "Swiftsands Plain",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "synites-aoarsum",
@@ -5161,7 +5541,8 @@
     "mapID": "tharcal-fissure",
     "mapName": "Tharcal Fissure",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Fort Stirling RC"
   },
   {
     "mapID": "the-underway",
@@ -5172,44 +5553,51 @@
   {
     "mapID": "thirstwater-gully",
     "mapName": "Thirstwater Gully",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "thirstwater-steppe",
     "mapName": "Thirstwater Steppe",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Briddgewatch Portal"
   },
   {
     "mapID": "thirstwater-waste",
     "mapName": "Thirstwater Waste",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "thunderrock-ascent",
     "mapName": "Thunderrock Ascent",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "thunderrock-draw",
     "mapName": "Thunderrock Draw",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "thunderrock-rapids",
     "mapName": "Thunderrock Rapids",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "thunderrock-upland",
     "mapName": "Thunderrock Upland",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "tieitos-eyexrom",
@@ -5246,50 +5634,58 @@
   {
     "mapID": "timberscar-copse",
     "mapName": "Timberscar Copse",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "timberscar-dell",
     "mapName": "Timberscar Dell",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "timberslope-bridge",
     "mapName": "Timberslope Bridge",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "timberslope-dell",
     "mapName": "Timberslope Dell",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "timberslope-grove",
     "mapName": "Timberslope Grove",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "timbertop-dale",
     "mapName": "Timbertop Dale",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "timbertop-escarp",
     "mapName": "Timbertop Escarp",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "timbertop-wood",
     "mapName": "Timbertop Wood",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "tiros-odoxlum",
@@ -5421,8 +5817,9 @@
   {
     "mapID": "twinchannel-narrows",
     "mapName": "Twinchannel Narrows",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "tynos-atatlos",
@@ -5460,8 +5857,9 @@
   {
     "mapID": "unhallowed-cloister",
     "mapName": "Unhallowed Cloister",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "veganimtest",
@@ -5473,319 +5871,372 @@
     "mapID": "vixen-tor",
     "mapName": "Vixen Tor",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Briddgewatch RC"
   },
   {
     "mapID": "wailing-bulwark",
     "mapName": "Wailing Bulwark",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "wanderlure-basin",
     "mapName": "Wanderlure Basin",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "watchwood-bluffs",
     "mapName": "Watchwood Bluffs",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "watchwood-grove",
     "mapName": "Watchwood Grove",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "watchwood-lakeside",
     "mapName": "Watchwood Lakeside",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "watchwood-precipice",
     "mapName": "Watchwood Precipice",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Lymhurt Portal"
   },
   {
     "mapID": "westweald-shore",
     "mapName": "Westweald Shore",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "westweald-thicket",
     "mapName": "Westweald Thicket",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "wetgrave-bog",
     "mapName": "Wetgrave Bog",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "wetgrave-marsh",
     "mapName": "Wetgrave Marsh",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "wetgrave-swale",
     "mapName": "Wetgrave Swale",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "whitebank-cross",
     "mapName": "Whitebank Cross",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "whitebank-descent",
     "mapName": "Whitebank Descent",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "whitebank-ridge",
     "mapName": "Whitebank Ridge",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "whitebank-shore",
     "mapName": "Whitebank Shore",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "whitebank-stream",
     "mapName": "Whitebank Stream",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "whitebank-wall",
     "mapName": "Whitebank Wall",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Fort Stirling Portal"
   },
   {
     "mapID": "whitecliff-expanse",
     "mapName": "Whitecliff Expanse",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "whitecliff-peak",
     "mapName": "Whitecliff Peak",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Outlands"
   },
   {
     "mapID": "whitepeak-ascent",
     "mapName": "Whitepeak Ascent",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Outlands"
   },
   {
     "mapID": "whitepeak-spring",
     "mapName": "Whitepeak Spring",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "whitepeak-tundra",
     "mapName": "Whitepeak Tundra",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "whitewall-pass",
     "mapName": "Whitewall Pass",
-    "mapType": "other",
-    "tier": 8
+    "mapType": "outlands",
+    "tier": 8,
+    "category": "Outlands"
   },
   {
     "mapID": "whitewall-ridge",
     "mapName": "Whitewall Ridge",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Outlands"
   },
   {
     "mapID": "widemoor-delta",
     "mapName": "Widemoor Delta",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "widemoor-end",
     "mapName": "Widemoor End",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "widemoor-estuary",
     "mapName": "Widemoor Estuary",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "widemoor-fen",
     "mapName": "Widemoor Fen",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "widemoor-flats",
     "mapName": "Widemoor Flats",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "widemoor-hills",
     "mapName": "Widemoor Hills",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "widemoor-pool",
     "mapName": "Widemoor Pool",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "widemoor-shore",
     "mapName": "Widemoor Shore",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "widemoor-woods",
     "mapName": "Widemoor Woods",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "willow-wood",
     "mapName": "Willow Wood",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "willowshade-hills",
     "mapName": "Willowshade Hills",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "willowshade-icemarsh",
     "mapName": "Willowshade Icemarsh",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "willowshade-lake",
     "mapName": "Willowshade Lake",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "willowshade-mire",
     "mapName": "Willowshade Mire",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "willowshade-pools",
     "mapName": "Willowshade Pools",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "willowshade-sink",
     "mapName": "Willowshade Sink",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "willowshade-wetlands",
     "mapName": "Willowshade Wetlands",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Thetford Portal"
   },
   {
     "mapID": "willowsigh-marsh",
     "mapName": "Willowsigh Marsh",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Thetford RC"
   },
   {
     "mapID": "windgrass-border",
     "mapName": "Windgrass Border",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "windgrass-coast",
     "mapName": "Windgrass Coast",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "windgrass-fields",
     "mapName": "Windgrass Fields",
-    "mapType": "other",
-    "tier": 6
+    "mapType": "outlands",
+    "tier": 6,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "windgrass-gully",
     "mapName": "Windgrass Gully",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "windgrass-precipice",
     "mapName": "Windgrass Precipice",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "windgrass-rill",
     "mapName": "Windgrass Rill",
-    "mapType": "other",
-    "tier": 5
+    "mapType": "outlands",
+    "tier": 5,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "windgrass-terrace",
     "mapName": "Windgrass Terrace",
-    "mapType": "other",
-    "tier": 7
+    "mapType": "outlands",
+    "tier": 7,
+    "category": "Martlock Portal"
   },
   {
     "mapID": "windripple-fen",
     "mapName": "Windripple Fen",
     "mapType": "royalBlue",
-    "tier": 4
+    "tier": 4,
+    "category": "Thetford RC"
   },
   {
     "mapID": "wispwhisper-marsh",
     "mapName": "Wispwhisper Marsh",
     "mapType": "royalYellow",
-    "tier": 6
+    "tier": 6,
+    "category": "Thetford RC"
   },
   {
     "mapID": "wyre-forest",
     "mapName": "Wyre Forest",
     "mapType": "royalRed",
-    "tier": 6
+    "tier": 6,
+    "category": "Lymhurt RC"
   },
   {
     "mapID": "xases-ataglos",
@@ -6033,6 +6484,7 @@
     "mapID": "yew-wood",
     "mapName": "Yew Wood",
     "mapType": "royalYellow",
-    "tier": 5
+    "tier": 5,
+    "category": "Lymhurt RC"
   }
 ]

@@ -11,6 +11,7 @@ export interface Zone {
   tier: number;
   ores?: string[];
   isRoadsHome?: boolean;
+  category?: string;
 }
 
 // ── GameMap (on-disk shape from maps.json) ──────────────────────────────────
@@ -22,6 +23,7 @@ export interface GameMap {
   mapName: string;
   mapType: MapType;
   tier: number;
+  category?: string;
   oresAvailable?: string[];
 }
 
@@ -94,6 +96,7 @@ export const ZoneSchema = z.object({
   tier: z.number().int().min(1).max(8),
   ores: z.array(z.string()).optional(),
   isRoadsHome: z.boolean().optional(),
+  category: z.string().optional(),
 });
 
 export const ConnectionSchema = z.object({

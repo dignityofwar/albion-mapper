@@ -88,7 +88,8 @@ const filteredZones = computed<Zone[]>(() => {
       z.name.toLowerCase().includes(q) ||
       zoneTypeLabel(z).toLowerCase().includes(q) ||
       TYPE_LABELS[z.type].toLowerCase().includes(q) ||
-      `t${z.tier}`.includes(q)
+      `t${z.tier}`.includes(q) ||
+      (z.category && z.category.toLowerCase().includes(q))
     );
   });
 
