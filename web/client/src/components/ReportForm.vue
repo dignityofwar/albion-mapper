@@ -108,7 +108,7 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
 
 <template>
   <form
-    class="relative flex flex-col md:flex-row md:items-center gap-1 p-2 bg-gray-900 border-b border-gray-700"
+    class="relative flex flex-col md:flex-row md:items-center gap-1 p-3 md:p-2 bg-gray-900 border-b border-gray-700"
     style="z-index:10"
     data-testid="report-form"
     @submit.prevent="submit"
@@ -177,7 +177,7 @@ defineExpose({ minutesRemaining, fromZoneId, setFromZoneId: (id: string) => from
     <button
       type="submit"
       :disabled="!canSubmit"
-      class="px-4 py-2 rounded bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
+      class="px-4 py-3 md:py-2 rounded bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
       data-testid="submit-button"
     >
       Add

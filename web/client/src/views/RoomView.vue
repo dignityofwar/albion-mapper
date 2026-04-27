@@ -387,7 +387,7 @@ defineExpose({ flowNodes, onNodeDragStop });
 
     <!-- Debug tray button -->
     <button
-      class="fixed bottom-4 left-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-lg shadow-lg"
+      class="fixed bottom-4 left-4 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
       title="Debug tray"
       @click="showDebug = true"
     >🐛</button>
@@ -397,7 +397,7 @@ defineExpose({ flowNodes, onNodeDragStop });
 
     <!-- Fit view button -->
     <button
-      class="fixed bottom-4 right-4 z-50 w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-lg shadow-lg"
+      class="fixed bottom-4 right-4 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
       title="Fit view"
       @click="fitView({ padding: 0.2, duration: 300 })"
     >🔄</button>

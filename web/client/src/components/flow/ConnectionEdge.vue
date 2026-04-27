@@ -105,7 +105,7 @@ const labelY = computed(() => straight.value[2]);
       <!-- Countdown label -->
       <div
         data-trigger="true"
-        class="text-xs px-2 py-0.5 rounded-full text-white cursor-pointer shadow-sm"
+        class="text-xs px-3 py-1.5 rounded-full text-white cursor-pointer shadow-sm"
         :style="{ backgroundColor: style.color, border: `1px solid ${style.stroke}` }"
         @click="showPopover = !showPopover"
       >
@@ -120,7 +120,7 @@ const labelY = computed(() => straight.value[2]);
         @click.stop
       >
         <button
-          class="absolute top-1 right-1 text-gray-400 hover:text-white"
+          class="absolute top-2 right-2 text-gray-400 hover:text-white p-1"
           @click.stop="showPopover = false"
         >
           ✕
@@ -144,7 +144,7 @@ const labelY = computed(() => straight.value[2]);
             <TimeInput v-model="newMinutesRemaining" />
             <button
               :disabled="newMinutesRemaining === null"
-              class="w-full mt-2 px-2 py-1 rounded bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-medium disabled:opacity-50"
+              class="w-full mt-2 px-3 py-2 rounded bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-medium disabled:opacity-50"
               @click.stop="data.onUpdate(id, newMinutesRemaining!); showPopover = false"
             >
               Update
@@ -152,7 +152,7 @@ const labelY = computed(() => straight.value[2]);
           </div>
         </div>
         <button
-          class="w-full px-2 py-1 rounded bg-red-700 hover:bg-red-600 text-white text-xs font-medium"
+          class="w-full px-3 py-2 rounded bg-red-700 hover:bg-red-600 text-white text-xs font-medium"
           @click.stop="data.onDelete(id); showPopover = false"
         >
           Delete

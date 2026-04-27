@@ -179,7 +179,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
           data-testid="zone-combobox-input"
           @focus="onInputFocus"
         />
-        <ComboboxTrigger class="px-2 py-2 text-gray-400 hover:text-white">▾</ComboboxTrigger>
+        <ComboboxTrigger class="px-3 py-2 text-gray-400 hover:text-white">▾</ComboboxTrigger>
       </div>
 
       <ComboboxContent
@@ -193,7 +193,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
             v-for="zone in filteredZones"
             :key="zone.id"
             :value="zone.id"
-            class="flex items-center gap-2 px-3 py-2 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
+            class="flex items-center gap-2 px-3 py-3 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
           >
             <span class="truncate flex-1">{{ zone.name }}</span>
             <span v-if="mappedZoneIds.has(zone.id)" class="shrink-0 text-green-400">✓</span>
