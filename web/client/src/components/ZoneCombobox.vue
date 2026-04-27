@@ -44,15 +44,16 @@ const query = ref('');
 const comboboxInput = ref<any>(null);
 const isOpen = ref(false);
 const highlightedId = ref<string | null>(null);
+const isFlashing = ref(false);
 
 defineExpose({
   focus: () => {
     comboboxInput.value?.$el?.focus();
   },
   flash: () => {
-    comboboxInput.value?.$el?.classList.add('flash-animation');
+    isFlashing.value = true;
     setTimeout(() => {
-      comboboxInput.value?.$el?.classList.remove('flash-animation');
+      isFlashing.value = false;
     }, 1000);
   }
 });
@@ -174,9 +175,10 @@ function onWrapperKeydown(e: KeyboardEvent) {
       data-testid="zone-combobox"
     >
       <div 
-        class="flex items-center border rounded bg-gray-800 text-white px-3 py-2.5 md:py-2" 
+        class="flex items-center border rounded bg-gray-800 text-white px-3 py-2.5 md:py-2 transition-colors focus-within:border-white" 
         :class="[
-          error ? 'border-red-500' : 'border-gray-600',
+          error ? 'border-red-500' : (isFlashing ? 'border-indigo-400' : 'border-gray-600'),
+          isFlashing ? 'flash-animation' : '',
           disabled ? 'cursor-not-allowed text-gray-400' : ''
         ]"
       >

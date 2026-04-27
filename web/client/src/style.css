@@ -6,13 +6,14 @@
 @tailwind utilities;
 
 @keyframes flash {
-  0% { background-color: transparent; }
-  50% { background-color: rgba(79, 70, 229, 0.5); } /* indigo-600 with opacity */
-  100% { background-color: transparent; }
+  50% { 
+    background-color: rgba(99, 102, 241, 0.8);
+    border-color: rgba(165, 180, 252, 1);
+  }
 }
 
 .flash-animation {
-  animation: flash 1s ease-in-out;
+  animation: flash 0.5s ease-in-out 2;
 }
 
 html, body, #app {

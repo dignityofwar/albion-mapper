@@ -94,7 +94,7 @@ defineExpose({
 
 <template>
   <div 
-    class="flex items-center justify-center bg-gray-800 border border-gray-600 rounded"
+    class="flex items-center justify-center bg-gray-800 border rounded border-gray-600 transition-colors focus-within:border-white"
     :class="compact ? 'px-2 py-1' : 'px-3 py-2.5 md:py-2'"
   >
     <input
