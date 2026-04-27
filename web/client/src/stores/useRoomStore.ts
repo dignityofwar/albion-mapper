@@ -141,7 +141,7 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   function updateNodePositionsInStore(positions: NodePosition[]) {
-    if (positions.length <= 1) return;
+    if (!positions) return;
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: positions }));
       nodePositions.value = positions; // Optimistic update

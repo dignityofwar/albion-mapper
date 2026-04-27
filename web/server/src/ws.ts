@@ -101,14 +101,15 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               return row.reported_at > max ? row.reported_at : max;
             }, room.updated_at || room.created_at);
 
-            const { rows: nodePosRows } = await app.db.query<{ zone_id: string; x: number; y: number }>(
-              'SELECT zone_id, x, y FROM room_node_positions WHERE room_id = $1',
+            const { rows: nodePosRows } = await app.db.query<{ zone_id: string; x: number; y: number; features: any }>(
+              'SELECT zone_id, x, y, features FROM room_node_positions WHERE room_id = $1',
               [roomId]
             );
             const nodePositions: NodePosition[] = nodePosRows.map((row) => ({
               zoneId: row.zone_id,
               x: row.x,
               y: row.y,
+              features: row.features,
             }));
 
             send({ type: 'sync', connections, homeZoneId: room.home_zone_id, nodePositions, lastUpdatedAt });
@@ -119,7 +120,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
         }
 
         if (msg.type === 'update_node_positions') {
-          if (msg.nodePositions.length <= 1) return;
+          if (!msg.nodePositions) return;
 
           const { rows: homeZoneIdRows } = await app.db.query<{ home_zone_id: string }>(
             'SELECT home_zone_id FROM rooms WHERE id = $1',
@@ -148,8 +149,8 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
                 pos.y = y;
               }
               await client.query(
-                'INSERT INTO room_node_positions (room_id, zone_id, x, y) VALUES ($1, $2, $3, $4)',
-                [roomId, pos.zoneId, x, y]
+                'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5)',
+                [roomId, pos.zoneId, x, y, JSON.stringify(pos.features || {})]
               );
             }
             await client.query(

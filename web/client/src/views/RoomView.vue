@@ -208,7 +208,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         // If new nodes were added, update the store.
         const hasNewPositions = positions.some(p => !nodePositions.value.find(np => np.zoneId === p.zoneId));
         if (hasNewPositions) {
-            const updatedPositions = positions.map(p => ({ zoneId: p.zoneId, x: p.x, y: p.y }));
+            const updatedPositions = positions.map(p => ({ zoneId: p.zoneId, x: p.x, y: p.y, features: p.features }));
             store.updateNodePositionsInStore(updatedPositions);
         }
     }
@@ -299,6 +299,7 @@ function onNodeDragStop() {
     zoneId: n.id,
     x: n.position.x,
     y: n.position.y,
+    features: n.data.features,
   }));
   store.updateNodePositionsInStore(positions);
 }

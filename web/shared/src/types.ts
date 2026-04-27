@@ -50,6 +50,7 @@ export interface NodeFeatures {
   enemySighted?: boolean;
   powercoreBlue?: boolean;
   powercorePurple?: boolean;
+  powercoreGreen?: boolean;
 }
 
 export type ConnectionStatus = 'active' | 'stale' | 'expired';

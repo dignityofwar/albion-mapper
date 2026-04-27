@@ -20,7 +20,7 @@ const store = useRoomStore();
 
 const hasActiveFeatures = computed(() => {
   const f = props.data.features;
-  return !!(f?.enemySighted || f?.powercoreBlue || f?.powercorePurple);
+  return !!(f?.enemySighted || f?.powercoreBlue || f?.powercorePurple || f?.powercoreGreen);
 });
 
 function toggleFeature(feature: keyof NodeFeatures) {
@@ -47,6 +47,7 @@ function getBorderClass(type: string): string {
       <button @click="toggleFeature('enemySighted')" :class="props.data.features?.enemySighted ? 'bg-red-500' : 'bg-gray-700'" class="text-white rounded p-1">👁️</button>
       <button @click="toggleFeature('powercoreBlue')" :class="props.data.features?.powercoreBlue ? 'bg-blue-500' : 'bg-gray-700'" class="text-white rounded p-1">🔵</button>
       <button @click="toggleFeature('powercorePurple')" :class="props.data.features?.powercorePurple ? 'bg-purple-500' : 'bg-gray-700'" class="text-white rounded p-1">🟣</button>
+      <button @click="toggleFeature('powercoreGreen')" :class="props.data.features?.powercoreGreen ? 'bg-green-500' : 'bg-gray-700'" class="text-white rounded p-1">🟢</button>
     </NodeToolbar>
 
     <Handle type="source" :position="Position.Top" id="top" />
