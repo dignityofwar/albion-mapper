@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import fastifyCors from '@fastify/cors';
 import fastifyWebsocket from '@fastify/websocket';
 import fastifyJwt from '@fastify/jwt';
 import fastifyRateLimit from '@fastify/rate-limit';
@@ -23,6 +24,17 @@ export async function buildApp(options: AppOptions) {
   } = options;
 
   const app = Fastify({ logger });
+
+  // CORS
+  await app.register(fastifyCors, {
+    origin: [
+      'https://roadmap.dignityofwar.com',
+      'https://albion-mapper-client.vercel.app',
+      'http://10.0.5.2',
+      'https://10.0.5.2',
+      /^http:\/\/localhost(:\d+)?$/,
+    ],
+  });
 
   // Decorate with db
   app.decorate('db', db);
