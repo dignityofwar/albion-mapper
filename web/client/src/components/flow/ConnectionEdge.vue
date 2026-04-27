@@ -114,7 +114,7 @@ const labelY = computed(() => straight.value[2]);
       <div
         v-if="showPopover"
         ref="popoverRef"
-        class="absolute top-6 left-1/2 -translate-x-1/2 z-[6000] w-48 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
+        class="absolute top-9 left-1/2 -translate-x-1/2 z-[6000] w-48 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
         @click.stop
       >
         <button
@@ -139,22 +139,24 @@ const labelY = computed(() => straight.value[2]);
           <span class="text-gray-400">Expires:</span>
           {{ new Date(data.connection.expiresAt).toLocaleTimeString() }}
           <div class="mt-2">
-            <TimeInput v-model="newMinutesRemaining" />
-            <button
-              :disabled="newMinutesRemaining === null"
-              class="w-full mt-2 px-3 py-2 rounded bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-medium disabled:opacity-50"
-              @click.stop="data.onUpdate(id, newMinutesRemaining!); showPopover = false"
-            >
-              Update
-            </button>
+            <TimeInput v-model="newMinutesRemaining" compact />
           </div>
         </div>
-        <button
-          class="w-full px-3 py-2 rounded bg-red-700 hover:bg-red-600 text-white text-xs font-medium"
-          @click.stop="data.onDelete(id); showPopover = false"
-        >
-          Delete
-        </button>
+        <div class="flex gap-2 mt-3">
+          <button
+            class="flex-1 px-2 py-1.5 rounded bg-red-700 hover:bg-red-600 text-white text-xs font-medium"
+            @click.stop="data.onDelete(id); showPopover = false"
+          >
+            Delete
+          </button>
+          <button
+            :disabled="newMinutesRemaining === null"
+            class="flex-1 px-2 py-1.5 rounded bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-medium disabled:opacity-50"
+            @click.stop="data.onUpdate(id, newMinutesRemaining!); showPopover = false"
+          >
+            Update
+          </button>
+        </div>
       </div>
     </div>
   </EdgeLabelRenderer>

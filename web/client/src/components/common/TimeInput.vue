@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   modelValue: number | null;
-}>();
+  compact?: boolean;
+}>(), {
+  compact: false,
+});
 
 const emit = defineEmits(['update:modelValue']);
 
@@ -90,7 +93,10 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex items-center justify-center bg-gray-800 border border-gray-600 rounded px-3 py-2.5 md:py-2">
+  <div 
+    class="flex items-center justify-center bg-gray-800 border border-gray-600 rounded"
+    :class="compact ? 'px-2 py-1' : 'px-3 py-2.5 md:py-2'"
+  >
     <input
       ref="hoursEl"
       type="number"
