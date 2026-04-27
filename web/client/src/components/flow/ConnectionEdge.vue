@@ -84,6 +84,9 @@ const path = computed(() => straight.value[0]);
 const labelX = computed(() => straight.value[1]);
 const labelY = computed(() => straight.value[2]);
 
+defineExpose({
+  showPopover,
+});
 </script>
 
 <template>

@@ -43,6 +43,7 @@ describe('ConnectionEdge', () => {
         data: {
           connection: {
             id: 'c1',
+            roomId: 'r1',
             fromZoneId: 'z1',
             toZoneId: 'z2',
             reportedAt: new Date().toISOString(),
@@ -52,7 +53,7 @@ describe('ConnectionEdge', () => {
           onDelete: vi.fn(),
           onUpdate: vi.fn(),
         },
-      },
+      } as any,
       global: {
         provide: {
           openPopoverId: ref(null),
@@ -92,6 +93,7 @@ describe('ConnectionEdge', () => {
         data: {
           connection: {
             id: 'c1',
+            roomId: 'r1',
             fromZoneId: 'z1',
             toZoneId: 'z2',
             reportedAt: new Date().toISOString(),
@@ -101,7 +103,7 @@ describe('ConnectionEdge', () => {
           onDelete: vi.fn(),
           onUpdate: vi.fn(),
         },
-      },
+      } as any,
       global: {
         provide: {
           openPopoverId: ref(null),
