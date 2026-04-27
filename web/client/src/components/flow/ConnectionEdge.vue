@@ -105,7 +105,7 @@ defineExpose({
         transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
         pointerEvents: 'all',
       }"
-      class="absolute nodrag nopan z-[5000]"
+      :class="['absolute nodrag nopan', showPopover ? 'z-[7000]' : 'z-[5000]']"
     >
       <!-- Countdown label -->
       <div
