@@ -9,11 +9,11 @@ const { Pool } = pkg;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const pool = new Pool({
-  connectionString: typeof process !== 'undefined' ? process.env?.DATABASE_URL : undefined,
+  connectionString: process.env.DATABASE_URL,
 });
 
 export async function initDb() {
-  const databaseUrl = typeof process !== 'undefined' ? process.env?.DATABASE_URL : undefined;
+  const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     throw new Error('DATABASE_URL environment variable is not set');
   }

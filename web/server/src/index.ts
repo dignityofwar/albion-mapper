@@ -3,8 +3,8 @@ import { buildApp } from './app.js';
 import { db, initDb } from './db.js';
 import { startExpiryCleanup } from './expiry.js';
 
-const PORT = parseInt((typeof process !== 'undefined' ? process.env?.['PORT'] : undefined) ?? '3001', 10);
-const HOST = (typeof process !== 'undefined' ? process.env?.['HOST'] : undefined) ?? '0.0.0.0';
+const PORT = parseInt(process.env['PORT'] ?? '3001', 10);
+const HOST = process.env['HOST'] ?? '0.0.0.0';
 
 async function main() {
   try {

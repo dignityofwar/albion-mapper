@@ -34,7 +34,7 @@ export const useRoomStore = defineStore('room', () => {
 
       case 'connection_added':
         if (!connections.value.find((c) => c.id === msg.connection.id)) {
-          connections.value.push(msg.connection);
+          connections.value = [...connections.value, msg.connection];
         }
         lastUpdate.value = new Date(msg.connection.reportedAt);
         break;
@@ -43,7 +43,9 @@ export const useRoomStore = defineStore('room', () => {
         {
           const index = connections.value.findIndex((c) => c.id === msg.connection.id);
           if (index !== -1) {
-            connections.value[index] = msg.connection;
+            const newConnections = [...connections.value];
+            newConnections[index] = msg.connection;
+            connections.value = newConnections;
           }
         }
         lastUpdate.value = new Date();
@@ -56,9 +58,11 @@ export const useRoomStore = defineStore('room', () => {
 
       case 'connection_expired':
         {
-          const conn = connections.value.find((c) => c.id === msg.connectionId);
-          if (conn) {
-            conn.isExpired = true;
+          const index = connections.value.findIndex((c) => c.id === msg.connectionId);
+          if (index !== -1) {
+            const newConnections = [...connections.value];
+            newConnections[index] = { ...newConnections[index], isExpired: true };
+            connections.value = newConnections;
           }
         }
         lastUpdate.value = new Date();
@@ -158,9 +162,11 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   function updateNodeFeatures(zoneId: string, features: NodeFeatures) {
-    const node = nodePositions.value.find(n => n.zoneId === zoneId);
-    if (!node) return;
-    node.features = features;
+    const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
+    if (index === -1) return;
+    const newNodePositions = [...nodePositions.value];
+    newNodePositions[index] = { ...newNodePositions[index], features };
+    nodePositions.value = newNodePositions;
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value }));
       lastUpdate.value = new Date();

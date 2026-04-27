@@ -11,6 +11,10 @@ let mockDb: any;
 beforeEach(async () => {
   mockDb = {
     query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+    connect: vi.fn().mockReturnValue({
+      query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+      release: vi.fn(),
+    }),
   };
   app = await buildApp({ db: mockDb, disableRateLimit: true, jwtSecret: 'test-secret' });
   await app.ready();
@@ -22,8 +26,6 @@ afterEach(async () => {
 
 describe('POST /api/rooms', () => {
   it('creates a room and returns id + shareUrl', async () => {
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT
-    
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
@@ -37,8 +39,6 @@ describe('POST /api/rooms', () => {
   });
 
   it('hashes the password (not stored as plaintext)', async () => {
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT
-    
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',

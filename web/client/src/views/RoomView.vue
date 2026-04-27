@@ -140,7 +140,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     if (!homeZoneId.value) return;
 
     const newConnections = connections.value;
-    const oldConnections = oldVal ? oldVal[2] as Connection[] : [];
+    const oldConnections = (oldVal && oldVal[2]) ? oldVal[2] as Connection[] : [];
     const existingNodeIds = new Set(nodePositions.value.map(np => np.zoneId));
 
     // Find new connections
@@ -148,6 +148,12 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         
     // 1. Compute positions
     let positions: NodePosition[] = [...nodePositions.value];
+    
+    // Ensure home zone exists in positions
+    if (homeZoneId.value && !existingNodeIds.has(homeZoneId.value)) {
+        positions.push({ zoneId: homeZoneId.value, x: 0, y: 0 });
+        existingNodeIds.add(homeZoneId.value);
+    }
     let hasNewNodes = false;
 
     for (const conn of addedConnections) {
@@ -171,7 +177,6 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
             const parentPos = positions.find(np => np.zoneId === parentNodeId);
             if (parentPos) {
                 const homePos = positions.find(np => np.zoneId === homeZoneId.value);
-                console.log('DEBUG: positions:', positions, 'homeZoneId:', homeZoneId.value);
                 const direction = parentPos.x >= (homePos?.x ?? 0) ? 250 : -250;
                 let newX = parentPos.x + direction;
                 let newY = parentPos.y;
@@ -191,10 +196,11 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     if (hasNewNodes) {
         isSkippingAutoLayout.value = true;
         store.updateNodePositionsInStore(positions);
-    } else if (isSkippingAutoLayout.value) {
-        isSkippingAutoLayout.value = false;
     } else {
-        // No auto-layout
+        if (isSkippingAutoLayout.value) {
+            isSkippingAutoLayout.value = false;
+        }
+
         // Ensure all connected nodes exist (if not in nodePositions, add with (0,0))
         connections.value.forEach(conn => {
             if (!positions.some(p => p.zoneId === conn.fromZoneId)) {

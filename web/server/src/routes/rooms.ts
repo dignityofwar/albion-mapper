@@ -35,10 +35,26 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     const adminPasswordHash = await bcrypt.hash(adminPassword, BCRYPT_ROUNDS);
     const createdAt = new Date().toISOString();
 
-    await app.db.query(`
-      INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, created_at)
-      VALUES ($1, $2, $3, $4, $5)
-    `, [id, passwordHash, adminPasswordHash, homeZoneId, createdAt]);
+    const client = await app.db.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(`
+        INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, created_at)
+        VALUES ($1, $2, $3, $4, $5)
+      `, [id, passwordHash, adminPasswordHash, homeZoneId, createdAt]);
+
+      await client.query(`
+        INSERT INTO room_node_positions (room_id, zone_id, x, y, features)
+        VALUES ($1, $2, $3, $4, $5)
+      `, [id, homeZoneId, 0, 0, JSON.stringify({})]);
+
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
 
     const shareUrl = `${request.protocol}://${request.hostname}/rooms/${id}`;
     return reply.status(201).send({ id, shareUrl });
