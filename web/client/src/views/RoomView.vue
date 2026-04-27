@@ -173,7 +173,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
             const parentPos = positions.find(np => np.zoneId === parentNodeId);
             if (parentPos) {
                 const homePos = positions.find(np => np.zoneId === homeZoneId.value);
-                const direction = parentPos.x >= (homePos?.x ?? 0) ? 250 : -250;
+                const direction = parentPos.x >= (homePos?.x ?? 0) ? 300 : -300;
                 let newX = parentPos.x + direction;
                 let newY = parentPos.y;
                     
