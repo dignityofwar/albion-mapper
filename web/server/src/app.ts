@@ -34,6 +34,7 @@ export async function buildApp(options: AppOptions) {
       'https://10.0.5.2',
       /^http:\/\/localhost(:\d+)?$/,
     ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   });
 
   // Decorate with db
