@@ -121,7 +121,7 @@ defineExpose({
       <div
         v-if="showPopover"
         ref="popoverRef"
-        class="absolute top-9 left-1/2 -translate-x-1/2 z-[6000] w-48 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
+        class="absolute top-9 left-1/2 -translate-x-1/2 w-48 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
         @click.stop
       >
         <button

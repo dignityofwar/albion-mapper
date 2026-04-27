@@ -43,7 +43,7 @@ function getBorderClass(type: string): string {
 
 <template>
   <div class="zone-node">
-    <NodeToolbar :is-visible="props.selected || hasActiveFeatures" :position="Position.Top" class="flex gap-1">
+    <NodeToolbar :is-visible="props.selected || hasActiveFeatures" :position="Position.Top" class="flex gap-1 !z-[5500]">
       <button @click="toggleFeature('enemySighted')" :class="props.data.features?.enemySighted ? 'bg-red-500' : 'bg-gray-700'" class="text-white rounded p-2">👁️</button>
       <button @click="toggleFeature('powercoreGreen')" :class="props.data.features?.powercoreGreen ? 'bg-green-500' : 'bg-gray-700'" class="text-white rounded p-2">🟢</button>
       <button @click="toggleFeature('powercoreBlue')" :class="props.data.features?.powercoreBlue ? 'bg-blue-500' : 'bg-gray-700'" class="text-white rounded p-2">🔵</button>
