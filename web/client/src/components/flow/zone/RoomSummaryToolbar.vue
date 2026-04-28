@@ -25,7 +25,7 @@ const emit = defineEmits<{
 }>();
 
 type ViewType = 'cores' | 'crystals' | 'dungeons' | 'chests';
-const activeView = ref<ViewType>('cores');
+const activeView = ref<ViewType | null>('cores');
 
 const coreCounts = computed(() => {
   const counts = { green: 0, blue: 0, purple: 0 };
@@ -42,8 +42,8 @@ const totalCount = computed(() => {
   };
 });
 
-function hasItems(view: ViewType) {
-  return totalCount.value[view] > 0;
+function hasItems(view: ViewType | null): view is ViewType {
+  return view !== null && totalCount.value[view] > 0;
 }
 
 const currentList = computed(() => {
@@ -84,7 +84,7 @@ function getItemIcon(item: ZoneFeatureInfo) {
     <div class="flex flex-row md:flex-col gap-2 bg-gray-900/95 border border-gray-700 rounded-xl p-2 shadow-2xl backdrop-blur-md pointer-events-auto justify-center">
       <!-- Cores Button -->
       <button 
-        @click="activeView = 'cores'"
+        @click="activeView = activeView === 'cores' ? null : 'cores'"
         class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border"
         :class="activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50' : 'bg-gray-800/50 border-transparent hover:bg-gray-700/50'"
         title="Active Cores"
@@ -101,7 +101,7 @@ function getItemIcon(item: ZoneFeatureInfo) {
 
       <!-- Crystals Button -->
       <button 
-        @click="activeView = 'crystals'"
+        @click="activeView = activeView === 'crystals' ? null : 'crystals'"
         class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border"
         :class="activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50' : 'bg-gray-800/50 border-transparent hover:bg-gray-700/50'"
         title="Crystals"
@@ -112,7 +112,7 @@ function getItemIcon(item: ZoneFeatureInfo) {
 
       <!-- Dungeons Button -->
       <button 
-        @click="activeView = 'dungeons'"
+        @click="activeView = activeView === 'dungeons' ? null : 'dungeons'"
         class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border"
         :class="activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50' : 'bg-gray-800/50 border-transparent hover:bg-gray-700/50'"
         title="Dungeons"
@@ -123,7 +123,7 @@ function getItemIcon(item: ZoneFeatureInfo) {
 
       <!-- Chests Button -->
       <button 
-        @click="activeView = 'chests'"
+        @click="activeView = activeView === 'chests' ? null : 'chests'"
         class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border"
         :class="activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50' : 'bg-gray-800/50 border-transparent hover:bg-gray-700/50'"
         title="Chests"
