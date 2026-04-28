@@ -134,10 +134,10 @@ describe('RoomSummaryToolbar', () => {
     const dungeonsButton = wrapper.find('button[title="Dungeons"]');
     const chestsButton = wrapper.find('button[title="Chests"]');
 
-    expect(coresButton.element.disabled).toBe(true);
-    expect(crystalsButton.element.disabled).toBe(false);
-    expect(dungeonsButton.element.disabled).toBe(true);
-    expect(chestsButton.element.disabled).toBe(true);
+    expect((coresButton.element as HTMLButtonElement).disabled).toBe(true);
+    expect((crystalsButton.element as HTMLButtonElement).disabled).toBe(false);
+    expect((dungeonsButton.element as HTMLButtonElement).disabled).toBe(true);
+    expect((chestsButton.element as HTMLButtonElement).disabled).toBe(true);
   });
 
   it('applies disabled classes to disabled buttons', () => {
