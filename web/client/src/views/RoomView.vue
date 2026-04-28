@@ -228,13 +228,13 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
             const parentPos = positions.find(np => np.zoneId === parentNodeId);
             if (parentPos) {
                 const homePos = positions.find(np => np.zoneId === homeZoneId.value);
-                const direction = parentPos.x >= (homePos?.x ?? 0) ? 350 : -350;
+                const direction = parentPos.x >= (homePos?.x ?? 0) ? 400 : -400;
                 let newX = parentPos.x + direction;
                 let newY = parentPos.y;
                     
                 // Collision check against ALL updated positions
                 while (positions.some(p => p.x === newX && p.y === newY)) {
-                    newY += 150;
+                    newY += 300;
                 }
                     
                 positions.push({ zoneId: newNodeId, x: newX, y: newY, virtualGridPos: { x: newX, y: newY } });
@@ -428,7 +428,7 @@ function goToNode(nodeId: string) {
   const node = flowNodes.value.find(n => n.id === nodeId) as any;
   if (node) {
     const width = node.dimensions?.width || 220;
-    const height = node.dimensions?.height || 80;
+    const height = node.dimensions?.height || 160;
     const centerX = node.position.x + (width / 2);
     const centerY = node.position.y + (height / 2);
     setCenter(centerX, centerY, { zoom: 2, duration: 800 });

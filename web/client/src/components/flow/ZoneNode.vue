@@ -298,7 +298,7 @@ function getBorderClass(type: string): string {
 <template>
   <div class="zone-node" ref="zoneNodeRef">
     <div 
-      class="border rounded overflow-hidden text-white text-xs px-2 py-3 text-center min-w-[230px] relative transition-all duration-300"
+      class="border rounded overflow-hidden text-white text-xs px-2 py-6 text-center min-w-[230px] relative transition-all duration-300"
       :class="[
         hasReds ? '!bg-red-950 !border-red-500 red-glow' : '!bg-gray-800',
         !hasReds ? getBorderClass(props.data.type) : '',
@@ -307,14 +307,14 @@ function getBorderClass(type: string): string {
       ]"
     >
       <div class="absolute z-10 -top-[1px] -left-[1px]">
-        <TagTier :tier="props.data.tier" :type="props.data.type as ZoneType" class="!rounded-tr-none !rounded-bl-none py-3 w-6" />
+        <TagTier :tier="props.data.tier" :type="props.data.type as ZoneType" class="!rounded-tr-none !rounded-bl-none py-6 w-6" />
       </div>
 
       <div class="font-bold text-sm flex items-center justify-center leading-tight">
         {{ props.data.zoneName || props.id }}
         <span v-if="props.data.isHome" class="ml-1">🏠</span>
       </div>
-      <div class="flex items-center justify-center mt-1">
+      <div class="flex items-center justify-center mt-2">
         <TagZone :type="props.data.type as ZoneType" :category="props.data.category" />
       </div>
 
@@ -322,7 +322,7 @@ function getBorderClass(type: string): string {
         <!-- Cores and Reds -->
         <div 
           ref="timerContainerRef"
-          class="my-2 border-y py-2 transition-colors duration-300"
+          class="my-4 border-y py-4 transition-colors duration-300"
           :class="hasReds ? 'border-red-500' : 'border-gray-700'"
         >
           <div class="flex items-center justify-center gap-1.5">
@@ -354,7 +354,7 @@ function getBorderClass(type: string): string {
         </div>
 
         <!-- Indicators -->
-        <div class="flex flex-wrap items-center justify-center gap-1 mt-2">
+        <div class="flex flex-wrap items-center justify-center gap-1 mt-4">
           <template v-if="activeFeatures.length > 0">
             <div 
               v-for="feature in activeFeatures" 
@@ -374,7 +374,7 @@ function getBorderClass(type: string): string {
         <!-- Editor Tray Toggle Tab -->
         <button 
           @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
-          class="w-full mt-2 py-1 transition-colors flex items-center justify-center rounded-sm"
+          class="w-full mt-4 py-2 transition-colors flex items-center justify-center rounded-sm"
           :class="hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_HAS_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_DEFAULT}`"
         >
           <div 
@@ -389,7 +389,7 @@ function getBorderClass(type: string): string {
         <!-- Editor Tray Content -->
         <Transition name="tray">
           <div v-if="isEditorTrayOpen" 
-            class="mt-2 text-left space-y-2 overflow-hidden rounded px-1 py-2 transition-colors duration-300"
+            class="mt-4 text-left space-y-4 overflow-hidden rounded px-1 py-4 transition-colors duration-300"
             :class="hasReds ? 'bg-red-900/20' : ''"
           >
             <!-- Chests -->
