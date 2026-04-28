@@ -52,10 +52,11 @@ const timerValue = ref('');
 const isEditingTimer = ref(false);
 const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | null>(null);
 const timerComponentRef = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null);
+const timerContainerRef = ref<HTMLElement | null>(null);
 
 const isRedsOpen = ref(false);
 
-onClickOutside(timerComponentRef, () => {
+onClickOutside(timerContainerRef, () => {
   if (activeEditingCore.value) {
     activeEditingCore.value = null;
   }
@@ -315,23 +316,25 @@ function getBorderClass(type: string): string {
       />
 
       <template v-if="showFeatures">
-        <ZoneCoresAndReds 
-          ref="timerComponentRef"
-          :features="props.data.features"
-          :active-editing-core="activeEditingCore"
-          :now="now"
-          :has-reds="hasReds"
-          v-model:timer-value="timerValue"
-          :is-timer-too-long="isTimerTooLong"
-          :is-timer-valid="isTimerValid"
-          v-model:is-reds-open="isRedsOpen"
-          @toggle="toggleFeature"
-          @update:reds="updateReds"
-          @save="saveTimer"
-          @clear="clearTimer"
-          @focus="onTimerFocus"
-          @blur="onTimerBlur"
-        />
+        <div ref="timerContainerRef">
+          <ZoneCoresAndReds 
+            ref="timerComponentRef"
+            :features="props.data.features"
+            :active-editing-core="activeEditingCore"
+            :now="now"
+            :has-reds="hasReds"
+            v-model:timer-value="timerValue"
+            :is-timer-too-long="isTimerTooLong"
+            :is-timer-valid="isTimerValid"
+            v-model:is-reds-open="isRedsOpen"
+            @toggle="toggleFeature"
+            @update:reds="updateReds"
+            @save="saveTimer"
+            @clear="clearTimer"
+            @focus="onTimerFocus"
+            @blur="onTimerBlur"
+          />
+        </div>
 
         <ZoneFeatures 
           :active-features="activeFeatures"
