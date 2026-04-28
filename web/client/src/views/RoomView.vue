@@ -380,7 +380,7 @@ const hasAnySummaryItems = computed(() => {
 function goToNode(nodeId: string) {
   const node = flowNodes.value.find(n => n.id === nodeId);
   if (node) {
-    const width = node.dimensions?.width || 140;
+    const width = node.dimensions?.width || 220;
     const height = node.dimensions?.height || 80;
     const centerX = node.position.x + (width / 2);
     const centerY = node.position.y + (height / 2);
