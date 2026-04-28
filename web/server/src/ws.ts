@@ -127,34 +127,47 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
         if (msg.type === 'update_node_positions') {
           if (!msg.nodePositions) return;
 
-          const { rows: homeZoneIdRows } = await app.db.query<{ home_zone_id: string }>(
-            'SELECT home_zone_id FROM rooms WHERE id = $1',
-            [roomId]
+          // Deduplicate nodePositions by zoneId to prevent unique constraint violations
+          const deduplicated = Array.from(
+            msg.nodePositions.reduce((map, pos) => {
+              map.set(pos.zoneId, pos);
+              return map;
+            }, new Map<string, NodePosition>()).values()
           );
-          const homeZoneIdRow = homeZoneIdRows[0];
-          
-          const homePos = homeZoneIdRow 
-            ? (await app.db.query<{ x: number; y: number }>(
-              'SELECT x, y FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
-              [roomId, homeZoneIdRow.home_zone_id]
-            )).rows[0]
-            : undefined;
 
           const client = await app.db.connect();
           try {
             await client.query('BEGIN');
+
+            // Lock the room to serialize updates for the same room and prevent race conditions
+            const { rows: homeZoneIdRows } = await client.query<{ home_zone_id: string }>(
+              'SELECT home_zone_id FROM rooms WHERE id = $1 FOR UPDATE',
+              [roomId]
+            );
+            const homeZoneIdRow = homeZoneIdRows[0];
+
+            if (!homeZoneIdRow) {
+              await client.query('ROLLBACK');
+              return;
+            }
+
+            const homePos = (await client.query<{ x: number; y: number }>(
+              'SELECT x, y FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
+              [roomId, homeZoneIdRow.home_zone_id]
+            )).rows[0];
+
             await client.query('DELETE FROM room_node_positions WHERE room_id = $1', [roomId]);
-            for (const pos of msg.nodePositions) {
+            for (const pos of deduplicated) {
               let x = pos.x;
               let y = pos.y;
-              if (homePos && homeZoneIdRow && pos.zoneId === homeZoneIdRow.home_zone_id) {
+              if (homePos && pos.zoneId === homeZoneIdRow.home_zone_id) {
                 x = homePos.x;
                 y = homePos.y;
                 pos.x = x;
                 pos.y = y;
               }
               await client.query(
-                'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5)',
+                'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features',
                 [roomId, pos.zoneId, x, y, JSON.stringify(pos.features || {})]
               );
             }
@@ -170,7 +183,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
             client.release();
           }
 
-          broadcast(roomId, { type: 'node_positions_updated', nodePositions: msg.nodePositions }, socket);
+          broadcast(roomId, { type: 'node_positions_updated', nodePositions: deduplicated }, socket);
           return;
         }
 

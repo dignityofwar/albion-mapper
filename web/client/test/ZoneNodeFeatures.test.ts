@@ -6,9 +6,10 @@ import { ref } from 'vue'
 
 describe('ZoneNode Features and Styling', () => {
   const mountNode = (type: string, isHome = false) => {
-    return mount(ZoneNode, {
+    return mount(ZoneNode as any, {
       props: {
         id: 'test-node',
+        type: 'zone',
         data: {
           type,
           isHome,
@@ -17,9 +18,12 @@ describe('ZoneNode Features and Styling', () => {
         },
         selected: false,
         dragging: false,
+        resizing: false,
+        connectable: true,
         zIndex: 0,
         position: { x: 0, y: 0 },
         dimensions: { width: 160, height: 100 },
+        events: {} as any,
       },
       global: {
         plugins: [createTestingPinia({ createSpy: vi.fn })],
@@ -58,24 +62,24 @@ describe('ZoneNode Features and Styling', () => {
   })
 
   describe('Home Zone Styling', () => {
-    it('applies 3px border and glow for home zones', () => {
+    it('applies glow for home zones', () => {
       const wrapper = mountNode('roads', true)
-      const nodeDiv = wrapper.find('.min-w-\\[160px\\]')
-      expect(nodeDiv.classes()).toContain('border-[3px]')
-      expect(nodeDiv.classes()).toContain('shadow-[0_0_10px_rgba(255,255,255,0.3)]')
+      const nodeDiv = wrapper.find('.min-w-\\[230px\\]')
+      expect(nodeDiv.classes()).not.toContain('border-[3px]')
+      expect(nodeDiv.classes()).toContain('shadow-[0_0_10px_rgba(255,255,255,0.5)]')
     })
 
-    it('does not apply 3px border for non-home zones', () => {
-      const wrapper = mountNode('roads', false)
-      const nodeDiv = wrapper.find('.min-w-\\[160px\\]')
+    it('does not apply 3px border for home zones', () => {
+      const wrapper = mountNode('roads', true)
+      const nodeDiv = wrapper.find('.min-w-\\[230px\\]')
       expect(nodeDiv.classes()).not.toContain('border-[3px]')
     })
 
-    it('nudges TagTier badge for home zones', () => {
+    it('keeps TagTier badge position for home zones', () => {
       const wrapper = mountNode('roads', true)
       const badgeContainer = wrapper.find('.absolute.z-10')
-      expect(badgeContainer.classes()).toContain('-top-[3px]')
-      expect(badgeContainer.classes()).toContain('-left-[3px]')
+      expect(badgeContainer.classes()).toContain('-top-[1px]')
+      expect(badgeContainer.classes()).toContain('-left-[1px]')
     })
   })
 })

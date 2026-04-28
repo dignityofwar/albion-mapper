@@ -139,29 +139,37 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(403).send({ error: 'Forbidden' });
     }
 
-    // Check adminPassword
-    const { rows: rooms } = await app.db.query<{ admin_password_hash: string }>(
-      'SELECT admin_password_hash FROM rooms WHERE id = $1',
-      [id]
-    );
-    const room = rooms[0];
-    if (!room) {
-      return reply.status(404).send({ error: 'Room not found' });
-    }
-    const validAdmin = await bcrypt.compare(adminPassword, room.admin_password_hash);
-    if (!validAdmin) {
-      return reply.status(401).send({ error: 'Invalid admin password' });
-    }
+    const client = await app.db.connect();
+    try {
+      await client.query('BEGIN');
+      
+      const { rows: rooms } = await client.query<{ admin_password_hash: string; home_zone_id: string }>(
+        'SELECT admin_password_hash, home_zone_id FROM rooms WHERE id = $1 FOR UPDATE',
+        [id]
+      );
+      const room = rooms[0];
+      if (!room) {
+        await client.query('ROLLBACK');
+        return reply.status(404).send({ error: 'Room not found' });
+      }
+      
+      const validAdmin = await bcrypt.compare(adminPassword, room.admin_password_hash);
+      if (!validAdmin) {
+        await client.query('ROLLBACK');
+        return reply.status(401).send({ error: 'Invalid admin password' });
+      }
 
-    await app.db.query('DELETE FROM connections WHERE room_id = $1', [id]);
-    
-    const { rows: rooms2 } = await app.db.query<{ home_zone_id: string }>(
-      'SELECT home_zone_id FROM rooms WHERE id = $1',
-      [id]
-    );
-    const roomWithHome = rooms2[0];
-    await app.db.query('DELETE FROM room_node_positions WHERE room_id = $1 AND zone_id != $2', [id, roomWithHome.home_zone_id]);
-    await app.db.query('UPDATE rooms SET updated_at = $1 WHERE id = $2', [new Date().toISOString(), id]);
+      await client.query('DELETE FROM connections WHERE room_id = $1', [id]);
+      await client.query('DELETE FROM room_node_positions WHERE room_id = $1 AND zone_id != $2', [id, room.home_zone_id]);
+      await client.query('UPDATE rooms SET updated_at = $1 WHERE id = $2', [new Date().toISOString(), id]);
+      
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
 
     broadcast(id, { type: 'room_reset' });
 

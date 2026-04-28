@@ -129,8 +129,8 @@ const { fitView, updateNode, setCenter } = useVueFlow();
 const openPopoverId = ref<string | null>(null);
 provide('openPopoverId', openPopoverId);
 
-const flowNodes = ref<Node[]>([]);
-const flowEdges = ref<Edge[]>([]);
+const flowNodes = ref<any[]>([]);
+const flowEdges = ref<any[]>([]);
 const isSkippingAutoLayout = ref(false);
 let wasConnected = false;
 let draggingFromNodeId: string | null = null;
@@ -188,13 +188,17 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
 
     const newConnections = connections.value;
     const oldConnections = (oldVal && oldVal[2]) ? oldVal[2] as Connection[] : [];
-    const existingNodeIds = new Set(nodePositions.value.map(np => np.zoneId));
+    const existingNodeIds = new Set<string>();
+    let positions: NodePosition[] = [];
+    for (const np of nodePositions.value) {
+        if (!existingNodeIds.has(np.zoneId)) {
+            positions.push(np);
+            existingNodeIds.add(np.zoneId);
+        }
+    }
 
     // Find new connections
     const addedConnections = newConnections.filter(c => !oldConnections.find(oc => oc.id === c.id));
-        
-    // 1. Compute positions
-    let positions: NodePosition[] = [...nodePositions.value];
     
     // Ensure home zone exists in positions
     if (homeZoneId.value && !existingNodeIds.has(homeZoneId.value)) {
@@ -421,7 +425,7 @@ const hasAnySummaryItems = computed(() => {
 });
 
 function goToNode(nodeId: string) {
-  const node = flowNodes.value.find(n => n.id === nodeId);
+  const node = flowNodes.value.find(n => n.id === nodeId) as any;
   if (node) {
     const width = node.dimensions?.width || 220;
     const height = node.dimensions?.height || 80;

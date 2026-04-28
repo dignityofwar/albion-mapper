@@ -16,7 +16,10 @@ let mockDb: any;
 beforeEach(async () => {
   mockDb = {
     query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
-    connect: vi.fn(),
+    connect: vi.fn().mockResolvedValue({
+      query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+      release: vi.fn(),
+    }),
   };
   app = await buildApp({ db: mockDb, disableRateLimit: true, jwtSecret: 'test-secret' });
   await app.ready();
@@ -229,16 +232,14 @@ describe('DELETE /api/rooms/:id/connections (Reset)', () => {
     const adminPw = 'admin-pw';
     const hash = await bcrypt.hash(adminPw, 1);
 
-    // Query 1: SELECT admin_password_hash FROM rooms
-    mockDb.query.mockResolvedValueOnce({ rows: [{ admin_password_hash: hash }] });
-    // Query 2: DELETE FROM connections
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] });
-    // Query 3: SELECT home_zone_id FROM rooms
-    mockDb.query.mockResolvedValueOnce({ rows: [{ home_zone_id: zoneA }] });
-    // Query 4: DELETE FROM room_node_positions
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] });
-    // Query 5: UPDATE rooms updated_at
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] });
+    const mockClient = await mockDb.connect();
+    // ws.ts uses a transaction and FOR UPDATE
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // BEGIN
+    mockClient.query.mockResolvedValueOnce({ rows: [{ admin_password_hash: hash, home_zone_id: zoneA }] }); // SELECT room
+    mockClient.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // DELETE FROM connections
+    mockClient.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // DELETE FROM room_node_positions
+    mockClient.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE rooms
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // COMMIT
 
     const res = await app.inject({
       method: 'DELETE',

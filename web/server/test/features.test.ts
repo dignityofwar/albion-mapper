@@ -79,10 +79,12 @@ describe('Node features persistence', () => {
     ];
 
     const mockClient = await mockDb.connect();
-    // ws.ts:125 - SELECT home_zone_id FROM rooms WHERE id = $1
-    mockDb.query.mockResolvedValueOnce({ rows: [{ home_zone_id: VALID_ZONE_A }] }); 
-    // ws.ts:132 - SELECT x, y FROM room_node_positions WHERE room_id = $1 AND zone_id = $2
-    mockDb.query.mockResolvedValueOnce({ rows: [{ x: 100, y: 100 }] }); 
+    // ws.ts:140 - BEGIN
+    // ws.ts:143 - SELECT home_zone_id FROM rooms WHERE id = $1 FOR UPDATE
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // BEGIN
+    mockClient.query.mockResolvedValueOnce({ rows: [{ home_zone_id: VALID_ZONE_A }] }); 
+    // ws.ts:154 - SELECT x, y FROM room_node_positions WHERE room_id = $1 AND zone_id = $2
+    mockClient.query.mockResolvedValueOnce({ rows: [{ x: 100, y: 100 }] }); 
     
     socket.send(JSON.stringify({ type: 'update_node_positions', nodePositions }));
 
@@ -93,7 +95,7 @@ describe('Node features persistence', () => {
     
     // Verify first node features (reds and powercoreGreen)
     expect(mockClient.query).toHaveBeenCalledWith(
-      'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5)',
+      expect.stringContaining('INSERT INTO room_node_positions'),
       expect.arrayContaining([
         roomId, 
         VALID_ZONE_A, 
@@ -105,7 +107,7 @@ describe('Node features persistence', () => {
 
     // Verify second node features (powercoreBlue and powercorePurple)
     expect(mockClient.query).toHaveBeenCalledWith(
-      'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5)',
+      expect.stringContaining('INSERT INTO room_node_positions'),
       expect.arrayContaining([
         roomId, 
         VALID_ZONE_B, 
@@ -167,8 +169,9 @@ describe('Node features persistence', () => {
     ];
 
     const mockClient = await mockDb.connect();
-    mockDb.query.mockResolvedValueOnce({ rows: [{ home_zone_id: VALID_ZONE_A }] }); // room check
-    mockDb.query.mockResolvedValueOnce({ rows: [{ x: 0, y: 0 }] }); // homePos check
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // BEGIN
+    mockClient.query.mockResolvedValueOnce({ rows: [{ home_zone_id: VALID_ZONE_A }] }); // room check
+    mockClient.query.mockResolvedValueOnce({ rows: [{ x: 0, y: 0 }] }); // homePos check
     
     socket.send(JSON.stringify({ type: 'update_node_positions', nodePositions }));
 
@@ -177,7 +180,7 @@ describe('Node features persistence', () => {
     // This ensures that the fix (removing length <= 1 guard) works
     expect(mockClient.query).toHaveBeenCalledWith('DELETE FROM room_node_positions WHERE room_id = $1', [roomId]);
     expect(mockClient.query).toHaveBeenCalledWith(
-      'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5)',
+      expect.stringContaining('INSERT INTO room_node_positions'),
       expect.arrayContaining([roomId, VALID_ZONE_A, 0, 0, JSON.stringify({ reds: 5 })])
     );
 

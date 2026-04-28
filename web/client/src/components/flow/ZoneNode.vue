@@ -47,7 +47,7 @@ onNodeDragStart(() => {
 onClickOutside(zoneNodeRef, () => {
   if (isViewportMoving.value) return;
   isEditorTrayOpen.value = false;
-}, { event: 'click' });
+});
 
 const timerValue = ref('');
 const isEditingTimer = ref(false);
@@ -306,7 +306,7 @@ function getBorderClass(type: string): string {
         props.data.highlighted ? 'goto-glow' : ''
       ]"
     >
-      <div class="absolute z-10" :class="props.data.isHome ? '-top-[3px] -left-[3px]' : '-top-[1px] -left-[1px]'">
+      <div class="absolute z-10 -top-[1px] -left-[1px]">
         <TagTier :tier="props.data.tier" :type="props.data.type as ZoneType" class="!rounded-tr-none !rounded-bl-none py-3 w-6" />
       </div>
 
