@@ -59,6 +59,7 @@ watch(
 
 onMounted(() => {
   initializeRoom();
+  window.addEventListener('keydown', handleKeyDown);
 });
 
 watch(() => props.id, () => {
@@ -117,6 +118,7 @@ const now = ref(Date.now());
 provide('globalNow', now);
 const ticker = setInterval(() => (now.value = Date.now()), 1000);
 onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
   clearInterval(ticker);
   store.disconnect();
   if (toastTimeout) clearTimeout(toastTimeout);
@@ -354,6 +356,15 @@ watch(now, () => {
   });
 });
 const showDebug = ref(false);
+const showDebugOverride = ref(false);
+const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+function handleKeyDown(e: KeyboardEvent) {
+  if (e.altKey && e.code === 'KeyD') {
+    e.preventDefault();
+    showDebugOverride.value = !showDebugOverride.value;
+  }
+}
 const showMobileSummary = ref(false);
 
 // ── Actions ──────────────────────────────────────────────────────────────────
@@ -557,6 +568,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-4">
       <!-- Debug tray button -->
       <button
+        v-if="isLocal || showDebugOverride"
         class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
         title="Debug tray"
         @click="showDebug = true"
