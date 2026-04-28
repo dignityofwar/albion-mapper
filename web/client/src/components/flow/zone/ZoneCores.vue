@@ -42,7 +42,7 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
       :active="isCoreActive('powercoreGreen')"
       :editing="activeEditingCore === 'powercoreGreen'"
       :label="getTimerLabel('powercoreGreen')"
-      border-class="border-green-500"
+      active-ring-class="ring-green-500"
       @toggle="emit('toggle', 'powercoreGreen')"
     />
     <ZoneCoreButton 
@@ -50,7 +50,7 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
       :active="isCoreActive('powercoreBlue')"
       :editing="activeEditingCore === 'powercoreBlue'"
       :label="getTimerLabel('powercoreBlue')"
-      border-class="border-blue-500"
+      active-ring-class="ring-blue-500"
       @toggle="emit('toggle', 'powercoreBlue')"
     />
     <ZoneCoreButton 
@@ -58,7 +58,7 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
       :active="isCoreActive('powercorePurple')"
       :editing="activeEditingCore === 'powercorePurple'"
       :label="getTimerLabel('powercorePurple')"
-      border-class="border-purple-500"
+      active-ring-class="ring-purple-500"
       @toggle="emit('toggle', 'powercorePurple')"
     />
   </div>

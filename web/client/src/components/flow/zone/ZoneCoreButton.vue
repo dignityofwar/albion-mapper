@@ -3,7 +3,7 @@ const props = defineProps<{
   type: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple';
   active: boolean;
   editing: boolean;
-  borderClass?: string;
+  activeRingClass?: string;
   label?: string;
 }>();
 
@@ -23,14 +23,39 @@ const config = {
     @click.stop="$emit('toggle')" 
     :class="[
       active ? config[type].colorClass : 'bg-gray-700',
-      active ? borderClass : 'border-transparent',
-      editing ? 'ring-1 ring-white' : '',
+      active ? activeRingClass : '',
+      editing ? 'ring-2 ring-white' : (active ? 'ring-1' : ''),
       config[type].hoverClass
     ]" 
-    class="text-white rounded p-1 border leading-none transition-colors flex items-center" 
+    class="text-white rounded p-1 ring-inset leading-none transition-colors flex items-center overflow-hidden" 
     :title="config[type].title"
   >
-    <img :src="config[type].img" class="w-6 h-6 p-[2px]" />
-    <span v-if="label" class="mx-1 text-[12px] leading-none">{{ label }}</span>
+    <img :src="config[type].img" class="w-6 h-6 p-[2px] flex-shrink-0" />
+    <Transition name="timer">
+      <span v-if="label" class="mx-1 text-[12px] leading-none whitespace-nowrap overflow-hidden">{{ label }}</span>
+    </Transition>
   </button>
 </template>
+
+<style scoped>
+.timer-enter-active,
+.timer-leave-active {
+  transition: all 0.3s ease;
+}
+
+.timer-enter-from,
+.timer-leave-to {
+  opacity: 0;
+  max-width: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.timer-enter-to,
+.timer-leave-from {
+  opacity: 1;
+  max-width: 100px;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+</style>
