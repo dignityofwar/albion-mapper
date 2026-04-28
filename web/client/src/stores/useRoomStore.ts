@@ -84,7 +84,6 @@ export const useRoomStore = defineStore('room', () => {
       
       case 'node_positions_updated':
         nodePositions.value = msg.nodePositions;
-        lastUpdate.value = new Date();
         break;
     }
   }
@@ -153,7 +152,6 @@ export const useRoomStore = defineStore('room', () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: positions }));
       nodePositions.value = positions; // Optimistic update
-      lastUpdate.value = new Date();
     }
   }
 
@@ -161,7 +159,6 @@ export const useRoomStore = defineStore('room', () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: [] }));
       nodePositions.value = []; // Optimistic update
-      lastUpdate.value = new Date();
     }
   }
 
@@ -173,7 +170,6 @@ export const useRoomStore = defineStore('room', () => {
     nodePositions.value = newNodePositions;
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value }));
-      lastUpdate.value = new Date();
     }
   }
 

@@ -329,9 +329,34 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           onDelete: async (id: string) => {
             await deleteConnection(props.id, store.token!, id);
           },
+          onDeleteRecursive: async (id: string) => {
+            const toDelete = new Set<string>();
+            const queue = [id];
+            
+            while (queue.length > 0) {
+              const currentId = queue.shift()!;
+              if (toDelete.has(currentId)) continue;
+              toDelete.add(currentId);
+              
+              const conn = connections.value.find(c => c.id === currentId);
+              if (conn) {
+                const children = connections.value.filter(c => c.fromZoneId === conn.toZoneId);
+                for (const child of children) {
+                  queue.push(child.id);
+                }
+              }
+            }
+            
+            // Delete in reverse order to help server-side cleanup logic (leaf to root)
+            const toDeleteArray = Array.from(toDelete).reverse();
+            for (const connId of toDeleteArray) {
+              await deleteConnection(props.id, store.token!, connId);
+            }
+          },
           onUpdate: async (id: string, secondsRemaining: number) => {
             await updateConnection(props.id, store.token!, id, secondsRemaining);
           },
+          hasChildren: connections.value.some(c => c.fromZoneId === conn.toZoneId),
         },
       };
 

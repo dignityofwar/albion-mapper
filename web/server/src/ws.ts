@@ -171,10 +171,6 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
                 [roomId, pos.zoneId, x, y, JSON.stringify(pos.features || {})]
               );
             }
-            await client.query(
-              'UPDATE rooms SET updated_at = $1 WHERE id = $2',
-              [new Date().toISOString(), roomId]
-            );
             await client.query('COMMIT');
           } catch (e) {
             await client.query('ROLLBACK');

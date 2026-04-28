@@ -8,7 +8,7 @@ const props = withDefaults(defineProps<{
   compact: false,
 });
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'enter']);
 
 const hours = ref<number | null>(null);
 const minutes = ref<number | null>(null);
@@ -74,6 +74,10 @@ watch(() => props.modelValue, (newVal) => {
 const hoursEl = ref<HTMLInputElement | null>(null);
 
 function onKeydown(e: KeyboardEvent) {
+  if (e.key === 'Enter') {
+    emit('enter');
+    return;
+  }
   // Allow control keys
   if (['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
     return;

@@ -59,4 +59,27 @@ describe('useRoomStore', () => {
     // Verify local state update (optimistic)
     expect(store.nodePositions[0].features).toEqual(features);
   });
+
+  it('should NOT update lastUpdate when node positions are updated', () => {
+    const store = useRoomStore();
+    const initialDate = new Date('2026-04-28T10:00:00Z');
+    store.lastUpdate = initialDate;
+    
+    store.updateNodePositionsInStore([{ zoneId: 'z1', x: 100, y: 100 }]);
+    
+    expect(store.lastUpdate).toBe(initialDate);
+  });
+
+  it('should NOT update lastUpdate when node_positions_updated message is received', () => {
+    const store = useRoomStore();
+    const initialDate = new Date('2026-04-28T10:00:00Z');
+    store.lastUpdate = initialDate;
+    
+    store.applyMessage({
+      type: 'node_positions_updated',
+      nodePositions: [{ zoneId: 'z1', x: 100, y: 100 }]
+    });
+    
+    expect(store.lastUpdate).toBe(initialDate);
+  });
 });

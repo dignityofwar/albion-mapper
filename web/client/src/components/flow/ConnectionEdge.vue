@@ -10,7 +10,9 @@ import { ZONE_BY_ID, type Connection } from 'shared';
 type EdgeData = {
   connection: Connection;
   now: number; // epoch ms, updated by parent interval
+  hasChildren: boolean;
   onDelete: (id: string) => void;
+  onDeleteRecursive: (id: string) => void;
   onUpdate: (id: string, secondsRemaining: number) => void;
 };
 
@@ -145,24 +147,43 @@ defineExpose({
         <div class="mb-2">
           <span class="text-gray-400">Expires:</span>
           {{ new Date(data.connection.expiresAt).toLocaleTimeString() }}
-          <div class="mt-2">
-            <TimeInput v-model="newSecondsRemaining" compact />
+          <div class="mt-2 flex items-stretch gap-1">
+            <TimeInput v-model="newSecondsRemaining" compact class="flex-1" @enter="newSecondsRemaining !== null && (data.onUpdate(id, newSecondsRemaining!), showPopover = false)" />
+            <button
+              :disabled="newSecondsRemaining === null"
+              class="bg-indigo-700 hover:bg-indigo-600 text-white rounded px-2 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Update Connection"
+              @click.stop="data.onUpdate(id, newSecondsRemaining!); showPopover = false"
+            >
+              ↵
+            </button>
           </div>
         </div>
-        <div class="flex gap-2 mt-3">
-          <button
-            class="flex-1 px-2 py-1.5 rounded bg-red-700 hover:bg-red-600 text-white text-xs font-medium"
-            @click.stop="data.onDelete(id); showPopover = false"
-          >
-            Delete
-          </button>
-          <button
-            :disabled="newSecondsRemaining === null"
-            class="flex-1 px-2 py-1.5 rounded bg-indigo-700 hover:bg-indigo-600 text-white text-xs font-medium disabled:opacity-50"
-            @click.stop="data.onUpdate(id, newSecondsRemaining!); showPopover = false"
-          >
-            Update
-          </button>
+        <div class="flex flex-col gap-2 mt-3">
+          <template v-if="data.hasChildren">
+            <div class="flex gap-2">
+              <button
+                class="flex-1 px-1 py-1.5 rounded bg-red-700 hover:bg-red-600 text-white text-[10px] font-medium leading-tight"
+                @click.stop="data.onDelete(id); showPopover = false"
+              >
+                Delete
+              </button>
+              <button
+                class="flex-1 px-1 py-1.5 rounded bg-red-700 hover:bg-red-600 text-white text-[10px] font-medium leading-tight"
+                @click.stop="data.onDeleteRecursive(id); showPopover = false"
+              >
+                Delete this & connected
+              </button>
+            </div>
+          </template>
+          <div v-else>
+            <button
+              class="w-full px-2 py-1.5 rounded bg-red-700 hover:bg-red-600 text-white text-xs font-medium"
+              @click.stop="data.onDelete(id); showPopover = false"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>
