@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../../constants/ui';
 const props = defineProps<{
   type: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple';
   active: boolean;
   editing: boolean;
+  hasReds?: boolean;
   activeRingClass?: string;
   label?: string;
 }>();
@@ -22,10 +24,10 @@ const config = {
   <button 
     @click.stop="$emit('toggle')" 
     :class="[
-      active ? config[type].colorClass : 'bg-gray-700',
+      active ? config[type].colorClass : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
       active ? activeRingClass : '',
       editing ? 'ring-2 ring-white' : (active ? 'ring-1' : ''),
-      config[type].hoverClass
+      active ? config[type].hoverClass : (hasReds ? ZONE_BUTTON_HOVER_HAS_REDS : ZONE_BUTTON_HOVER_DEFAULT)
     ]" 
     class="text-white rounded p-1 ring-inset leading-none transition-colors flex items-center overflow-hidden" 
     :title="config[type].title"

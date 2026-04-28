@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS, ZONE_BUTTON_BG_ACTIVE_HAS_REDS, ZONE_BUTTON_BORDER_ACTIVE_HAS_REDS } from '../../../constants/ui';
 import type { NodeFeatures } from 'shared';
 
 const props = defineProps<{
   type: keyof NodeFeatures;
   active: boolean;
+  hasReds?: boolean;
   title: string;
 }>();
 
@@ -33,8 +35,12 @@ const getImageSrc = (type: string) => {
 <template>
   <button 
     @click.stop="$emit('toggle')" 
-    :class="active ? 'bg-gray-600 border-white' : 'bg-gray-700 border-transparent'" 
-    class="text-white rounded p-1 border leading-none transition-colors hover:opacity-80 flex items-center justify-center" 
+    :class="[
+      active 
+        ? (hasReds ? `${ZONE_BUTTON_BG_ACTIVE_HAS_REDS} ${ZONE_BUTTON_BORDER_ACTIVE_HAS_REDS} hover:bg-red-500` : 'bg-gray-600 border-white hover:bg-gray-500') 
+        : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} border-transparent ${ZONE_BUTTON_HOVER_HAS_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} border-transparent ${ZONE_BUTTON_HOVER_DEFAULT}`),
+      'text-white rounded p-1 border leading-none transition-colors flex items-center justify-center'
+    ]"
     :title="title"
   >
     <img :src="getImageSrc(type)" class="w-6 h-6 p-[2px]" :alt="title" />

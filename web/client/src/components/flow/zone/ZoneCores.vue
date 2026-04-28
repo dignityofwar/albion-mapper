@@ -6,6 +6,7 @@ const props = defineProps<{
   features?: NodeFeatures;
   activeEditingCore: string | null;
   now: number;
+  hasReds?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -42,6 +43,7 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
       :active="isCoreActive('powercoreGreen')"
       :editing="activeEditingCore === 'powercoreGreen'"
       :label="getTimerLabel('powercoreGreen')"
+      :has-reds="hasReds"
       active-ring-class="ring-green-500"
       @toggle="emit('toggle', 'powercoreGreen')"
     />
@@ -50,6 +52,7 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
       :active="isCoreActive('powercoreBlue')"
       :editing="activeEditingCore === 'powercoreBlue'"
       :label="getTimerLabel('powercoreBlue')"
+      :has-reds="hasReds"
       active-ring-class="ring-blue-500"
       @toggle="emit('toggle', 'powercoreBlue')"
     />
@@ -58,6 +61,7 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
       :active="isCoreActive('powercorePurple')"
       :editing="activeEditingCore === 'powercorePurple'"
       :label="getTimerLabel('powercorePurple')"
+      :has-reds="hasReds"
       active-ring-class="ring-purple-500"
       @toggle="emit('toggle', 'powercorePurple')"
     />

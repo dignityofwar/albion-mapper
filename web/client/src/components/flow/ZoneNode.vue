@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import type { ZoneType, NodeFeatures } from 'shared';
+import { ZoneType, NodeFeatures } from 'shared';
+import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../constants/ui';
 import TagTier from '../common/TagTier.vue';
 import TagZone from '../common/TagZone.vue';
 import ZoneFeatureToggle from './zone/ZoneFeatureToggle.vue';
@@ -327,6 +328,7 @@ function getBorderClass(type: string): string {
               :features="props.data.features"
               :active-editing-core="activeEditingCore"
               :now="now"
+              :has-reds="hasReds"
               @toggle="toggleFeature"
             />
             <ZoneReds 
@@ -355,7 +357,8 @@ function getBorderClass(type: string): string {
             <div 
               v-for="feature in activeFeatures" 
               :key="feature.type"
-              class="bg-gray-700 rounded p-1 flex items-center justify-center"
+              class="rounded p-1 flex items-center justify-center"
+              :class="hasReds ? ZONE_BUTTON_BG_HAS_REDS : 'bg-gray-700'"
               :title="feature.title"
             >
               <img :src="feature.icon" class="w-4 h-4 object-contain" />
@@ -370,7 +373,7 @@ function getBorderClass(type: string): string {
         <button 
           @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
           class="w-full mt-2 py-1 transition-colors flex items-center justify-center rounded-sm"
-          :class="hasReds ? 'bg-red-900/40 hover:bg-red-800/40' : 'bg-gray-700/50 hover:bg-gray-600/50'"
+          :class="hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_HAS_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_DEFAULT}`"
         >
           <div 
             class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent transition-transform duration-300"
@@ -401,6 +404,7 @@ function getBorderClass(type: string): string {
                   :key="f.type"
                   :type="f.type as any"
                   :active="!!props.data.features?.[f.type as keyof NodeFeatures]"
+                  :has-reds="hasReds"
                   :title="f.title"
                   @toggle="toggleFeature(f.type as any)"
                 />
@@ -424,6 +428,7 @@ function getBorderClass(type: string): string {
                   :key="f.type"
                   :type="f.type as any"
                   :active="!!props.data.features?.[f.type as keyof NodeFeatures]"
+                  :has-reds="hasReds"
                   :title="f.title"
                   @toggle="toggleFeature(f.type as any)"
                 />
@@ -445,6 +450,7 @@ function getBorderClass(type: string): string {
                   :key="f.type"
                   :type="f.type as any"
                   :active="!!props.data.features?.[f.type as keyof NodeFeatures]"
+                  :has-reds="hasReds"
                   :title="f.title"
                   @toggle="toggleFeature(f.type as any)"
                 />

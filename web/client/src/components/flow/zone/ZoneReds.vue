@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BORDER_ACTIVE_HAS_REDS } from '../../../constants/ui';
 import { ref, watch, nextTick } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 
@@ -82,7 +83,7 @@ function onBlur() {
     <button 
       @click.stop="handleToggle" 
       :class="[
-        (props.reds !== undefined || isOpen) ? 'bg-red-700 border-red-400' : 'bg-gray-700 border-transparent',
+        (props.reds !== undefined || isOpen) ? `bg-red-700 ${ZONE_BUTTON_BORDER_ACTIVE_HAS_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} border-transparent`,
         'text-white rounded p-1 border leading-none transition-all hover:opacity-80 flex items-center justify-center overflow-hidden gap-0'
       ]" 
       title="Reds"

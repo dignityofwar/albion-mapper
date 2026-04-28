@@ -28,6 +28,11 @@ const router = useRouter();
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
 const toastType = ref<'info' | 'error'>('info');
+const megaToast = ref('');
+const megaToastRegion = ref('');
+const megaToastBackgroundActive = ref(false);
+let megaToastTimeout: ReturnType<typeof setTimeout> | null = null;
+let megaToastBgTimeout: ReturnType<typeof setTimeout> | null = null;
 const lastUpdateFlash = ref(false);
 let flashTimeout: ReturnType<typeof setTimeout> | null = null;
 const initialUpdateCount = ref(0);
@@ -91,6 +96,18 @@ function showToast(msg: string, type: 'info' | 'error' = 'info') {
   toastTimeout = setTimeout(() => (toast.value = ''), 5000);
 }
 
+function showMegaToast(region: string) {
+  megaToastRegion.value = region;
+  megaToast.value = `Enemies sighted in ${region}!`;
+  megaToastBackgroundActive.value = true;
+
+  if (megaToastTimeout) clearTimeout(megaToastTimeout);
+  if (megaToastBgTimeout) clearTimeout(megaToastBgTimeout);
+
+  megaToastTimeout = setTimeout(() => (megaToast.value = ''), 8000);
+  megaToastBgTimeout = setTimeout(() => (megaToastBackgroundActive.value = false), 2500);
+}
+
 provide('showToast', showToast);
 
 // ── Countdown ticker ─────────────────────────────────────────────────────────
@@ -101,6 +118,8 @@ onUnmounted(() => {
   clearInterval(ticker);
   store.disconnect();
   if (toastTimeout) clearTimeout(toastTimeout);
+  if (megaToastTimeout) clearTimeout(megaToastTimeout);
+  if (megaToastBgTimeout) clearTimeout(megaToastBgTimeout);
   if (flashTimeout) clearTimeout(flashTimeout);
 });
 
@@ -139,6 +158,30 @@ function computeHandles(sourceNode: any, targetNode: any) {
     };
   }
 }
+
+const initialRedsHandled = ref(false);
+const activeRedsIds = ref(new Set<string>());
+
+watch(nodePositions, (newPositions) => {
+  const currentActiveIds = new Set<string>();
+  
+  for (const np of newPositions) {
+    const isActive = np.features?.reds !== undefined && np.features?.reds !== 0;
+    
+    if (isActive) {
+      if (!activeRedsIds.value.has(np.zoneId)) {
+        if (initialRedsHandled.value) {
+          const zone = ZONE_BY_ID.get(np.zoneId);
+          showMegaToast(zone?.name || np.zoneId);
+        }
+      }
+      currentActiveIds.add(np.zoneId);
+    }
+  }
+  
+  activeRedsIds.value = currentActiveIds;
+  initialRedsHandled.value = true;
+}, { deep: true });
 
 watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     if (!homeZoneId.value) return;
@@ -464,7 +507,8 @@ defineExpose({ flowNodes, onNodeDragStop });
         :edge-types="{ connection: markRaw(ConnectionEdge) }"
         :fit-view-on-init="true"
         :connection-mode="ConnectionMode.Loose"
-        class="bg-gray-950"
+        class="transition-colors duration-1000"
+        :class="megaToastBackgroundActive ? 'bg-red-950' : 'bg-gray-950'"
         @node-drag-stop="onNodeDragStop"
         @connect="handleConnect"
         @connect-start="handleConnectStart"
@@ -473,6 +517,17 @@ defineExpose({ flowNodes, onNodeDragStop });
         <Background />
         <Controls />
       </VueFlow>
+
+      <!-- Mega Toast -->
+      <Transition name="mega-toast">
+        <div v-if="megaToast" class="absolute top-4 left-1/2 -translate-x-1/2 z-[100] pointer-events-none w-full max-w-[95vw] flex justify-center px-4">
+           <div class="bg-red-700 text-white px-6 py-3 rounded-full shadow-2xl border-2 border-red-400">
+              <span class="text-lg md:text-2xl font-bold uppercase tracking-wider text-center block">
+                Enemies sighted in {{ megaToastRegion }}!
+              </span>
+           </div>
+        </div>
+      </Transition>
 
       <!-- Summary Toolbar (Desktop) -->
       <div v-if="hasAnySummaryItems" class="absolute top-4 right-4 z-40 hidden md:flex pointer-events-none">
@@ -600,5 +655,22 @@ defineExpose({ flowNodes, onNodeDragStop });
   0%   { opacity: 0.85; }
   15%  { opacity: 0.85; }
   100% { opacity: 0; }
+}
+
+.mega-toast-enter-active {
+  animation: mega-toast-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.mega-toast-leave-active {
+  animation: mega-toast-out 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+@keyframes mega-toast-in {
+  0% { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
+  100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+}
+
+@keyframes mega-toast-out {
+  0% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
 }
 </style>
