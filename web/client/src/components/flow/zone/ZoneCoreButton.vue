@@ -32,7 +32,7 @@ const config = {
     class="text-white rounded p-1 ring-inset leading-none transition-colors flex items-center overflow-hidden" 
     :title="config[type].title"
   >
-    <img :src="config[type].img" class="w-6 h-6 p-[2px] flex-shrink-0" />
+    <img :src="config[type].img" class="w-6 h-6 p-[2px]" />
     <Transition name="timer">
       <span v-if="label" class="mx-1 text-[12px] leading-none whitespace-nowrap overflow-hidden">{{ label }}</span>
     </Transition>

@@ -37,7 +37,7 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
 </script>
 
 <template>
-  <div class="flex items-center justify-center gap-1.5">
+  <div class="flex items-center justify-center gap-x-1.5">
     <ZoneCoreButton 
       type="powercoreGreen"
       :active="isCoreActive('powercoreGreen')"

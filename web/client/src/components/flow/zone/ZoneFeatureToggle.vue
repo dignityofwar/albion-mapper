@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS, ZONE_BUTTON_BG_ACTIVE_HAS_REDS, ZONE_BUTTON_BORDER_ACTIVE_HAS_REDS } from '../../../constants/ui';
+import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS, ZONE_BUTTON_BG_ACTIVE_HAS_REDS, ZONE_BUTTON_RING_ACTIVE_HAS_REDS } from '../../../constants/ui';
 import type { NodeFeatures } from 'shared';
 
 const props = defineProps<{
@@ -37,9 +37,9 @@ const getImageSrc = (type: string) => {
     @click.stop="$emit('toggle')" 
     :class="[
       active 
-        ? (hasReds ? `${ZONE_BUTTON_BG_ACTIVE_HAS_REDS} ${ZONE_BUTTON_BORDER_ACTIVE_HAS_REDS} hover:bg-red-500` : 'bg-gray-600 border-white hover:bg-gray-500') 
-        : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} border-transparent ${ZONE_BUTTON_HOVER_HAS_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} border-transparent ${ZONE_BUTTON_HOVER_DEFAULT}`),
-      'text-white rounded p-1 border leading-none transition-colors flex items-center justify-center'
+        ? (hasReds ? `${ZONE_BUTTON_BG_ACTIVE_HAS_REDS} ${ZONE_BUTTON_RING_ACTIVE_HAS_REDS} ring-1 hover:bg-red-500` : 'bg-gray-600 ring-white ring-1 hover:bg-gray-500') 
+        : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_HAS_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_DEFAULT}`),
+      'text-white rounded p-1 ring-inset leading-none transition-colors flex items-center justify-center'
     ]"
     :title="title"
   >
