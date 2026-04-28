@@ -3,12 +3,11 @@ import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
 import { ZoneType, NodeFeatures } from 'shared';
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../constants/ui';
-import TagTier from '../common/TagTier.vue';
-import TagZone from '../common/TagZone.vue';
 import ZoneFeatureToggle from './zone/ZoneFeatureToggle.vue';
-import ZoneReds from './zone/ZoneReds.vue';
-import ZoneCores from './zone/ZoneCores.vue';
-import ZoneCoreTimer from './zone/ZoneCoreTimer.vue';
+import ZoneTier from './zone/ZoneTier.vue';
+import ZoneHeader from './zone/ZoneHeader.vue';
+import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
+import ZoneFeatures from './zone/ZoneFeatures.vue';
 import { useRoomStore } from '../../stores/useRoomStore';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
@@ -52,12 +51,11 @@ onClickOutside(zoneNodeRef, () => {
 const timerValue = ref('');
 const isEditingTimer = ref(false);
 const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | null>(null);
-const timerComponentRef = ref<{ focus: () => void; blur: () => void } | null>(null);
-const timerContainerRef = ref<HTMLElement | null>(null);
+const timerComponentRef = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null);
 
 const isRedsOpen = ref(false);
 
-onClickOutside(timerContainerRef, () => {
+onClickOutside(timerComponentRef, () => {
   if (activeEditingCore.value) {
     activeEditingCore.value = null;
   }
@@ -298,7 +296,7 @@ function getBorderClass(type: string): string {
 <template>
   <div class="zone-node" ref="zoneNodeRef">
     <div 
-      class="border rounded overflow-hidden text-white text-xs px-2 py-6 text-center min-w-[230px] relative transition-all duration-300"
+      class="border rounded overflow-hidden text-white text-xs px-2 py-3 text-center min-w-[230px] relative transition-all duration-300"
       :class="[
         hasReds ? '!bg-red-950 !border-red-500 red-glow' : '!bg-gray-800',
         !hasReds ? getBorderClass(props.data.type) : '',
@@ -306,70 +304,39 @@ function getBorderClass(type: string): string {
         props.data.highlighted ? 'goto-glow' : ''
       ]"
     >
-      <div class="absolute z-10 -top-[1px] -left-[1px]">
-        <TagTier :tier="props.data.tier" :type="props.data.type as ZoneType" class="!rounded-tr-none !rounded-bl-none py-6 w-6" />
-      </div>
+      <ZoneTier :tier="props.data.tier" :type="props.data.type as ZoneType" />
 
-      <div class="font-bold text-sm flex items-center justify-center leading-tight">
-        {{ props.data.zoneName || props.id }}
-        <span v-if="props.data.isHome" class="ml-1">🏠</span>
-      </div>
-      <div class="flex items-center justify-center mt-2">
-        <TagZone :type="props.data.type as ZoneType" :category="props.data.category" />
-      </div>
+      <ZoneHeader 
+        :id="props.id"
+        :zone-name="props.data.zoneName"
+        :is-home="props.data.isHome"
+        :type="props.data.type as ZoneType"
+        :category="props.data.category"
+      />
 
       <template v-if="showFeatures">
-        <!-- Cores and Reds -->
-        <div 
-          ref="timerContainerRef"
-          class="my-4 border-y py-4 transition-colors duration-300"
-          :class="hasReds ? 'border-red-500' : 'border-gray-700'"
-        >
-          <div class="flex items-center justify-center gap-1.5">
-            <ZoneCores 
-              :features="props.data.features"
-              :active-editing-core="activeEditingCore"
-              :now="now"
-              :has-reds="hasReds"
-              @toggle="toggleFeature"
-            />
-            <ZoneReds 
-              :reds="props.data.features?.reds"
-              v-model:is-open="isRedsOpen"
-              @update:reds="updateReds"
-            />
-          </div>
+        <ZoneCoresAndReds 
+          ref="timerComponentRef"
+          :features="props.data.features"
+          :active-editing-core="activeEditingCore"
+          :now="now"
+          :has-reds="hasReds"
+          v-model:timer-value="timerValue"
+          :is-timer-too-long="isTimerTooLong"
+          :is-timer-valid="isTimerValid"
+          v-model:is-reds-open="isRedsOpen"
+          @toggle="toggleFeature"
+          @update:reds="updateReds"
+          @save="saveTimer"
+          @clear="clearTimer"
+          @focus="onTimerFocus"
+          @blur="onTimerBlur"
+        />
 
-          <ZoneCoreTimer 
-            ref="timerComponentRef"
-            v-model="timerValue"
-            :active-editing-core="activeEditingCore"
-            :is-timer-too-long="isTimerTooLong"
-            :is-timer-valid="isTimerValid"
-            @save="saveTimer"
-            @clear="clearTimer"
-            @focus="onTimerFocus"
-            @blur="onTimerBlur"
-          />
-        </div>
-
-        <!-- Indicators -->
-        <div class="flex flex-wrap items-center justify-center gap-1 mt-4">
-          <template v-if="activeFeatures.length > 0">
-            <div 
-              v-for="feature in activeFeatures" 
-              :key="feature.type"
-              class="rounded p-1 flex items-center justify-center"
-              :class="hasReds ? ZONE_BUTTON_BG_HAS_REDS : 'bg-gray-700'"
-              :title="feature.title"
-            >
-              <img :src="feature.icon" class="w-4 h-4 object-contain" />
-            </div>
-          </template>
-          <div v-else class="bg-gray-700/20 rounded px-2 py-1 text-[10px] text-gray-400/50 italic h-[24px] flex items-center">
-            No map features
-          </div>
-        </div>
+        <ZoneFeatures 
+          :active-features="activeFeatures"
+          :has-reds="hasReds"
+        />
 
         <!-- Editor Tray Toggle Tab -->
         <button 
