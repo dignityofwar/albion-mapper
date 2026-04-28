@@ -49,7 +49,7 @@ export interface NodePosition {
 }
 
 export interface NodeFeatures {
-  reds?: number;
+  reds?: number | null;
   powercoreBlue?: boolean;
   powercorePurple?: boolean;
   powercoreGreen?: boolean;
@@ -57,7 +57,12 @@ export interface NodeFeatures {
   powercoreTimerBlue?: number;  // Expiration timestamp in ms
   powercoreTimerPurple?: number; // Expiration timestamp in ms
   crystalCreaturePresent?: boolean;
+  dungeonStatic?: boolean;
+  dungeonGroup?: boolean;
   chest?: boolean;
+  treasuresGreen?: boolean;
+  treasuresBlue?: boolean;
+  treasuresYellow?: boolean;
   resourceFibre?: boolean;
   resourceLeather?: boolean;
   resourceOre?: boolean;

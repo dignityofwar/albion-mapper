@@ -20,12 +20,15 @@ function isCoreActive(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurpl
   return expiresAt > props.now;
 }
 
-function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple'): string | undefined {
+function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple'): string {
+  if (!props.features?.[core]) return '';
   const timerKey = core === 'powercoreGreen' ? 'powercoreTimerGreen' : core === 'powercoreBlue' ? 'powercoreTimerBlue' : 'powercoreTimerPurple';
-  const expiresAtMs = props.features?.[timerKey as keyof NodeFeatures] as number | undefined;
-  if (expiresAtMs === undefined || expiresAtMs === null) return undefined;
+  const expiresAt = props.features?.[timerKey as keyof NodeFeatures] as number | undefined;
+  if (!expiresAt) return '';
   
-  const remaining = Math.max(0, Math.floor((expiresAtMs - props.now) / 1000));
+  const remaining = Math.max(0, Math.floor((expiresAt - props.now) / 1000));
+  if (remaining <= 0) return '';
+  
   const m = Math.floor(remaining / 60);
   const s = remaining % 60;
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
@@ -38,21 +41,24 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
       type="powercoreGreen"
       :active="isCoreActive('powercoreGreen')"
       :editing="activeEditingCore === 'powercoreGreen'"
-      :timer-label="getTimerLabel('powercoreGreen')"
+      :label="getTimerLabel('powercoreGreen')"
+      border-class="border-green-500"
       @toggle="emit('toggle', 'powercoreGreen')"
     />
     <ZoneCoreButton 
       type="powercoreBlue"
       :active="isCoreActive('powercoreBlue')"
       :editing="activeEditingCore === 'powercoreBlue'"
-      :timer-label="getTimerLabel('powercoreBlue')"
+      :label="getTimerLabel('powercoreBlue')"
+      border-class="border-blue-500"
       @toggle="emit('toggle', 'powercoreBlue')"
     />
     <ZoneCoreButton 
       type="powercorePurple"
       :active="isCoreActive('powercorePurple')"
       :editing="activeEditingCore === 'powercorePurple'"
-      :timer-label="getTimerLabel('powercorePurple')"
+      :label="getTimerLabel('powercorePurple')"
+      border-class="border-purple-500"
       @toggle="emit('toggle', 'powercorePurple')"
     />
   </div>

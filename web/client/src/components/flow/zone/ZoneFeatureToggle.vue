@@ -14,7 +14,12 @@ defineEmits<{
 const getImageSrc = (type: string) => {
   switch (type) {
     case 'crystalCreaturePresent': return '/images/crystal.png';
+    case 'dungeonStatic': return '/images/dungeon-static.png';
+    case 'dungeonGroup': return '/images/dungeon-group.png';
     case 'chest': return '/images/chest.png';
+    case 'treasuresGreen': return '/images/treasures-green.png';
+    case 'treasuresBlue': return '/images/treasures-blue.png';
+    case 'treasuresYellow': return '/images/treasures-yellow.png';
     case 'resourceFibre': return '/images/resource-fibre.png';
     case 'resourceLeather': return '/images/resource-leather.png';
     case 'resourceOre': return '/images/resource-ore.png';

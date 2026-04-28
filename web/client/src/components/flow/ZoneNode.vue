@@ -106,7 +106,7 @@ const showFeatures = computed(() => {
   return !type.startsWith('royal') && type !== 'outlands';
 });
 
-function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'crystalCreaturePresent' | 'chest' | 'resourceFibre' | 'resourceLeather' | 'resourceOre' | 'resourceStone' | 'resourceWood') {
+function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup' | 'chest' | 'treasuresGreen' | 'treasuresBlue' | 'treasuresYellow' | 'resourceFibre' | 'resourceLeather' | 'resourceOre' | 'resourceStone' | 'resourceWood') {
   const currentFeatures = props.data.features || {};
   const features = { ...currentFeatures };
   
@@ -215,7 +215,7 @@ function onTimerBlur() {
   timerValue.value = formatTimer(newVal);
 }
 
-function updateReds(val: number | undefined) {
+function updateReds(val: number | null | undefined) {
   const features = { ...(props.data.features || {}) };
   if (val === undefined) {
     delete features.reds;
@@ -241,7 +241,7 @@ function getBorderClass(type: string): string {
   <div class="zone-node">
     <div 
       class="!bg-gray-800 border rounded overflow-hidden text-white text-xs px-2 py-3 text-center min-w-[160px] relative" 
-      :class="[getBorderClass(props.data.type), props.data.isHome ? 'border-[3px] shadow-[0_0_10px_rgba(255,255,255,0.3)]' : '']"
+      :class="[getBorderClass(props.data.type), props.data.isHome ? 'shadow-[0_0_10px_rgba(255,255,255,0.5)]' : '']"
     >
       <div class="absolute z-10" :class="props.data.isHome ? '-top-[3px] -left-[3px]' : '-top-[1px] -left-[1px]'">
         <TagTier :tier="props.data.tier" :type="props.data.type as ZoneType" class="!rounded-tr-none !rounded-bl-none py-3 w-6" />
@@ -294,10 +294,45 @@ function getBorderClass(type: string): string {
           />
 
           <ZoneFeatureToggle 
+            type="dungeonStatic"
+            :active="!!props.data.features?.dungeonStatic"
+            title="Static Dungeon"
+            @toggle="toggleFeature('dungeonStatic')"
+          />
+
+          <ZoneFeatureToggle 
+            type="dungeonGroup"
+            :active="!!props.data.features?.dungeonGroup"
+            title="Group Dungeon"
+            @toggle="toggleFeature('dungeonGroup')"
+          />
+        </div>
+
+        <!-- Chests and Treasures -->
+        <div class="flex items-center justify-center gap-1.5 mt-2">
+          <ZoneFeatureToggle 
             type="chest"
             :active="!!props.data.features?.chest"
             title="Chests"
             @toggle="toggleFeature('chest')"
+          />
+          <ZoneFeatureToggle 
+            type="treasuresGreen"
+            :active="!!props.data.features?.treasuresGreen"
+            title="Green Treasures"
+            @toggle="toggleFeature('treasuresGreen')"
+          />
+          <ZoneFeatureToggle 
+            type="treasuresBlue"
+            :active="!!props.data.features?.treasuresBlue"
+            title="Blue Treasures"
+            @toggle="toggleFeature('treasuresBlue')"
+          />
+          <ZoneFeatureToggle 
+            type="treasuresYellow"
+            :active="!!props.data.features?.treasuresYellow"
+            title="Yellow Treasures"
+            @toggle="toggleFeature('treasuresYellow')"
           />
         </div>
 

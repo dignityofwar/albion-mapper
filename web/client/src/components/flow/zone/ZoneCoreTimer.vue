@@ -51,7 +51,7 @@ defineExpose({ focus, blur });
       <button 
         @click.stop="emit('save')"
         :disabled="!activeEditingCore || (!isTimerValid && modelValue !== '') || isTimerTooLong"
-        class="nodrag bg-gray-700 hover:bg-gray-600 text-white rounded px-1.5 py-0.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        class="nodrag bg-blue-600 hover:bg-gray-600 text-white rounded px-1.5 py-0.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         title="Save Timer"
       >
         ↵
@@ -59,7 +59,7 @@ defineExpose({ focus, blur });
       <button 
         @click.stop="emit('clear')"
         :disabled="!activeEditingCore"
-        class="nodrag bg-gray-700 hover:bg-gray-600 text-white rounded px-1.5 py-0.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        class="nodrag bg-red-600 hover:bg-gray-600 text-white rounded px-1.5 py-0.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         title="Clear Timer"
       >
         ✕

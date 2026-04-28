@@ -8,6 +8,7 @@ import RoomSettings from '../components/RoomSettings.vue';
 import DebugTray from '../components/DebugTray.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
+import ActiveCoreSummary from '../components/flow/zone/ActiveCoreSummary.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
@@ -337,13 +338,6 @@ const activeCores = computed(() => {
   return cores.sort((a, b) => a.expiresAt - b.expiresAt);
 });
 
-function formatTimerMMSS(expiresAtMs: number): string {
-  const remaining = Math.max(0, Math.floor((expiresAtMs - now.value) / 1000));
-  const m = Math.floor(remaining / 60);
-  const s = remaining % 60;
-  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-}
-
 function goToNode(nodeId: string) {
   const node = flowNodes.value.find(n => n.id === nodeId);
   if (node) {
@@ -444,21 +438,12 @@ defineExpose({ flowNodes, onNodeDragStop });
             <span>Active Cores</span>
             <span class="bg-gray-800 text-xs px-2 py-0.5 rounded text-gray-300">{{ activeCores.length }}</span>
           </div>
-          <div class="flex flex-col gap-1.5 max-h-[400px] overflow-y-auto pr-1">
-            <button 
-              v-for="core in activeCores" 
-              :key="`${core.zoneId}-${core.coreType}`"
-              @click="goToNode(core.zoneId)"
-              class="flex items-center justify-between gap-3 px-2.5 py-2 rounded bg-gray-800 hover:bg-gray-700 transition-colors text-left group"
-            >
-              <div class="flex items-center gap-2 min-w-0">
-                <img v-if="core.coreType === 'green'" src="/images/core-green.png" class="w-5 h-5 p-[2px]" />
-                <img v-else-if="core.coreType === 'blue'" src="/images/core-blue.png" class="w-5 h-5 p-[2px]" />
-                <img v-else-if="core.coreType === 'purple'" src="/images/core-purple.png" class="w-5 h-5 p-[2px]" />
-                <span class="text-sm truncate font-medium group-hover:text-indigo-300">{{ core.zoneName }}</span>
-              </div>
-              <span class="text-xs font-mono text-gray-300 shrink-0 bg-gray-950 px-1.5 py-0.5 rounded border border-gray-700">{{ formatTimerMMSS(core.expiresAt) }}</span>
-            </button>
+          <div class="max-h-[400px] overflow-y-auto pr-1">
+            <ActiveCoreSummary 
+              :cores="activeCores" 
+              compact 
+              @select="goToNode"
+            />
           </div>
         </div>
       </div>
@@ -508,22 +493,13 @@ defineExpose({ flowNodes, onNodeDragStop });
             </div>
             <button class="text-gray-400 hover:text-white text-xl leading-none" @click="showMobileSummary = false">&times;</button>
           </div>
-          <div class="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
-            <button 
-              v-for="core in activeCores" 
-              :key="`${core.zoneId}-${core.coreType}`"
-              @click="goToNode(core.zoneId)"
-              class="flex items-center justify-between gap-4 px-3 py-2 rounded-lg bg-gray-800 active:bg-gray-700 transition-colors text-left"
-            >
-              <div class="flex items-center gap-3 min-w-0">
-                <img v-if="core.coreType === 'green'" src="/images/core-green.png" class="w-8 h-8 p-[2px]" />
-                <img v-else-if="core.coreType === 'blue'" src="/images/core-blue.png" class="w-8 h-8 p-[2px]" />
-                <img v-else-if="core.coreType === 'purple'" src="/images/core-purple.png" class="w-8 h-8 p-[2px]" />
-                <span class="text-sm font-bold truncate">{{ core.zoneName }}</span>
-              </div>
-              <span class="text-sm font-mono font-bold text-indigo-300 bg-gray-950 px-2 py-1 rounded border border-gray-700 shrink-0">{{ formatTimerMMSS(core.expiresAt) }}</span>
-            </button>
-            <div v-if="activeCores.length === 0" class="text-center py-8 text-gray-500">
+          <div class="flex-1 overflow-y-auto p-3">
+            <ActiveCoreSummary 
+              v-if="activeCores.length > 0"
+              :cores="activeCores" 
+              @select="goToNode"
+            />
+            <div v-else class="text-center py-8 text-gray-500">
               No active cores
             </div>
           </div>

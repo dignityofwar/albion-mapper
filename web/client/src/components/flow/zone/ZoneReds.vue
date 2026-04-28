@@ -1,21 +1,34 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
 const props = defineProps<{
-  reds: number | undefined;
+  reds: number | null | undefined;
   isOpen: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:reds', value: number | undefined): void;
+  (e: 'update:reds', value: number | null | undefined): void;
   (e: 'update:isOpen', value: boolean): void;
 }>();
 
 const redsValue = ref<string>('');
 const redsInputRef = ref<HTMLInputElement | null>(null);
+const containerRef = ref<HTMLElement | null>(null);
+const isFocused = ref(false);
+
+onClickOutside(containerRef, () => {
+  if (props.isOpen) {
+    emit('update:isOpen', false);
+  }
+});
 
 watch(() => props.reds, (newVal) => {
-  if (newVal !== undefined && newVal !== null) {
+  if (isFocused.value) return;
+  
+  if (newVal === null) {
+    redsValue.value = '?';
+  } else if (newVal !== undefined) {
     redsValue.value = String(newVal);
   } else {
     redsValue.value = '';
@@ -27,53 +40,71 @@ function handleToggle() {
     emit('update:reds', undefined);
     emit('update:isOpen', false);
   } else {
-    const nextOpen = !props.isOpen;
-    emit('update:isOpen', nextOpen);
-    if (nextOpen) {
-      nextTick(() => {
-        redsInputRef.value?.focus();
-      });
-    }
+    emit('update:reds', null);
+    emit('update:isOpen', true);
+    nextTick(() => {
+      redsInputRef.value?.focus();
+    });
   }
 }
 
 function handleInput() {
   if (redsValue.value === '' || redsValue.value === null) {
-    emit('update:reds', undefined);
+    emit('update:reds', null);
   } else {
-    const val = parseInt(String(redsValue.value), 10);
+    const val = parseInt(redsValue.value, 10);
     if (isNaN(val)) {
-      emit('update:reds', undefined);
+      emit('update:reds', null);
     } else {
       emit('update:reds', val);
     }
   }
 }
+
+function onFocus() {
+  isFocused.value = true;
+  if (redsValue.value === '?') {
+    redsValue.value = '';
+  }
+}
+
+function onBlur() {
+  isFocused.value = false;
+  if (redsValue.value === '' && props.reds !== undefined) {
+    redsValue.value = '?';
+    emit('update:reds', null);
+  }
+}
 </script>
 
 <template>
-  <button 
-    @click.stop="handleToggle" 
-    :class="[
-      (props.reds !== undefined || isOpen) ? 'bg-red-700 border-red-400' : 'bg-gray-700 border-transparent',
-      'text-white rounded p-1 border leading-none transition-all hover:opacity-80 flex items-center justify-center overflow-hidden gap-0'
-    ]" 
-    title="Reds"
-  >
-    <img src="/images/reds.png" class="w-6 h-6 p-[2px]" alt="Reds" />
-    <Transition name="slide-right">
-      <input 
-        v-if="isOpen || props.reds !== undefined"
-        ref="redsInputRef"
-        type="number"
-        v-model="redsValue"
-        @input="handleInput"
-        @click.stop
-        class="nodrag bg-transparent text-white text-[14px] w-4 text-center border-none outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none leading-none p-0"
-        placeholder="0"
-      />
-    </Transition>
-  </button>
+  <div ref="containerRef" class="flex items-center">
+    <button 
+      @click.stop="handleToggle" 
+      :class="[
+        (props.reds !== undefined || isOpen) ? 'bg-red-700 border-red-400' : 'bg-gray-700 border-transparent',
+        'text-white rounded p-1 border leading-none transition-all hover:opacity-80 flex items-center justify-center overflow-hidden gap-0'
+      ]" 
+      title="Reds"
+    >
+      <img src="/images/reds.png" class="w-6 h-6 p-[2px]" alt="Reds" />
+      <Transition name="slide-right">
+        <input 
+          v-if="isOpen || props.reds !== undefined"
+          ref="redsInputRef"
+          type="text"
+          inputmode="numeric"
+          v-model="redsValue"
+          @input="handleInput"
+          @focus="onFocus"
+          @blur="onBlur"
+          @click.stop
+          class="nodrag bg-transparent text-white text-[14px] w-4 text-center border-none outline-none leading-none p-0"
+          placeholder="?"
+        />
+      </Transition>
+    </button>
+  </div>
 </template>
 
 <style scoped>
