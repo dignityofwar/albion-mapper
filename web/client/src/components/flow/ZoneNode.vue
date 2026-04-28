@@ -160,6 +160,8 @@ const activeFeatures = computed(() => {
 
 const hasReds = computed(() => {
   const reds = props.data.features?.reds;
+  const redsTimer = props.data.features?.redsTimer;
+  if (redsTimer && redsTimer <= now.value) return false;
   return reds !== undefined && reds !== 0;
 });
 
@@ -276,8 +278,11 @@ function updateReds(val: number | null | undefined) {
   const features = { ...(props.data.features || {}) };
   if (val === undefined) {
     delete features.reds;
+    delete features.redsTimer;
   } else {
     features.reds = val;
+    // Set/Refresh 30 minute timer
+    features.redsTimer = now.value + 30 * 60 * 1000;
   }
   store.updateNodeFeatures(props.id, features);
 }

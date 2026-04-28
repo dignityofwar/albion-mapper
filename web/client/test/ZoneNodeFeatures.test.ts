@@ -42,22 +42,22 @@ describe('ZoneNode Features and Styling', () => {
   describe('Feature Visibility', () => {
     it('hides features for royal zones', () => {
       const wrapper = mountNode('royalBlue')
-      expect(wrapper.find('button[title="Green Core"]').exists()).toBe(false)
+      expect(wrapper.findComponent({ name: 'ZoneCoresAndReds' }).exists()).toBe(false)
     })
 
     it('hides features for outlands zones', () => {
       const wrapper = mountNode('outlands')
-      expect(wrapper.find('button[title="Green Core"]').exists()).toBe(false)
+      expect(wrapper.findComponent({ name: 'ZoneCoresAndReds' }).exists()).toBe(false)
     })
 
     it('shows features for roads zones', () => {
       const wrapper = mountNode('roads')
-      expect(wrapper.find('button[title="Green Core"]').exists()).toBe(true)
+      expect(wrapper.findComponent({ name: 'ZoneCoresAndReds' }).exists()).toBe(true)
     })
     
     it('shows features for roadsHideout zones', () => {
       const wrapper = mountNode('roadsHideout')
-      expect(wrapper.find('button[title="Green Core"]').exists()).toBe(true)
+      expect(wrapper.findComponent({ name: 'ZoneCoresAndReds' }).exists()).toBe(true)
     })
   })
 

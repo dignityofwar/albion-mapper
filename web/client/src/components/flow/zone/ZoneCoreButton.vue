@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../../constants/ui';
+import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 const props = defineProps<{
   type: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple';
   active: boolean;
@@ -21,22 +22,33 @@ const config = {
 </script>
 
 <template>
-  <button 
-    @click.stop="$emit('toggle')" 
-    :class="[
-      active ? config[type].colorClass : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
-      active ? activeRingClass : '',
-      editing ? 'ring-2 ring-white' : (active ? 'ring-1' : ''),
-      active ? config[type].hoverClass : (hasReds ? ZONE_BUTTON_HOVER_HAS_REDS : ZONE_BUTTON_HOVER_DEFAULT)
-    ]" 
-    class="text-white rounded p-1 ring-inset leading-none transition-colors flex items-center overflow-hidden" 
-    :title="config[type].title"
-  >
-    <img :src="config[type].img" class="w-6 h-6 p-[2px]" />
-    <Transition name="timer">
-      <span v-if="label" class="mx-1 text-[12px] leading-none whitespace-nowrap overflow-hidden">{{ label }}</span>
-    </Transition>
-  </button>
+  <TooltipRoot>
+    <TooltipTrigger as-child>
+      <button 
+        @click.stop="$emit('toggle')" 
+        :class="[
+          active ? config[type].colorClass : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
+          active ? activeRingClass : '',
+          editing ? 'ring-2 ring-white' : (active ? 'ring-1' : ''),
+          active ? config[type].hoverClass : (hasReds ? ZONE_BUTTON_HOVER_HAS_REDS : ZONE_BUTTON_HOVER_DEFAULT)
+        ]" 
+        class="text-white rounded p-1 ring-inset leading-none transition-colors flex items-center overflow-hidden" 
+      >
+        <img :src="config[type].img" class="w-6 h-6 p-[2px]" />
+        <Transition name="timer">
+          <span v-if="label" class="mx-1 text-[12px] leading-none whitespace-nowrap overflow-hidden">{{ label }}</span>
+        </Transition>
+      </button>
+    </TooltipTrigger>
+    <TooltipPortal>
+      <TooltipContent 
+        class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-50 side-top animate-in fade-in zoom-in duration-200"
+        :side-offset="5"
+      >
+        {{ config[type].title }}
+      </TooltipContent>
+    </TooltipPortal>
+  </TooltipRoot>
 </template>
 
 <style scoped>

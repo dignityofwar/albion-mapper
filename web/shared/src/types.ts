@@ -50,6 +50,7 @@ export interface NodePosition {
 
 export interface NodeFeatures {
   reds?: number | null;
+  redsTimer?: number; // Expiration timestamp in ms
   powercoreBlue?: boolean;
   powercorePurple?: boolean;
   powercoreGreen?: boolean;
