@@ -4,6 +4,10 @@ import type { NodeProps } from '@vue-flow/core';
 import type { ZoneType, NodeFeatures } from 'shared';
 import TagTier from '../common/TagTier.vue';
 import TagZone from '../common/TagZone.vue';
+import ZoneFeatureToggle from './zone/ZoneFeatureToggle.vue';
+import ZoneReds from './zone/ZoneReds.vue';
+import ZoneCores from './zone/ZoneCores.vue';
+import ZoneCoreTimer from './zone/ZoneCoreTimer.vue';
 import { useRoomStore } from '../../stores/useRoomStore';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
@@ -23,20 +27,10 @@ const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 const timerValue = ref('');
 const isEditingTimer = ref(false);
 const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | null>(null);
-const timerInputRef = ref<HTMLInputElement | null>(null);
+const timerComponentRef = ref<{ focus: () => void; blur: () => void } | null>(null);
 const timerContainerRef = ref<HTMLElement | null>(null);
 
-const redsInputRef = ref<HTMLInputElement | null>(null);
 const isRedsOpen = ref(false);
-const redsValue = ref('');
-
-watch(() => props.data.features?.reds, (newVal) => {
-  if (newVal !== undefined && newVal !== null) {
-    redsValue.value = String(newVal);
-  } else {
-    redsValue.value = '';
-  }
-}, { immediate: true });
 
 onClickOutside(timerContainerRef, () => {
   if (activeEditingCore.value) {
@@ -52,13 +46,6 @@ const MAX_TIMES = {
 
 const showToast = inject<(msg: string, type?: 'info' | 'error') => void>('showToast');
 
-function isCoreActive(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple'): boolean {
-  if (!props.data.features?.[core]) return false;
-  const timerKey = core === 'powercoreGreen' ? 'powercoreTimerGreen' : core === 'powercoreBlue' ? 'powercoreTimerBlue' : 'powercoreTimerPurple';
-  const expiresAt = props.data.features?.[timerKey as keyof NodeFeatures] as number | undefined;
-  if (!expiresAt) return true;
-  return expiresAt > now.value;
-}
 
 function formatTimer(expiresAtMs: number | undefined | null): string {
   if (expiresAtMs === undefined || expiresAtMs === null) return '';
@@ -198,7 +185,7 @@ function saveTimer() {
       
       // Blur the input after saving
       nextTick(() => {
-        timerInputRef.value?.blur();
+        timerComponentRef.value?.blur();
       });
       activeEditingCore.value = null;
     }
@@ -228,34 +215,14 @@ function onTimerBlur() {
   timerValue.value = formatTimer(newVal);
 }
 
-function saveReds() {
+function updateReds(val: number | undefined) {
   const features = { ...(props.data.features || {}) };
-  if (redsValue.value === '' || redsValue.value === null) {
+  if (val === undefined) {
     delete features.reds;
   } else {
-    const val = parseInt(String(redsValue.value), 10);
-    if (isNaN(val)) {
-      delete features.reds;
-    } else {
-      features.reds = val;
-    }
+    features.reds = val;
   }
   store.updateNodeFeatures(props.id, features);
-}
-
-function toggleReds() {
-  if (props.data.features?.reds !== undefined) {
-    redsValue.value = '';
-    saveReds();
-    isRedsOpen.value = false;
-  } else {
-    isRedsOpen.value = !isRedsOpen.value;
-    if (isRedsOpen.value) {
-      nextTick(() => {
-        redsInputRef.value?.focus();
-      });
-    }
-  }
 }
 
 function getBorderClass(type: string): string {
@@ -272,13 +239,11 @@ function getBorderClass(type: string): string {
 
 <template>
   <div class="zone-node">
-    <Handle type="source" :position="Position.Top" id="top" />
-    <Handle type="source" :position="Position.Right" id="right" />
-    <Handle type="source" :position="Position.Bottom" id="bottom" />
-    <Handle type="source" :position="Position.Left" id="left" />
-
-    <div class="!bg-gray-800 border rounded overflow-hidden text-white text-xs px-2 py-3 text-center min-w-[160px] relative" :class="getBorderClass(props.data.type)">
-      <div class="absolute -top-[1px] -left-[1px] z-10">
+    <div 
+      class="!bg-gray-800 border rounded overflow-hidden text-white text-xs px-2 py-3 text-center min-w-[160px] relative" 
+      :class="[getBorderClass(props.data.type), props.data.isHome ? 'border-[3px] shadow-[0_0_10px_rgba(255,255,255,0.3)]' : '']"
+    >
+      <div class="absolute z-10" :class="props.data.isHome ? '-top-[3px] -left-[3px]' : '-top-[1px] -left-[1px]'">
         <TagTier :tier="props.data.tier" :type="props.data.type as ZoneType" class="!rounded-tr-none !rounded-bl-none py-3 w-6" />
       </div>
 
@@ -293,144 +258,89 @@ function getBorderClass(type: string): string {
       <template v-if="showFeatures">
         <!-- Power cores and Timer -->
         <div ref="timerContainerRef" class="mt-3">
-          <!-- Power cores -->
-          <div class="flex items-center justify-center gap-1.5">
-            <button 
-              @click.stop="toggleFeature('powercoreGreen')" 
-              :class="[
-                isCoreActive('powercoreGreen') ? 'bg-green-600' : 'bg-gray-700',
-                activeEditingCore === 'powercoreGreen' ? 'ring-1 ring-white' : ''
-              ]" 
-              class="text-white rounded p-1 leading-none transition-colors hover:bg-green-500 flex items-center" 
-              title="Green Core"
-            >
-              <img src="/images/core-green.png" class="w-6 h-6 p-[2px]" />
-              <span v-if="isCoreActive('powercoreGreen') && props.data.features?.powercoreTimerGreen" class="ml-1 text-[10px] font-mono">
-                {{ formatTimer(props.data.features.powercoreTimerGreen) }}
-              </span>
-            </button>
-            <button 
-              @click.stop="toggleFeature('powercoreBlue')" 
-              :class="[
-                isCoreActive('powercoreBlue') ? 'bg-blue-600' : 'bg-gray-700',
-                activeEditingCore === 'powercoreBlue' ? 'ring-1 ring-white' : ''
-              ]" 
-              class="text-white rounded p-1 leading-none transition-colors hover:bg-blue-500 flex items-center" 
-              title="Blue Core"
-            >
-              <img src="/images/core-blue.png" class="w-6 h-6 p-[2px]" />
-              <span v-if="isCoreActive('powercoreBlue') && props.data.features?.powercoreTimerBlue" class="ml-1 text-[10px] font-mono">
-                {{ formatTimer(props.data.features.powercoreTimerBlue) }}
-              </span>
-            </button>
-            <button 
-              @click.stop="toggleFeature('powercorePurple')" 
-              :class="[
-                isCoreActive('powercorePurple') ? 'bg-purple-600' : 'bg-gray-700',
-                activeEditingCore === 'powercorePurple' ? 'ring-1 ring-white' : ''
-              ]" 
-              class="text-white rounded p-1 leading-none transition-colors hover:bg-purple-500 flex items-center" 
-              title="Purple Core"
-            >
-              <img src="/images/core-purple.png" class="w-6 h-6 p-[2px]" />
-              <span v-if="isCoreActive('powercorePurple') && props.data.features?.powercoreTimerPurple" class="ml-1 text-[10px] font-mono">
-                {{ formatTimer(props.data.features.powercoreTimerPurple) }}
-              </span>
-            </button>
-          </div>
+          <ZoneCores 
+            :features="props.data.features"
+            :active-editing-core="activeEditingCore"
+            :now="now"
+            @toggle="toggleFeature"
+          />
 
-          <!-- Timer -->
-          <Transition name="slide">
-            <div v-if="activeEditingCore" class="mt-1.5 flex justify-center items-center gap-1 overflow-hidden">
-              <input 
-                ref="timerInputRef"
-                type="text" 
-                v-model="timerValue"
-                @focus="onTimerFocus"
-                @blur="onTimerBlur"
-                @keydown.enter="saveTimer"
-                :placeholder="activeEditingCore ? 'MM:SS' : 'Select core'"
-                :disabled="!activeEditingCore"
-                :class="[
-                  'nodrag bg-gray-900 text-white text-[11px] w-14 text-center border rounded py-0.5 outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-colors',
-                  isTimerTooLong ? 'border-red-500 text-red-500' : 'border-gray-600 focus:border-blue-400'
-                ]"
-                @click.stop
-              />
-              <button 
-                @click.stop="saveTimer"
-                :disabled="!activeEditingCore || (!isTimerValid && timerValue !== '') || isTimerTooLong"
-                class="nodrag bg-gray-700 hover:bg-gray-600 text-white rounded px-1.5 py-0.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Save Timer"
-              >
-                ↵
-              </button>
-              <button 
-                @click.stop="clearTimer"
-                :disabled="!activeEditingCore"
-                class="nodrag bg-gray-700 hover:bg-gray-600 text-white rounded px-1.5 py-0.5 text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Clear Timer"
-              >
-                ✕
-              </button>
-            </div>
-          </Transition>
+          <ZoneCoreTimer 
+            ref="timerComponentRef"
+            v-model="timerValue"
+            :active-editing-core="activeEditingCore"
+            :is-timer-too-long="isTimerTooLong"
+            :is-timer-valid="isTimerValid"
+            @save="saveTimer"
+            @clear="clearTimer"
+            @focus="onTimerFocus"
+            @blur="onTimerBlur"
+          />
         </div>
 
         <!-- Reds and other features -->
         <div class="flex items-center justify-center gap-1.5 mt-2">
-          <button 
-            @click.stop="toggleReds" 
-            :class="[
-              (props.data.features?.reds !== undefined || isRedsOpen) ? 'bg-red-700 border-red-400' : 'bg-gray-700 border-transparent',
-              'text-white rounded p-1 border leading-none transition-all hover:opacity-80 flex items-center justify-center overflow-hidden gap-0'
-            ]" 
-            title="Reds"
-          >
-            <img src="/images/reds.png" class="w-6 h-6 p-[2px]" alt="Reds" />
-            <Transition name="slide-right">
-              <input 
-                v-if="isRedsOpen || props.data.features?.reds !== undefined"
-                ref="redsInputRef"
-                type="number"
-                v-model="redsValue"
-                @input="saveReds"
-                @click.stop
-                class="nodrag bg-transparent text-white text-[14px] w-4 text-center border-none outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none leading-none p-0"
-                placeholder="0"
-              />
-            </Transition>
-          </button>
+          <ZoneReds 
+            :reds="props.data.features?.reds"
+            v-model:is-open="isRedsOpen"
+            @update:reds="updateReds"
+          />
           
-          <button @click.stop="toggleFeature('crystalCreaturePresent')" :class="props.data.features?.crystalCreaturePresent ? 'bg-gray-600 border-white' : 'bg-gray-700 border-transparent'" class="text-white rounded p-1 border leading-none transition-colors flex items-center justify-center hover:opacity-80" title="Crystal Creature">
-            <img src="/images/crystal.png" class="w-6 h-6 p-[2px]" alt="Crystal" />
-          </button>
+          <ZoneFeatureToggle 
+            type="crystalCreaturePresent"
+            :active="!!props.data.features?.crystalCreaturePresent"
+            title="Crystal Creature"
+            @toggle="toggleFeature('crystalCreaturePresent')"
+          />
 
-          <button @click.stop="toggleFeature('chest')" :class="props.data.features?.chest ? 'bg-gray-600 border-white' : 'bg-gray-700 border-transparent'" class="text-white rounded p-1 border leading-none transition-colors hover:opacity-80 flex items-center justify-center" title="Chests">
-            <img src="/images/chest.png" class="w-6 h-6 p-[2px]" alt="Chest" />
-          </button>
+          <ZoneFeatureToggle 
+            type="chest"
+            :active="!!props.data.features?.chest"
+            title="Chests"
+            @toggle="toggleFeature('chest')"
+          />
         </div>
 
         <!-- Resources -->
         <div class="flex items-center justify-center gap-1.5 mt-2">
-          <button @click.stop="toggleFeature('resourceFibre')" :class="props.data.features?.resourceFibre ? 'bg-gray-600 border-white' : 'bg-gray-700 border-transparent'" class="text-white rounded p-1 border leading-none transition-colors hover:opacity-80 flex items-center justify-center" title="Fibre">
-            <img src="/images/resource-fibre.png" class="w-6 h-6 p-[2px]" alt="Fibre" />
-          </button>
-          <button @click.stop="toggleFeature('resourceLeather')" :class="props.data.features?.resourceLeather ? 'bg-gray-600 border-white' : 'bg-gray-700 border-transparent'" class="text-white rounded p-1 border leading-none transition-colors hover:opacity-80 flex items-center justify-center" title="Leather">
-            <img src="/images/resource-leather.png" class="w-6 h-6 p-[2px]" alt="Leather" />
-          </button>
-          <button @click.stop="toggleFeature('resourceOre')" :class="props.data.features?.resourceOre ? 'bg-gray-600 border-white' : 'bg-gray-700 border-transparent'" class="text-white rounded p-1 border leading-none transition-colors hover:opacity-80 flex items-center justify-center" title="Ore">
-            <img src="/images/resource-ore.png" class="w-6 h-6 p-[2px]" alt="Ore" />
-          </button>
-          <button @click.stop="toggleFeature('resourceStone')" :class="props.data.features?.resourceStone ? 'bg-gray-600 border-white' : 'bg-gray-700 border-transparent'" class="text-white rounded p-1 border leading-none transition-colors hover:opacity-80 flex items-center justify-center" title="Stone">
-            <img src="/images/resource-stone.png" class="w-6 h-6 p-[2px]" alt="Stone" />
-          </button>
-          <button @click.stop="toggleFeature('resourceWood')" :class="props.data.features?.resourceWood ? 'bg-gray-600 border-white' : 'bg-gray-700 border-transparent'" class="text-white rounded p-1 border leading-none transition-colors hover:opacity-80 flex items-center justify-center" title="Wood">
-            <img src="/images/resource-wood.png" class="w-6 h-6 p-[2px]" alt="Wood" />
-          </button>
+          <ZoneFeatureToggle 
+            type="resourceFibre"
+            :active="!!props.data.features?.resourceFibre"
+            title="Fibre"
+            @toggle="toggleFeature('resourceFibre')"
+          />
+          <ZoneFeatureToggle 
+            type="resourceLeather"
+            :active="!!props.data.features?.resourceLeather"
+            title="Leather"
+            @toggle="toggleFeature('resourceLeather')"
+          />
+          <ZoneFeatureToggle 
+            type="resourceOre"
+            :active="!!props.data.features?.resourceOre"
+            title="Ore"
+            @toggle="toggleFeature('resourceOre')"
+          />
+          <ZoneFeatureToggle 
+            type="resourceStone"
+            :active="!!props.data.features?.resourceStone"
+            title="Stone"
+            @toggle="toggleFeature('resourceStone')"
+          />
+          <ZoneFeatureToggle 
+            type="resourceWood"
+            :active="!!props.data.features?.resourceWood"
+            title="Wood"
+            @toggle="toggleFeature('resourceWood')"
+          />
         </div>
       </template>
     </div>
+
+    <Handle type="source" :position="Position.Top" id="top" />
+    <Handle type="source" :position="Position.Right" id="right" />
+    <Handle type="source" :position="Position.Bottom" id="bottom" />
+    <Handle type="source" :position="Position.Left" id="left" />
   </div>
 </template>
 
@@ -439,6 +349,7 @@ function getBorderClass(type: string): string {
   width: 8px;
   height: 8px;
   background: #aaa;
+  z-index: 20;
 }
 
 @media (pointer: coarse) {
@@ -448,29 +359,4 @@ function getBorderClass(type: string): string {
   }
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.3s ease-in-out;
-  max-height: 40px;
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0 !important;
-}
-
-.slide-right-enter-active,
-.slide-right-leave-active {
-  transition: all 0.3s ease-in-out;
-  max-width: 50px;
-  overflow: hidden;
-}
-
-.slide-right-enter-from,
-.slide-right-leave-to {
-  max-width: 0;
-  opacity: 0;
-}
 </style>
