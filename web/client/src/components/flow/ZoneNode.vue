@@ -20,6 +20,7 @@ const props = defineProps<NodeProps<{
   type: string; 
   features?: NodeFeatures;
   category?: string;
+  highlighted?: boolean;
 }>>();
 
 const store = useRoomStore();
@@ -301,7 +302,8 @@ function getBorderClass(type: string): string {
       :class="[
         hasReds ? '!bg-red-950 !border-red-500 red-glow' : '!bg-gray-800',
         !hasReds ? getBorderClass(props.data.type) : '',
-        props.data.isHome ? 'shadow-[0_0_10px_rgba(255,255,255,0.5)]' : ''
+        props.data.isHome ? 'shadow-[0_0_10px_rgba(255,255,255,0.5)]' : '',
+        props.data.highlighted ? 'goto-glow' : ''
       ]"
     >
       <div class="absolute z-10" :class="props.data.isHome ? '-top-[3px] -left-[3px]' : '-top-[1px] -left-[1px]'">
@@ -508,5 +510,9 @@ function getBorderClass(type: string): string {
   50% {
     box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
   }
+}
+
+.goto-glow {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5) !important;
 }
 </style>

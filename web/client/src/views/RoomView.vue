@@ -429,6 +429,12 @@ function goToNode(nodeId: string) {
     const centerY = node.position.y + (height / 2);
     setCenter(centerX, centerY, { zoom: 2, duration: 800 });
     showMobileSummary.value = false;
+
+    // Apply brief glow
+    node.data.highlighted = true;
+    setTimeout(() => {
+      node.data.highlighted = false;
+    }, 1500);
   }
 }
 
