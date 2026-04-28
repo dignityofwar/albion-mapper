@@ -3,11 +3,11 @@ import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
 import { ZoneType, NodeFeatures } from 'shared';
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../constants/ui';
-import ZoneFeatureToggle from './zone/ZoneFeatureToggle.vue';
 import ZoneTier from './zone/ZoneTier.vue';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
+import ZoneEditorTray from './zone/ZoneEditorTray.vue';
 import { useRoomStore } from '../../stores/useRoomStore';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
@@ -341,9 +341,13 @@ function getBorderClass(type: string): string {
         <!-- Editor Tray Toggle Tab -->
         <button 
           @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
-          class="w-full mt-4 py-2 transition-colors flex items-center justify-center rounded-sm"
-          :class="hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_HAS_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_DEFAULT}`"
+          class="w-full mt-2 py-1.5 transition-colors flex items-center justify-center gap-2"
+          :class="[
+            isEditorTrayOpen ? 'rounded-t-sm' : 'rounded-sm',
+            hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_HAS_REDS} text-red-400` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_DEFAULT} text-gray-400`
+          ]"
         >
+          <span class="text-[10px] uppercase font-bold">Edit Map Features</span>
           <div 
             class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent transition-transform duration-300"
             :class="[
@@ -353,80 +357,12 @@ function getBorderClass(type: string): string {
           ></div>
         </button>
 
-        <!-- Editor Tray Content -->
-        <Transition name="tray">
-          <div v-if="isEditorTrayOpen" 
-            class="mt-4 text-left space-y-4 overflow-hidden rounded px-1 py-4 transition-colors duration-300"
-            :class="hasReds ? 'bg-red-900/20' : ''"
-          >
-            <!-- Chests -->
-            <div>
-              <div class="text-[10px] uppercase text-gray-500 font-bold mb-1 px-1" title="Chests">Chests</div>
-              <div class="flex flex-wrap gap-1.5 justify-center">
-                <ZoneFeatureToggle 
-                  v-for="f in [
-                    { type: 'chest', title: 'Chests' },
-                    { type: 'treasuresGreen', title: 'Green Treasures' },
-                    { type: 'treasuresBlue', title: 'Blue Treasures' },
-                    { type: 'treasuresYellow', title: 'Yellow Treasures' }
-                  ]"
-                  :key="f.type"
-                  :type="f.type as any"
-                  :active="!!props.data.features?.[f.type as keyof NodeFeatures]"
-                  :has-reds="hasReds"
-                  :title="f.title"
-                  @toggle="toggleFeature(f.type as any)"
-                />
-              </div>
-            </div>
-            
-            <hr class="transition-colors duration-300" :class="hasReds ? 'border-red-500/50' : 'border-gray-700/50'" />
-
-            <!-- Resources -->
-            <div>
-              <div class="text-[10px] uppercase text-gray-500 font-bold mb-1 px-1" title="Resources">Resources</div>
-              <div class="flex flex-wrap gap-1.5 justify-center">
-                <ZoneFeatureToggle 
-                  v-for="f in [
-                    { type: 'resourceFibre', title: 'Fibre' },
-                    { type: 'resourceLeather', title: 'Leather' },
-                    { type: 'resourceOre', title: 'Ore' },
-                    { type: 'resourceStone', title: 'Stone' },
-                    { type: 'resourceWood', title: 'Wood' }
-                  ]"
-                  :key="f.type"
-                  :type="f.type as any"
-                  :active="!!props.data.features?.[f.type as keyof NodeFeatures]"
-                  :has-reds="hasReds"
-                  :title="f.title"
-                  @toggle="toggleFeature(f.type as any)"
-                />
-              </div>
-            </div>
-
-            <hr class="transition-colors duration-300" :class="hasReds ? 'border-red-500/50' : 'border-gray-700/50'" />
-
-            <!-- Other -->
-            <div>
-              <div class="text-[10px] uppercase text-gray-500 font-bold mb-1 px-1" title="Other">Other</div>
-              <div class="flex flex-wrap gap-1.5 justify-center pb-1">
-                <ZoneFeatureToggle 
-                  v-for="f in [
-                    { type: 'crystalCreaturePresent', title: 'Crystal Creature' },
-                    { type: 'dungeonStatic', title: 'Static Dungeon' },
-                    { type: 'dungeonGroup', title: 'Group Dungeon' }
-                  ]"
-                  :key="f.type"
-                  :type="f.type as any"
-                  :active="!!props.data.features?.[f.type as keyof NodeFeatures]"
-                  :has-reds="hasReds"
-                  :title="f.title"
-                  @toggle="toggleFeature(f.type as any)"
-                />
-              </div>
-            </div>
-          </div>
-        </Transition>
+        <ZoneEditorTray 
+          :is-open="isEditorTrayOpen"
+          :has-reds="hasReds"
+          :features="props.data.features"
+          @toggle="toggleFeature"
+        />
       </template>
     </div>
 
@@ -450,19 +386,6 @@ function getBorderClass(type: string): string {
     width: 16px;
     height: 16px;
   }
-}
-
-.tray-enter-active,
-.tray-leave-active {
-  transition: all 0.3s ease-out;
-  max-height: 500px;
-}
-
-.tray-enter-from,
-.tray-leave-to {
-  max-height: 0;
-  opacity: 0;
-  margin-top: 0;
 }
 
 .red-glow {

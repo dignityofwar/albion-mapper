@@ -37,7 +37,7 @@ defineExpose({
 
 <template>
   <div 
-    class="my-4 border-y py-4 transition-colors duration-300"
+    class="my-2 border-y py-2 transition-colors duration-300"
     :class="hasReds ? 'border-red-500' : 'border-gray-700'"
   >
     <div class="flex items-center justify-center gap-1.5">

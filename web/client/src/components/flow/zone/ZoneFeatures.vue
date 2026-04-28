@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center justify-center gap-1 mt-4">
+  <div class="flex flex-wrap items-center justify-center gap-1 mt-2 max-w-[220px] mx-auto">
     <template v-if="activeFeatures.length > 0">
       <div 
         v-for="feature in activeFeatures" 
@@ -17,7 +17,7 @@ defineProps<{
         :class="hasReds ? ZONE_BUTTON_BG_HAS_REDS : 'bg-gray-700'"
         :title="feature.title"
       >
-        <img :src="feature.icon" class="w-4 h-4 object-contain" />
+        <img :src="feature.icon" class="w-5 h-5 object-contain" />
       </div>
     </template>
     <div v-else class="bg-gray-700/20 rounded px-2 py-1 text-[10px] text-gray-400/50 italic h-[24px] flex items-center">

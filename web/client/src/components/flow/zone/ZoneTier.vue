@@ -10,6 +10,6 @@ defineProps<{
 
 <template>
   <div class="absolute z-10 -top-[1px] -left-[1px]">
-    <TagTier :tier="tier" :type="type" class="!rounded-tr-none !rounded-bl-none py-6 w-6" />
+    <TagTier :tier="tier" :type="type" class="!rounded-tr-none !rounded-bl-none py-3 w-6" />
   </div>
 </template>
