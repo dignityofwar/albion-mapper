@@ -110,7 +110,7 @@ const tooltipText = computed(() => {
         >
           <img src="/images/reds.png" class="w-6 h-6 p-[2px]" alt="Reds" />
           <Transition name="slide-right">
-            <input 
+            <input
               v-if="isOpen || isActuallyActive"
               ref="redsInputRef"
               type="text"
