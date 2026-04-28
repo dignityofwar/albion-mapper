@@ -31,6 +31,6 @@ const config = {
     :title="config[type].title"
   >
     <img :src="config[type].img" class="w-6 h-6 p-[2px]" />
-    <span v-if="label" class="mx-1 text-[10px] font-mono leading-none">{{ label }}</span>
+    <span v-if="label" class="mx-1 text-[12px] leading-none">{{ label }}</span>
   </button>
 </template>
