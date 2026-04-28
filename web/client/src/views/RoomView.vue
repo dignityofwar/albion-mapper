@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, nextTick, markRaw, provide } from 'vue';
 import { useRouter } from 'vue-router';
+// @ts-ignore
+import VueKofi from 'vue-kofi';
 import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
 import ReportForm from '../components/ReportForm.vue';
@@ -551,18 +553,14 @@ defineExpose({ flowNodes, onNodeDragStop });
       </div>
     </div>
 
-    <!-- Debug tray button -->
-    <button
-      class="fixed bottom-4 left-4 z-50 w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
-      title="Debug tray"
-      @click="showDebug = true"
-    >🐛</button>
-
-    <!-- Refresh layout button -->
-    <!-- Removed as per user request -->
-
     <!-- Tray buttons -->
     <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-4">
+      <!-- Debug tray button -->
+      <button
+        class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
+        title="Debug tray"
+        @click="showDebug = true"
+      >🐛</button>
       <!-- Active Cores button (mobile only) -->
       <button
         v-if="hasAnySummaryItems"
@@ -624,6 +622,10 @@ defineExpose({ flowNodes, onNodeDragStop });
         </button>
       </div>
     </Transition>
+    <!-- Ko-fi button -->
+    <div class="fixed bottom-4 left-4 z-50">
+      <VueKofi uid="K3K5156KXP" color="#302f86" text="Tip the Navigator!" />
+    </div>
   </div>
 </template>
 
