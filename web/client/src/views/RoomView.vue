@@ -9,6 +9,7 @@ import DebugTray from '../components/DebugTray.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ActiveCoreSummary from '../components/flow/zone/ActiveCoreSummary.vue';
+import RoomSummaryToolbar from '../components/flow/zone/RoomSummaryToolbar.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
@@ -338,10 +339,52 @@ const activeCores = computed(() => {
   return cores.sort((a, b) => a.expiresAt - b.expiresAt);
 });
 
+const activeCrystals = computed(() => {
+  return flowNodes.value
+    .filter(node => node.data.features?.crystalCreaturePresent)
+    .map(node => ({ zoneId: node.id, zoneName: node.data.zoneName }))
+    .sort((a, b) => a.zoneName.localeCompare(b.zoneName));
+});
+
+const activeDungeons = computed(() => {
+  const dungeons: { zoneId: string; zoneName: string; type: 'static' | 'group' }[] = [];
+  flowNodes.value.forEach(node => {
+    const f = node.data.features;
+    if (!f) return;
+    if (f.dungeonStatic) dungeons.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'static' });
+    if (f.dungeonGroup) dungeons.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'group' });
+  });
+  return dungeons.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
+});
+
+const activeChests = computed(() => {
+  const result: { zoneId: string; zoneName: string; type: 'green' | 'blue' | 'yellow' | 'chest' }[] = [];
+  flowNodes.value.forEach(node => {
+    const f = node.data.features;
+    if (!f) return;
+    if (f.treasuresGreen) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'green' });
+    if (f.treasuresBlue) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'blue' });
+    if (f.treasuresYellow) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'yellow' });
+    if (f.chest) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'chest' });
+  });
+  return result.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
+});
+
+const hasAnySummaryItems = computed(() => {
+  return activeCores.value.length > 0 || 
+         activeCrystals.value.length > 0 || 
+         activeDungeons.value.length > 0 || 
+         activeChests.value.length > 0;
+});
+
 function goToNode(nodeId: string) {
   const node = flowNodes.value.find(n => n.id === nodeId);
   if (node) {
-    setCenter(node.position.x + 70, node.position.y + 40, { zoom: 1.2, duration: 800 });
+    const width = node.dimensions?.width || 140;
+    const height = node.dimensions?.height || 80;
+    const centerX = node.position.x + (width / 2);
+    const centerY = node.position.y + (height / 2);
+    setCenter(centerX, centerY, { zoom: 2, duration: 800 });
     showMobileSummary.value = false;
   }
 }
@@ -431,21 +474,15 @@ defineExpose({ flowNodes, onNodeDragStop });
         <Controls />
       </VueFlow>
 
-      <!-- Core Summary (Desktop) -->
-      <div v-if="activeCores.length > 0" class="absolute top-4 right-4 z-40 hidden md:flex flex-col gap-2 w-64 pointer-events-none">
-        <div class="bg-gray-900/90 border border-gray-700 rounded-lg p-3 shadow-xl backdrop-blur-sm pointer-events-auto">
-          <div class="text-sm uppercase text-gray-400 font-bold mb-3 px-1 flex items-center justify-between">
-            <span>Active Cores</span>
-            <span class="bg-gray-800 text-xs px-2 py-0.5 rounded text-gray-300">{{ activeCores.length }}</span>
-          </div>
-          <div class="max-h-[400px] overflow-y-auto pr-1">
-            <ActiveCoreSummary 
-              :cores="activeCores" 
-              compact 
-              @select="goToNode"
-            />
-          </div>
-        </div>
+      <!-- Summary Toolbar (Desktop) -->
+      <div v-if="hasAnySummaryItems" class="absolute top-4 right-4 z-40 hidden md:flex pointer-events-none">
+        <RoomSummaryToolbar 
+          :cores="activeCores"
+          :crystals="activeCrystals"
+          :dungeons="activeDungeons"
+          :chests="activeChests"
+          @select="goToNode"
+        />
       </div>
     </div>
 
@@ -463,9 +500,9 @@ defineExpose({ flowNodes, onNodeDragStop });
     <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-4">
       <!-- Active Cores button (mobile only) -->
       <button
-        v-if="activeCores.length > 0"
+        v-if="hasAnySummaryItems"
         class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 border border-indigo-400 text-xl shadow-lg md:hidden"
-        title="Active Cores"
+        title="Room Summary"
         @click="showMobileSummary = true"
       >
         <img src="/images/core-green.png" class="w-8 h-8 p-[2px]" />
@@ -482,26 +519,21 @@ defineExpose({ flowNodes, onNodeDragStop });
       <RoomSettings tray class="md:hidden" />
     </div>
 
-    <!-- Mobile Core Summary Modal -->
     <Transition name="toast">
       <div v-if="showMobileSummary" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 md:hidden" @click.self="showMobileSummary = false">
-        <div class="bg-gray-900 border border-gray-700 rounded-xl shadow-xl w-full max-w-sm flex flex-col max-h-[80vh]">
-          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700">
-            <div class="flex items-center gap-2">
-              <h2 class="text-base font-bold uppercase text-gray-400">Active Cores</h2>
-              <span class="bg-gray-800 text-xs px-2 py-0.5 rounded text-gray-300">{{ activeCores.length }}</span>
-            </div>
+        <div class="bg-gray-900 border border-gray-700 rounded-xl shadow-xl w-full max-w-lg flex flex-col max-h-[90vh]">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-gray-900 rounded-t-xl sticky top-0 z-10">
+            <h2 class="text-base font-bold uppercase text-gray-400">Room Summary</h2>
             <button class="text-gray-400 hover:text-white text-xl leading-none" @click="showMobileSummary = false">&times;</button>
           </div>
-          <div class="flex-1 overflow-y-auto p-3">
-            <ActiveCoreSummary 
-              v-if="activeCores.length > 0"
-              :cores="activeCores" 
-              @select="goToNode"
-            />
-            <div v-else class="text-center py-8 text-gray-500">
-              No active cores
-            </div>
+          <div class="flex-1 overflow-y-auto p-4">
+             <RoomSummaryToolbar 
+                :cores="activeCores"
+                :crystals="activeCrystals"
+                :dungeons="activeDungeons"
+                :chests="activeChests"
+                @select="goToNode"
+              />
           </div>
         </div>
       </div>
