@@ -49,10 +49,20 @@ export interface NodePosition {
 }
 
 export interface NodeFeatures {
-  enemySighted?: boolean;
+  reds?: number;
   powercoreBlue?: boolean;
   powercorePurple?: boolean;
   powercoreGreen?: boolean;
+  powercoreTimerGreen?: number; // Expiration timestamp in ms
+  powercoreTimerBlue?: number;  // Expiration timestamp in ms
+  powercoreTimerPurple?: number; // Expiration timestamp in ms
+  crystalCreaturePresent?: boolean;
+  chest?: boolean;
+  resourceFibre?: boolean;
+  resourceLeather?: boolean;
+  resourceOre?: boolean;
+  resourceStone?: boolean;
+  resourceWood?: boolean;
 }
 
 export type ConnectionStatus = 'active' | 'expired';

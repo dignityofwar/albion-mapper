@@ -53,7 +53,7 @@ describe('useRoomStore', () => {
       { zoneId: 'z2', x: 10, y: 10 }
     ];
 
-    const features = { enemySighted: true, powercoreGreen: true };
+    const features = { reds: 5, powercoreGreen: true };
     store.updateNodeFeatures('z1', features);
 
     // Verify local state update (optimistic)

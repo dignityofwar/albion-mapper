@@ -25,6 +25,7 @@ const router = useRouter();
 
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
+const toastType = ref<'info' | 'error'>('info');
 const lastUpdateFlash = ref(false);
 let flashTimeout: ReturnType<typeof setTimeout> | null = null;
 const initialUpdateCount = ref(0);
@@ -81,14 +82,18 @@ async function copyShareUrl() {
   showToast('Copied to clipboard!');
 }
 
-function showToast(msg: string) {
+function showToast(msg: string, type: 'info' | 'error' = 'info') {
   toast.value = msg;
+  toastType.value = type;
   if (toastTimeout) clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => (toast.value = ''), 5000);
 }
 
+provide('showToast', showToast);
+
 // ── Countdown ticker ─────────────────────────────────────────────────────────
 const now = ref(Date.now());
+provide('globalNow', now);
 const ticker = setInterval(() => (now.value = Date.now()), 1000);
 onUnmounted(() => {
   clearInterval(ticker);
@@ -99,7 +104,7 @@ onUnmounted(() => {
 
 
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
-const { fitView, updateNode } = useVueFlow();
+const { fitView, updateNode, setCenter } = useVueFlow();
 const openPopoverId = ref<string | null>(null);
 provide('openPopoverId', openPopoverId);
 
@@ -174,7 +179,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
             const parentPos = positions.find(np => np.zoneId === parentNodeId);
             if (parentPos) {
                 const homePos = positions.find(np => np.zoneId === homeZoneId.value);
-                const direction = parentPos.x >= (homePos?.x ?? 0) ? 300 : -300;
+                const direction = parentPos.x >= (homePos?.x ?? 0) ? 350 : -350;
                 let newX = parentPos.x + direction;
                 let newY = parentPos.y;
                     
@@ -298,6 +303,7 @@ watch(now, () => {
   });
 });
 const showDebug = ref(false);
+const showMobileSummary = ref(false);
 
 // ── Actions ──────────────────────────────────────────────────────────────────
 function onNodeDragStop() {
@@ -311,6 +317,40 @@ function onNodeDragStop() {
 }
 
 const reportForm = ref<InstanceType<typeof ReportForm> | null>(null);
+
+const activeCores = computed(() => {
+  const cores: { zoneId: string; zoneName: string; type: string; expiresAt: number; coreType: 'green' | 'blue' | 'purple' }[] = [];
+  flowNodes.value.forEach(node => {
+    const features = node.data.features as NodeFeatures | undefined;
+    if (!features) return;
+    
+    if (features.powercoreTimerGreen && features.powercoreTimerGreen > now.value) {
+      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerGreen, coreType: 'green' });
+    }
+    if (features.powercoreTimerBlue && features.powercoreTimerBlue > now.value) {
+      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerBlue, coreType: 'blue' });
+    }
+    if (features.powercoreTimerPurple && features.powercoreTimerPurple > now.value) {
+      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerPurple, coreType: 'purple' });
+    }
+  });
+  return cores.sort((a, b) => a.expiresAt - b.expiresAt);
+});
+
+function formatTimerMMSS(expiresAtMs: number): string {
+  const remaining = Math.max(0, Math.floor((expiresAtMs - now.value) / 1000));
+  const m = Math.floor(remaining / 60);
+  const s = remaining % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function goToNode(nodeId: string) {
+  const node = flowNodes.value.find(n => n.id === nodeId);
+  if (node) {
+    setCenter(node.position.x + 70, node.position.y + 40, { zoom: 1.2, duration: 800 });
+    showMobileSummary.value = false;
+  }
+}
 
 function handleSuccess(msg: string) {
   showToast(msg);
@@ -362,7 +402,7 @@ defineExpose({ flowNodes, onNodeDragStop });
         <h1 v-if="roomTitle" class="text-2xl font-bold text-gray-200 truncate leading-none min-w-0 pointer-events-auto" :title="roomTitle" data-testid="room-title-desktop">{{ roomTitle }}</h1>
       </div>
 
-      <ReportForm ref="reportForm" @success="handleSuccess" @error="showToast" />
+      <ReportForm ref="reportForm" @success="handleSuccess" @error="msg => showToast(msg, 'error')" />
     </div>
 
     <!-- WS status bar (always visible) -->
@@ -396,6 +436,32 @@ defineExpose({ flowNodes, onNodeDragStop });
         <Background />
         <Controls />
       </VueFlow>
+
+      <!-- Core Summary (Desktop) -->
+      <div v-if="activeCores.length > 0" class="absolute top-4 right-4 z-40 hidden md:flex flex-col gap-2 w-64 pointer-events-none">
+        <div class="bg-gray-900/90 border border-gray-700 rounded-lg p-3 shadow-xl backdrop-blur-sm pointer-events-auto">
+          <div class="text-sm uppercase text-gray-400 font-bold mb-3 px-1 flex items-center justify-between">
+            <span>Active Cores</span>
+            <span class="bg-gray-800 text-xs px-2 py-0.5 rounded text-gray-300">{{ activeCores.length }}</span>
+          </div>
+          <div class="flex flex-col gap-1.5 max-h-[400px] overflow-y-auto pr-1">
+            <button 
+              v-for="core in activeCores" 
+              :key="`${core.zoneId}-${core.coreType}`"
+              @click="goToNode(core.zoneId)"
+              class="flex items-center justify-between gap-3 px-2.5 py-2 rounded bg-gray-800 hover:bg-gray-700 transition-colors text-left group"
+            >
+              <div class="flex items-center gap-2 min-w-0">
+                <img v-if="core.coreType === 'green'" src="/images/core-green.png" class="w-5 h-5 p-[2px]" />
+                <img v-else-if="core.coreType === 'blue'" src="/images/core-blue.png" class="w-5 h-5 p-[2px]" />
+                <img v-else-if="core.coreType === 'purple'" src="/images/core-purple.png" class="w-5 h-5 p-[2px]" />
+                <span class="text-sm truncate font-medium group-hover:text-indigo-300">{{ core.zoneName }}</span>
+              </div>
+              <span class="text-xs font-mono text-gray-300 shrink-0 bg-gray-950 px-1.5 py-0.5 rounded border border-gray-700">{{ formatTimerMMSS(core.expiresAt) }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Debug tray button -->
@@ -410,6 +476,16 @@ defineExpose({ flowNodes, onNodeDragStop });
 
     <!-- Tray buttons -->
     <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-4">
+      <!-- Active Cores button (mobile only) -->
+      <button
+        v-if="activeCores.length > 0"
+        class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 border border-indigo-400 text-xl shadow-lg md:hidden"
+        title="Active Cores"
+        @click="showMobileSummary = true"
+      >
+        <img src="/images/core-green.png" class="w-8 h-8 p-[2px]" />
+      </button>
+
       <!-- Fit view button -->
       <button
         class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
@@ -421,6 +497,40 @@ defineExpose({ flowNodes, onNodeDragStop });
       <RoomSettings tray class="md:hidden" />
     </div>
 
+    <!-- Mobile Core Summary Modal -->
+    <Transition name="toast">
+      <div v-if="showMobileSummary" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 md:hidden" @click.self="showMobileSummary = false">
+        <div class="bg-gray-900 border border-gray-700 rounded-xl shadow-xl w-full max-w-sm flex flex-col max-h-[80vh]">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700">
+            <div class="flex items-center gap-2">
+              <h2 class="text-base font-bold uppercase text-gray-400">Active Cores</h2>
+              <span class="bg-gray-800 text-xs px-2 py-0.5 rounded text-gray-300">{{ activeCores.length }}</span>
+            </div>
+            <button class="text-gray-400 hover:text-white text-xl leading-none" @click="showMobileSummary = false">&times;</button>
+          </div>
+          <div class="flex-1 overflow-y-auto p-3 flex flex-col gap-2">
+            <button 
+              v-for="core in activeCores" 
+              :key="`${core.zoneId}-${core.coreType}`"
+              @click="goToNode(core.zoneId)"
+              class="flex items-center justify-between gap-4 px-3 py-2 rounded-lg bg-gray-800 active:bg-gray-700 transition-colors text-left"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <img v-if="core.coreType === 'green'" src="/images/core-green.png" class="w-8 h-8 p-[2px]" />
+                <img v-else-if="core.coreType === 'blue'" src="/images/core-blue.png" class="w-8 h-8 p-[2px]" />
+                <img v-else-if="core.coreType === 'purple'" src="/images/core-purple.png" class="w-8 h-8 p-[2px]" />
+                <span class="text-sm font-bold truncate">{{ core.zoneName }}</span>
+              </div>
+              <span class="text-sm font-mono font-bold text-indigo-300 bg-gray-950 px-2 py-1 rounded border border-gray-700 shrink-0">{{ formatTimerMMSS(core.expiresAt) }}</span>
+            </button>
+            <div v-if="activeCores.length === 0" class="text-center py-8 text-gray-500">
+              No active cores
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
     <!-- Debug tray modal -->
     <DebugTray :nodes="flowNodes" :edges="flowEdges" :show="showDebug" @close="showDebug = false" />
 
@@ -428,7 +538,8 @@ defineExpose({ flowNodes, onNodeDragStop });
     <Transition name="toast">
       <div
         v-if="toast"
-        class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-gray-800 border border-gray-600 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3"
+        class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
+        :class="toastType === 'error' ? 'bg-red-900 border border-red-500' : 'bg-gray-800 border border-gray-600'"
       >
         <span>{{ toast }}</span>
         <button

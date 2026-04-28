@@ -63,7 +63,7 @@ describe('Node features persistence', () => {
         x: 100, 
         y: 100, 
         features: { 
-          enemySighted: true,
+          reds: 5,
           powercoreGreen: true 
         } 
       },
@@ -91,7 +91,7 @@ describe('Node features persistence', () => {
     // Verify DB calls
     expect(mockClient.query).toHaveBeenCalledWith('DELETE FROM room_node_positions WHERE room_id = $1', [roomId]);
     
-    // Verify first node features (enemySighted and powercoreGreen)
+    // Verify first node features (reds and powercoreGreen)
     expect(mockClient.query).toHaveBeenCalledWith(
       'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5)',
       expect.arrayContaining([
@@ -99,7 +99,7 @@ describe('Node features persistence', () => {
         VALID_ZONE_A, 
         100, 
         100, 
-        JSON.stringify({ enemySighted: true, powercoreGreen: true })
+        JSON.stringify({ reds: 5, powercoreGreen: true })
       ])
     );
 
@@ -126,7 +126,7 @@ describe('Node features persistence', () => {
           zone_id: VALID_ZONE_A, 
           x: 100, 
           y: 100, 
-          features: { enemySighted: true, powercoreGreen: true } 
+          features: { reds: 5, powercoreGreen: true } 
         }
     ] }); // node positions
 
@@ -143,7 +143,7 @@ describe('Node features persistence', () => {
 
     const syncMsg = messages.find(m => m.type === 'sync');
     expect(syncMsg).toBeDefined();
-    expect(syncMsg.nodePositions[0].features).toEqual({ enemySighted: true, powercoreGreen: true });
+    expect(syncMsg.nodePositions[0].features).toEqual({ reds: 5, powercoreGreen: true });
 
     socket.close();
   });
@@ -163,7 +163,7 @@ describe('Node features persistence', () => {
 
     // Update single node with features
     const nodePositions = [
-      { zoneId: VALID_ZONE_A, x: 0, y: 0, features: { enemySighted: true } }
+      { zoneId: VALID_ZONE_A, x: 0, y: 0, features: { reds: 5 } }
     ];
 
     const mockClient = await mockDb.connect();
@@ -178,7 +178,7 @@ describe('Node features persistence', () => {
     expect(mockClient.query).toHaveBeenCalledWith('DELETE FROM room_node_positions WHERE room_id = $1', [roomId]);
     expect(mockClient.query).toHaveBeenCalledWith(
       'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5)',
-      expect.arrayContaining([roomId, VALID_ZONE_A, 0, 0, JSON.stringify({ enemySighted: true })])
+      expect.arrayContaining([roomId, VALID_ZONE_A, 0, 0, JSON.stringify({ reds: 5 })])
     );
 
     socket.close();

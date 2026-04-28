@@ -14,7 +14,7 @@ export const getTierClasses = (zoneType: ZoneType): string => {
   if (zoneType === 'royalBlue') return 'bg-blue-700';
   if (zoneType === 'royalYellow') return 'bg-yellow-700';
   if (zoneType === 'royalRed') return 'bg-red-700';
-  if (zoneType === 'outlands' || zoneType === 'roads' || zoneType === 'roadsHideout') return 'bg-black border border-gray-500';
+  if (zoneType === 'outlands' || zoneType === 'roads' || zoneType === 'roadsHideout') return 'bg-[#1f1f1f] border border-gray-500';
 
   return 'bg-gray-700';
 };

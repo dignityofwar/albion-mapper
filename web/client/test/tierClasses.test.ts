@@ -14,9 +14,9 @@ describe('getTierClasses', () => {
     expect(getTierClasses('royalRed')).toBe('bg-red-700');
   });
 
-  it('returns black for Outlands/Roads', () => {
-    expect(getTierClasses('outlands')).toBe('bg-black border border-gray-500');
-    expect(getTierClasses('roads')).toBe('bg-black border border-gray-500');
-    expect(getTierClasses('roadsHideout')).toBe('bg-black border border-gray-500');
+  it('returns dark gray for Outlands/Roads', () => {
+    expect(getTierClasses('outlands')).toBe('bg-[#1f1f1f] border border-gray-500');
+    expect(getTierClasses('roads')).toBe('bg-[#1f1f1f] border border-gray-500');
+    expect(getTierClasses('roadsHideout')).toBe('bg-[#1f1f1f] border border-gray-500');
   });
 });
