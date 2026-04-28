@@ -84,6 +84,9 @@ export const useRoomStore = defineStore('room', () => {
       
       case 'node_positions_updated':
         nodePositions.value = msg.nodePositions;
+        if (msg.updateLastUpdated) {
+          lastUpdate.value = new Date();
+        }
         break;
     }
   }
@@ -156,9 +159,10 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   function resetNodePositions() {
+    nodePositions.value = []; // Optimistic update
+    lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: [] }));
-      nodePositions.value = []; // Optimistic update
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: [], updateLastUpdated: true }));
     }
   }
 
@@ -168,8 +172,9 @@ export const useRoomStore = defineStore('room', () => {
     const newNodePositions = [...nodePositions.value];
     newNodePositions[index] = { ...newNodePositions[index], features };
     nodePositions.value = newNodePositions;
+    lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value }));
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value, updateLastUpdated: true }));
     }
   }
 

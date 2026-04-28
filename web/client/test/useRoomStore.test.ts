@@ -60,7 +60,7 @@ describe('useRoomStore', () => {
     expect(store.nodePositions[0].features).toEqual(features);
   });
 
-  it('should NOT update lastUpdate when node positions are updated', () => {
+  it('should NOT update lastUpdate when node positions are updated (default reason)', () => {
     const store = useRoomStore();
     const initialDate = new Date('2026-04-28T10:00:00Z');
     store.lastUpdate = initialDate;
@@ -70,7 +70,7 @@ describe('useRoomStore', () => {
     expect(store.lastUpdate).toBe(initialDate);
   });
 
-  it('should NOT update lastUpdate when node_positions_updated message is received', () => {
+  it('should NOT update lastUpdate when node_positions_updated message is received without flag', () => {
     const store = useRoomStore();
     const initialDate = new Date('2026-04-28T10:00:00Z');
     store.lastUpdate = initialDate;
@@ -81,5 +81,30 @@ describe('useRoomStore', () => {
     });
     
     expect(store.lastUpdate).toBe(initialDate);
+  });
+
+  it('should update lastUpdate when updateNodeFeatures is called', () => {
+    const store = useRoomStore();
+    const initialDate = new Date('2026-04-28T10:00:00Z');
+    store.lastUpdate = initialDate;
+    store.nodePositions = [{ zoneId: 'z1', x: 0, y: 0 }];
+    
+    store.updateNodeFeatures('z1', { reds: 5 });
+    
+    expect(store.lastUpdate).not.toBe(initialDate);
+  });
+
+  it('should update lastUpdate when node_positions_updated message is received with updateLastUpdated flag', () => {
+    const store = useRoomStore();
+    const initialDate = new Date('2026-04-28T10:00:00Z');
+    store.lastUpdate = initialDate;
+    
+    store.applyMessage({
+      type: 'node_positions_updated',
+      nodePositions: [{ zoneId: 'z1', x: 100, y: 100 }],
+      updateLastUpdated: true
+    });
+    
+    expect(store.lastUpdate).not.toBe(initialDate);
   });
 });

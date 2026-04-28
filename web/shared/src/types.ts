@@ -175,10 +175,10 @@ export type ServerMessage =
   | { type: 'connection_expired'; connectionId: string }
   | { type: 'room_updated'; homeZoneId: string }
   | { type: 'room_reset' }
-  | { type: 'node_positions_updated'; nodePositions: NodePosition[] }
+  | { type: 'node_positions_updated'; nodePositions: NodePosition[]; updateLastUpdated?: boolean }
   | { type: 'error'; message: string };
 
 export type ClientMessage =
   | { type: 'auth'; token: string }
   | { type: 'ping' }
-  | { type: 'update_node_positions'; nodePositions: NodePosition[] };
+  | { type: 'update_node_positions'; nodePositions: NodePosition[]; updateLastUpdated?: boolean };

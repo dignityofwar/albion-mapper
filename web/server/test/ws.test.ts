@@ -188,4 +188,73 @@ describe('WebSocket authentication', () => {
     ws1.close();
     ws2.close();
   });
+
+  it('updates rooms.updated_at when updateLastUpdated is true in update_node_positions', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId, home_zone_id: VALID_ZONE_A, created_at: new Date().toISOString() }] }); // room sync
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections sync
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // node positions sync
+
+    const mockClient = {
+      query: vi.fn().mockImplementation((q) => {
+        if (q.includes('SELECT home_zone_id FROM rooms')) return { rows: [{ home_zone_id: VALID_ZONE_A }] };
+        if (q.includes('SELECT x, y FROM room_node_positions')) return { rows: [{ x: 0, y: 0 }] };
+        return { rows: [], rowCount: 0 };
+      }),
+      release: vi.fn(),
+    };
+    mockDb.connect.mockResolvedValue(mockClient);
+
+    await app.listen({ port: 0 });
+    const { socket } = await connectWs(roomId);
+    socket.send(JSON.stringify({ type: 'auth', token }));
+    await new Promise((r) => setTimeout(r, 100)); // wait for sync
+
+    socket.send(JSON.stringify({ 
+      type: 'update_node_positions', 
+      nodePositions: [{ zoneId: VALID_ZONE_A, x: 10, y: 10, features: { reds: 1 } }],
+      updateLastUpdated: true 
+    }));
+
+    await new Promise((r) => setTimeout(r, 200));
+
+    // Check if rooms table was updated
+    const updateCall = mockClient.query.mock.calls.find(call => call[0].includes('UPDATE rooms SET updated_at'));
+    expect(updateCall).toBeDefined();
+
+    socket.close();
+  });
+
+  it('does NOT update rooms.updated_at when updateLastUpdated is missing in update_node_positions', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId, home_zone_id: VALID_ZONE_A, created_at: new Date().toISOString() }] }); // room sync
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections sync
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // node positions sync
+
+    const mockClient = {
+      query: vi.fn().mockImplementation((q) => {
+        if (q.includes('SELECT home_zone_id FROM rooms')) return { rows: [{ home_zone_id: VALID_ZONE_A }] };
+        if (q.includes('SELECT x, y FROM room_node_positions')) return { rows: [{ x: 0, y: 0 }] };
+        return { rows: [], rowCount: 0 };
+      }),
+      release: vi.fn(),
+    };
+    mockDb.connect.mockResolvedValue(mockClient);
+
+    await app.listen({ port: 0 });
+    const { socket } = await connectWs(roomId);
+    socket.send(JSON.stringify({ type: 'auth', token }));
+    await new Promise((r) => setTimeout(r, 100)); // wait for sync
+
+    socket.send(JSON.stringify({ 
+      type: 'update_node_positions', 
+      nodePositions: [{ zoneId: VALID_ZONE_A, x: 10, y: 10 }]
+    }));
+
+    await new Promise((r) => setTimeout(r, 200));
+
+    // Check if rooms table was updated
+    const updateCall = mockClient.query.mock.calls.find(call => call[0].includes('UPDATE rooms SET updated_at'));
+    expect(updateCall).toBeUndefined();
+
+    socket.close();
+  });
 });
