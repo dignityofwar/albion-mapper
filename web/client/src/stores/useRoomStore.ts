@@ -234,5 +234,6 @@ export const useRoomStore = defineStore('room', () => {
     connect,
     disconnect,
     removeFromRecentRooms,
+    showDefaultHandles,
   };
 });

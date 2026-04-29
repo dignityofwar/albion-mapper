@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // ── Zone types ──────────────────────────────────────────────────────────────
 
-export type ZoneType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'other';
+export type ZoneType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'roadsHideout' | 'other';
 
 export interface Zone {
   id: string;
@@ -126,6 +126,7 @@ export const ZoneTypeSchema = z.enum([
   'royalRed',
   'outlands',
   'roads',
+  'roadsHideout',
   'other',
 ]);
 

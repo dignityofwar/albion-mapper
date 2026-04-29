@@ -3,6 +3,7 @@ import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
 import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../constants/ui';
+import { connectionStyle } from '../../utils/connectionStyle.js';
 import { TooltipProvider } from 'reka-ui';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
@@ -305,10 +306,34 @@ function getHandlePosition(left: string, top: string): Position {
   const l = parseFloat(left);
   const t = parseFloat(top);
   
-  if (l >= 50 && t <= 50) return Position.Top;
+  // Points
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return Position.Top;
+  if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return Position.Right;
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return Position.Bottom;
+  if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return Position.Left;
+
+  // Diagonals
+  if (l > 50 && t < 50) return Position.Top;
   if (l > 50 && t > 50) return Position.Right;
-  if (l <= 50 && t > 50) return Position.Bottom;
+  if (l < 50 && t > 50) return Position.Bottom;
   return Position.Left;
+}
+
+function getHandleFacing(left: string, top: string): string {
+  const l = parseFloat(left);
+  const t = parseFloat(top);
+  
+  // Points
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return 'n';
+  if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
+  if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+
+  // Sides
+  if (l >= 50 && t < 50) return 'ne';
+  if (l > 50 && t >= 50) return 'se';
+  if (l <= 50 && t > 50) return 'sw';
+  return 'nw';
 }
 
 function updateReds(val: number | null | undefined) {
@@ -362,6 +387,19 @@ function getBorderBgClass(type: string): string {
   }
 }
 
+function getHandleColor(handleId: string) {
+  const connection = store.connections.find(c => 
+    (c.fromZoneId === props.id && c.fromHandleId === handleId) ||
+    (c.toZoneId === props.id && c.toHandleId === handleId)
+  );
+  if (!connection) return '#bbb';
+  
+  const remainingMs = new Date(connection.expiresAt).getTime() - now.value;
+  const isExpired = connection.isExpired || remainingMs <= 0;
+  
+  return connectionStyle(remainingMs, isExpired).stroke;
+}
+
 const customHandles = computed(() => {
   const handles = (props.data.customHandles && props.data.customHandles.length > 0)
     ? props.data.customHandles
@@ -372,7 +410,12 @@ const customHandles = computed(() => {
     .map(h => ({
       ...h,
       position: getHandlePosition(h.left, h.top),
-      style: { left: h.left, top: h.top }
+      facing: getHandleFacing(h.left, h.top),
+      style: { 
+        left: h.left, 
+        top: h.top,
+        backgroundColor: getHandleColor(h.id)
+      }
     }));
 });
 
@@ -380,7 +423,12 @@ const defaultInternalHandles = computed(() => {
   return DEFAULT_INTERNAL_HANDLES.map(h => ({
     ...h,
     position: getHandlePosition(h.left, h.top),
-    style: { left: h.left, top: h.top }
+    facing: getHandleFacing(h.left, h.top),
+    style: { 
+      left: h.left, 
+      top: h.top,
+      backgroundColor: getHandleColor(h.id)
+    }
   }));
 });
 
@@ -402,11 +450,11 @@ const defaultInternalHandles = computed(() => {
       >
       <!-- Diamond Shape Background -->
       <div 
-        class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
+        class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none z-[5]"
         :class="[hasReds ? 'bg-red-500' : getBorderBgClass(props.data.type)]"
       ></div>
       <div 
-        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none"
+        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none z-[6]"
         :class="[hasReds ? 'bg-red-950' : 'bg-gray-800']"
       ></div>
 
@@ -522,6 +570,7 @@ const defaultInternalHandles = computed(() => {
         :position="handle.position" 
         :id="handle.id" 
         :style="handle.style"
+        :data-facing="handle.facing"
       />
 
       <!-- Default internal handles for pending connections -->
@@ -532,7 +581,8 @@ const defaultInternalHandles = computed(() => {
         :position="handle.position" 
         :id="handle.id" 
         :style="handle.style"
-        :class="['!bg-orange-500 !border-orange-700 !z-30 transition-opacity duration-300', store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none']"
+        :data-facing="handle.facing"
+        :class="['!border-orange-700 !border-b-2 !z-30 transition-opacity duration-300', store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none']"
       />
 
       <!-- Legacy center handle for backward compatibility -->
@@ -549,19 +599,19 @@ const defaultInternalHandles = computed(() => {
 
 <style scoped>
 :deep(.vue-flow__handle) {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
   background: #bbb;
   border: 2px solid #222;
   border-radius: 50%;
-  z-index: 20;
-  transition: background-color 0.2s;
+  z-index: 0;
+  transition: background-color 0.2s, border-color 0.2s;
   transform: translate(-50%, -50%);
 }
 
 :deep(.vue-flow__handle:hover) {
   background: #fff;
-  border-color: #000;
+  border-color: #fff;
 }
 
 @media (pointer: coarse) {

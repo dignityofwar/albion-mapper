@@ -18,6 +18,7 @@ vi.mock('@vue-flow/core', () => ({
     addEdges: vi.fn(),
   }),
   ConnectionMode: { Loose: 'loose' },
+  Position: { Top: 'top', Right: 'right', Bottom: 'bottom', Left: 'left' },
 }));
 
 vi.mock('@vue-flow/background', () => ({

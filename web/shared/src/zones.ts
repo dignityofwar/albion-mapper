@@ -104,6 +104,23 @@ export const DEFAULT_INTERNAL_HANDLES: CustomHandle[] = [
   { id: 'default-sw', left: '25%', top: '75%' },
 ];
 
+export function getHandleFacing(left: string, top: string): string {
+  const l = parseFloat(left);
+  const t = parseFloat(top);
+  
+  // Points
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return 'n';
+  if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
+  if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+
+  // Sides
+  if (l >= 50 && t < 50) return 'ne';
+  if (l > 50 && t >= 50) return 'se';
+  if (l <= 50 && t > 50) return 'sw';
+  return 'nw';
+}
+
 const isRoadsHome = (name: string) => /^[^-\s]+-[^-\s]+-[^-\s]+$/.test(name);
 
 export function getZoneCategory(name: string, type: string): string | undefined {

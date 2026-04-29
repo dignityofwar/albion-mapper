@@ -16,6 +16,7 @@ vi.mock('@vue-flow/core', () => ({
   ConnectionMode: { Loose: 'loose' },
   BaseEdge: { template: '<div></div>' },
   EdgeLabelRenderer: { template: '<div><slot /></div>' },
+  Position: { Top: 'top', Right: 'right', Bottom: 'bottom', Left: 'left' },
 }));
 
 vi.mock('vue-router', () => ({

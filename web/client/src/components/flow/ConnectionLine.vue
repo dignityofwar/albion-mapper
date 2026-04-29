@@ -2,17 +2,34 @@
 import { computed } from 'vue';
 import type { ConnectionLineProps } from '@vue-flow/core';
 import { getConnectionPath } from '../../utils/connectionPath.js';
+import { getHandleFacing, getDefaultHandles, DEFAULT_INTERNAL_HANDLES } from 'shared';
 
 const props = defineProps<ConnectionLineProps & { isOccupied?: boolean }>();
 
 const path = computed(() => {
+  const findFacing = (node: any, handleId: string) => {
+    const handles = [
+      ...(node.data.customHandles || []),
+      ...DEFAULT_INTERNAL_HANDLES,
+      ...getDefaultHandles(node.data.mapShape)
+    ];
+    const h = handles.find(h => h.id === handleId);
+    if (h) return getHandleFacing(h.left, h.top);
+    return undefined;
+  };
+
+  const sourceFacing = props.sourceHandle?.id ? findFacing(props.sourceNode, props.sourceHandle.id) : undefined;
+  const targetFacing = (props.targetNode && props.targetHandle?.id) ? findFacing(props.targetNode, props.targetHandle.id) : undefined;
+
   const [d] = getConnectionPath({
     sourceX: props.sourceX,
     sourceY: props.sourceY,
     targetX: props.targetX,
     targetY: props.targetY,
-    sourcePosition: props.sourcePosition,
-    targetPosition: props.targetPosition,
+    sourcePosition: sourceFacing || props.sourcePosition,
+    targetPosition: targetFacing || props.targetPosition,
+    sourceHandleId: props.sourceHandle?.id,
+    targetHandleId: props.targetHandle?.id,
   });
   return d;
 });

@@ -13,6 +13,7 @@ vi.mock('@vue-flow/core', () => ({
   }),
   VueFlow: { template: '<div><slot /></div>' },
   ConnectionMode: { Loose: 'loose' },
+  Position: { Top: 'top', Right: 'right', Bottom: 'bottom', Left: 'left' },
 }));
 
 vi.mock('vue-router', () => ({

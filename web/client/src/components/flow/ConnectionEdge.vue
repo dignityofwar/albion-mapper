@@ -16,6 +16,8 @@ type EdgeData = {
   onDeleteRecursive?: (id: string) => void;
   onUpdate?: (id: string, secondsRemaining: number) => void;
   isGhost?: boolean;
+  sourceFacing?: string;
+  targetFacing?: string;
 };
 
 const props = defineProps<EdgeProps<EdgeData>>();
@@ -85,7 +87,8 @@ const style = computed(() => {
     return {
       stroke: '#6366f1',
       strokeDasharray: '5,5',
-      animated: true
+      animated: true,
+      color: '#6366f1'
     };
   }
   return connectionStyle(remainingMs.value, isExpired.value);
@@ -101,8 +104,10 @@ const pathData = computed(() =>
     sourceY: props.sourceY,
     targetX: props.targetX,
     targetY: props.targetY,
-    sourcePosition: props.sourcePosition,
-    targetPosition: props.targetPosition,
+    sourcePosition: props.data?.sourceFacing || props.sourcePosition,
+    targetPosition: props.data?.targetFacing || props.targetPosition,
+    sourceHandleId: props.sourceHandleId,
+    targetHandleId: props.targetHandleId,
   }),
 );
 const path = computed(() => pathData.value[0]);
@@ -159,44 +164,44 @@ defineExpose({
           ✕
         </button>
         <div class="text-sm font-bold mb-2 text-center">
-          <div>{{ getZoneName(data.connection.fromZoneId) }}</div>
+          <div v-if="data?.connection">{{ getZoneName(data.connection.fromZoneId) }}</div>
           <div class="text-xs text-gray-400 font-normal">to</div>
-          <div>{{ getZoneName(data.connection.toZoneId) }}</div>
+          <div v-if="data?.connection">{{ getZoneName(data.connection.toZoneId) }}</div>
         </div>
-        <div v-if="data.connection.reportedBy" class="mb-1">
+        <div v-if="data?.connection?.reportedBy" class="mb-1">
           <span class="text-gray-400">By:</span> {{ data.connection.reportedBy }}
         </div>
-        <div class="mb-1">
+        <div v-if="data?.connection" class="mb-1">
           <span class="text-gray-400">Created:</span>
           {{ new Date(data.connection.reportedAt).toLocaleTimeString() }}
         </div>
-        <div class="mb-2">
+        <div v-if="data?.connection" class="mb-2">
           <span class="text-gray-400">Expires:</span>
           {{ new Date(data.connection.expiresAt).toLocaleTimeString() }}
           <div class="mt-2 flex items-stretch gap-1">
-            <TimeInput v-model="newSecondsRemaining" compact class="flex-1" @enter="newSecondsRemaining !== null && (data.onUpdate(id, newSecondsRemaining!), showPopover = false)" />
+            <TimeInput v-model="newSecondsRemaining" compact class="flex-1" @enter="newSecondsRemaining !== null && data?.onUpdate?.(id, newSecondsRemaining!) && (showPopover = false)" />
             <button
               :disabled="newSecondsRemaining === null"
               class="bg-indigo-700 hover:bg-indigo-600 text-white rounded px-2 flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="Update Connection"
-              @click.stop="data.onUpdate(id, newSecondsRemaining!); showPopover = false"
+              @click.stop="data?.onUpdate?.(id, newSecondsRemaining!); showPopover = false"
             >
               ↵
             </button>
           </div>
         </div>
         <div class="flex flex-col gap-2 mt-3">
-          <template v-if="data.hasChildren">
+          <template v-if="data?.hasChildren">
             <div class="flex gap-2">
               <button
                 class="flex-1 px-1 py-1.5 rounded bg-red-700 hover:bg-red-600 text-white text-[10px] font-medium leading-tight"
-                @click.stop="data.onDelete(id); showPopover = false"
+                @click.stop="data?.onDelete?.(id); showPopover = false"
               >
                 Delete
               </button>
               <button
                 class="flex-1 px-1 py-1.5 rounded bg-red-700 hover:bg-red-600 text-white text-[10px] font-medium leading-tight"
-                @click.stop="data.onDeleteRecursive(id); showPopover = false"
+                @click.stop="data?.onDeleteRecursive?.(id); showPopover = false"
               >
                 Delete this & connected
               </button>
@@ -205,7 +210,7 @@ defineExpose({
           <div v-else>
             <button
               class="w-full px-2 py-1.5 rounded bg-red-700 hover:bg-red-600 text-white text-xs font-medium"
-              @click.stop="data.onDelete(id); showPopover = false"
+              @click.stop="data?.onDelete?.(id); showPopover = false"
             >
               Delete
             </button>

@@ -7,6 +7,7 @@ export const TYPE_LABELS: Record<ZoneType, string> = {
   royalRed: 'Royal Continent',
   outlands: 'Outlands',
   roads: 'Roads',
+  roadsHideout: 'Roads Hideout',
   other: 'Other / Outlands',
 };
 

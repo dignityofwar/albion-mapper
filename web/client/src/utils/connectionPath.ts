@@ -3,50 +3,95 @@ import { getBezierPath, Position } from '@vue-flow/core';
 export interface PathParams {
   sourceX: number;
   sourceY: number;
-  sourcePosition: Position;
+  sourcePosition: Position | string;
   targetX: number;
   targetY: number;
-  targetPosition: Position;
+  targetPosition: Position | string;
+  sourceHandleId?: string | null;
+  targetHandleId?: string | null;
 }
 
-export function getConnectionPath(params: PathParams) {
-  const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition } = params;
+/**
+ * Maps Vue Flow Position (including custom strings) to the outward normal angle (in radians) of our diamond edges/points.
+ */
+const angleMap: Record<string, number> = {
+  // Diagonals (Edges)
+  'ne': -Math.PI / 4,
+  'se': Math.PI / 4,
+  'sw': (3 * Math.PI) / 4,
+  'nw': (-3 * Math.PI) / 4,
+  // Points
+  'n': -Math.PI / 2,
+  'e': 0,
+  's': Math.PI / 2,
+  'w': Math.PI,
+  
+  // Vue Flow standard positions (mapped to our diagonals)
+  [Position.Top]: -Math.PI / 4,
+  [Position.Right]: Math.PI / 4,
+  [Position.Bottom]: (3 * Math.PI) / 4,
+  [Position.Left]: (-3 * Math.PI) / 4,
+};
 
-  const dx = targetX - sourceX;
-  const dy = targetY - sourceY;
-  const distance = Math.sqrt(dx * dx + dy * dy);
+export function getConnectionPath(params: PathParams): [string, number, number, number, number] {
+  const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, sourceHandleId, targetHandleId } = params;
 
-  if (distance < 1) {
-    return getBezierPath(params);
+  // Prefer handle ID for fine-grained facing if available
+  const getFacing = (pos: string | Position, handleId?: string | null) => {
+    if (handleId) {
+      if (handleId.endsWith('-n')) return 'n';
+      if (handleId.endsWith('-e')) return 'e';
+      if (handleId.endsWith('-s')) return 's';
+      if (handleId.endsWith('-w')) return 'w';
+      if (handleId.endsWith('-ne')) return 'ne';
+      if (handleId.endsWith('-se')) return 'se';
+      if (handleId.endsWith('-sw')) return 'sw';
+      if (handleId.endsWith('-nw')) return 'nw';
+      
+      // Points for default shapes
+      if (handleId.endsWith('-top')) return 'n';
+      if (handleId.endsWith('-right')) return 'e';
+      if (handleId.endsWith('-bottom')) return 's';
+      if (handleId.endsWith('-left')) return 'w';
+    }
+    return pos as string;
+  };
+
+  const sourceFacing = getFacing(sourcePosition, sourceHandleId);
+  const targetFacing = getFacing(targetPosition, targetHandleId);
+
+  const sourceAngle = angleMap[sourceFacing];
+  const targetAngle = angleMap[targetFacing];
+
+  // If both are recognized diagonal positions, use custom Bezier exit/entry angles
+  if (sourceAngle !== undefined && targetAngle !== undefined) {
+    const dx = targetX - sourceX;
+    const dy = targetY - sourceY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // Curvature scales slightly with distance, but capped
+    const curvature = Math.min(distance * 0.25, 50);
+    
+    const c0x = sourceX + Math.cos(sourceAngle) * curvature;
+    const c0y = sourceY + Math.sin(sourceAngle) * curvature;
+    
+    const c1x = targetX + Math.cos(targetAngle) * curvature;
+    const c1y = targetY + Math.sin(targetAngle) * curvature;
+    
+    const path = `M${sourceX},${sourceY} C${c0x},${c0y} ${c1x},${c1y} ${targetX},${targetY}`;
+    
+    return [
+      path,
+      (sourceX + targetX) / 2,
+      (sourceY + targetY) / 2,
+      0, 0
+    ];
   }
 
-  // Calculate the angle of the straight line in degrees (0 to 180)
-  const absAngle = Math.abs(Math.atan2(dy, dx) * 180 / Math.PI);
-
-  // Check if the positions are "opposite" (Top-Bottom or Left-Right)
-  const isOpposite = 
-    (sourcePosition === Position.Top && targetPosition === Position.Bottom) ||
-    (sourcePosition === Position.Bottom && targetPosition === Position.Top) ||
-    (sourcePosition === Position.Left && targetPosition === Position.Right) ||
-    (sourcePosition === Position.Right && targetPosition === Position.Left);
-
-  if (isOpposite) {
-    // We want curvature to be 0 at diagonals (45°, 135°)
-    // and 20 at orthogonal angles (0°, 90°, 180°)
-    
-    const diff45 = Math.abs(absAngle - 45);
-    const diff135 = Math.abs(absAngle - 135);
-    const minDiff = Math.min(diff45, diff135);
-    
-    // Smoothly transition curvature from 0 (at 45/135 deg) to 20 (at 0/90/180 deg)
-    // We use a 22.5 degree range for the transition
-    const curvature = Math.min(20, (minDiff / 22.5) * 20);
-    
-    return getBezierPath({
-      ...params,
-      curvature
-    });
-  }
-
-  return getBezierPath(params);
+  // Fallback to default Bezier for center handle or other positions
+  return getBezierPath({
+    ...params,
+    sourcePosition: params.sourcePosition as Position,
+    targetPosition: params.targetPosition as Position,
+  });
 }

@@ -64,22 +64,20 @@ describe('ZoneNode Features and Styling', () => {
   describe('Home Zone Styling', () => {
     it('applies glow for home zones', () => {
       const wrapper = mountNode('roads', true)
-      const nodeDiv = wrapper.find('.min-w-\\[230px\\]')
+      const nodeDiv = wrapper.find('.min-w-\\[400px\\]')
       expect(nodeDiv.classes()).not.toContain('border-[3px]')
-      expect(nodeDiv.classes()).toContain('shadow-[0_0_10px_rgba(255,255,255,0.5)]')
+      expect(nodeDiv.classes()).toContain('home-glow')
     })
 
     it('does not apply 3px border for home zones', () => {
       const wrapper = mountNode('roads', true)
-      const nodeDiv = wrapper.find('.min-w-\\[230px\\]')
+      const nodeDiv = wrapper.find('.min-w-\\[400px\\]')
       expect(nodeDiv.classes()).not.toContain('border-[3px]')
     })
 
-    it('keeps TagTier badge position for home zones', () => {
+    it('renders TagTier badge for home zones', () => {
       const wrapper = mountNode('roads', true)
-      const badgeContainer = wrapper.find('.absolute.z-10')
-      expect(badgeContainer.classes()).toContain('-top-[1px]')
-      expect(badgeContainer.classes()).toContain('-left-[1px]')
+      expect(wrapper.findComponent({ name: 'TagTier' }).exists()).toBe(true)
     })
   })
 })

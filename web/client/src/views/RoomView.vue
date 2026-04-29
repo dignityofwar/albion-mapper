@@ -21,7 +21,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
 import { deleteConnection, updateConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
-import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getHandleFacing } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -163,11 +163,11 @@ function getEdgeParams(conn: Connection, currentTime: number) {
 }
 
 function computeHandles(sourceNode: any, targetNode: any, conn?: Connection) {
-  let sourceHandle = conn?.fromHandleId ?? 'center';
-  let targetHandle = conn?.toHandleId ?? 'center';
+  let sourceHandleId = conn?.fromHandleId ?? 'center';
+  let targetHandleId = conn?.toHandleId ?? 'center';
 
   // Resolve 'center' to one of 4 directional default handles
-  if (sourceHandle === 'center' || targetHandle === 'center') {
+  if (sourceHandleId === 'center' || targetHandleId === 'center') {
     const dx = targetNode.position.x - sourceNode.position.x;
     const dy = targetNode.position.y - sourceNode.position.y;
     const angle = Math.atan2(dy, dx);
@@ -181,11 +181,27 @@ function computeHandles(sourceNode: any, targetNode: any, conn?: Connection) {
       return 'default-ne';
     };
 
-    if (sourceHandle === 'center') sourceHandle = resolveDefault(deg);
-    if (targetHandle === 'center') targetHandle = resolveDefault((deg + 180) % 360);
+    if (sourceHandleId === 'center') sourceHandleId = resolveDefault(deg);
+    if (targetHandleId === 'center') targetHandleId = resolveDefault((deg + 180) % 360);
   }
 
-  return { sourceHandle, targetHandle };
+  const findFacing = (node: any, handleId: string) => {
+    const handles = [
+      ...(node.data.customHandles || []),
+      ...DEFAULT_INTERNAL_HANDLES,
+      ...getDefaultHandles(node.data.mapShape)
+    ];
+    const h = handles.find(h => h.id === handleId);
+    if (h) return getHandleFacing(h.left, h.top);
+    return undefined;
+  };
+
+  return { 
+    sourceHandle: sourceHandleId, 
+    targetHandle: targetHandleId,
+    sourceFacing: findFacing(sourceNode, sourceHandleId),
+    targetFacing: findFacing(targetNode, targetHandleId)
+  };
 }
 
 const initialRedsHandled = ref(false);
@@ -380,8 +396,11 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
       };
 
       if (sourceNode && targetNode) {
-        const handles = computeHandles(sourceNode, targetNode, conn);
-        Object.assign(edge, handles);
+        const { sourceHandle, targetHandle, sourceFacing, targetFacing } = computeHandles(sourceNode, targetNode, conn);
+        edge.sourceHandle = sourceHandle;
+        edge.targetHandle = targetHandle;
+        edge.data.sourceFacing = sourceFacing;
+        edge.data.targetFacing = targetFacing;
       }
       return edge;
     });
