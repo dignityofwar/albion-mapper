@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // ── Zone types ──────────────────────────────────────────────────────────────
 
-export type ZoneType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'roadsHideout' | 'other';
+export type ZoneType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'other';
 
 export interface Zone {
   id: string;
@@ -12,11 +12,17 @@ export interface Zone {
   ores?: string[];
   isRoadsHome?: boolean;
   category?: string;
+  mapShape?: string;
 }
 
 // ── GameMap (on-disk shape from maps.json) ──────────────────────────────────
 
-export type MapType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'roadsHideout' | 'other';
+export type MapType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'other';
+
+export interface GuaranteedContent {
+  type: string;
+  category: string;
+}
 
 export interface GameMap {
   mapID: string;
@@ -24,7 +30,14 @@ export interface GameMap {
   mapType: MapType;
   tier: number;
   category?: string;
+  isRoadsHideout?: true;
   oresAvailable?: string[];
+  mapShape?: string;
+  socketCount?: number;
+  largeSocketCount?: number;
+  smallSocketCount?: number;
+  socketCountIsMinimum?: boolean;
+  guaranteedContent?: GuaranteedContent | null;
 }
 
 // ── Connection ───────────────────────────────────────────────────────────────
@@ -34,6 +47,8 @@ export interface Connection {
   roomId: string;
   fromZoneId: string;
   toZoneId: string;
+  fromHandleId?: string;
+  toHandleId?: string;
   expiresAt: string;
   reportedAt: string;
   reportedBy?: string;
@@ -101,7 +116,6 @@ export const ZoneTypeSchema = z.enum([
   'royalRed',
   'outlands',
   'roads',
-  'roadsHideout',
   'other',
 ]);
 
@@ -120,6 +134,8 @@ export const ConnectionSchema = z.object({
   roomId: z.string(),
   fromZoneId: z.string(),
   toZoneId: z.string(),
+  fromHandleId: z.string().optional(),
+  toHandleId: z.string().optional(),
   expiresAt: z.string().datetime(),
   reportedAt: z.string().datetime(),
   reportedBy: z.string().optional(),
@@ -151,12 +167,16 @@ export const AuthRoomBodySchema = z.object({
 export const CreateConnectionBodySchema = z.object({
   fromZoneId: z.string().min(1),
   toZoneId: z.string().min(1),
+  fromHandleId: z.string().optional(),
+  toHandleId: z.string().optional(),
   secondsRemaining: z.number().int().min(1).max(86400),
   reportedBy: z.string().optional(),
 });
 
 export const UpdateConnectionBodySchema = z.object({
-  secondsRemaining: z.number().int().min(1).max(86400),
+  secondsRemaining: z.number().int().min(1).max(86400).optional(),
+  fromHandleId: z.string().optional(),
+  toHandleId: z.string().optional(),
 });
 
 export const ChangePasswordBodySchema = z.object({

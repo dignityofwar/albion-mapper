@@ -83,8 +83,7 @@ const warnings: string[] = [];
 
 function classify(raw: RawEntry): MapType | 'WARN_OTHER' {
   const { name, color, icons } = raw;
-  if (TWO_HYPHEN_RE.test(name)) return 'roadsHideout';
-  if (ONE_HYPHEN_RE.test(name)) return 'roads';
+  if (TWO_HYPHEN_RE.test(name) || ONE_HYPHEN_RE.test(name)) return 'roads';
   if (color !== undefined) {
     switch (color.toLowerCase()) {
       case 'blue':   return 'royalBlue';
@@ -106,10 +105,6 @@ interface GameMap {
   oresAvailable?: string[];
 }
 
-function isHideout(name: string): boolean {
-  return TWO_HYPHEN_RE.test(name);
-}
-
 function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } | { warn: true; reason: string } {
   if (EXCLUDED_MAP_NAMES.has(raw.name)) return { skip: true, reason: 'excluded' };
   const tierNum = Number(raw.tier);
@@ -121,7 +116,6 @@ function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } |
   const mapID = raw.name.toLowerCase().replace(/\s+/g, '-');
   const result: GameMap = { mapID, mapName: raw.name, mapType, tier: tierNum };
   if (mapType === 'roads' || mapType === 'roadsHideout') {
-    if (isHideout(raw.name)) result.isRoadsHideout = true;
     result.oresAvailable = extractOres(raw.icons);
   }
   return result;
@@ -130,8 +124,8 @@ function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } |
 // ── Tests ─────────────────────────────────────────────────────────────────────
 
 describe('classification', () => {
-  it('two-hyphen name → roadsHideout', () => {
-    expect(classify({ name: 'Qiient-In-Odetum', tier: 6, icons: [] })).toBe('roadsHideout');
+  it('two-hyphen name → roads (initially)', () => {
+    expect(classify({ name: 'Qiient-In-Odetum', tier: 6, icons: [] })).toBe('roads');
   });
 
   it('one-hyphen name → roads', () => {
@@ -208,14 +202,13 @@ describe('oresAvailable extraction', () => {
 });
 
 describe('processEntry — truth table', () => {
-  it('Qiient-In-Odetum (two-hyphen roads = hideout, no ores)', () => {
+  it('Qiient-In-Odetum (two-hyphen roads, initially roads, no ores)', () => {
     const result = processEntry({ name: 'Qiient-In-Odetum', tier: 6, icons: [] });
     expect(result).toEqual({
       mapID: 'qiient-in-odetum',
       mapName: 'Qiient-In-Odetum',
-      mapType: 'roadsHideout',
+      mapType: 'roads',
       tier: 6,
-      isRoadsHideout: true,
       oresAvailable: [],
     });
   });
@@ -444,17 +437,30 @@ describe('script integration (via --source fixture)', () => {
     expect(maps[0].oresAvailable).toEqual([]);
   });
 
-  it('three-barrel roads entry has isRoadsHideout: true; one-barrel does not', () => {
+  it('three-barrel roads entry initially roads', () => {
     const fixture = writeFixture('hideout-flag.json', [
-      { name: 'Qiient-In-Odetum', tier: 6, icons: [] },   // two hyphens → hideout
-      { name: 'Cebos-Avemlum', tier: 4, icons: [] },       // one hyphen  → travel
+      { name: 'Qiient-In-Odetum', tier: 6, icons: [] },   // two hyphens
+      { name: 'Cebos-Avemlum', tier: 4, icons: [] },       // one hyphen
     ]);
     runSync(fixture);
-    const maps = readOutput() as GameMap[];
+    const maps = readOutput() as any[];
     const hideout = maps.find((m) => m.mapID === 'qiient-in-odetum');
     const travel  = maps.find((m) => m.mapID === 'cebos-avemlum');
-    expect(hideout).toHaveProperty('isRoadsHideout', true);
-    expect(travel).not.toHaveProperty('isRoadsHideout');
+    expect(hideout.mapType).toBe('roads'); // No longer promoted to roadsHideout
+    expect(hideout.isRoadsHideout).toBe(true);
+    expect(travel.mapType).toBe('roads');
+    expect(travel.isRoadsHideout).toBeUndefined();
+  });
+
+  it('one-hyphen Avalonian Rest name → roads and isRoadsHideout: true', () => {
+    const fixture = writeFixture('rest-shape.json', [
+      { name: 'Qiient-Vyntum', tier: 6, icons: [] },
+    ]);
+    runSync(fixture);
+    const maps = readOutput() as any[];
+    expect(maps[0].mapType).toBe('roads');
+    expect(maps[0].isRoadsHideout).toBe(true);
+    expect(maps[0].mapShape).toBe('rest');
   });
 
   it('non-roads entries do not have oresAvailable key', () => {

@@ -14,7 +14,7 @@ import type { Zone, ZoneType } from 'shared';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import TagTier from './common/TagTier.vue';
 import TagZone from './common/TagZone.vue';
-import { TYPE_LABELS } from '../utils/zoneStyles';
+import { TYPE_LABELS, getZoneTypeDisplay } from '../utils/zoneStyles';
 
 const props = withDefaults(defineProps<{
   modelValue: string;
@@ -62,7 +62,7 @@ defineExpose({
 
 /** Full label including hideout distinction */
 function zoneTypeLabel(zone: Zone): string {
-  return TYPE_LABELS[zone.type];
+  return getZoneTypeDisplay(zone.type, zone.mapShape).label;
 }
 
 // Zone IDs that appear in any current connection
@@ -224,7 +224,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
             <span v-if="mappedZoneIds.has(zone.id)" class="shrink-0 text-green-400">✓</span>
             <span v-if="zone.id === store.homeZoneId" class="shrink-0 text-yellow-400" title="Room home zone">🏠</span>
             <TagTier :tier="zone.tier" :type="zone.type" />
-            <TagZone :type="zone.type" :category="zone.category" />
+            <TagZone :type="zone.type" :category="zone.category" :map-shape="zone.mapShape" />
             <ComboboxItemIndicator class="shrink-0 text-green-400">✓</ComboboxItemIndicator>
           </ComboboxItem>
         </ComboboxViewport>

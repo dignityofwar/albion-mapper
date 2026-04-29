@@ -293,7 +293,16 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "casitos-alieam",
@@ -304,7 +313,16 @@
       "COTTON",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "casitos-atinaum",
@@ -313,14 +331,26 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "casitos-avaelum",
     "mapName": "Casitos-Avaelum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "casos-aiagsum",
@@ -329,7 +359,13 @@
     "tier": 4,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "casos-aximam",
@@ -338,7 +374,16 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "casos-ayosrom",
@@ -348,7 +393,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "casos-uruxtum",
@@ -357,7 +408,13 @@
     "tier": 4,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "caulder-fissure",
@@ -374,7 +431,13 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cebos-avemlum",
@@ -385,7 +448,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cedarcopse",
@@ -402,14 +471,26 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "ceritos-avulsum",
     "mapName": "Ceritos-Avulsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "ceros-aeaylum",
@@ -419,7 +500,13 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cetitos-aiayrom",
@@ -429,7 +516,13 @@
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cetitos-avixnum",
@@ -440,7 +533,13 @@
       "COTTON",
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cetitos-aximam",
@@ -449,14 +548,32 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "cetos-obaelos",
     "mapName": "Cetos-Obaelos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "chasmlight-cave-t5",
@@ -486,7 +603,16 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "cieitos-avioaum",
@@ -496,7 +622,13 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cieitos-ayosrom",
@@ -506,14 +638,29 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cieitos-obaelos",
     "mapName": "Cieitos-Obaelos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "cieitos-otatrom",
@@ -522,14 +669,26 @@
     "tier": 8,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cieos-atatlum",
     "mapName": "Cieos-Atatlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cilitos-opodam",
@@ -538,7 +697,16 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "cilos-avioaum",
@@ -548,14 +716,29 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cilos-ofailos",
     "mapName": "Cilos-Ofailos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "cilos-otatrom",
@@ -564,7 +747,13 @@
     "tier": 8,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "citadel-of-ash",
@@ -578,7 +767,16 @@
     "mapName": "Conitos-Ofailos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "conitos-oxaeaum",
@@ -587,7 +785,13 @@
     "tier": 4,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "conitos-uruxtum",
@@ -596,7 +800,13 @@
     "tier": 4,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "conos-avaelum",
@@ -605,7 +815,13 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "coritos-avemlum",
@@ -616,7 +832,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "coros-aiayrom",
@@ -626,7 +848,13 @@
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "coros-alieam",
@@ -637,7 +865,16 @@
       "COTTON",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "coros-atinaum",
@@ -646,14 +883,26 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "coues-exakrom",
     "mapName": "Coues-Exakrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "couos-ayayaum",
@@ -663,7 +912,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "couos-opodam",
@@ -672,7 +927,16 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "cracked-earth",
@@ -735,7 +999,13 @@
     "mapName": "Curites-Exakrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "curitos-ayayaum",
@@ -745,7 +1015,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "curlew-fen",
@@ -763,7 +1039,13 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cuyites-iooinum",
@@ -773,7 +1055,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cynitos-aiagsum",
@@ -782,14 +1070,26 @@
     "tier": 4,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cynitos-atatlum",
     "mapName": "Cynitos-Atatlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cynos-avixnum",
@@ -800,7 +1100,13 @@
       "COTTON",
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "cynos-oxaeaum",
@@ -809,7 +1115,13 @@
     "tier": 4,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "c",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "daemonium-keep",
@@ -1257,7 +1569,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fasitos-atezsum",
@@ -1267,7 +1585,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fasitos-oleraum",
@@ -1276,7 +1600,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fasitos-oyuctum",
@@ -1286,7 +1616,13 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fasos-ayiotum",
@@ -1297,7 +1633,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "febites-opavun",
@@ -1306,7 +1648,16 @@
     "tier": 8,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "febos-acalun",
@@ -1316,7 +1667,16 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "felniks-hill",
@@ -1332,7 +1692,13 @@
     "tier": 8,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "feritos-enomaum",
@@ -1342,7 +1708,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "feritos-osinsum",
@@ -1351,7 +1723,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "ferndell",
@@ -1368,14 +1746,29 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fetos-aiaylos",
     "mapName": "Fetos-Aiaylos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "fiees-ohohtum",
@@ -1384,7 +1777,13 @@
     "tier": 8,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fieites-unavtum",
@@ -1393,7 +1792,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fieos-aiuttum",
@@ -1403,14 +1808,26 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fieos-atezsum",
     "mapName": "Fieos-Atezsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "files-azazsum",
@@ -1420,7 +1837,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "files-izizaum",
@@ -1430,14 +1853,29 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "filites-izohun",
     "mapName": "Filites-Izohun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "filitos-uzazlum",
@@ -1448,14 +1886,29 @@
       "COTTON",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "filos-abalam",
     "mapName": "Filos-Abalam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "firesink-caldera",
@@ -1479,7 +1932,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "firos-aiavam",
@@ -1488,7 +1947,16 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "firos-enomaum",
@@ -1498,7 +1966,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "firos-ezatam",
@@ -1507,7 +1981,16 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "firos-osinsum",
@@ -1516,7 +1999,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "flammog-desolation",
@@ -1608,7 +2097,16 @@
     "tier": 8,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "fonitos-amaurom",
@@ -1617,7 +2115,13 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fonos-aiugsum",
@@ -1628,7 +2132,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fonos-oleraum",
@@ -1637,7 +2147,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "forest-burrow",
@@ -1651,7 +2167,16 @@
     "mapName": "Foritos-Aiaylos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "foros-egoisum",
@@ -1661,7 +2186,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "foros-uzazlum",
@@ -1672,7 +2203,13 @@
       "COTTON",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "foues-aeaosum",
@@ -1681,7 +2218,13 @@
     "tier": 4,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fouitos-aiattum",
@@ -1690,14 +2233,26 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fouitos-aiuttum",
     "mapName": "Fouitos-Aiuttum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fouos-agosaum",
@@ -1707,7 +2262,13 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fouos-amaurom",
@@ -1716,7 +2277,13 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fractured-ground",
@@ -1788,14 +2355,32 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "fuyes-izohun",
     "mapName": "Fuyes-Izohun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "fuyitos-acalun",
@@ -1805,7 +2390,16 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "fuyitos-ayiotum",
@@ -1816,7 +2410,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fynes-unavtum",
@@ -1826,7 +2426,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fynites-aeaosum",
@@ -1835,21 +2441,42 @@
     "tier": 4,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fynitos-abalam",
     "mapName": "Fynitos-Abalam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "fynitos-agosaum",
     "mapName": "Fynitos-Agosaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fynitos-aiugsum",
@@ -1860,7 +2487,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fynitos-egoisum",
@@ -1870,7 +2503,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "fynitos-ezatam",
@@ -1879,7 +2518,16 @@
     "tier": 8,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "fynos-alodrom",
@@ -1888,7 +2536,13 @@
     "tier": 4,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "f",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "garrow-fell",
@@ -2093,7 +2747,13 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hasitos-umayaum",
@@ -2103,7 +2763,13 @@
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hasos-agoitum",
@@ -2114,7 +2780,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hasos-ayousum",
@@ -2123,7 +2795,13 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hasos-inayaum",
@@ -2133,7 +2811,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hasos-iuimaum",
@@ -2143,7 +2827,13 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hasos-osuorom",
@@ -2152,7 +2842,13 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "haytor",
@@ -2168,7 +2864,16 @@
     "tier": 4,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "hebites-exemrom",
@@ -2178,7 +2883,13 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hebitos-atontum",
@@ -2188,7 +2899,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hebos-ulamsum",
@@ -2198,21 +2915,42 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "heritos-exozlos",
     "mapName": "Heritos-Exozlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "heritos-eyoztum",
     "mapName": "Heritos-Eyoztum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "heritos-inayaum",
@@ -2222,35 +2960,68 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "heros-atoyam",
     "mapName": "Heros-Atoyam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "hetitos-iuaerom",
     "mapName": "Hetitos-Iuaerom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hieos-aiigaum",
     "mapName": "Hieos-Aiigaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hieos-avaolum",
     "mapName": "Hieos-Avaolum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "highbole-glen",
@@ -2393,7 +3164,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hilites-ugumtum",
@@ -2403,7 +3180,13 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hilitos-aiigaum",
@@ -2414,7 +3197,13 @@
       "COTTON",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hilitos-osuorom",
@@ -2423,21 +3212,42 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hiros-exozlos",
     "mapName": "Hiros-Exozlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "hiros-iuaerom",
     "mapName": "Hiros-Iuaerom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "honites-izizaum",
@@ -2447,7 +3257,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "honitos-uxeulum",
@@ -2456,14 +3272,29 @@
     "tier": 4,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "honos-oyezam",
     "mapName": "Honos-Oyezam",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "honos-umayaum",
@@ -2473,7 +3304,13 @@
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hornbeam-wood",
@@ -2490,21 +3327,42 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hures-ugumtum",
     "mapName": "Hures-Ugumtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hurites-ieatun",
     "mapName": "Hurites-Ieatun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "hurites-ouaylos",
@@ -2513,7 +3371,16 @@
     "tier": 4,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "huritos-iuimaum",
@@ -2523,14 +3390,29 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "huritos-oiaelos",
     "mapName": "Huritos-Oiaelos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "huros-atontum",
@@ -2540,7 +3422,13 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "huyes-ogozlum",
@@ -2550,7 +3438,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "huyitos-agoitum",
@@ -2561,7 +3455,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "huyitos-ohenlum",
@@ -2570,7 +3470,13 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "huyos-eyoztum",
@@ -2579,7 +3485,13 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "huyos-uxeulum",
@@ -2588,7 +3500,13 @@
     "tier": 4,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hynes-exemrom",
@@ -2598,14 +3516,29 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hynes-ieatun",
     "mapName": "Hynes-Ieatun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "hynites-ogozlum",
@@ -2615,14 +3548,29 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hynitos-atoyam",
     "mapName": "Hynitos-Atoyam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "hynitos-ayousum",
@@ -2631,14 +3579,29 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hynitos-oyezam",
     "mapName": "Hynitos-Oyezam",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "hynitos-ulamsum",
@@ -2648,14 +3611,29 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "hynos-oiaelos",
     "mapName": "Hynos-Oiaelos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "h",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "iceburn-cliffs",
@@ -2948,7 +3926,16 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "oasos-eraerom",
@@ -2958,7 +3945,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oasos-uromlum",
@@ -2968,7 +3961,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oebitos-eraerom",
@@ -2978,7 +3977,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oebitos-oyozam",
@@ -2987,14 +3992,29 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "oebos-ixakaum",
     "mapName": "Oebos-Ixakaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oeritos-ecunsum",
@@ -3005,7 +4025,13 @@
       "COTTON",
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oeritos-oyexlos",
@@ -3016,14 +4042,32 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "oetos-ofailos",
     "mapName": "Oetos-Ofailos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "oetos-oyexlos",
@@ -3034,7 +4078,16 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "oieitos-ixakaum",
@@ -3044,7 +4097,13 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oieos-umiutum",
@@ -3054,7 +4113,13 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oires-oloblum",
@@ -3063,7 +4128,13 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oiritos-eramtum",
@@ -3074,14 +4145,29 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oiros-alaiam",
     "mapName": "Oiros-Alaiam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "oonitos-umiutum",
@@ -3091,14 +4177,26 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "ooros-ataltum",
     "mapName": "Ooros-Ataltum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "ooros-ecunsum",
@@ -3109,14 +4207,29 @@
       "COTTON",
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oouitos-alaiam",
     "mapName": "Oouitos-Alaiam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "ore-adit",
@@ -3133,21 +4246,42 @@
       "COTTON",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "ouritos-ataltum",
     "mapName": "Ouritos-Ataltum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "ouritos-ofailos",
     "mapName": "Ouritos-Ofailos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "ouyos-aoeuam",
@@ -3157,7 +4291,16 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "owlsong-glen",
@@ -3171,7 +4314,13 @@
     "mapName": "Oynites-Araosum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oynites-oloblum",
@@ -3180,7 +4329,13 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oynitos-uromlum",
@@ -3190,7 +4345,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oynos-eramtum",
@@ -3201,7 +4362,13 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "oynos-oyozam",
@@ -3211,7 +4378,16 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "o",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "parchsand-cliffs",
@@ -3239,7 +4415,16 @@
     "mapName": "Pasos-Avosam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "pebos-avosrom",
@@ -3248,7 +4433,13 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "pen-fenair",
@@ -3290,7 +4481,16 @@
     "mapName": "Peritos-Avosam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "peritos-oconun",
@@ -3299,7 +4499,16 @@
     "tier": 4,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "peros-aiataum",
@@ -3308,14 +4517,29 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "petitos-amayam",
     "mapName": "Petitos-Amayam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "petitos-avosrom",
@@ -3324,7 +4548,13 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "petos-aietam",
@@ -3334,7 +4564,16 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "pieos-eterrom",
@@ -3345,7 +4584,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "pieos-ofairom",
@@ -3354,7 +4599,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "pilitos-eterrom",
@@ -3365,7 +4616,13 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "pinecopse",
@@ -3381,14 +4638,32 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "piritos-ofavam",
     "mapName": "Piritos-Ofavam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "piritos-opabrom",
@@ -3397,7 +4672,13 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "ponitos-aiayrom",
@@ -3408,7 +4689,13 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "poros-aiayrom",
@@ -3419,7 +4706,13 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "poros-oconun",
@@ -3428,7 +4721,16 @@
     "tier": 4,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "poues-unatam",
@@ -3437,7 +4739,16 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "pouitos-ofairom",
@@ -3446,7 +4757,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "prospector's-hope",
@@ -3463,28 +4780,58 @@
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "puros-amayam",
     "mapName": "Puros-Amayam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "puros-ofavam",
     "mapName": "Puros-Ofavam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "puyitos-aiataum",
     "mapName": "Puyitos-Aiataum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "pynites-ouozlum",
@@ -3494,7 +4841,13 @@
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "pynitos-aietam",
@@ -3504,7 +4857,16 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "pynos-opabrom",
@@ -3513,470 +4875,801 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "p",
+    "socketCount": 8,
+    "largeSocketCount": 1,
+    "smallSocketCount": 7,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-al-nusom",
     "mapName": "Qiient-Al-Nusom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-al-odesum",
     "mapName": "Qiient-Al-Odesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-al-qinsis",
     "mapName": "Qiient-Al-Qinsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-al-tersas",
     "mapName": "Qiient-Al-Tersas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-al-viesis",
     "mapName": "Qiient-Al-Viesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-al-vynsis",
     "mapName": "Qiient-Al-Vynsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-et-nusas",
     "mapName": "Qiient-Et-Nusas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-et-odetis",
     "mapName": "Qiient-Et-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-et-qinsum",
     "mapName": "Qiient-Et-Qinsum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-et-tertum",
     "mapName": "Qiient-Et-Tertum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-in-nutis",
     "mapName": "Qiient-In-Nutis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-in-odetum",
     "mapName": "Qiient-In-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-in-qinsis",
     "mapName": "Qiient-In-Qinsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-in-tersom",
     "mapName": "Qiient-In-Tersom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-in-viesis",
     "mapName": "Qiient-In-Viesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-in-vyntum",
     "mapName": "Qiient-In-Vyntum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-nutis",
     "mapName": "Qiient-Nutis",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-oc-odetum",
     "mapName": "Qiient-Oc-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-odesas",
     "mapName": "Qiient-Odesas",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-qi-nusom",
     "mapName": "Qiient-Qi-Nusom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-qi-odesas",
     "mapName": "Qiient-Qi-Odesas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-qi-tersas",
     "mapName": "Qiient-Qi-Tersas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-qi-vynsis",
     "mapName": "Qiient-Qi-Vynsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-qinsum",
     "mapName": "Qiient-Qinsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-sa-odetis",
     "mapName": "Qiient-Sa-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "HIDE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-si-nusas",
     "mapName": "Qiient-Si-Nusas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-si-odesum",
     "mapName": "Qiient-Si-Odesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-si-tertum",
     "mapName": "Qiient-Si-Tertum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-tersom",
     "mapName": "Qiient-Tersom",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiient-vyntum",
     "mapName": "Qiient-Vyntum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiitun-al-duosum",
     "mapName": "Qiitun-Al-Duosum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiitun-duosum",
     "mapName": "Qiitun-Duosum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiitun-et-vietis",
     "mapName": "Qiitun-Et-Vietis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiitun-et-vynsom",
     "mapName": "Qiitun-Et-Vynsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiitun-si-vynsom",
     "mapName": "Qiitun-Si-Vynsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "qiitun-vietis",
     "mapName": "Qiitun-Vietis",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-al-nusis",
     "mapName": "Quaent-Al-Nusis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-al-odesum",
     "mapName": "Quaent-Al-Odesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-al-qintis",
     "mapName": "Quaent-Al-Qintis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-al-tersis",
     "mapName": "Quaent-Al-Tersis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-al-viesom",
     "mapName": "Quaent-Al-Viesom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-al-vynsum",
     "mapName": "Quaent-Al-Vynsum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-in-nusis",
     "mapName": "Quaent-In-Nusis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-in-odesum",
     "mapName": "Quaent-In-Odesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-qintis",
     "mapName": "Quaent-Qintis",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-tersis",
     "mapName": "Quaent-Tersis",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-viesom",
     "mapName": "Quaent-Viesom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quaent-vynsum",
     "mapName": "Quaent-Vynsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quatun-et-nusas",
     "mapName": "Quatun-Et-Nusas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quatun-et-odetum",
     "mapName": "Quatun-Et-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quatun-nusas",
     "mapName": "Quatun-Nusas",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "quatun-odetum",
     "mapName": "Quatun-Odetum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "razorrock-bank",
@@ -4240,7 +5933,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sases-avuotum",
@@ -4250,21 +5949,39 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sasitos-oyarlum",
     "mapName": "Sasitos-Oyarlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sasitos-ugersum",
     "mapName": "Sasitos-Ugersum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sasitos-umogaum",
@@ -4275,14 +5992,26 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sasos-abizaum",
     "mapName": "Sasos-Abizaum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sasos-egeylos",
@@ -4293,7 +6022,16 @@
       "COTTON",
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "sasos-oiozlum",
@@ -4303,7 +6041,13 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "scuttlesink-marsh",
@@ -4333,7 +6077,13 @@
     "tier": 4,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sebos-oyohun",
@@ -4344,7 +6094,16 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "sebos-ugersum",
@@ -4353,265 +6112,452 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-ai-odetis",
     "mapName": "Secent-AI-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-al-duosom",
     "mapName": "Secent-Al-Duosom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-al-nutum",
     "mapName": "Secent-Al-Nutum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-al-odetis",
     "mapName": "Secent-Al-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-al-qinsom",
     "mapName": "Secent-Al-Qinsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-al-tersum",
     "mapName": "Secent-Al-Tersum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-al-viesum",
     "mapName": "Secent-Al-Viesum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-duosom",
     "mapName": "Secent-Duosom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-et-odesis",
     "mapName": "Secent-Et-Odesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-et-qinsas",
     "mapName": "Secent-Et-Qinsas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-et-vyntum",
     "mapName": "Secent-Et-Vyntum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-in-tersum",
     "mapName": "Secent-In-Tersum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-nutum",
     "mapName": "Secent-Nutum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-odesom",
     "mapName": "Secent-Odesom",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-qi-odesom",
     "mapName": "Secent-Qi-Odesom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-qi-qinsom",
     "mapName": "Secent-Qi-Qinsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-sa-odesis",
     "mapName": "Secent-Sa-Odesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-si-odetis",
     "mapName": "Secent-Si-Odetis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-si-qinsas",
     "mapName": "Secent-Si-Qinsas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-viesum",
     "mapName": "Secent-Viesum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "secent-vyntum",
     "mapName": "Secent-Vyntum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sectun-al-vyntis",
     "mapName": "Sectun-Al-Vyntis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sectun-et-tersas",
     "mapName": "Sectun-Et-Tersas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sectun-in-odesis",
     "mapName": "Sectun-In-Odesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sectun-in-qinsom",
     "mapName": "Sectun-In-Qinsom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sectun-in-vyntis",
     "mapName": "Sectun-In-Vyntis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sectun-oc-odesis",
     "mapName": "Sectun-Oc-Odesis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sectun-qinsom",
     "mapName": "Sectun-Qinsom",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "sectun-tersas",
     "mapName": "Sectun-Tersas",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "seritos-egeylos",
@@ -4622,7 +6568,16 @@
       "COTTON",
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "seritos-onaytum",
@@ -4631,222 +6586,383 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-al-duosas",
     "mapName": "Setent-Al-Duosas",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-al-qinsum",
     "mapName": "Setent-Al-Qinsum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-al-vietis",
     "mapName": "Setent-Al-Vietis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-duosas",
     "mapName": "Setent-Duosas",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-et-nusum",
     "mapName": "Setent-Et-Nusum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-et-qintis",
     "mapName": "Setent-Et-Qintis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-in-qinsum",
     "mapName": "Setent-In-Qinsum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-nusum",
     "mapName": "Setent-Nusum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-qintis",
     "mapName": "Setent-Qintis",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setent-vietis",
     "mapName": "Setent-Vietis",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setitos-obobrom",
     "mapName": "Setitos-Obobrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setos-aiaitum",
     "mapName": "Setos-Aiaitum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setos-aigitum",
     "mapName": "Setos-Aigitum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "setos-avamsum",
     "mapName": "Setos-Avamsum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-al-nusis",
     "mapName": "Settun-AL-Nusis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-al-odetum",
     "mapName": "Settun-Al-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-al-tersom",
     "mapName": "Settun-Al-Tersom",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-al-vynsis",
     "mapName": "Settun-Al-Vynsis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-et-odetum",
     "mapName": "Settun-Et-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-in-nusis",
     "mapName": "Settun-In-Nusis",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-in-odetum",
     "mapName": "Settun-In-Odetum",
-    "mapType": "roadsHideout",
+    "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-odetum",
     "mapName": "Settun-Odetum",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-tersom",
     "mapName": "Settun-Tersom",
     "mapType": "roads",
     "tier": 6,
+    "isRoadsHideout": true,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "settun-vynsis",
     "mapName": "Settun-Vynsis",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "isRoadsHideout": true,
+    "oresAvailable": [],
+    "mapShape": "rest",
+    "socketCount": 4,
+    "largeSocketCount": 2,
+    "smallSocketCount": 2,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "shaleheath-hills",
@@ -4875,7 +6991,13 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "silitos-abizaum",
@@ -4884,7 +7006,13 @@
     "tier": 8,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "silos-apenlum",
@@ -4895,14 +7023,26 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "silos-oyarlum",
     "mapName": "Silos-Oyarlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "siritos-avoirom",
@@ -4911,7 +7051,13 @@
     "tier": 4,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "siritos-oyohun",
@@ -4920,14 +7066,29 @@
     "tier": 8,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGoldChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "siros-obobrom",
     "mapName": "Siros-Obobrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "siros-ofurlos",
@@ -4936,7 +7097,16 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "skullmarsh-lower",
@@ -5039,7 +7209,16 @@
     "mapName": "Sonitos-Ayailos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "soritos-aiaitum",
@@ -5049,7 +7228,13 @@
     "oresAvailable": [
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "soritos-apenlum",
@@ -5060,7 +7245,13 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "soritos-avamsum",
@@ -5069,14 +7260,26 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "soros-axaesum",
     "mapName": "Soros-Axaesum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "soues-uzurtum",
@@ -5086,7 +7289,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "souitos-oiozlum",
@@ -5096,7 +7305,13 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "souos-availos",
@@ -5107,21 +7322,45 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "souos-ososlos",
     "mapName": "Souos-Ososlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "souos-umogaum",
     "mapName": "Souos-Umogaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "southgrove-copse",
@@ -5326,7 +7565,13 @@
       "COTTON",
       "HIDE",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "suyites-uzurtum",
@@ -5336,14 +7581,26 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "suyitos-axaesum",
     "mapName": "Suyitos-Axaesum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "suyitos-ofugtum",
@@ -5352,7 +7609,13 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "suyitos-oyarlos",
@@ -5362,7 +7625,16 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "suyos-onaytum",
@@ -5371,7 +7643,13 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "swamp-burrow",
@@ -5409,7 +7687,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": null
   },
   {
     "mapID": "synitos-availos",
@@ -5420,7 +7704,16 @@
       "COTTON",
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "synitos-ofurlos",
@@ -5429,21 +7722,48 @@
     "tier": 6,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "synitos-ososlos",
     "mapName": "Synitos-Ososlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "synos-ayailos",
     "mapName": "Synos-Ayailos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "synos-oyarlos",
@@ -5453,14 +7773,32 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "s",
+    "socketCount": 8,
+    "largeSocketCount": 2,
+    "smallSocketCount": 6,
+    "socketCountIsMinimum": false,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "tasitos-obayam",
     "mapName": "Tasitos-Obayam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "tasitos-ulaurom",
@@ -5470,7 +7808,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tasos-iriglos",
@@ -5480,14 +7824,29 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "tebitos-igaelum",
     "mapName": "Tebitos-Igaelum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tebitos-odoxlum",
@@ -5497,7 +7856,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "teros-auiusum",
@@ -5506,7 +7871,13 @@
     "tier": 4,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tetitos-ayoslum",
@@ -5515,7 +7886,13 @@
     "tier": 4,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tetos-igaelum",
@@ -5525,7 +7902,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tetos-ulaurom",
@@ -5535,7 +7918,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tharcal-fissure",
@@ -5604,7 +7993,13 @@
     "mapName": "Tieitos-Eyexrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tieitos-ouultum",
@@ -5613,7 +8008,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tieos-ayoslum",
@@ -5622,14 +8023,29 @@
     "tier": 4,
     "oresAvailable": [
       "COTTON"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tilitos-ataglos",
     "mapName": "Tilitos-Ataglos",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "timberscar-copse",
@@ -5695,7 +8111,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tiros-ouultum",
@@ -5704,7 +8126,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tonitos-igurlum",
@@ -5714,14 +8142,26 @@
     "oresAvailable": [
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tonitos-uxavrom",
     "mapName": "Tonitos-Uxavrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tonitos-uxavrtom",
@@ -5730,21 +8170,42 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tonos-aboysum",
     "mapName": "Tonos-Aboysum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tonos-obayam",
     "mapName": "Tonos-Obayam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "toritos-iriglos",
@@ -5754,14 +8215,32 @@
     "oresAvailable": [
       "LOGS",
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "touos-ataglos",
     "mapName": "Touos-Ataglos",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "touos-uoemtum",
@@ -5772,28 +8251,58 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "turitos-atalos",
     "mapName": "Turitos-Atalos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "turitos-atatlos",
     "mapName": "Turitos-Atatlos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "turitos-uoemtum",
     "mapName": "Turitos-Uoemtum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tuyitos-aboysum",
@@ -5803,7 +8312,13 @@
     "oresAvailable": [
       "COTTON",
       "ORE"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tuyitos-auiusum",
@@ -5812,7 +8327,13 @@
     "tier": 4,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "twinchannel-narrows",
@@ -5826,7 +8347,16 @@
     "mapName": "Tynos-Atatlos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "tynos-eyexrom",
@@ -5836,14 +8366,26 @@
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tynos-igurlum",
     "mapName": "Tynos-Igurlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "tynos-uxavrom",
@@ -5852,7 +8394,13 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "t",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "unhallowed-cloister",
@@ -6243,7 +8791,16 @@
     "mapName": "Xases-Ataglos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xases-oxoulum",
@@ -6252,28 +8809,55 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xasos-aeoilos",
     "mapName": "Xasos-Aeoilos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xasos-aoemaum",
     "mapName": "Xasos-Aoemaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xasos-oneulum",
     "mapName": "Xasos-Oneulum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xebitos-oyogam",
@@ -6282,7 +8866,16 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xebos-emimsum",
@@ -6293,7 +8886,13 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xebos-exostum",
@@ -6303,7 +8902,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xerites-oxoulum",
@@ -6312,7 +8917,13 @@
     "tier": 6,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xetitos-emimsum",
@@ -6323,7 +8934,13 @@
       "LOGS",
       "ORE",
       "ROCK"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xetitos-oneulum",
@@ -6332,7 +8949,13 @@
     "tier": 6,
     "oresAvailable": [
       "HIDE"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xetos-obursum",
@@ -6341,7 +8964,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xiles-aiavlum",
@@ -6351,7 +8980,13 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xilitos-aoemaum",
@@ -6362,14 +8997,29 @@
       "COTTON",
       "LOGS",
       "ORE"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xilos-osayam",
     "mapName": "Xilos-Osayam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xiros-aiairom",
@@ -6378,14 +9028,26 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xonites-aiavlum",
     "mapName": "Xonites-Aiavlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xoritos-aiairom",
@@ -6394,7 +9056,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xoritos-exostum",
@@ -6404,35 +9072,74 @@
     "oresAvailable": [
       "COTTON",
       "LOGS"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xoritos-osayam",
     "mapName": "Xoritos-Osayam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xouitos-aeoilos",
     "mapName": "Xouitos-Aeoilos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xouitos-eyoztum",
     "mapName": "Xouitos-Eyoztum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xouos-aioblos",
     "mapName": "Xouos-Aioblos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": []
+    "oresAvailable": [],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xurites-ataglos",
@@ -6441,7 +9148,16 @@
     "tier": 4,
     "oresAvailable": [
       "LOGS"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xuros-eyoztum",
@@ -6451,7 +9167,13 @@
     "oresAvailable": [
       "COTTON",
       "ROCK"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xuyitos-aioblos",
@@ -6460,7 +9182,16 @@
     "tier": 4,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeGreenChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "xynitos-obursum",
@@ -6469,7 +9200,13 @@
     "tier": 6,
     "oresAvailable": [
       "ORE"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": null
   },
   {
     "mapID": "xynos-oyogam",
@@ -6478,7 +9215,16 @@
     "tier": 6,
     "oresAvailable": [
       "ROCK"
-    ]
+    ],
+    "mapShape": "x",
+    "socketCount": 8,
+    "largeSocketCount": 3,
+    "smallSocketCount": 5,
+    "socketCountIsMinimum": true,
+    "guaranteedContent": {
+      "type": "LargeBlueChest",
+      "category": "chest"
+    }
   },
   {
     "mapID": "yew-wood",

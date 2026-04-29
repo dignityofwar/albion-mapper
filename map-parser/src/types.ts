@@ -6,8 +6,12 @@ export type MapType =
   | 'royalRed'
   | 'outlands'
   | 'roads'
-  | 'roadsHideout'
   | 'other';
+
+export interface GuaranteedContent {
+  type: string;
+  category: string;
+}
 
 export interface GameMap {
   mapID: string;
@@ -17,6 +21,12 @@ export interface GameMap {
   category?: string;
   isRoadsHideout?: true;
   oresAvailable?: string[];
+  mapShape?: string;
+  socketCount?: number;
+  largeSocketCount?: number;
+  smallSocketCount?: number;
+  socketCountIsMinimum?: boolean;
+  guaranteedContent?: GuaranteedContent | null;
 }
 
 export const MapTypeSchema = z.enum([
@@ -25,9 +35,13 @@ export const MapTypeSchema = z.enum([
   'royalRed',
   'outlands',
   'roads',
-  'roadsHideout',
   'other',
 ]);
+
+export const GuaranteedContentSchema = z.object({
+  type: z.string(),
+  category: z.string(),
+});
 
 export const GameMapSchema = z.object({
   mapID: z.string(),
@@ -37,4 +51,10 @@ export const GameMapSchema = z.object({
   category: z.string().optional(),
   isRoadsHideout: z.literal(true).optional(),
   oresAvailable: z.array(z.string()).optional(),
+  mapShape: z.string().optional(),
+  socketCount: z.number().int().nonnegative().optional(),
+  largeSocketCount: z.number().int().nonnegative().optional(),
+  smallSocketCount: z.number().int().nonnegative().optional(),
+  socketCountIsMinimum: z.boolean().optional(),
+  guaranteedContent: GuaranteedContentSchema.nullable().optional(),
 });

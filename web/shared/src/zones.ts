@@ -65,10 +65,11 @@ export const ZONES: Zone[] = (mapsData as GameMap[]).map((m) => {
     tier: m.tier,
     ores: m.oresAvailable,
     category: m.category ?? getZoneCategory(m.mapName, m.mapType),
+    mapShape: m.mapShape,
   };
 
-  if (m.mapType === 'roads' || m.mapType === 'roadsHideout') {
-    zone.isRoadsHome = m.mapType === 'roadsHideout' || isRoadsHome(m.mapName);
+  if (m.mapType === 'roads') {
+    zone.isRoadsHome = m.isRoadsHideout || isRoadsHome(m.mapName);
   }
 
   return zone;

@@ -8,6 +8,7 @@ const props = defineProps<{
   type: ZoneType;
   label?: string;
   category?: string;
+  mapShape?: string;
 }>();
 
 const display = computed(() => {
@@ -22,7 +23,7 @@ const display = computed(() => {
       class: 'border'
     };
   }
-  const d = getZoneTypeDisplay(props.type);
+  const d = getZoneTypeDisplay(props.type, props.mapShape);
   return { ...d, label: props.label ?? d.label, style: {}, class: d.class };
 });
 </script>

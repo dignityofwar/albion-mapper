@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
 import { EXCLUDED_MAP_NAMES } from './excludedMaps.js';
 import { GameMapSchema, type GameMap, type MapType } from '../src/types.js';
+import { ZoneNameParser } from '../src/ZoneNameParser.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -53,17 +54,10 @@ interface RawEntry {
 const TWO_HYPHEN_RE = /^[^-\s]+-[^-\s]+-[^-\s]+$/;
 const ONE_HYPHEN_RE = /^[^-\s]+-[^-\s]+$/;
 
-function isHideout(name: string): boolean {
-  return TWO_HYPHEN_RE.test(name);
-}
-
 function classifyMapType(raw: RawEntry): MapType | null {
   const { name, color, icons } = raw;
 
-  if (TWO_HYPHEN_RE.test(name)) {
-    return 'roadsHideout';
-  }
-  if (ONE_HYPHEN_RE.test(name)) {
+  if (TWO_HYPHEN_RE.test(name) || ONE_HYPHEN_RE.test(name)) {
     return 'roads';
   }
 
@@ -192,6 +186,37 @@ async function main(): Promise<void> {
     const mapName = raw.name;
     const mapID = mapName.toLowerCase().replace(/\s+/g, '-');
 
+    const buildGameMap = (id: string, name: string, type: MapType, tier: number, icons?: RawIcon[]): GameMap => {
+      const gameMap: GameMap = {
+        mapID: id,
+        mapName: name,
+        mapType: type,
+        tier,
+        category: getZoneCategory(name, type),
+      };
+
+      if (type === 'roads' || type === 'roadsHideout') {
+        gameMap.oresAvailable = extractOres(icons);
+
+        const shape = ZoneNameParser.parseMapShape({ mapName: name, mapID: id } as any);
+        const socketInfo = ZoneNameParser.resolveSocketInfo(shape);
+        const guaranteedContent = ZoneNameParser.parseGuaranteedContent({ mapName: name } as any);
+
+        gameMap.mapShape = shape;
+        gameMap.socketCount = socketInfo.socketCount;
+        gameMap.largeSocketCount = socketInfo.largeSocketCount;
+        gameMap.smallSocketCount = socketInfo.smallSocketCount;
+        gameMap.socketCountIsMinimum = socketInfo.socketCountIsMinimum;
+        gameMap.guaranteedContent = guaranteedContent;
+
+        if (shape === 'rest') {
+          gameMap.isRoadsHideout = true;
+        }
+      }
+
+      return gameMap;
+    };
+
     // 5. Duplicate ID check — disambiguate with tier suffix, then hard-abort if still colliding
     if (seenIDs.has(mapID)) {
       const existingEntry = seenIDs.get(mapID)!;
@@ -223,18 +248,9 @@ async function main(): Promise<void> {
         process.exit(1);
       }
       seenIDs.set(finalID, mapName);
-      // Build record with disambiguated ID
-      const gameMap: GameMap = {
-        mapID: finalID,
-        mapName,
-        mapType: mapType!,
-        tier: tierNum,
-        category: getZoneCategory(mapName, mapType!),
-      };
-      if (mapType === 'roads' || mapType === 'roadsHideout') {
-        if (isHideout(mapName)) gameMap.isRoadsHideout = true;
-        gameMap.oresAvailable = extractOres(raw.icons);
-      }
+      
+      const gameMap = buildGameMap(finalID, mapName, mapType!, tierNum, raw.icons);
+      
       const parsed = GameMapSchema.safeParse(gameMap);
       if (!parsed.success) {
         warn(`Zod validation failed for "${mapName}": ${parsed.error.message}`);
@@ -246,18 +262,7 @@ async function main(): Promise<void> {
     seenIDs.set(mapID, mapName);
 
     // 6. Build GameMap
-    const gameMap: GameMap = {
-      mapID,
-      mapName,
-      mapType,
-      tier: tierNum,
-      category: getZoneCategory(mapName, mapType),
-    };
-
-    if (mapType === 'roads' || mapType === 'roadsHideout') {
-      if (isHideout(mapName)) gameMap.isRoadsHideout = true;
-      gameMap.oresAvailable = extractOres(raw.icons);
-    }
+    const gameMap = buildGameMap(mapID, mapName, mapType, tierNum, raw.icons);
 
     // 7. Validate against Zod schema
     const parsed = GameMapSchema.safeParse(gameMap);

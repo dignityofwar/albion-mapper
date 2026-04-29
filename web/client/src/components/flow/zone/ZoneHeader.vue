@@ -8,6 +8,7 @@ defineProps<{
   isHome?: boolean;
   type: ZoneType;
   category?: string;
+  mapShape?: string;
 }>();
 </script>
 
@@ -17,6 +18,6 @@ defineProps<{
     <span v-if="isHome" class="ml-1">🏠</span>
   </div>
   <div class="flex items-center justify-center mt-2">
-    <TagZone :type="type" :category="category" />
+    <TagZone :type="type" :category="category" :map-shape="mapShape" />
   </div>
 </template>
