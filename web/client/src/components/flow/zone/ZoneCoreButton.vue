@@ -13,6 +13,7 @@ const props = defineProps<{
   timerValue?: string;
   isTimerTooLong?: boolean;
   isTimerValid?: boolean;
+  isUnlocked?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -22,6 +23,8 @@ const emit = defineEmits<{
   (e: 'clear'): void;
   (e: 'focus'): void;
   (e: 'blur'): void;
+  (e: 'unlock'): void;
+  (e: 'lock'): void;
 }>();
 
 const config = {
@@ -34,7 +37,7 @@ const config = {
 const timerInputRef = ref<HTMLInputElement | null>(null);
 
 const containerStyle = computed(() => {
-  const targetWidth = props.editing ? '135px' : (props.active ? '100px' : '60px');
+  const targetWidth = props.editing ? '160px' : (props.active ? '110px' : '60px');
   const style: any = {
     width: targetWidth,
     '--target-width': targetWidth,
@@ -83,35 +86,71 @@ defineExpose({
           <img :src="config[type].img" class="w-6 h-6 p-[2px] shrink-0" />
           
           <Transition name="fade" mode="out-in">
-            <span v-if="label && !editing" key="timer" class="text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200 shrink-0">{{ label }}</span>
-            <div v-else-if="editing" key="editing" class="flex items-center gap-1 overflow-hidden whitespace-nowrap shrink-0">
-              <input 
-                ref="timerInputRef"
-                type="text" 
-                :value="timerValue"
-                @input="e => emit('update:timerValue', (e.target as HTMLInputElement).value)"
-                @focus="emit('focus')"
-                @blur="emit('blur')"
-                @keydown.enter="emit('save')"
-                placeholder="MM:SS"
-                class="nodrag bg-gray-950/50 text-white text-[12px] font-bold w-[48px] text-center border rounded h-5 px-0 leading-none outline-none transition-colors border-gray-600 focus:border-blue-400"
-                :class="{ 'border-red-500 text-red-500': isTimerTooLong }"
-                @click.stop
-              />
+            <div v-if="label && !editing" key="timer" class="flex items-center gap-1.5">
+              <span class="text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200 shrink-0">{{ label }}</span>
+            </div>
+            <div v-else-if="!label && active && !editing" key="unlocked" class="flex items-center justify-center pr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+              </svg>
+            </div>
+            <div v-else-if="editing" key="editing" class="flex items-center gap-2 overflow-hidden whitespace-nowrap shrink-0">
+              <div class="relative flex items-center gap-1">
+                <input 
+                  v-if="!isUnlocked"
+                  ref="timerInputRef"
+                  type="text" 
+                  :value="timerValue"
+                  @input="e => emit('update:timerValue', (e.target as HTMLInputElement).value)"
+                  @focus="emit('focus')"
+                  @blur="emit('blur')"
+                  @keydown.enter="emit('save')"
+                  placeholder="MM:SS"
+                  class="nodrag bg-gray-950/50 text-white text-[12px] font-bold w-[48px] text-center border rounded h-5 px-0 leading-none outline-none transition-colors border-gray-600 focus:border-blue-400"
+                  :class="{ 'border-red-500 text-red-500': isTimerTooLong }"
+                  @click.stop
+                />
+                <div v-else class="w-[48px] flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
+                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+                  </svg>
+                </div>
+              </div>
             </div>
           </Transition>
         </div>
 
-        <!-- X Button Rectangle -->
+        <!-- Lock/Unlock and X Buttons -->
         <Transition name="fade">
-          <button 
-            v-if="editing"
-            @click.stop="emit('clear')"
-            class="nodrag absolute right-0 top-0 bottom-0 w-6 flex items-center justify-center text-white text-[10px] transition-colors z-20 group/clear bg-red-600 hover:bg-red-500 border-none outline-none rounded-tr-md rounded-br-md"
-            title="Clear Timer"
-          >
-            <span class="relative z-30">✕</span>
-          </button>
+          <div v-if="editing" class="absolute right-0 top-0 bottom-0 flex z-20">
+            <button 
+              v-if="!isUnlocked"
+              @click.stop="emit('unlock')"
+              class="nodrag w-6 flex items-center justify-center text-white transition-colors bg-yellow-600 hover:bg-yellow-500 border-none outline-none"
+              title="Unlock Core"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+              </svg>
+            </button>
+            <button 
+              v-else
+              @click.stop="emit('lock')"
+              class="nodrag w-6 flex items-center justify-center text-blue-400 transition-colors bg-gray-600 hover:bg-gray-500 border-none outline-none"
+              title="Lock Core"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </button>
+            <button 
+              @click.stop="emit('clear')"
+              class="nodrag w-6 flex items-center justify-center text-white text-[10px] transition-colors group/clear bg-red-600 hover:bg-red-500 border-none outline-none rounded-tr-md rounded-br-md"
+              title="Clear Timer"
+            >
+              <span class="relative z-30">✕</span>
+            </button>
+          </div>
         </Transition>
       </div>
     </TooltipTrigger>
@@ -142,7 +181,7 @@ defineExpose({
 }
 
 .core-container.editing {
-  padding-right: 24px;
+  padding-right: 48px;
 }
 
 .fade-enter-active {

@@ -20,14 +20,21 @@ const emit = defineEmits<{
   (e: 'clear'): void;
   (e: 'focus'): void;
   (e: 'blur'): void;
+  (e: 'unlock', core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow'): void;
+  (e: 'lock', core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow'): void;
 }>();
 
 function isCoreActive(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow'): boolean {
+  return !!props.features?.[core];
+}
+
+function isCoreUnlocked(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow'): boolean {
   if (!props.features?.[core]) return false;
   const timerKey = core === 'powercoreGreen' ? 'powercoreTimerGreen' : core === 'powercoreBlue' ? 'powercoreTimerBlue' : core === 'powercorePurple' ? 'powercoreTimerPurple' : 'powercoreTimerYellow';
   const expiresAt = props.features?.[timerKey as keyof NodeFeatures] as number | undefined;
+  
   if (!expiresAt) return true;
-  return expiresAt > props.now;
+  return expiresAt <= props.now;
 }
 
 function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow'): string {
@@ -78,12 +85,15 @@ defineExpose({
         :timer-value="activeEditingCore === core ? timerValue : ''"
         :is-timer-too-long="activeEditingCore === core ? isTimerTooLong : false"
         :is-timer-valid="activeEditingCore === core ? isTimerValid : false"
+        :is-unlocked="isCoreUnlocked(core)"
         @toggle="emit('toggle', core)"
         @update:timer-value="emit('update:timerValue', $event)"
         @save="emit('save')"
         @clear="emit('clear')"
         @focus="emit('focus')"
         @blur="emit('blur')"
+        @unlock="emit('unlock', core)"
+        @lock="emit('lock', core)"
       />
     </div>
   </div>

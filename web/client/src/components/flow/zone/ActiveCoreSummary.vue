@@ -56,10 +56,15 @@ const config = {
         </span>
       </div>
       <span 
-        class="font-mono bg-gray-950 rounded border border-gray-700 shrink-0"
-        :class="compact ? 'text-xs px-1.5 py-0.5 text-gray-300' : 'text-sm px-2 py-1 font-bold text-indigo-300'"
+        class="font-mono bg-gray-950 rounded border border-gray-700 shrink-0 flex items-center justify-center"
+        :class="compact ? 'text-xs px-1.5 py-0.5 text-gray-300 min-w-[45px] h-6' : 'text-sm px-2 py-1 font-bold text-indigo-300 min-w-[55px] h-8'"
       >
-        {{ formatTimerMMSS(core.expiresAt) }}
+        <template v-if="core.expiresAt > now">
+          {{ formatTimerMMSS(core.expiresAt) }}
+        </template>
+        <svg v-else xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
+          <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+        </svg>
       </span>
     </button>
   </div>

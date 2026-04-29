@@ -442,17 +442,17 @@ const activeCores = computed(() => {
     const features = node.data.features as NodeFeatures | undefined;
     if (!features) return;
     
-    if (features.powercoreTimerGreen && features.powercoreTimerGreen > now.value) {
-      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerGreen, coreType: 'green' });
+    if (features.powercoreGreen) {
+      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerGreen || 0, coreType: 'green' });
     }
-    if (features.powercoreTimerBlue && features.powercoreTimerBlue > now.value) {
-      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerBlue, coreType: 'blue' });
+    if (features.powercoreBlue) {
+      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerBlue || 0, coreType: 'blue' });
     }
-    if (features.powercoreTimerPurple && features.powercoreTimerPurple > now.value) {
-      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerPurple, coreType: 'purple' });
+    if (features.powercorePurple) {
+      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerPurple || 0, coreType: 'purple' });
     }
-    if (features.powercoreTimerYellow && features.powercoreTimerYellow > now.value) {
-      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerYellow, coreType: 'yellow' });
+    if (features.powercoreYellow) {
+      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerYellow || 0, coreType: 'yellow' });
     }
   });
   return cores.sort((a, b) => a.expiresAt - b.expiresAt);

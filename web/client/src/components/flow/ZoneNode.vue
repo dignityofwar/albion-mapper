@@ -323,6 +323,33 @@ function updateReds(val: number | null | undefined) {
   store.updateNodeFeatures(props.id, features);
 }
 
+function unlockCore(core: string) {
+  const timerKey = getTimerKey(core);
+  const features = { ...(props.data.features || {}) };
+  // Set timer to current time so it's considered expired (unlocked)
+  features[timerKey as keyof NodeFeatures] = now.value as any;
+  store.updateNodeFeatures(props.id, features);
+  
+  if (activeEditingCore.value === core) {
+    timerValue.value = '';
+    activeEditingCore.value = null;
+  }
+}
+
+function lockCore(core: string) {
+  const timerKey = getTimerKey(core);
+  const features = { ...(props.data.features || {}) };
+  const maxSeconds = MAX_TIMES[core as keyof typeof MAX_TIMES];
+  features[timerKey as keyof NodeFeatures] = (now.value + maxSeconds * 1000) as any;
+  store.updateNodeFeatures(props.id, features);
+  
+  if (activeEditingCore.value === core) {
+    const m = Math.floor(maxSeconds / 60);
+    const s = maxSeconds % 60;
+    timerValue.value = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+}
+
 function getBorderBgClass(type: string): string {
   switch (type) {
     case 'royalBlue': return 'bg-blue-500';
@@ -402,6 +429,8 @@ const defaultInternalHandles = computed(() => {
             @clear="clearTimer"
             @focus="onTimerFocus"
             @blur="onTimerBlur"
+            @unlock="unlockCore"
+            @lock="lockCore"
           />
         </div>
 

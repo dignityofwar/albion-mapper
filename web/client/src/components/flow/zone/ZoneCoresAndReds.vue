@@ -20,6 +20,8 @@ const emit = defineEmits<{
   (e: 'clear'): void;
   (e: 'focus'): void;
   (e: 'blur'): void;
+  (e: 'unlock', core: string): void;
+  (e: 'lock', core: string): void;
 }>();
 
 const timerComponentRef = ref<InstanceType<typeof ZoneCores> | null>(null);
@@ -47,6 +49,8 @@ defineExpose({
       @clear="emit('clear')"
       @focus="emit('focus')"
       @blur="emit('blur')"
+      @unlock="emit('unlock', $event)"
+      @lock="emit('lock', $event)"
     />
   </div>
 </template>
