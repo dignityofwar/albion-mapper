@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../../constants/ui';
 import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
+import IconUnlocked from '../../icons/IconUnlocked.vue';
+import IconLocked from '../../icons/IconLocked.vue';
 import { ref, watch, nextTick, computed } from 'vue';
 
 const props = defineProps<{
@@ -37,7 +39,7 @@ const config = {
 const timerInputRef = ref<HTMLInputElement | null>(null);
 
 const containerStyle = computed(() => {
-  const targetWidth = props.editing ? '160px' : (props.active ? '110px' : '60px');
+  const targetWidth = props.editing ? '160px' : (props.active ? (props.isUnlocked ? '80px' : '110px') : '60px');
   const style: any = {
     width: targetWidth,
     '--target-width': targetWidth,
@@ -90,9 +92,7 @@ defineExpose({
               <span class="text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200 shrink-0">{{ label }}</span>
             </div>
             <div v-else-if="!label && active && !editing" key="unlocked" class="flex items-center justify-center pr-4">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
-              </svg>
+              <IconUnlocked class="text-green-500" />
             </div>
             <div v-else-if="editing" key="editing" class="flex items-center gap-2 overflow-hidden whitespace-nowrap shrink-0">
               <div class="relative flex items-center gap-1">
@@ -111,9 +111,7 @@ defineExpose({
                   @click.stop
                 />
                 <div v-else class="w-[48px] flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
-                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
-                  </svg>
+                  <IconUnlocked class="text-green-500" />
                 </div>
               </div>
             </div>
@@ -126,12 +124,10 @@ defineExpose({
             <button 
               v-if="!isUnlocked"
               @click.stop="emit('unlock')"
-              class="nodrag w-6 flex items-center justify-center text-white transition-colors bg-yellow-600 hover:bg-yellow-500 border-none outline-none"
+              class="nodrag w-6 flex items-center justify-center text-white transition-colors bg-green-700 hover:bg-green-500 border-none outline-none"
               title="Unlock Core"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>
-              </svg>
+              <IconUnlocked />
             </button>
             <button 
               v-else
@@ -139,9 +135,7 @@ defineExpose({
               class="nodrag w-6 flex items-center justify-center text-blue-400 transition-colors bg-gray-600 hover:bg-gray-500 border-none outline-none"
               title="Lock Core"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
+              <IconLocked />
             </button>
             <button 
               @click.stop="emit('clear')"
