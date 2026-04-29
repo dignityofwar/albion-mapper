@@ -87,7 +87,7 @@ const isActuallyActive = computed(() => {
 });
 
 const containerStyle = computed(() => {
-  const targetWidth = (isActuallyActive.value || props.isOpen) ? '115px' : '80px';
+  const targetWidth = (isActuallyActive.value || props.isOpen) ? '110px' : '80px';
   const style: any = {
     width: targetWidth,
     '--target-width': targetWidth,
@@ -161,7 +161,7 @@ const timerLabel = computed(() => {
 
           <!-- Right Div: Logo -->
           <div class="shrink-0 flex items-center justify-center">
-            <img src="/images/reds.png" class="w-8 h-8 p-[2px]" alt="Reds" />
+            <img src="/images/reds.png" class="w-6 h-6 p-[2px]" alt="Reds" />
           </div>
         </div>
       </div>
