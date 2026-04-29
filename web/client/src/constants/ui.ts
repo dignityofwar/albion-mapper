@@ -5,3 +5,7 @@ export const ZONE_BUTTON_HOVER_HAS_REDS = 'hover:bg-red-700/60';
 
 export const ZONE_BUTTON_BG_ACTIVE_HAS_REDS = 'bg-red-600';
 export const ZONE_BUTTON_RING_ACTIVE_HAS_REDS = 'ring-red-400';
+
+export const ZONE_BUTTON_HOVER_REDS = 'hover:bg-red-700/60';
+export const ZONE_BUTTON_HOVER_INACTIVE = 'hover:bg-gray-600';
+export const ZONE_BUTTON_HOVER_ACTIVE = 'hover:bg-gray-500';

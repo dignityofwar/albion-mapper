@@ -48,7 +48,7 @@ describe('Reds Timer Logic', () => {
       redsTimer: now + 60000 // 1 minute from now
     }
     const wrapper = mountNode(features, now)
-    const nodeDiv = wrapper.find('.min-w-\\[230px\\]')
+    const nodeDiv = wrapper.find('.min-w-\\[400px\\]')
     expect(nodeDiv.classes()).toContain('red-glow')
   })
 
@@ -59,7 +59,7 @@ describe('Reds Timer Logic', () => {
       redsTimer: now - 1000 // Expired 1 second ago
     }
     const wrapper = mountNode(features, now)
-    const nodeDiv = wrapper.find('.min-w-\\[230px\\]')
+    const nodeDiv = wrapper.find('.min-w-\\[400px\\]')
     expect(nodeDiv.classes()).not.toContain('red-glow')
   })
 

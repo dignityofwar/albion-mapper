@@ -604,7 +604,7 @@ const defaultInternalHandles = computed(() => {
 .reds-ne-container {
   position: absolute;
   top: 87px;
-  right: 98px;
+  right: 71px;
 }
 
 </style>
