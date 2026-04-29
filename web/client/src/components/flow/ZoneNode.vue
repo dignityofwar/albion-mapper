@@ -569,7 +569,7 @@ const defaultInternalHandles = computed(() => {
 .cores-nw-container {
   position: absolute;
   top: 50px;
-  left: 136px;
+  left: 120px;
 }
 
 .reds-ne-container {

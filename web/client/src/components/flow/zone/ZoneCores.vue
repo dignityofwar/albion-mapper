@@ -65,7 +65,7 @@ defineExpose({
     <div 
       v-for="(core, index) in (['powercoreGreen', 'powercoreBlue', 'powercorePurple', 'powercoreYellow'] as const)" 
       :key="core"
-      class="absolute left-0 flex items-center transition-all duration-300"
+      class="absolute left-0 flex items-center"
       :style="{ top: `${index * 36}px`, left: `${index * -36}px` }"
     >
       <ZoneCoreButton 

@@ -86,6 +86,21 @@ const isActuallyActive = computed(() => {
   return true;
 });
 
+const containerStyle = computed(() => {
+  const targetWidth = (isActuallyActive.value || props.isOpen) ? '84px' : '44px';
+  const style: any = {
+    width: targetWidth,
+    '--target-width': targetWidth,
+  };
+
+  if (isActuallyActive.value || props.isOpen) {
+    style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+    style.boxShadow = 'inset 0 0 0 1px #ef4444, 0 4px 10px -2px rgba(239, 68, 68, 0.5)';
+  }
+
+  return style;
+});
+
 const tooltipText = computed(() => {
   if (!isActuallyActive.value || !props.redsTimer || !props.now) return 'Reds';
   const remaining = Math.max(0, Math.floor((props.redsTimer - props.now) / 1000));
@@ -98,27 +113,23 @@ const tooltipText = computed(() => {
 </script>
 
 <template>
-  <div ref="containerRef" class="flex items-center">
-    <TooltipRoot>
-      <TooltipTrigger as-child>
-        <button 
-          @click.stop="handleToggle" 
-          class="text-white py-1 pl-2 pr-1 leading-none transition-all duration-300 flex items-center min-w-[40px] relative group"
-        >
-          <!-- Background Shape -->
-          <div 
-            class="absolute inset-y-[1px] left-[1px] right-[-15px] transition-all duration-300 reds-shape"
-            :class="[(isActuallyActive || isOpen) ? '' : ZONE_BUTTON_BG_DEFAULT]"
-            :style="(isActuallyActive || isOpen) ? { 
-              backgroundColor: 'rgba(239, 68, 68, 0.2)',
-              border: '1px solid #ef4444',
-              boxShadow: '0 4px 10px -2px rgba(239, 68, 68, 0.5)'
-            } : {}"
-          ></div>
-          <div class="flex items-center relative z-10 gap-1">
-            <Transition name="slide-left">
+  <TooltipRoot>
+    <TooltipTrigger as-child>
+      <div 
+        ref="containerRef"
+        @click.stop="handleToggle" 
+        class="reds-container relative group cursor-pointer overflow-visible shrink-0"
+        :class="[
+          (isActuallyActive || isOpen) ? '' : ZONE_BUTTON_BG_DEFAULT,
+          { 'active': isActuallyActive || isOpen }
+        ]"
+        :style="containerStyle"
+      >
+        <!-- Background/Border is handled by the container itself -->
+        <div class="flex items-center h-full pl-1 gap-1 relative z-10">
+          <Transition name="fade-slide">
+            <div v-if="isOpen || isActuallyActive" class="overflow-hidden flex items-center shrink-0">
               <input
-                v-if="isOpen || isActuallyActive"
                 ref="redsInputRef"
                 type="text"
                 inputmode="numeric"
@@ -130,12 +141,13 @@ const tooltipText = computed(() => {
                 class="nodrag bg-transparent text-white text-[14px] w-5 h-6 text-center border-none outline-none font-bold leading-none p-0 px-0"
                 placeholder="?"
               />
-            </Transition>
-            <img src="/images/reds.png" class="w-6 h-6 p-[2px] shrink-0" alt="Reds" />
-          </div>
-        </button>
-      </TooltipTrigger>
-      <TooltipPortal>
+            </div>
+          </Transition>
+          <img src="/images/reds.png" class="w-6 h-6 p-[2px] shrink-0" alt="Reds" />
+        </div>
+      </div>
+    </TooltipTrigger>
+    <TooltipPortal>
         <TooltipContent 
           class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-50 side-top animate-in fade-in zoom-in duration-200"
           :side-offset="5"
@@ -143,35 +155,42 @@ const tooltipText = computed(() => {
           {{ tooltipText }}
         </TooltipContent>
       </TooltipPortal>
-    </TooltipRoot>
-  </div>
+  </TooltipRoot>
 </template>
 
 <style scoped>
-.rhombus-button {
-  transform: skewX(45deg);
+.reds-container {
+  height: 32px;
+  width: var(--target-width, 44px);
+  min-width: 44px;
+  transition: width 0.3s ease, padding-right 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 100%, 0 100%);
+  padding-right: 4px;
 }
 
-.reds-shape {
-  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 100%, 0 100%);
+.reds-container.active {
+  padding-right: 8px;
 }
 
-.slide-left-enter-active {
-  transition: all 0.3s ease-in-out;
-  max-width: 50px;
-  overflow: hidden;
-  transition-delay: 150ms;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
 
-.slide-left-leave-active {
-  transition: all 0.3s ease-in-out;
-  max-width: 50px;
-  overflow: hidden;
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
 }
 
-.slide-left-enter-from,
-.slide-left-leave-to {
-  max-width: 0;
+.fade-slide-enter-from,
+.fade-slide-leave-to {
   opacity: 0;
+  max-width: 0;
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  max-width: 30px;
 }
 </style>

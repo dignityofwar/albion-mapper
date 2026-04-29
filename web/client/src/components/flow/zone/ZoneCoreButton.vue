@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../../constants/ui';
 import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
-import { ref, watch, nextTick } from 'vue';
+import { ref, watch, nextTick, computed } from 'vue';
 
 const props = defineProps<{
   type: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow';
@@ -33,6 +33,25 @@ const config = {
 
 const timerInputRef = ref<HTMLInputElement | null>(null);
 
+const containerStyle = computed(() => {
+  const targetWidth = props.editing ? '135px' : (props.active ? '100px' : '60px');
+  const style: any = {
+    width: targetWidth,
+    '--target-width': targetWidth,
+  };
+
+  if (props.active) {
+    style.backgroundColor = `${config[props.type].color}33`;
+    style.boxShadow = `inset 0 0 0 1px ${config[props.type].color}, 0 4px 10px -2px ${config[props.type].shadow}`;
+  }
+  
+  if (props.editing) {
+    style.boxShadow = `inset 0 0 0 1px ${config[props.type].color}, 0 4px 10px -2px ${config[props.type].shadow}`;
+  }
+
+  return style;
+});
+
 watch(() => props.editing, (isEditing) => {
   if (isEditing) {
     nextTick(() => {
@@ -50,67 +69,50 @@ defineExpose({
 <template>
   <TooltipRoot>
     <TooltipTrigger as-child>
-      <div class="relative group">
-        <button 
-          @click.stop="$emit('toggle')" 
-          class="text-white py-1 pl-2 pr-1 leading-none transition-all duration-300 flex items-center relative group"
-          :class="[
-            editing ? 'min-w-[115px] pr-6' : (active ? 'min-w-[80px] pr-2' : 'min-w-[40px]')
-          ]"
-        >
-          <!-- Background Shape -->
-          <div 
-            class="absolute inset-y-[1px] right-[1px] left-[-15px] transition-all duration-300 core-shape rounded-tr-md rounded br-md"
-            :class="[
-              active ? '' : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
-              editing ? 'ring-2 ring-inset ring-white' : ''
-            ]"
-            :style="active ? { 
-              backgroundColor: `${config[type].color}33`,
-              border: `1px solid ${config[type].color}`,
-              boxShadow: `0 4px 10px -2px ${config[type].shadow}`
-            } : {}"
-          ></div>
-
-          <div class="flex items-center relative z-10 gap-1">
-            <img :src="config[type].img" class="w-6 h-6 p-[2px] shrink-0" />
-            
-            <Transition name="timer">
-              <span v-if="label && !editing" class="text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200">{{ label }}</span>
-            </Transition>
-
-            <Transition name="fade">
-              <div v-if="editing" class="flex items-center gap-1 overflow-hidden whitespace-nowrap">
-                <input 
-                  ref="timerInputRef"
-                  type="text" 
-                  :value="timerValue"
-                  @input="e => emit('update:timerValue', (e.target as HTMLInputElement).value)"
-                  @focus="emit('focus')"
-                  @blur="emit('blur')"
-                  @keydown.enter="emit('save')"
-                  placeholder="MM:SS"
-                  class="nodrag bg-gray-950/50 text-white text-[12px] font-bold w-[48px] text-center border rounded h-5 px-0 leading-none outline-none transition-colors border-gray-600 focus:border-blue-400"
-                  :class="{ 'border-red-500 text-red-500': isTimerTooLong }"
-                  @click.stop
-                />
-              </div>
-            </Transition>
-          </div>
-
-          <!-- X Button Rectangle -->
-          <Transition name="fade">
-            <button 
-              v-if="editing"
-              @click.stop="emit('clear')"
-              class="nodrag absolute right-0 top-0 bottom-0 w-6 flex items-center justify-center text-white text-[10px] transition-colors z-20 group/clear"
-              title="Clear Timer"
-            >
-              <div class="absolute inset-y-[1px] right-[1px] left-0 bg-red-600 group-hover/clear:bg-red-500 transition-all duration-300"></div>
-              <span class="relative z-30">✕</span>
-            </button>
+      <div 
+        @click.stop="$emit('toggle')" 
+        class="core-container relative group cursor-pointer overflow-visible shrink-0 rounded-tr-md rounded-br-md"
+        :class="[
+          active ? '' : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
+          { 'active': active, 'editing': editing }
+        ]"
+        :style="containerStyle"
+      >
+        <!-- Background/Border is handled by the container itself via clip-path and styles -->
+        <div class="flex items-center h-full pl-4 gap-1 relative z-10">
+          <img :src="config[type].img" class="w-6 h-6 p-[2px] shrink-0" />
+          
+          <Transition name="fade" mode="out-in">
+            <span v-if="label && !editing" key="timer" class="text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200 shrink-0">{{ label }}</span>
+            <div v-else-if="editing" key="editing" class="flex items-center gap-1 overflow-hidden whitespace-nowrap shrink-0">
+              <input 
+                ref="timerInputRef"
+                type="text" 
+                :value="timerValue"
+                @input="e => emit('update:timerValue', (e.target as HTMLInputElement).value)"
+                @focus="emit('focus')"
+                @blur="emit('blur')"
+                @keydown.enter="emit('save')"
+                placeholder="MM:SS"
+                class="nodrag bg-gray-950/50 text-white text-[12px] font-bold w-[48px] text-center border rounded h-5 px-0 leading-none outline-none transition-colors border-gray-600 focus:border-blue-400"
+                :class="{ 'border-red-500 text-red-500': isTimerTooLong }"
+                @click.stop
+              />
+            </div>
           </Transition>
-        </button>
+        </div>
+
+        <!-- X Button Rectangle -->
+        <Transition name="fade">
+          <button 
+            v-if="editing"
+            @click.stop="emit('clear')"
+            class="nodrag absolute right-0 top-0 bottom-0 w-6 flex items-center justify-center text-white text-[10px] transition-colors z-20 group/clear bg-red-600 hover:bg-red-500 border-none outline-none rounded-tr-md rounded-br-md"
+            title="Clear Timer"
+          >
+            <span class="relative z-30">✕</span>
+          </button>
+        </Transition>
       </div>
     </TooltipTrigger>
     <TooltipPortal>
@@ -125,40 +127,30 @@ defineExpose({
 </template>
 
 <style scoped>
-.rhombus-button {
-  transform: skewX(-45deg);
+.core-container {
+  height: 32px;
+  width: var(--target-width, 44px);
+  min-width: 44px;
+  transition: width 0.3s ease, padding-right 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  clip-path: polygon(32px 0, 100% 0, 100% 100%, 0 100%);
+  padding-right: 8px;
+  padding-left: 12px;
 }
 
-.core-shape {
-  clip-path: polygon(30px 0, 100% 0, 100% 100%, 0 100%);
+.core-container.active {
+  padding-right: 8px;
 }
 
-.timer-enter-active {
-  transition: all 0.3s ease;
-  transition-delay: 150ms;
-}
-
-.timer-leave-active {
-  transition: all 0.3s ease;
-}
-
-.timer-enter-from,
-.timer-leave-to {
-  opacity: 0;
-}
-
-.timer-enter-to,
-.timer-leave-from {
-  opacity: 1;
+.core-container.editing {
+  padding-right: 24px;
 }
 
 .fade-enter-active {
-  transition: opacity 0.3s ease;
-  transition-delay: 150ms;
+  transition: opacity 0.15s ease;
 }
 
 .fade-leave-active {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.15s ease;
 }
 
 .fade-enter-from,
