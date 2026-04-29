@@ -103,12 +103,19 @@ const tooltipText = computed(() => {
       <TooltipTrigger as-child>
         <button 
           @click.stop="handleToggle" 
-          :class="[
-            (isActuallyActive || isOpen) ? 'bg-slate-900/90' : ZONE_BUTTON_BG_DEFAULT,
-            'text-white p-1.5 ring-inset leading-none transition-all flex items-center justify-center rhombus-button min-w-[44px] relative overflow-hidden'
-          ]" 
+          class="text-white py-1 pl-2 pr-1 leading-none transition-all duration-300 flex items-center min-w-[40px] relative group"
         >
-          <div class="flex items-center unskew-content">
+          <!-- Background Rhombus -->
+          <div 
+            class="absolute inset-[1px] rhombus-button transition-all duration-300"
+            :class="[(isActuallyActive || isOpen) ? '' : ZONE_BUTTON_BG_DEFAULT]"
+            :style="(isActuallyActive || isOpen) ? { 
+              backgroundColor: 'rgba(239, 68, 68, 0.2)',
+              border: '1px solid #ef4444',
+              boxShadow: '0 4px 10px -2px rgba(239, 68, 68, 0.5)'
+            } : {}"
+          ></div>
+          <div class="flex items-center relative z-10 gap-1">
             <Transition name="slide-left">
               <input
                 v-if="isOpen || isActuallyActive"
@@ -120,17 +127,12 @@ const tooltipText = computed(() => {
                 @focus="onFocus"
                 @blur="onBlur"
                 @click.stop
-                class="nodrag bg-transparent text-white text-[14px] w-6 text-center border-none outline-none font-bold leading-none p-0 mr-1"
+                class="nodrag bg-transparent text-white text-[14px] w-5 h-6 text-center border-none outline-none font-bold leading-none p-0 px-0"
                 placeholder="?"
               />
             </Transition>
-            <img src="/images/reds.png" class="w-7 h-7 p-[2px] shrink-0" alt="Reds" />
+            <img src="/images/reds.png" class="w-6 h-6 p-[2px] shrink-0" alt="Reds" />
           </div>
-          <!-- Bottom red line -->
-          <div 
-            v-if="isActuallyActive" 
-            class="absolute bottom-0 left-0 right-0 h-[2px] bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300"
-          ></div>
         </button>
       </TooltipTrigger>
       <TooltipPortal>
@@ -147,16 +149,16 @@ const tooltipText = computed(() => {
 
 <style scoped>
 .rhombus-button {
-  transform: skewY(45deg);
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+  transform: skewX(45deg);
 }
 
-.unskew-content {
-  transform: skewY(-45deg) rotate(45deg);
+.slide-left-enter-active {
+  transition: all 0.3s ease-in-out;
+  max-width: 50px;
+  overflow: hidden;
+  transition-delay: 150ms;
 }
 
-.slide-left-enter-active,
 .slide-left-leave-active {
   transition: all 0.3s ease-in-out;
   max-width: 50px;

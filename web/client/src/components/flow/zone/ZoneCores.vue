@@ -61,12 +61,12 @@ defineExpose({
 </script>
 
 <template>
-  <div class="relative w-11 h-[180px]">
+  <div class="relative w-12 h-[160px]">
     <div 
       v-for="(core, index) in (['powercoreGreen', 'powercoreBlue', 'powercorePurple', 'powercoreYellow'] as const)" 
       :key="core"
       class="absolute left-0 flex items-center transition-all duration-300"
-      :style="{ top: `${index * 46}px` }"
+      :style="{ top: `${index * 36}px`, left: `${index * -36}px` }"
     >
       <ZoneCoreButton 
         :ref="el => { if (el) coreButtonRefs[core] = el }"

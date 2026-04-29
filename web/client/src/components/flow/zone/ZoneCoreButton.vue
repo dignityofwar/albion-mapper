@@ -53,21 +53,34 @@ defineExpose({
       <div class="relative group">
         <button 
           @click.stop="$emit('toggle')" 
+          class="text-white py-1 pl-2 pr-1 leading-none transition-all duration-300 flex items-center relative group"
           :class="[
-            active ? 'bg-slate-900/90' : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
-            editing ? 'ring-2 ring-white' : ''
-          ]" 
-          class="text-white p-1.5 ring-inset leading-none transition-all flex items-center rhombus-button min-w-[44px] relative overflow-hidden"
+            editing ? 'min-w-[124px] pr-5' : (active ? 'min-w-[80px] pr-2' : 'min-w-[40px]')
+          ]"
         >
-          <div class="flex items-center unskew-content">
-            <img :src="config[type].img" class="w-7 h-7 p-[2px] shrink-0" />
+          <!-- Background Rhombus -->
+          <div 
+            class="absolute inset-[1px] rhombus-button transition-all duration-300"
+            :class="[
+              active ? '' : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
+              editing ? 'ring-2 ring-inset ring-white' : ''
+            ]"
+            :style="active ? { 
+              backgroundColor: `${config[type].color}33`,
+              border: `1px solid ${config[type].color}`,
+              boxShadow: `0 4px 10px -2px ${config[type].shadow}`
+            } : {}"
+          ></div>
+
+          <div class="flex items-center relative z-10 gap-1">
+            <img :src="config[type].img" class="w-6 h-6 p-[2px] shrink-0" />
             
             <Transition name="timer">
-              <span v-if="label && !editing" class="ml-2 text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200">{{ label }}</span>
+              <span v-if="label && !editing" class="text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200">{{ label }}</span>
             </Transition>
 
-            <Transition name="slide">
-              <div v-if="editing" class="ml-2 flex items-center gap-1 overflow-hidden whitespace-nowrap">
+            <Transition name="fade">
+              <div v-if="editing" class="flex items-center gap-1 overflow-hidden whitespace-nowrap">
                 <input 
                   ref="timerInputRef"
                   type="text" 
@@ -77,29 +90,26 @@ defineExpose({
                   @blur="emit('blur')"
                   @keydown.enter="emit('save')"
                   placeholder="MM:SS"
-                  class="nodrag bg-gray-950/50 text-white text-[12px] font-bold w-16 text-center border rounded py-0.5 outline-none transition-colors border-gray-600 focus:border-blue-400"
+                  class="nodrag bg-gray-950/50 text-white text-[12px] font-bold w-[48px] text-center border rounded h-5 px-0 leading-none outline-none transition-colors border-gray-600 focus:border-blue-400"
                   :class="{ 'border-red-500 text-red-500': isTimerTooLong }"
                   @click.stop
                 />
-                <button 
-                  @click.stop="emit('clear')"
-                  class="nodrag bg-red-600 hover:bg-red-500 text-white rounded px-1.5 py-0.5 text-[10px] transition-colors"
-                  title="Clear Timer"
-                >
-                  ✕
-                </button>
               </div>
             </Transition>
           </div>
-          <!-- Bottom colored line -->
-          <div 
-            v-if="active" 
-            class="absolute bottom-0 left-0 right-0 h-[2px] transition-all duration-300"
-            :style="{ 
-              backgroundColor: config[type].color, 
-              boxShadow: `0 0 10px ${config[type].shadow}`
-            }"
-          ></div>
+
+          <!-- X Button Rhombus -->
+          <Transition name="fade">
+            <button 
+              v-if="editing"
+              @click.stop="emit('clear')"
+              class="nodrag absolute right-0 top-0 bottom-0 w-5 flex items-center justify-center text-white text-[10px] transition-colors z-20 group/clear"
+              title="Clear Timer"
+            >
+              <div class="absolute inset-y-[1px] right-[1px] left-[-4px] bg-red-600 group-hover/clear:bg-red-500 transition-all duration-300 rhombus-button"></div>
+              <span class="relative z-30 mr-1">✕</span>
+            </button>
+          </Transition>
         </button>
       </div>
     </TooltipTrigger>
@@ -116,16 +126,14 @@ defineExpose({
 
 <style scoped>
 .rhombus-button {
-  transform: skewY(-45deg);
-  border-top-right-radius: 4px;
-  border-bottom-right-radius: 4px;
+  transform: skewX(-45deg);
 }
 
-.unskew-content {
-  transform: skewY(45deg) rotate(-45deg);
+.timer-enter-active {
+  transition: all 0.3s ease;
+  transition-delay: 150ms;
 }
 
-.timer-enter-active,
 .timer-leave-active {
   transition: all 0.3s ease;
 }
@@ -133,27 +141,29 @@ defineExpose({
 .timer-enter-from,
 .timer-leave-to {
   opacity: 0;
-  max-width: 0;
-  margin-left: 0;
 }
 
 .timer-enter-to,
 .timer-leave-from {
   opacity: 1;
-  max-width: 100px;
-  margin-left: 0.5rem;
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.3s ease-in-out;
-  max-width: 150px;
+.fade-enter-active {
+  transition: opacity 0.3s ease;
+  transition-delay: 150ms;
 }
 
-.slide-enter-from,
-.slide-leave-to {
-  max-width: 0;
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
-  margin-left: 0 !important;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
 }
 </style>

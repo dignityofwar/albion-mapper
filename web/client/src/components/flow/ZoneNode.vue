@@ -568,18 +568,14 @@ const defaultInternalHandles = computed(() => {
 
 .cores-nw-container {
   position: absolute;
-  top: 65px;
-  left: 165px;
-  transform: rotate(45deg);
-  transform-origin: top left;
+  top: 50px;
+  left: 135px;
 }
 
 .reds-ne-container {
   position: absolute;
-  top: 65px;
-  right: 165px;
-  transform: rotate(-45deg);
-  transform-origin: top right;
+  top: 87px;
+  right: 98px;
 }
 
 </style>
