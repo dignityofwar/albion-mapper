@@ -55,12 +55,12 @@ defineExpose({
           @click.stop="$emit('toggle')" 
           class="text-white py-1 pl-2 pr-1 leading-none transition-all duration-300 flex items-center relative group"
           :class="[
-            editing ? 'min-w-[124px] pr-5' : (active ? 'min-w-[80px] pr-2' : 'min-w-[40px]')
+            editing ? 'min-w-[115px] pr-6' : (active ? 'min-w-[80px] pr-2' : 'min-w-[40px]')
           ]"
         >
-          <!-- Background Rhombus -->
+          <!-- Background Shape -->
           <div 
-            class="absolute inset-[1px] rhombus-button transition-all duration-300"
+            class="absolute inset-y-[1px] right-[1px] left-[-15px] transition-all duration-300 core-shape rounded-tr-md rounded br-md"
             :class="[
               active ? '' : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
               editing ? 'ring-2 ring-inset ring-white' : ''
@@ -98,16 +98,16 @@ defineExpose({
             </Transition>
           </div>
 
-          <!-- X Button Rhombus -->
+          <!-- X Button Rectangle -->
           <Transition name="fade">
             <button 
               v-if="editing"
               @click.stop="emit('clear')"
-              class="nodrag absolute right-0 top-0 bottom-0 w-5 flex items-center justify-center text-white text-[10px] transition-colors z-20 group/clear"
+              class="nodrag absolute right-0 top-0 bottom-0 w-6 flex items-center justify-center text-white text-[10px] transition-colors z-20 group/clear"
               title="Clear Timer"
             >
-              <div class="absolute inset-y-[1px] right-[1px] left-[-4px] bg-red-600 group-hover/clear:bg-red-500 transition-all duration-300 rhombus-button"></div>
-              <span class="relative z-30 mr-1">✕</span>
+              <div class="absolute inset-y-[1px] right-[1px] left-0 bg-red-600 group-hover/clear:bg-red-500 transition-all duration-300"></div>
+              <span class="relative z-30">✕</span>
             </button>
           </Transition>
         </button>
@@ -127,6 +127,10 @@ defineExpose({
 <style scoped>
 .rhombus-button {
   transform: skewX(-45deg);
+}
+
+.core-shape {
+  clip-path: polygon(30px 0, 100% 0, 100% 100%, 0 100%);
 }
 
 .timer-enter-active {

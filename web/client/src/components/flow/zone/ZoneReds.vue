@@ -105,9 +105,9 @@ const tooltipText = computed(() => {
           @click.stop="handleToggle" 
           class="text-white py-1 pl-2 pr-1 leading-none transition-all duration-300 flex items-center min-w-[40px] relative group"
         >
-          <!-- Background Rhombus -->
+          <!-- Background Shape -->
           <div 
-            class="absolute inset-[1px] rhombus-button transition-all duration-300"
+            class="absolute inset-y-[1px] left-[1px] right-[-15px] transition-all duration-300 reds-shape"
             :class="[(isActuallyActive || isOpen) ? '' : ZONE_BUTTON_BG_DEFAULT]"
             :style="(isActuallyActive || isOpen) ? { 
               backgroundColor: 'rgba(239, 68, 68, 0.2)',
@@ -150,6 +150,10 @@ const tooltipText = computed(() => {
 <style scoped>
 .rhombus-button {
   transform: skewX(45deg);
+}
+
+.reds-shape {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 100%, 0 100%);
 }
 
 .slide-left-enter-active {
