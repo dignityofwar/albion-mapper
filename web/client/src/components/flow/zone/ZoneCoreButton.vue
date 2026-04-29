@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../../constants/ui';
+import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS, ZONE_BUTTON_HOVER_REDS, ZONE_BUTTON_HOVER_INACTIVE } from '../../../constants/ui';
 import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import IconUnlocked from '../../icons/IconUnlocked.vue';
 import IconLocked from '../../icons/IconLocked.vue';
@@ -47,6 +47,7 @@ const containerStyle = computed(() => {
 
   if (props.active) {
     style.backgroundColor = `${config[props.type].color}33`;
+    style['--hover-bg'] = `${config[props.type].color}4D`;
     style.boxShadow = `inset 0 0 0 1px ${config[props.type].color}, 0 4px 10px -2px ${config[props.type].shadow}`;
   }
   
@@ -78,7 +79,7 @@ defineExpose({
         @click.stop="$emit('toggle')" 
         class="core-container relative group cursor-pointer overflow-visible shrink-0 rounded-tr-md rounded-br-md"
         :class="[
-          active ? '' : (hasReds ? ZONE_BUTTON_BG_HAS_REDS : ZONE_BUTTON_BG_DEFAULT),
+          active ? '' : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_INACTIVE}`),
           { 'active': active, 'editing': editing }
         ]"
         :style="containerStyle"
@@ -172,6 +173,10 @@ defineExpose({
 
 .core-container.active {
   padding-right: 8px;
+}
+
+.core-container.active:hover {
+  background-color: var(--hover-bg) !important;
 }
 
 .core-container.editing {

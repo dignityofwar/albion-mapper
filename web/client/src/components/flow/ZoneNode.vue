@@ -448,7 +448,7 @@ const defaultInternalHandles = computed(() => {
       </div>
 
       <!-- Central Content Block -->
-      <div class="absolute inset-x-0 top-[40%] z-10 pointer-events-none flex flex-col items-center">
+      <div class="absolute inset-x-0 top-[37.5%] z-10 pointer-events-none flex flex-col items-center">
         <div class="w-full flex flex-col items-center pointer-events-auto">
           <!-- Zone Header -->
             <ZoneHeader
@@ -461,8 +461,10 @@ const defaultInternalHandles = computed(() => {
               :tier="props.data.tier"
             />
 
+            <hr class="w-full my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
+
           <!-- Map Features -->
-          <div class="flex flex-col items-center pt-2">
+          <div class="flex flex-col items-center">
             <div class="flex items-center justify-center gap-1 mb-1">
               <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Map Features</span>
               <button 
