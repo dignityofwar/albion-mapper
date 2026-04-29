@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch, onUnmounted, nextTick, inject, type Ref } from 'vue';
-import { BaseEdge, EdgeLabelRenderer, getStraightPath, useVueFlow } from '@vue-flow/core';
+import { BaseEdge, EdgeLabelRenderer, getBezierPath, useVueFlow } from '@vue-flow/core';
 import type { EdgeProps } from '@vue-flow/core';
 import { connectionStyle } from '../../utils/connectionStyle.js';
 import { formatCountdown } from '../../utils/formatters.js';
@@ -74,17 +74,19 @@ function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;
 }
 
-const straight = computed(() =>
-  getStraightPath({
+const pathData = computed(() =>
+  getBezierPath({
     sourceX: props.sourceX,
     sourceY: props.sourceY,
     targetX: props.targetX,
     targetY: props.targetY,
+    sourcePosition: props.sourcePosition,
+    targetPosition: props.targetPosition,
   }),
 );
-const path = computed(() => straight.value[0]);
-const labelX = computed(() => straight.value[1]);
-const labelY = computed(() => straight.value[2]);
+const path = computed(() => pathData.value[0]);
+const labelX = computed(() => pathData.value[1]);
+const labelY = computed(() => pathData.value[2]);
 
 defineExpose({
   showPopover,

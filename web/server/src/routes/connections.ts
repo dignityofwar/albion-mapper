@@ -107,11 +107,11 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       roomId: id,
       fromZoneId,
       toZoneId,
-      fromHandleId,
-      toHandleId,
+      fromHandleId: fromHandleId ?? undefined,
+      toHandleId: toHandleId ?? undefined,
       expiresAt,
       reportedAt,
-      reportedBy,
+      reportedBy: reportedBy ?? undefined,
     };
 
     broadcast(id, { type: 'connection_added', connection });

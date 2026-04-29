@@ -14,7 +14,7 @@ vi.mock('@vue-flow/core', () => ({
     emits: ['click']
   },
   EdgeLabelRenderer: { template: '<div class="edge-label-renderer"><slot /></div>' },
-  getStraightPath: () => [ 'M0,0L100,100', 50, 50 ],
+  getBezierPath: () => [ 'M0,0C25,0,75,100,100,100', 50, 50 ],
 }));
 
 // Mock formatCountdown to avoid dependency issues

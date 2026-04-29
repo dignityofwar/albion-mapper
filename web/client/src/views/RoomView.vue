@@ -129,7 +129,7 @@ onUnmounted(() => {
 
 
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
-const { fitView, updateNode, setCenter } = useVueFlow();
+const { fitView, updateNode, setCenter, updateNodeInternals } = useVueFlow();
 const openPopoverId = ref<string | null>(null);
 provide('openPopoverId', openPopoverId);
 
@@ -315,16 +315,38 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     });
 
     // Update nodes using VueFlow's updateNode for reactivity
+    const nodesWithHandleChanges = new Set<string>();
     newNodes.forEach(newNode => {
-        const existingNode = flowNodes.value.find(n => n.id === newNode.id);
-        if (existingNode) {
-            existingNode.position = newNode.position;
-            existingNode.data = newNode.data;
-            updateNode(newNode.id, newNode);
-        } else {
-            flowNodes.value.push(newNode);
+      const existingNode = flowNodes.value.find(n => n.id === newNode.id);
+      if (existingNode) {
+        // Check if handles changed to trigger internal update
+        const oldHandles = JSON.stringify(existingNode.data.customHandles);
+        const newHandles = JSON.stringify(newNode.data.customHandles);
+        
+        existingNode.position = newNode.position;
+        existingNode.data = newNode.data;
+        updateNode(newNode.id, newNode);
+
+        if (oldHandles !== newHandles) {
+          nodesWithHandleChanges.add(newNode.id);
         }
+      } else {
+        flowNodes.value.push(newNode);
+      }
     });
+
+    if (nodesWithHandleChanges.size > 0) {
+      const nodesToUpdateInternals = new Set(nodesWithHandleChanges);
+      nodesWithHandleChanges.forEach(nodeId => {
+        connections.value.forEach(conn => {
+          if (conn.fromZoneId === nodeId) nodesToUpdateInternals.add(conn.toZoneId);
+          if (conn.toZoneId === nodeId) nodesToUpdateInternals.add(conn.fromZoneId);
+        });
+      });
+      nextTick(() => {
+        updateNodeInternals(Array.from(nodesToUpdateInternals));
+      });
+    }
 
     // Remove nodes that are no longer present
     flowNodes.value = flowNodes.value.filter(n => newNodes.find(nn => nn.id === n.id));

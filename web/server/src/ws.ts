@@ -8,6 +8,8 @@ interface DbConnection {
   room_id: string;
   from_zone_id: string;
   to_zone_id: string;
+  from_handle_id: string | null;
+  to_handle_id: string | null;
   expires_at: string;
   reported_at: string;
   reported_by: string | null;
@@ -93,6 +95,8 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
                 roomId: row.room_id,
                 fromZoneId: row.from_zone_id,
                 toZoneId: row.to_zone_id,
+                fromHandleId: row.from_handle_id ?? undefined,
+                toHandleId: row.to_handle_id ?? undefined,
                 expiresAt: row.expires_at,
                 reportedAt: row.reported_at,
                 reportedBy: row.reported_by ?? undefined,
