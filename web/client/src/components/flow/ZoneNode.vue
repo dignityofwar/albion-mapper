@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { ZoneType, NodeFeatures } from 'shared';
+import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles } from 'shared';
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../constants/ui';
 import ZoneTier from './zone/ZoneTier.vue';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneEditorTray from './zone/ZoneEditorTray.vue';
+import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import { useRoomStore } from '../../stores/useRoomStore';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
@@ -20,6 +21,8 @@ const props = defineProps<NodeProps<{
   features?: NodeFeatures;
   category?: string;
   highlighted?: boolean;
+  mapShape?: string;
+  customHandles?: CustomHandle[];
 }>>();
 
 const store = useRoomStore();
@@ -55,6 +58,7 @@ const timerComponentRef = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null
 const timerContainerRef = ref<HTMLElement | null>(null);
 
 const isRedsOpen = ref(false);
+const isHandleEditorOpen = ref(false);
 
 onClickOutside(timerContainerRef, () => {
   if (activeEditingCore.value) {
@@ -274,6 +278,26 @@ function onTimerBlur() {
   timerValue.value = formatTimer(newVal);
 }
 
+function openHandleEditor() {
+  isHandleEditorOpen.value = true;
+}
+
+function saveCustomHandles(newHandles: CustomHandle[]) {
+  store.updateNodeCustomHandles(props.id, newHandles);
+  isHandleEditorOpen.value = false;
+  if (showToast) showToast('Handle positions updated');
+}
+
+function getHandlePosition(left: string, top: string): Position {
+  const l = parseFloat(left);
+  const t = parseFloat(top);
+  
+  if (l >= 50 && t <= 50) return Position.Top;
+  if (l > 50 && t > 50) return Position.Right;
+  if (l <= 50 && t > 50) return Position.Bottom;
+  return Position.Left;
+}
+
 function updateReds(val: number | null | undefined) {
   const features = { ...(props.data.features || {}) };
   if (val === undefined) {
@@ -287,126 +311,194 @@ function updateReds(val: number | null | undefined) {
   store.updateNodeFeatures(props.id, features);
 }
 
-function getBorderClass(type: string): string {
+function getBorderBgClass(type: string): string {
   switch (type) {
-    case 'royalBlue': return 'border-blue-500';
-    case 'royalYellow': return 'border-yellow-500';
-    case 'royalRed': return 'border-red-500';
-    case 'outlands': return 'border-[#1f1f1f]';
-    case 'roads': return 'border-gray-500';
-    default: return 'border-gray-500';
+    case 'royalBlue': return 'bg-blue-500';
+    case 'royalYellow': return 'bg-yellow-500';
+    case 'royalRed': return 'bg-red-500';
+    case 'outlands': return 'bg-[#1f1f1f]';
+    case 'roads': return 'bg-gray-500';
+    default: return 'bg-gray-500';
   }
 }
+
+const customHandles = computed(() => {
+  const handles = (props.data.customHandles && props.data.customHandles.length > 0)
+    ? props.data.customHandles
+    : getDefaultHandles(props.data.mapShape);
+
+  return handles
+    .filter(h => !h.disabled)
+    .map(h => ({
+      ...h,
+      position: getHandlePosition(h.left, h.top),
+      style: { left: h.left, top: h.top }
+    }));
+});
+
+
+// getDefaultHandles removed, now using from 'shared'
 </script>
 
 <template>
   <div class="zone-node" ref="zoneNodeRef">
     <div 
-      class="border rounded overflow-hidden text-white text-xs px-2 py-3 text-center min-w-[230px] relative transition-all duration-300"
+      class="text-white text-xs text-center min-w-[340px] min-h-[340px] relative transition-all duration-300 flex items-center justify-center p-14"
       :class="[
-        hasReds ? '!bg-red-950 !border-red-500 red-glow' : '!bg-gray-800',
-        !hasReds ? getBorderClass(props.data.type) : '',
-        props.data.isHome ? 'shadow-[0_0_10px_rgba(255,255,255,0.5)]' : '',
+        hasReds ? 'red-glow' : '',
+        props.data.isHome ? 'home-glow' : '',
         props.data.highlighted ? 'goto-glow' : ''
       ]"
     >
-      <ZoneTier :tier="props.data.tier" :type="props.data.type as ZoneType" />
+      <!-- Diamond Shape Background -->
+      <div 
+        class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
+        :class="[hasReds ? 'bg-red-500' : getBorderBgClass(props.data.type)]"
+      ></div>
+      <div 
+        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none"
+        :class="[hasReds ? 'bg-red-950' : 'bg-gray-800']"
+      ></div>
 
-      <ZoneHeader 
-        :id="props.id"
-        :zone-name="props.data.zoneName"
-        :is-home="props.data.isHome"
-        :type="props.data.type as ZoneType"
-        :category="props.data.category"
-      />
+      <div class="relative z-10 flex flex-col items-center w-full">
+        <ZoneTier :tier="props.data.tier" :type="props.data.type as ZoneType" />
 
-      <template v-if="showFeatures">
-        <div ref="timerContainerRef">
-          <ZoneCoresAndReds 
-            ref="timerComponentRef"
-            :features="props.data.features"
-            :active-editing-core="activeEditingCore"
-            :now="now"
-            :has-reds="hasReds"
-            v-model:timer-value="timerValue"
-            :is-timer-too-long="isTimerTooLong"
-            :is-timer-valid="isTimerValid"
-            v-model:is-reds-open="isRedsOpen"
-            @toggle="toggleFeature"
-            @update:reds="updateReds"
-            @save="saveTimer"
-            @clear="clearTimer"
-            @focus="onTimerFocus"
-            @blur="onTimerBlur"
-          />
-        </div>
-
-        <ZoneFeatures 
-          :active-features="activeFeatures"
-          :has-reds="hasReds"
+        <ZoneHeader 
+          :id="props.id" 
+          :zone-name="props.data.zoneName" 
+          :is-home="props.data.isHome" 
+          :type="props.data.type as ZoneType" 
+          :category="props.data.category"
+          :map-shape="props.data.mapShape"
         />
 
-        <!-- Editor Tray Toggle Tab -->
         <button 
-          @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
-          class="w-full mt-2 py-1.5 transition-colors flex items-center justify-center gap-2"
-          :class="[
-            isEditorTrayOpen ? 'rounded-t-sm' : 'rounded-sm',
-            hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_HAS_REDS} text-red-400` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_DEFAULT} text-gray-400`
-          ]"
+          v-if="props.data.mapShape && props.data.type === 'roads'"
+          class="mt-1 p-1 rounded hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
+          title="Edit Handles"
+          @click.stop="openHandleEditor"
         >
-          <span class="text-[10px] uppercase font-bold">Edit Map Features</span>
-          <div 
-            class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent transition-transform duration-300"
-            :class="[
-              isEditorTrayOpen ? 'border-b-[6px]' : 'border-t-[6px]',
-              hasReds ? 'border-b-red-400 border-t-red-400' : 'border-b-gray-400 border-t-gray-400'
-            ]"
-          ></div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         </button>
 
-        <ZoneEditorTray 
-          :is-open="isEditorTrayOpen"
-          :has-reds="hasReds"
-          :features="props.data.features"
-          @toggle="toggleFeature"
-        />
-      </template>
+        <template v-if="showFeatures">
+          <div ref="timerContainerRef" class="w-full">
+            <ZoneCoresAndReds 
+              ref="timerComponentRef"
+              :features="props.data.features"
+              :active-editing-core="activeEditingCore"
+              :now="now"
+              :has-reds="hasReds"
+              v-model:timer-value="timerValue"
+              :is-timer-too-long="isTimerTooLong"
+              :is-timer-valid="isTimerValid"
+              v-model:is-reds-open="isRedsOpen"
+              @toggle="toggleFeature"
+              @update:reds="updateReds"
+              @save="saveTimer"
+              @clear="clearTimer"
+              @focus="onTimerFocus"
+              @blur="onTimerBlur"
+            />
+          </div>
+
+          <ZoneFeatures 
+            :active-features="activeFeatures"
+            :has-reds="hasReds"
+          />
+
+          <!-- Editor Tray Toggle Tab -->
+          <button 
+            @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
+            class="w-full mt-2 py-1.5 transition-colors flex items-center justify-center gap-2"
+            :class="[
+              isEditorTrayOpen ? 'rounded-t-sm' : 'rounded-sm',
+              hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_HAS_REDS} text-red-400` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_DEFAULT} text-gray-400`
+            ]"
+          >
+            <span class="text-[10px] uppercase font-bold">Edit Map Features</span>
+            <div 
+              class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent transition-transform duration-300"
+              :class="[
+                isEditorTrayOpen ? 'border-b-[6px]' : 'border-t-[6px]',
+                hasReds ? 'border-b-red-400 border-t-red-400' : 'border-b-gray-400 border-t-gray-400'
+              ]"
+            ></div>
+          </button>
+
+          <ZoneEditorTray 
+            :is-open="isEditorTrayOpen"
+            :has-reds="hasReds"
+            :features="props.data.features"
+            @toggle="toggleFeature"
+          />
+        </template>
+      </div>
     </div>
 
-    <Handle type="source" :position="Position.Top" id="top" />
-    <Handle type="source" :position="Position.Right" id="right" />
-    <Handle type="source" :position="Position.Bottom" id="bottom" />
-    <Handle type="source" :position="Position.Left" id="left" />
+    <ZoneHandleEditor
+      v-if="isHandleEditorOpen"
+      :zone-name="props.data.zoneName || props.id"
+      :initial-handles="props.data.customHandles && props.data.customHandles.length > 0 ? props.data.customHandles : getDefaultHandles(props.data.mapShape)"
+      :is-toggle-mode="props.data.mapShape !== 'rest'"
+      @save="saveCustomHandles"
+      @close="isHandleEditorOpen = false"
+    />
+
+    <Handle 
+      v-for="handle in customHandles" 
+      :key="handle.id"
+      type="source" 
+      :position="handle.position" 
+      :id="handle.id" 
+      :style="handle.style"
+    />
   </div>
 </template>
 
 <style scoped>
 :deep(.vue-flow__handle) {
-  width: 8px;
-  height: 8px;
-  background: #aaa;
+  width: 16px;
+  height: 16px;
+  background: #bbb;
+  border: 2px solid #222;
+  border-radius: 50%;
   z-index: 20;
+  transition: background-color 0.2s;
+}
+
+:deep(.vue-flow__handle:hover) {
+  background: #fff;
+  border-color: #000;
 }
 
 @media (pointer: coarse) {
   :deep(.vue-flow__handle) {
-    width: 16px;
-    height: 16px;
+    width: 24px;
+    height: 24px;
+    border-width: 3px;
   }
 }
 
 .red-glow {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.7);
+  filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.7));
   animation: slow-glow 3s infinite ease-in-out;
+}
+
+.home-glow {
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.diamond-shape {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
 @keyframes slow-glow {
   0%, 100% {
-    box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
+    filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.3));
   }
   50% {
-    box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
+    filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.8));
   }
 }
 

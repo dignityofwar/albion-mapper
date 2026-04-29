@@ -4,6 +4,7 @@ import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPo
 import ZoneCombobox from './ZoneCombobox.vue';
 import TimeInput from './common/TimeInput.vue';
 import { useRoomStore } from '../stores/useRoomStore.js';
+import { addConnection } from '../utils/roomOperations.js';
 import { ZONE_BY_ID } from 'shared';
 import { API_BASE_URL } from '../utils/api';
 
@@ -12,21 +13,10 @@ const props = defineProps<{}>();
 const store = useRoomStore();
 
 const fromZoneId = ref('');
-const isLocked = computed(() => store.connections.length === 0);
-
-const connectedToFromZone = computed(() => {
-  return store.connections
-    .filter(c => c.fromZoneId === fromZoneId.value)
-    .map(c => c.toZoneId);
-});
-
-watch([() => store.homeZoneId, isLocked], ([newHomeId, locked]) => {
-  if (locked && newHomeId) {
-    fromZoneId.value = newHomeId;
-  }
-}, { immediate: true });
-
+const fromHandleId = ref<string | null>(null);
 const toZoneId = ref('');
+const toHandleId = ref<string | null>(null);
+const isLocked = computed(() => store.connections.length === 0);
 const secondsRemaining = ref<number | null>(null);
 watch([fromZoneId, toZoneId], () => {
   secondsRemaining.value = null;
@@ -43,7 +33,12 @@ const emit = defineEmits<{
   error: [message: string];
 }>();
 
-// ...
+const connectedToFromZone = computed(() => {
+  if (!fromZoneId.value) return [];
+  return store.connections
+    .filter((c) => !c.isExpired && (c.fromZoneId === fromZoneId.value || c.toZoneId === fromZoneId.value))
+    .map((c) => (c.fromZoneId === fromZoneId.value ? c.toZoneId : c.fromZoneId));
+});
 
 const canSubmit = computed(
   () => fromZoneId.value && toZoneId.value && secondsRemaining.value !== null && !submitting.value,
@@ -54,31 +49,27 @@ async function submit() {
   submitting.value = true;
 
   try {
-    const res = await fetch(`${API_BASE_URL}/api/rooms/${store.roomId}/connections`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${store.token}`,
-      },
-      body: JSON.stringify({
-        fromZoneId: fromZoneId.value,
-        toZoneId: toZoneId.value,
-        secondsRemaining: Number(secondsRemaining.value!),
-        reportedBy: reportedBy.value || undefined,
-      }),
-    });
-
-    if (!res.ok) {
-      const body = await res.json() as { error?: string };
-      emit('error', body.error ?? 'Failed to submit');
-      return;
-    }
+    await addConnection(
+      store.roomId,
+      store.token!,
+      fromZoneId.value,
+      toZoneId.value,
+      Number(secondsRemaining.value!),
+      fromHandleId.value || undefined,
+      toHandleId.value || undefined,
+      reportedBy.value || undefined,
+    );
 
     emit('success', 'Connection added!');
 
-    // To becomes the new From, reset time
+    // Reset To, keep From (common for mapping multiple exits from one zone)
+    fromHandleId.value = null; 
+    // Reset "To" for next entry
     toZoneId.value = '';
+    toHandleId.value = null;
     secondsRemaining.value = null;
+  } catch (err: any) {
+    emit('error', err.message || 'Failed to submit');
   } finally {
     submitting.value = false;
   }
@@ -104,7 +95,23 @@ function focusTimeInput() {
   timeInputEl.value?.focus();
 }
 
-defineExpose({ secondsRemaining, fromZoneId, setFromZoneId: (id: string) => fromZoneId.value = id, focusToCombobox, flashToCombobox });
+defineExpose({ 
+  secondsRemaining, 
+  fromZoneId, 
+  setFromZoneId: (id: string, handleId?: string | null) => {
+    fromZoneId.value = id;
+    fromHandleId.value = handleId ?? null;
+  }, 
+  setConnection: (fromId: string, fHandleId: string | null, toId: string, tHandleId: string | null) => {
+    fromZoneId.value = fromId;
+    fromHandleId.value = fHandleId;
+    toZoneId.value = toId;
+    toHandleId.value = tHandleId;
+  },
+  focusTimeInput,
+  focusToCombobox, 
+  flashToCombobox 
+});
 </script>
 
 <template>
@@ -133,6 +140,7 @@ defineExpose({ secondsRemaining, fromZoneId, setFromZoneId: (id: string) => from
                   icon="🏠"
                   @tab-select="focusToCombobox"
                   @select="focusToCombobox"
+                  @update:model-value="fromHandleId = null"
                 />
               </TooltipTrigger>
               <TooltipPortal>
@@ -154,6 +162,7 @@ defineExpose({ secondsRemaining, fromZoneId, setFromZoneId: (id: string) => from
           :error="secondsRemaining !== null && !fromZoneId"
           @tab-select="focusToCombobox"
           @select="focusToCombobox"
+          @update:model-value="fromHandleId = null"
         />
       </div>
 
@@ -170,6 +179,7 @@ defineExpose({ secondsRemaining, fromZoneId, setFromZoneId: (id: string) => from
           :error="secondsRemaining !== null && !toZoneId"
           @tab-select="focusTimeInput"
           @select="focusTimeInput"
+          @update:model-value="toHandleId = null"
         />
       </div>
 

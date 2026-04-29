@@ -106,8 +106,8 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               return row.reported_at > max ? row.reported_at : max;
             }, room.updated_at || room.created_at);
 
-            const { rows: nodePosRows } = await app.db.query<{ zone_id: string; x: number; y: number; features: any }>(
-              'SELECT zone_id, x, y, features FROM room_node_positions WHERE room_id = $1',
+            const { rows: nodePosRows } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
+              'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
               [roomId]
             );
             const nodePositions: NodePosition[] = nodePosRows.map((row) => ({
@@ -115,6 +115,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               x: row.x,
               y: row.y,
               features: row.features,
+              customHandles: row.custom_handles,
             }));
 
             send({ type: 'sync', connections, homeZoneId: room.home_zone_id, title: room.title || undefined, nodePositions, lastUpdatedAt });
@@ -167,8 +168,8 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
                 pos.y = y;
               }
               await client.query(
-                'INSERT INTO room_node_positions (room_id, zone_id, x, y, features) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features',
-                [roomId, pos.zoneId, x, y, JSON.stringify(pos.features || {})]
+                'INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features, custom_handles = EXCLUDED.custom_handles',
+                [roomId, pos.zoneId, x, y, JSON.stringify(pos.features || {}), JSON.stringify(pos.customHandles || null)]
               );
             }
             if (msg.updateLastUpdated) {

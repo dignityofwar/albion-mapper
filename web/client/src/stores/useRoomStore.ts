@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import type { Connection, ServerMessage, NodePosition, NodeFeatures } from 'shared';
+import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle } from 'shared';
 import { API_BASE_URL } from '../utils/api';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected';
@@ -178,6 +178,18 @@ export const useRoomStore = defineStore('room', () => {
     }
   }
 
+  function updateNodeCustomHandles(zoneId: string, customHandles: CustomHandle[]) {
+    const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
+    if (index === -1) return;
+    const newNodePositions = [...nodePositions.value];
+    newNodePositions[index] = { ...newNodePositions[index], customHandles };
+    nodePositions.value = newNodePositions;
+    lastUpdate.value = new Date();
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value, updateLastUpdated: true }));
+    }
+  }
+
   // Recently Viewed Rooms
   interface RecentRoom {
     id: string;
@@ -216,6 +228,7 @@ export const useRoomStore = defineStore('room', () => {
     applyMessage,
     updateNodePositionsInStore,
     updateNodeFeatures,
+    updateNodeCustomHandles,
     resetNodePositions,
     connect,
     disconnect,

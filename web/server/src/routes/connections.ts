@@ -9,6 +9,8 @@ interface DbConnection {
   room_id: string;
   from_zone_id: string;
   to_zone_id: string;
+  from_handle_id: string | null;
+  to_handle_id: string | null;
   expires_at: string;
   reported_at: string;
   reported_by: string | null;
@@ -20,6 +22,8 @@ function dbRowToConnection(row: DbConnection): Connection {
     roomId: row.room_id,
     fromZoneId: row.from_zone_id,
     toZoneId: row.to_zone_id,
+    fromHandleId: row.from_handle_id ?? undefined,
+    toHandleId: row.to_handle_id ?? undefined,
     expiresAt: row.expires_at,
     reportedAt: row.reported_at,
     reportedBy: row.reported_by ?? undefined,
@@ -74,7 +78,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
     }
 
-    const { fromZoneId, toZoneId, secondsRemaining, reportedBy } = parsed.data;
+    const { fromZoneId, toZoneId, fromHandleId, toHandleId, secondsRemaining, reportedBy } = parsed.data;
 
     if (fromZoneId === toZoneId) {
       return reply.status(400).send({ error: 'fromZoneId and toZoneId must be different' });
@@ -94,15 +98,17 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
     const expiresAt = new Date(now.getTime() + secondsRemaining * 1000).toISOString();
 
     await app.db.query(`
-      INSERT INTO connections (id, room_id, from_zone_id, to_zone_id, expires_at, reported_at, reported_by)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-    `, [connId, id, fromZoneId, toZoneId, expiresAt, reportedAt, reportedBy ?? null]);
+      INSERT INTO connections (id, room_id, from_zone_id, to_zone_id, from_handle_id, to_handle_id, expires_at, reported_at, reported_by)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    `, [connId, id, fromZoneId, toZoneId, fromHandleId ?? null, toHandleId ?? null, expiresAt, reportedAt, reportedBy ?? null]);
 
     const connection: Connection = {
       id: connId,
       roomId: id,
       fromZoneId,
       toZoneId,
+      fromHandleId,
+      toHandleId,
       expiresAt,
       reportedAt,
       reportedBy,
@@ -198,7 +204,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
         return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
       }
 
-      const { secondsRemaining } = parsed.data;
+      const { secondsRemaining, fromHandleId, toHandleId } = parsed.data;
 
       const { rows } = await app.db.query<{ id: string }>(
         'SELECT id FROM connections WHERE id = $1 AND room_id = $2',
@@ -211,12 +217,34 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       }
 
       const now = new Date();
-      const expiresAt = new Date(now.getTime() + secondsRemaining * 1000).toISOString();
+      
+      const updates: string[] = [];
+      const values: any[] = [];
+      let idx = 1;
 
-      await app.db.query(
-        'UPDATE connections SET expires_at = $1 WHERE id = $2 AND room_id = $3',
-        [expiresAt, connId, id]
-      );
+      if (secondsRemaining !== undefined) {
+        const expiresAt = new Date(now.getTime() + secondsRemaining * 1000).toISOString();
+        updates.push(`expires_at = $${idx++}`);
+        values.push(expiresAt);
+      }
+      
+      if (fromHandleId !== undefined) {
+        updates.push(`from_handle_id = $${idx++}`);
+        values.push(fromHandleId);
+      }
+      
+      if (toHandleId !== undefined) {
+        updates.push(`to_handle_id = $${idx++}`);
+        values.push(toHandleId);
+      }
+
+      if (updates.length > 0) {
+        values.push(connId, id);
+        await app.db.query(
+          `UPDATE connections SET ${updates.join(', ')} WHERE id = $${idx++} AND room_id = $${idx++}`,
+          values
+        );
+      }
 
       const { rows: updatedConns } = await app.db.query<DbConnection>(
         'SELECT * FROM connections WHERE id = $1 AND room_id = $2',

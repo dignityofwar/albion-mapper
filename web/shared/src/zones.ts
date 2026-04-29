@@ -1,5 +1,40 @@
 import mapsData from '../data/maps.json' with { type: 'json' };
-import type { GameMap, Zone } from './types.js';
+import type { GameMap, Zone, CustomHandle } from './types.js';
+
+export function getDefaultHandles(shape?: string): CustomHandle[] {
+  if (shape === 'h') {
+    return [
+      { id: 'h-nw-n', left: '37.5%', top: '12.5%' },
+      { id: 'h-ne', left: '75%', top: '25%' },
+      { id: 'h-e', left: '92%', top: '58%' },
+      { id: 'h-s', left: '50%', top: '100%' },
+      { id: 'h-sw', left: '25%', top: '75%' },
+      { id: 'h-nw-w', left: '8%', top: '42%' },
+    ];
+  }
+  
+  if (shape && shape !== 'rest' && shape !== 'unknown') {
+    // Return 8 handles for regular shapes
+    return [
+      { id: 'n', left: '50%', top: '0%' },
+      { id: 'ne', left: '75%', top: '25%' },
+      { id: 'e', left: '100%', top: '50%' },
+      { id: 'se', left: '75%', top: '75%' },
+      { id: 's', left: '50%', top: '100%' },
+      { id: 'sw', left: '25%', top: '75%' },
+      { id: 'w', left: '0%', top: '50%' },
+      { id: 'nw', left: '25%', top: '25%' },
+    ];
+  }
+
+  // Default 4 corners for others
+  return [
+    { id: 'top', left: '50%', top: '0%' },
+    { id: 'right', left: '100%', top: '50%' },
+    { id: 'bottom', left: '50%', top: '100%' },
+    { id: 'left', left: '0%', top: '50%' },
+  ];
+}
 
 const isRoadsHome = (name: string) => /^[^-\s]+-[^-\s]+-[^-\s]+$/.test(name);
 

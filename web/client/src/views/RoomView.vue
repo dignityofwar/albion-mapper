@@ -20,7 +20,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
 import { deleteConnection, updateConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
-import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -138,6 +138,7 @@ const flowEdges = ref<any[]>([]);
 const isSkippingAutoLayout = ref(false);
 let wasConnected = false;
 let draggingFromNodeId: string | null = null;
+let draggingFromHandleId: string | null = null;
 
 function getEdgeParams(conn: Connection, currentTime: number) {
   const expiresAt = new Date(conn.expiresAt).getTime();
@@ -146,21 +147,49 @@ function getEdgeParams(conn: Connection, currentTime: number) {
   return { remainingMs, style };
 }
 
-function computeHandles(sourceNode: any, targetNode: any) {
+function computeHandles(sourceNode: any, targetNode: any, conn?: Connection) {
   const dx = targetNode.position.x - sourceNode.position.x;
   const dy = targetNode.position.y - sourceNode.position.y;
 
-  if (Math.abs(dx) > Math.abs(dy)) {
-    return {
-      sourceHandle: dx > 0 ? 'right' : 'left',
-      targetHandle: dx > 0 ? 'left' : 'right',
-    };
-  } else {
-    return {
-      sourceHandle: dy > 0 ? 'bottom' : 'top',
-      targetHandle: dy > 0 ? 'top' : 'bottom',
-    };
-  }
+  const getHandleId = (node: any, otherNode: any, isSource: boolean) => {
+    const sdx = isSource ? dx : -dx;
+    const sdy = isSource ? dy : -dy;
+
+    const custom = node.data.customHandles || getDefaultHandles(node.data.mapShape);
+    
+    const activeHandles = custom.filter((h: any) => !h.disabled);
+    if (activeHandles.length > 0) {
+      // Find handle closest to the angle of the connection
+      let bestHandle = activeHandles[0].id;
+      let minDiff = Infinity;
+      const targetAngle = Math.atan2(sdy, sdx);
+
+      for (const h of activeHandles) {
+        const hLeft = parseFloat(h.left);
+        const hTop = parseFloat(h.top);
+        const hAngle = Math.atan2(hTop - 50, hLeft - 50);
+        let diff = Math.abs(targetAngle - hAngle);
+        if (diff > Math.PI) diff = 2 * Math.PI - diff;
+        if (diff < minDiff) {
+          minDiff = diff;
+          bestHandle = h.id;
+        }
+      }
+      return bestHandle;
+    }
+
+    // Fallback if all handles are disabled
+    if (Math.abs(sdx) > Math.abs(sdy)) {
+      return sdx > 0 ? 'right' : 'left';
+    } else {
+      return sdy > 0 ? 'bottom' : 'top';
+    }
+  };
+
+  return {
+    sourceHandle: conn?.fromHandleId ?? getHandleId(sourceNode, targetNode, true),
+    targetHandle: conn?.toHandleId ?? getHandleId(targetNode, sourceNode, false),
+  };
 }
 
 const initialRedsHandled = ref(false);
@@ -269,7 +298,14 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         // If new nodes were added, update the store.
         const hasNewPositions = positions.some(p => !nodePositions.value.find(np => np.zoneId === p.zoneId));
         if (hasNewPositions) {
-            const updatedPositions = positions.map(p => ({ zoneId: p.zoneId, x: p.x, y: p.y, features: p.features }));
+            const updatedPositions = positions.map(p => ({ 
+                zoneId: p.zoneId, 
+                x: p.x, 
+                y: p.y, 
+                features: p.features,
+                customHandles: p.customHandles,
+                virtualGridPos: p.virtualGridPos 
+            }));
             store.updateNodePositionsInStore(updatedPositions);
         }
     }
@@ -291,6 +327,8 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           category: zone?.category,
           virtualGridPos: pos.virtualGridPos,
           features: pos.features,
+          mapShape: zone?.mapShape,
+          customHandles: pos.customHandles,
         },
       };
     });
@@ -354,14 +392,14 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
             }
           },
           onUpdate: async (id: string, secondsRemaining: number) => {
-            await updateConnection(props.id, store.token!, id, secondsRemaining);
+            await updateConnection(props.id, store.token!, id, { secondsRemaining: Number(secondsRemaining) });
           },
           hasChildren: connections.value.some(c => c.fromZoneId === conn.toZoneId),
         },
       };
 
       if (sourceNode && targetNode) {
-        const handles = computeHandles(sourceNode, targetNode);
+        const handles = computeHandles(sourceNode, targetNode, conn);
         Object.assign(edge, handles);
       }
       return edge;
@@ -399,6 +437,8 @@ function onNodeDragStop() {
     x: n.position.x,
     y: n.position.y,
     features: n.data.features,
+    customHandles: n.data.customHandles,
+    virtualGridPos: n.data.virtualGridPos,
   }));
   store.updateNodePositionsInStore(positions);
 }
@@ -484,12 +524,62 @@ function handleSuccess(msg: string) {
   showToast(msg);
 }
 
-function handleConnect() {
+async function onEdgeUpdate({ edge, connection }: any) {
+  if (edge.source === connection.source && edge.target === connection.target) {
+    try {
+      await updateConnection(props.id, store.token!, edge.id, {
+        fromHandleId: connection.sourceHandle,
+        toHandleId: connection.targetHandle
+      });
+    } catch (err: any) {
+      showToast(err.message || 'Failed to update connection', 'error');
+    }
+  }
+}
+
+async function handleConnect(params: any) {
   wasConnected = true;
+
+  // Check for existing connection between these two zones
+  const existing = store.connections.find(c =>
+    !c.isExpired &&
+    ((c.fromZoneId === params.source && c.toZoneId === params.target) ||
+     (c.fromZoneId === params.target && c.toZoneId === params.source))
+  );
+
+  if (existing) {
+    // Determine which handle is which based on the existing connection direction
+    let fHandleId = params.sourceHandle;
+    let tHandleId = params.targetHandle;
+
+    if (existing.fromZoneId === params.target) {
+      fHandleId = params.targetHandle;
+      tHandleId = params.sourceHandle;
+    }
+
+    try {
+      await updateConnection(props.id, store.token!, existing.id, {
+        fromHandleId: fHandleId,
+        toHandleId: tHandleId
+      });
+    } catch (err: any) {
+      showToast(err.message || 'Failed to update connection', 'error');
+    }
+    return;
+  }
+
+  reportForm.value?.setConnection(
+    params.source,
+    params.sourceHandle,
+    params.target,
+    params.targetHandle
+  );
+  reportForm.value?.focusTimeInput();
 }
 
 function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent }) {
   draggingFromNodeId = params.nodeId ?? null;
+  draggingFromHandleId = params.handleId ?? null;
 }
 
 function handleConnectEnd(event?: MouseEvent) {
@@ -500,14 +590,16 @@ function handleConnectEnd(event?: MouseEvent) {
   }
   
   const fromNodeId = draggingFromNodeId;
+  const fromHandleId = draggingFromHandleId;
   
   if (fromNodeId) {
-     reportForm.value?.setFromZoneId(fromNodeId);
+     reportForm.value?.setFromZoneId(fromNodeId, fromHandleId);
      reportForm.value?.focusToCombobox();
      reportForm.value?.flashToCombobox();
   }
   
   draggingFromNodeId = null;
+  draggingFromHandleId = null;
 }
 
 
@@ -558,6 +650,7 @@ defineExpose({ flowNodes, onNodeDragStop });
         class="transition-colors duration-1000"
         :class="megaToastBackgroundActive ? 'bg-red-950' : 'bg-gray-950'"
         @node-drag-stop="onNodeDragStop"
+        @edge-update="onEdgeUpdate"
         @connect="handleConnect"
         @connect-start="handleConnectStart"
         @connect-end="handleConnectEnd"

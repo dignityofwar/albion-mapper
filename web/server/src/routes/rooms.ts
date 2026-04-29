@@ -44,9 +44,9 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       `, [id, passwordHash, adminPasswordHash, homeZoneId, title || null, createdAt]);
 
       await client.query(`
-        INSERT INTO room_node_positions (room_id, zone_id, x, y, features)
-        VALUES ($1, $2, $3, $4, $5)
-      `, [id, homeZoneId, 0, 0, JSON.stringify({})]);
+        INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
+        VALUES ($1, $2, $3, $4, $5, $6)
+      `, [id, homeZoneId, 0, 0, JSON.stringify({}), JSON.stringify(null)]);
 
       await client.query('COMMIT');
     } catch (e) {

@@ -171,4 +171,18 @@ describe('ReportForm', () => {
     expect(vm.secondsRemaining).toBeNull(); // Should reset
     wrapper.unmount();
   });
+
+  it('setConnection updates fields correctly and does not throw', () => {
+    const wrapper = mountForm();
+    const vm = wrapper.vm as any;
+    
+    expect(() => {
+      vm.setConnection('zone1', 'handle1', 'zone2', 'handle2');
+    }).not.toThrow();
+    
+    expect(vm.fromZoneId).toBe('zone1');
+    expect(vm.toZoneId).toBe('zone2');
+    
+    wrapper.unmount();
+  });
 });

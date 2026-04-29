@@ -21,6 +21,12 @@ vi.mock('vue-router', () => ({
   }),
 }));
 
+vi.mock('../src/utils/roomOperations.js', () => ({
+  updateConnection: vi.fn(),
+  deleteConnection: vi.fn(),
+  addConnection: vi.fn(),
+}));
+
 beforeEach(() => {
   setActivePinia(createPinia());
   sessionStorage.clear();
@@ -125,6 +131,56 @@ describe('RoomView', () => {
     expect(spy).toHaveBeenCalledWith(expect.arrayContaining([
         expect.objectContaining({ zoneId: 'zone-a', x: 0, y: 0 }),
         expect.objectContaining({ zoneId: 'zone-b', x: 10, y: 10 })
+    ]));
+    
+    wrapper.unmount();
+  });
+
+  it('preserves customHandles and features when a node is dragged', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+    const spy = vi.spyOn(store, 'updateNodePositionsInStore');
+    
+    const customHandles = [{ id: 'h1', left: '10%', top: '20%' }];
+    const features = { chest: true };
+
+    store.applyMessage({
+        type: 'sync',
+        connections: [],
+        homeZoneId: 'zone-a',
+        nodePositions: [
+            { zoneId: 'zone-a', x: 0, y: 0 },
+            { zoneId: 'zone-b', x: 100, y: 100, customHandles, features }
+        ],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+      }
+    });
+
+    await nextTick();
+    await nextTick();
+
+    const vm = wrapper.vm as any;
+    const nodeB = vm.flowNodes.find((n: any) => n.id === 'zone-b');
+    nodeB.position = { x: 50, y: 50 };
+    
+    vm.onNodeDragStop();
+
+    expect(spy).toHaveBeenCalledWith(expect.arrayContaining([
+        expect.objectContaining({ 
+          zoneId: 'zone-b', 
+          x: 50, 
+          y: 50, 
+          customHandles,
+          features
+        })
     ]));
     
     wrapper.unmount();
@@ -353,6 +409,107 @@ describe('RoomView', () => {
     // Check if it's not at (0,0)
     expect(zoneBNode).toBeDefined();
     expect(zoneBNode.position).not.toEqual({ x: 0, y: 0 });
+    
+    wrapper.unmount();
+  });
+
+  it('updates an existing connection directly when dragging from handle to handle', async () => {
+    const { updateConnection } = await import('../src/utils/roomOperations.js');
+    sessionStorage.setItem('token:room1', 'some-token');
+    
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+    
+    const expiry = new Date(Date.now() + 3600000).toISOString();
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [{
+          id: 'c1',
+          roomId: 'room1',
+          fromZoneId: 'zone-a',
+          toZoneId: 'zone-b',
+          expiresAt: expiry,
+          reportedAt: new Date().toISOString()
+        }], 
+        homeZoneId: 'zone-a',
+        nodePositions: [],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    
+    // Simulate handle-to-handle connection between existing zones
+    vm.handleConnect({
+      source: 'zone-a',
+      sourceHandle: 'top',
+      target: 'zone-b',
+      targetHandle: 'bottom'
+    });
+
+    expect(updateConnection).toHaveBeenCalledWith(
+      'room1',
+      'some-token',
+      'c1',
+      { fromHandleId: 'top', toHandleId: 'bottom' }
+    );
+    
+    wrapper.unmount();
+  });
+
+  it('updates an existing connection directly even if dragged in reverse direction', async () => {
+    const { updateConnection } = await import('../src/utils/roomOperations.js');
+    sessionStorage.setItem('token:room1', 'some-token');
+    
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+    
+    const expiry = new Date(Date.now() + 3600000).toISOString();
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [{
+          id: 'c1',
+          roomId: 'room1',
+          fromZoneId: 'zone-a',
+          toZoneId: 'zone-b',
+          expiresAt: expiry,
+          reportedAt: new Date().toISOString()
+        }], 
+        homeZoneId: 'zone-a',
+        nodePositions: [],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    
+    // Simulate handle-to-handle connection but source/target are reversed compared to DB
+    vm.handleConnect({
+      source: 'zone-b',
+      sourceHandle: 'bottom',
+      target: 'zone-a',
+      targetHandle: 'top'
+    });
+
+    // It should know that 'zone-b' is the 'to' side and 'zone-a' is the 'from' side
+    expect(updateConnection).toHaveBeenCalledWith(
+      'room1',
+      'some-token',
+      'c1',
+      { fromHandleId: 'top', toHandleId: 'bottom' }
+    );
     
     wrapper.unmount();
   });

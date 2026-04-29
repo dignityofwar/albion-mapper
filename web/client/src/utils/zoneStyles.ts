@@ -7,13 +7,22 @@ export const TYPE_LABELS: Record<ZoneType, string> = {
   royalRed: 'Royal Continent',
   outlands: 'Outlands',
   roads: 'Roads',
-  roadsHideout: 'Roads (Hideout)',
   other: 'Other / Outlands',
 };
 
-export function getZoneTypeDisplay(type: ZoneType) {
+export function getZoneTypeDisplay(type: ZoneType, mapShape?: string) {
+  let label = TYPE_LABELS[type];
+
+  if (type === 'roads' && mapShape) {
+    if (mapShape === 'rest') {
+      label = 'Roads - Hideout';
+    } else if (mapShape !== 'unknown') {
+      label = `Roads - ${mapShape.toUpperCase()} shape`;
+    }
+  }
+
   return {
-    label: TYPE_LABELS[type],
+    label,
     class: ZONE_TYPE_CLASSES[type],
   };
 }

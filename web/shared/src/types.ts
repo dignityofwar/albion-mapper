@@ -61,6 +61,14 @@ export interface NodePosition {
   y: number;
   virtualGridPos?: { x: number; y: number };
   features?: NodeFeatures;
+  customHandles?: CustomHandle[];
+}
+
+export interface CustomHandle {
+  id: string;
+  left: string;
+  top: string;
+  disabled?: boolean;
 }
 
 export interface NodeFeatures {
@@ -167,16 +175,16 @@ export const AuthRoomBodySchema = z.object({
 export const CreateConnectionBodySchema = z.object({
   fromZoneId: z.string().min(1),
   toZoneId: z.string().min(1),
-  fromHandleId: z.string().optional(),
-  toHandleId: z.string().optional(),
+  fromHandleId: z.string().nullable().optional(),
+  toHandleId: z.string().nullable().optional(),
   secondsRemaining: z.number().int().min(1).max(86400),
   reportedBy: z.string().optional(),
 });
 
 export const UpdateConnectionBodySchema = z.object({
   secondsRemaining: z.number().int().min(1).max(86400).optional(),
-  fromHandleId: z.string().optional(),
-  toHandleId: z.string().optional(),
+  fromHandleId: z.string().nullable().optional(),
+  toHandleId: z.string().nullable().optional(),
 });
 
 export const ChangePasswordBodySchema = z.object({

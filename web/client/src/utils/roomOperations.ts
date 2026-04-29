@@ -14,10 +14,15 @@ export async function deleteConnection(
   token: string,
   connectionId: string,
 ): Promise<void> {
-  await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections/${connectionId}`, {
+  const res = await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections/${connectionId}`, {
     method: 'DELETE',
     headers: { Authorization: `Bearer ${token}` },
   });
+
+  if (!res.ok) {
+    const body = await res.json() as { error?: string };
+    throw new Error(body.error ?? 'Failed to delete connection');
+  }
 }
 
 /**
@@ -27,16 +32,21 @@ export async function updateConnection(
   roomId: string,
   token: string,
   connectionId: string,
-  secondsRemaining: number,
+  update: { secondsRemaining?: number; fromHandleId?: string; toHandleId?: string },
 ): Promise<void> {
-  await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections/${connectionId}`, {
+  const res = await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections/${connectionId}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ secondsRemaining: Number(secondsRemaining) }),
+    body: JSON.stringify(update),
   });
+
+  if (!res.ok) {
+    const body = await res.json() as { error?: string };
+    throw new Error(body.error ?? 'Failed to update connection');
+  }
 }
 
 /**
@@ -48,13 +58,28 @@ export async function addConnection(
   fromZoneId: string,
   toZoneId: string,
   secondsRemaining: number,
+  fromHandleId?: string,
+  toHandleId?: string,
+  reportedBy?: string,
 ): Promise<void> {
-  await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections`, {
+  const res = await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ fromZoneId, toZoneId, secondsRemaining }),
+    body: JSON.stringify({
+      fromZoneId,
+      toZoneId,
+      secondsRemaining,
+      fromHandleId,
+      toHandleId,
+      reportedBy,
+    }),
   });
+
+  if (!res.ok) {
+    const body = await res.json() as { error?: string };
+    throw new Error(body.error ?? 'Failed to add connection');
+  }
 }
