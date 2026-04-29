@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoomStore } from '../stores/useRoomStore';
 import { addConnection } from '../utils/roomOperations';
+import ShapeEditor from './debug/ShapeEditor.vue';
 
 const store = useRoomStore();
+const showShapeEditor = ref(false);
 
 const props = defineProps<{
   nodes: unknown[];
@@ -70,6 +72,11 @@ async function exportNodes() {
             <h2 class="text-base font-semibold">🐛 Debug Tray</h2>
             <button @click="addDemo" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs">Add Demo</button>
             <button @click="exportNodes" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs">Export</button>
+            <button @click="showShapeEditor = true" class="bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded text-xs">Shape Editor</button>
+            <label class="flex items-center gap-2 cursor-pointer ml-2">
+              <input type="checkbox" v-model="store.showDefaultHandles" class="w-3 h-3 bg-gray-800 border-gray-700 rounded focus:ring-blue-500 text-blue-600">
+              <span class="text-[10px] uppercase font-bold text-gray-400">Default Handles</span>
+            </label>
           </div>
           <button class="text-gray-400 hover:text-white text-xl leading-none" @click="emit('close')">&times;</button>
         </div>
@@ -102,4 +109,6 @@ async function exportNodes() {
       </div>
     </div>
   </Transition>
+
+  <ShapeEditor v-if="showShapeEditor" @close="showShapeEditor = false" />
 </template>

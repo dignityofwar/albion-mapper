@@ -172,11 +172,17 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       broadcast(id, { type: 'connection_removed', connectionId: connId });
 
       if (positionsUpdated) {
-        const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number }>(
-          'SELECT zone_id, x, y FROM room_node_positions WHERE room_id = $1',
+        const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
+          'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
           [id]
         );
-        const nodePositions = positions.map(p => ({ zoneId: p.zone_id, x: p.x, y: p.y }));
+        const nodePositions = positions.map(p => ({ 
+          zoneId: p.zone_id, 
+          x: p.x, 
+          y: p.y,
+          features: p.features,
+          customHandles: p.custom_handles 
+        }));
         
         broadcast(id, { type: 'node_positions_updated', nodePositions });
       }

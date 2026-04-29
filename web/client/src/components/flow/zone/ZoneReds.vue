@@ -104,26 +104,33 @@ const tooltipText = computed(() => {
         <button 
           @click.stop="handleToggle" 
           :class="[
-            (isActuallyActive || isOpen) ? `bg-red-700 ${ZONE_BUTTON_RING_ACTIVE_HAS_REDS} ring-1` : ZONE_BUTTON_BG_DEFAULT,
-            'text-white rounded p-1 ring-inset leading-none transition-all hover:opacity-80 flex items-center justify-center overflow-hidden'
+            (isActuallyActive || isOpen) ? 'bg-slate-900/90' : ZONE_BUTTON_BG_DEFAULT,
+            'text-white p-1.5 ring-inset leading-none transition-all flex items-center justify-center rhombus-button min-w-[44px] relative overflow-hidden'
           ]" 
         >
-          <img src="/images/reds.png" class="w-6 h-6 p-[2px]" alt="Reds" />
-          <Transition name="slide-right">
-            <input
-              v-if="isOpen || isActuallyActive"
-              ref="redsInputRef"
-              type="text"
-              inputmode="numeric"
-              v-model="redsValue"
-              @input="handleInput"
-              @focus="onFocus"
-              @blur="onBlur"
-              @click.stop
-              class="nodrag bg-transparent text-white text-[14px] w-4 text-center border-none outline-none leading-none p-0"
-              placeholder="?"
-            />
-          </Transition>
+          <div class="flex items-center unskew-content">
+            <Transition name="slide-left">
+              <input
+                v-if="isOpen || isActuallyActive"
+                ref="redsInputRef"
+                type="text"
+                inputmode="numeric"
+                v-model="redsValue"
+                @input="handleInput"
+                @focus="onFocus"
+                @blur="onBlur"
+                @click.stop
+                class="nodrag bg-transparent text-white text-[14px] w-6 text-center border-none outline-none font-bold leading-none p-0 mr-1"
+                placeholder="?"
+              />
+            </Transition>
+            <img src="/images/reds.png" class="w-7 h-7 p-[2px] shrink-0" alt="Reds" />
+          </div>
+          <!-- Bottom red line -->
+          <div 
+            v-if="isActuallyActive" 
+            class="absolute bottom-0 left-0 right-0 h-[2px] bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] transition-all duration-300"
+          ></div>
         </button>
       </TooltipTrigger>
       <TooltipPortal>
@@ -139,15 +146,25 @@ const tooltipText = computed(() => {
 </template>
 
 <style scoped>
-.slide-right-enter-active,
-.slide-right-leave-active {
+.rhombus-button {
+  transform: skewY(45deg);
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.unskew-content {
+  transform: skewY(-45deg) rotate(45deg);
+}
+
+.slide-left-enter-active,
+.slide-left-leave-active {
   transition: all 0.3s ease-in-out;
   max-width: 50px;
   overflow: hidden;
 }
 
-.slide-right-enter-from,
-.slide-right-leave-to {
+.slide-left-enter-from,
+.slide-left-leave-to {
   max-width: 0;
   opacity: 0;
 }

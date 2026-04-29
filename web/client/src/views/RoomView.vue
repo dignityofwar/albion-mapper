@@ -148,48 +148,29 @@ function getEdgeParams(conn: Connection, currentTime: number) {
 }
 
 function computeHandles(sourceNode: any, targetNode: any, conn?: Connection) {
-  const dx = targetNode.position.x - sourceNode.position.x;
-  const dy = targetNode.position.y - sourceNode.position.y;
+  let sourceHandle = conn?.fromHandleId ?? 'center';
+  let targetHandle = conn?.toHandleId ?? 'center';
 
-  const getHandleId = (node: any, otherNode: any, isSource: boolean) => {
-    const sdx = isSource ? dx : -dx;
-    const sdy = isSource ? dy : -dy;
+  // Resolve 'center' to one of 4 directional default handles
+  if (sourceHandle === 'center' || targetHandle === 'center') {
+    const dx = targetNode.position.x - sourceNode.position.x;
+    const dy = targetNode.position.y - sourceNode.position.y;
+    const angle = Math.atan2(dy, dx);
+    let deg = (angle * 180) / Math.PI;
+    if (deg < 0) deg += 360;
 
-    const custom = node.data.customHandles || getDefaultHandles(node.data.mapShape);
-    
-    const activeHandles = custom.filter((h: any) => !h.disabled);
-    if (activeHandles.length > 0) {
-      // Find handle closest to the angle of the connection
-      let bestHandle = activeHandles[0].id;
-      let minDiff = Infinity;
-      const targetAngle = Math.atan2(sdy, sdx);
+    const resolveDefault = (d: number) => {
+      if (d >= 0 && d < 90) return 'default-se';
+      if (d >= 90 && d < 180) return 'default-sw';
+      if (d >= 180 && d < 270) return 'default-nw';
+      return 'default-ne';
+    };
 
-      for (const h of activeHandles) {
-        const hLeft = parseFloat(h.left);
-        const hTop = parseFloat(h.top);
-        const hAngle = Math.atan2(hTop - 50, hLeft - 50);
-        let diff = Math.abs(targetAngle - hAngle);
-        if (diff > Math.PI) diff = 2 * Math.PI - diff;
-        if (diff < minDiff) {
-          minDiff = diff;
-          bestHandle = h.id;
-        }
-      }
-      return bestHandle;
-    }
+    if (sourceHandle === 'center') sourceHandle = resolveDefault(deg);
+    if (targetHandle === 'center') targetHandle = resolveDefault((deg + 180) % 360);
+  }
 
-    // Fallback if all handles are disabled
-    if (Math.abs(sdx) > Math.abs(sdy)) {
-      return sdx > 0 ? 'right' : 'left';
-    } else {
-      return sdy > 0 ? 'bottom' : 'top';
-    }
-  };
-
-  return {
-    sourceHandle: conn?.fromHandleId ?? getHandleId(sourceNode, targetNode, true),
-    targetHandle: conn?.toHandleId ?? getHandleId(targetNode, sourceNode, false),
-  };
+  return { sourceHandle, targetHandle };
 }
 
 const initialRedsHandled = ref(false);
@@ -365,30 +346,40 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           connection: conn,
           now: now.value,
           onDelete: async (id: string) => {
-            await deleteConnection(props.id, store.token!, id);
+            try {
+              await deleteConnection(props.id, store.token!, id);
+            } catch (err: any) {
+              console.error('Failed to delete connection:', err);
+              if (showToast) showToast(`Delete failed: ${err.message}`, 'error');
+            }
           },
           onDeleteRecursive: async (id: string) => {
-            const toDelete = new Set<string>();
-            const queue = [id];
-            
-            while (queue.length > 0) {
-              const currentId = queue.shift()!;
-              if (toDelete.has(currentId)) continue;
-              toDelete.add(currentId);
+            try {
+              const toDelete = new Set<string>();
+              const queue = [id];
               
-              const conn = connections.value.find(c => c.id === currentId);
-              if (conn) {
-                const children = connections.value.filter(c => c.fromZoneId === conn.toZoneId);
-                for (const child of children) {
-                  queue.push(child.id);
+              while (queue.length > 0) {
+                const currentId = queue.shift()!;
+                if (toDelete.has(currentId)) continue;
+                toDelete.add(currentId);
+                
+                const conn = connections.value.find(c => c.id === currentId);
+                if (conn) {
+                  const children = connections.value.filter(c => c.fromZoneId === conn.toZoneId);
+                  for (const child of children) {
+                    queue.push(child.id);
+                  }
                 }
               }
-            }
-            
-            // Delete in reverse order to help server-side cleanup logic (leaf to root)
-            const toDeleteArray = Array.from(toDelete).reverse();
-            for (const connId of toDeleteArray) {
-              await deleteConnection(props.id, store.token!, connId);
+              
+              // Delete in reverse order to help server-side cleanup logic (leaf to root)
+              const toDeleteArray = Array.from(toDelete).reverse();
+              for (const connId of toDeleteArray) {
+                await deleteConnection(props.id, store.token!, connId);
+              }
+            } catch (err: any) {
+              console.error('Failed to delete connections:', err);
+              if (showToast) showToast(`Delete failed: ${err.message}`, 'error');
             }
           },
           onUpdate: async (id: string, secondsRemaining: number) => {
@@ -446,7 +437,7 @@ function onNodeDragStop() {
 const reportForm = ref<InstanceType<typeof ReportForm> | null>(null);
 
 const activeCores = computed(() => {
-  const cores: { zoneId: string; zoneName: string; type: string; expiresAt: number; coreType: 'green' | 'blue' | 'purple' }[] = [];
+  const cores: { zoneId: string; zoneName: string; type: string; expiresAt: number; coreType: 'green' | 'blue' | 'purple' | 'yellow' }[] = [];
   flowNodes.value.forEach(node => {
     const features = node.data.features as NodeFeatures | undefined;
     if (!features) return;
@@ -459,6 +450,9 @@ const activeCores = computed(() => {
     }
     if (features.powercoreTimerPurple && features.powercoreTimerPurple > now.value) {
       cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerPurple, coreType: 'purple' });
+    }
+    if (features.powercoreTimerYellow && features.powercoreTimerYellow > now.value) {
+      cores.push({ zoneId: node.id, zoneName: node.data.zoneName, type: node.data.type, expiresAt: features.powercoreTimerYellow, coreType: 'yellow' });
     }
   });
   return cores.sort((a, b) => a.expiresAt - b.expiresAt);

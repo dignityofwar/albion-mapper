@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles } from 'shared';
+import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../constants/ui';
-import ZoneTier from './zone/ZoneTier.vue';
+import { TooltipProvider } from 'reka-ui';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
+import ZoneReds from './zone/ZoneReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneEditorTray from './zone/ZoneEditorTray.vue';
 import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
@@ -53,7 +54,7 @@ onClickOutside(zoneNodeRef, () => {
 
 const timerValue = ref('');
 const isEditingTimer = ref(false);
-const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | null>(null);
+const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow' | null>(null);
 const timerComponentRef = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null);
 const timerContainerRef = ref<HTMLElement | null>(null);
 
@@ -70,6 +71,7 @@ const MAX_TIMES = {
   powercoreGreen: 5 * 60,
   powercoreBlue: 15 * 60,
   powercorePurple: 30 * 60,
+  powercoreYellow: 20 * 60,
 };
 
 const showToast = inject<(msg: string, type?: 'info' | 'error') => void>('showToast');
@@ -83,6 +85,16 @@ function formatTimer(expiresAtMs: number | undefined | null): string {
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
+function getTimerKey(core: string): string {
+  switch (core) {
+    case 'powercoreGreen': return 'powercoreTimerGreen';
+    case 'powercoreBlue': return 'powercoreTimerBlue';
+    case 'powercorePurple': return 'powercoreTimerPurple';
+    case 'powercoreYellow': return 'powercoreTimerYellow';
+    default: return '';
+  }
+}
+
 // Update timer value when the active core changes
 watch(activeEditingCore, (newCore) => {
   if (!newCore) {
@@ -90,7 +102,7 @@ watch(activeEditingCore, (newCore) => {
     return;
   }
   
-  const timerKey = newCore === 'powercoreGreen' ? 'powercoreTimerGreen' : newCore === 'powercoreBlue' ? 'powercoreTimerBlue' : 'powercoreTimerPurple';
+  const timerKey = getTimerKey(newCore);
   const val = props.data.features?.[timerKey as keyof NodeFeatures] as number | undefined;
   const formatted = formatTimer(val);
   
@@ -105,7 +117,7 @@ watch(activeEditingCore, (newCore) => {
 watch([() => props.data.features, now], ([features, _]) => {
   if (isEditingTimer.value || !activeEditingCore.value) return;
   
-  const timerKey = activeEditingCore.value === 'powercoreGreen' ? 'powercoreTimerGreen' : activeEditingCore.value === 'powercoreBlue' ? 'powercoreTimerBlue' : 'powercoreTimerPurple';
+  const timerKey = getTimerKey(activeEditingCore.value);
   const val = features?.[timerKey as keyof NodeFeatures] as number | undefined;
   timerValue.value = formatTimer(val);
 }, { deep: true });
@@ -169,13 +181,13 @@ const hasReds = computed(() => {
   return reds !== undefined && reds !== 0;
 });
 
-function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup' | 'chest' | 'treasuresGreen' | 'treasuresBlue' | 'treasuresYellow' | 'resourceFibre' | 'resourceLeather' | 'resourceOre' | 'resourceStone' | 'resourceWood') {
+function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'powercoreYellow' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup' | 'chest' | 'treasuresGreen' | 'treasuresBlue' | 'treasuresYellow' | 'resourceFibre' | 'resourceLeather' | 'resourceOre' | 'resourceStone' | 'resourceWood') {
   const currentFeatures = props.data.features || {};
   const features = { ...currentFeatures };
   
   if (feature.startsWith('powercore')) {
     const isAlreadyEditing = activeEditingCore.value === feature;
-    const timerKey = feature === 'powercoreGreen' ? 'powercoreTimerGreen' : feature === 'powercoreBlue' ? 'powercoreTimerBlue' : 'powercoreTimerPurple';
+    const timerKey = getTimerKey(feature);
     const expiresAt = features[timerKey as keyof NodeFeatures] as number | undefined;
     const isExpired = expiresAt && expiresAt <= now.value;
 
@@ -225,7 +237,7 @@ function saveTimer() {
     return;
   }
   
-  const timerKey = activeEditingCore.value === 'powercoreGreen' ? 'powercoreTimerGreen' : activeEditingCore.value === 'powercoreBlue' ? 'powercoreTimerBlue' : 'powercoreTimerPurple';
+  const timerKey = getTimerKey(activeEditingCore.value);
   const currentFeatures = { ...(props.data.features || {}) };
 
   if (timerValue.value === '') {
@@ -273,7 +285,7 @@ function onTimerBlur() {
     timerValue.value = '';
     return;
   }
-  const timerKey = activeEditingCore.value === 'powercoreGreen' ? 'powercoreTimerGreen' : activeEditingCore.value === 'powercoreBlue' ? 'powercoreTimerBlue' : 'powercoreTimerPurple';
+  const timerKey = getTimerKey(activeEditingCore.value);
   const newVal = props.data.features?.[timerKey as keyof NodeFeatures] as number | undefined;
   timerValue.value = formatTimer(newVal);
 }
@@ -336,20 +348,30 @@ const customHandles = computed(() => {
     }));
 });
 
+const defaultInternalHandles = computed(() => {
+  return DEFAULT_INTERNAL_HANDLES.map(h => ({
+    ...h,
+    position: getHandlePosition(h.left, h.top),
+    style: { left: h.left, top: h.top }
+  }));
+});
+
+
 
 // getDefaultHandles removed, now using from 'shared'
 </script>
 
 <template>
   <div class="zone-node" ref="zoneNodeRef">
-    <div 
-      class="text-white text-xs text-center min-w-[340px] min-h-[340px] relative transition-all duration-300 flex items-center justify-center p-14"
-      :class="[
-        hasReds ? 'red-glow' : '',
-        props.data.isHome ? 'home-glow' : '',
-        props.data.highlighted ? 'goto-glow' : ''
-      ]"
-    >
+    <TooltipProvider :delay-duration="300">
+      <div 
+        class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
+        :class="[
+          hasReds ? 'red-glow' : '',
+          props.data.isHome ? 'home-glow' : '',
+          props.data.highlighted ? 'goto-glow' : ''
+        ]"
+      >
       <!-- Diamond Shape Background -->
       <div 
         class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
@@ -360,99 +382,136 @@ const customHandles = computed(() => {
         :class="[hasReds ? 'bg-red-950' : 'bg-gray-800']"
       ></div>
 
-      <div class="relative z-10 flex flex-col items-center w-full">
-        <ZoneTier :tier="props.data.tier" :type="props.data.type as ZoneType" />
 
-        <ZoneHeader 
-          :id="props.id" 
-          :zone-name="props.data.zoneName" 
-          :is-home="props.data.isHome" 
-          :type="props.data.type as ZoneType" 
-          :category="props.data.category"
-          :map-shape="props.data.mapShape"
-        />
+      <div 
+        v-if="showFeatures"
+        class="absolute top-0 left-0 w-full h-full pointer-events-none z-20"
+      >
+        <div class="cores-nw-container pointer-events-auto" ref="timerContainerRef">
+          <ZoneCoresAndReds 
+            ref="timerComponentRef"
+            :features="props.data.features"
+            :active-editing-core="activeEditingCore"
+            :now="now"
+            :has-reds="hasReds"
+            v-model:timer-value="timerValue"
+            :is-timer-too-long="isTimerTooLong"
+            :is-timer-valid="isTimerValid"
+            @toggle="toggleFeature"
+            @save="saveTimer"
+            @clear="clearTimer"
+            @focus="onTimerFocus"
+            @blur="onTimerBlur"
+          />
+        </div>
 
-        <button 
-          v-if="props.data.mapShape && props.data.type === 'roads'"
-          class="mt-1 p-1 rounded hover:bg-white/10 transition-colors text-gray-400 hover:text-white"
-          title="Edit Handles"
-          @click.stop="openHandleEditor"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-        </button>
+        <!-- Reds on North-East Edge -->
+        <div class="reds-ne-container pointer-events-auto">
+          <ZoneReds 
+            :reds="props.data.features?.reds"
+            :reds-timer="props.data.features?.redsTimer"
+            :now="now"
+            v-model:is-open="isRedsOpen"
+            @update:reds="updateReds"
+          />
+        </div>
 
-        <template v-if="showFeatures">
-          <div ref="timerContainerRef" class="w-full">
-            <ZoneCoresAndReds 
-              ref="timerComponentRef"
-              :features="props.data.features"
-              :active-editing-core="activeEditingCore"
-              :now="now"
+      </div>
+
+      <!-- Central Content Block -->
+      <div class="absolute inset-x-0 top-[40%] z-10 pointer-events-none flex flex-col items-center">
+        <div class="w-full flex flex-col items-center pointer-events-auto">
+          <!-- Zone Header -->
+            <ZoneHeader
+              :id="props.id" 
+              :zone-name="props.data.zoneName" 
+              :is-home="props.data.isHome" 
+              :type="props.data.type as ZoneType" 
+              :category="props.data.category"
+              :map-shape="props.data.mapShape"
+              :tier="props.data.tier"
+            />
+
+          <!-- Map Features -->
+          <div class="flex flex-col items-center pt-2">
+            <div class="flex items-center justify-center gap-1 mb-1">
+              <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Map Features</span>
+              <button 
+                @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
+                @mousedown.stop
+                class="p-1 rounded hover:bg-white/10 text-gray-500 transition-colors"
+                title="Edit Map Features"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </button>
+            </div>
+            <ZoneFeatures 
+              :active-features="activeFeatures"
               :has-reds="hasReds"
-              v-model:timer-value="timerValue"
-              :is-timer-too-long="isTimerTooLong"
-              :is-timer-valid="isTimerValid"
-              v-model:is-reds-open="isRedsOpen"
-              @toggle="toggleFeature"
-              @update:reds="updateReds"
-              @save="saveTimer"
-              @clear="clearTimer"
-              @focus="onTimerFocus"
-              @blur="onTimerBlur"
             />
           </div>
-
-          <ZoneFeatures 
-            :active-features="activeFeatures"
-            :has-reds="hasReds"
-          />
-
-          <!-- Editor Tray Toggle Tab -->
-          <button 
-            @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
-            class="w-full mt-2 py-1.5 transition-colors flex items-center justify-center gap-2"
-            :class="[
-              isEditorTrayOpen ? 'rounded-t-sm' : 'rounded-sm',
-              hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_HAS_REDS} text-red-400` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_DEFAULT} text-gray-400`
-            ]"
-          >
-            <span class="text-[10px] uppercase font-bold">Edit Map Features</span>
-            <div 
-              class="w-0 h-0 border-l-[4px] border-l-transparent border-r-[4px] border-r-transparent transition-transform duration-300"
-              :class="[
-                isEditorTrayOpen ? 'border-b-[6px]' : 'border-t-[6px]',
-                hasReds ? 'border-b-red-400 border-t-red-400' : 'border-b-gray-400 border-t-gray-400'
-              ]"
-            ></div>
-          </button>
-
-          <ZoneEditorTray 
-            :is-open="isEditorTrayOpen"
-            :has-reds="hasReds"
-            :features="props.data.features"
-            @toggle="toggleFeature"
-          />
-        </template>
+        </div>
       </div>
+
+      <!-- Edit Handles Button at Middle Bottom -->
+      <button 
+        v-if="props.data.mapShape && props.data.type === 'roads'"
+        class="absolute bottom-[35px] left-1/2 -translate-x-1/2 z-10 px-2 py-1 rounded bg-gray-900/80 hover:bg-gray-700 transition-colors text-gray-300 hover:text-white flex items-center gap-1.5 border border-gray-700 shadow-lg"
+        @click.stop="openHandleEditor"
+        @mousedown.stop
+        title="Edit Handles"
+      >
+        <div class="w-2.5 h-2.5 rounded-full bg-gray-500 border border-white"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      </button>
+
+      <ZoneEditorTray 
+        :is-open="isEditorTrayOpen"
+        :has-reds="hasReds"
+        :features="props.data.features"
+        @toggle="toggleFeature"
+        @close="isEditorTrayOpen = false"
+      />
+      
+      <ZoneHandleEditor
+        v-if="isHandleEditorOpen"
+        :zone-name="props.data.zoneName || props.id"
+        :initial-handles="props.data.customHandles && props.data.customHandles.length > 0 ? props.data.customHandles : getDefaultHandles(props.data.mapShape)"
+        :is-toggle-mode="props.data.mapShape !== 'rest'"
+        @save="saveCustomHandles"
+        @close="isHandleEditorOpen = false"
+      />
+
+      <!-- Handles moved inside the relative container to match diamond coordinates exactly -->
+      <Handle 
+        v-for="handle in customHandles" 
+        :key="handle.id"
+        type="source" 
+        :position="handle.position" 
+        :id="handle.id" 
+        :style="handle.style"
+      />
+
+      <!-- Default internal handles for pending connections -->
+      <Handle 
+        v-for="handle in defaultInternalHandles" 
+        :key="handle.id"
+        type="source" 
+        :position="handle.position" 
+        :id="handle.id" 
+        :style="handle.style"
+        :class="['!bg-orange-500 !border-orange-700 !z-30 transition-opacity duration-300', store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none']"
+      />
+
+      <!-- Legacy center handle for backward compatibility -->
+      <Handle
+        type="source"
+        :position="Position.Top"
+        id="center"
+        :style="{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)', opacity: 0, pointerEvents: 'none' }"
+      />
     </div>
-
-    <ZoneHandleEditor
-      v-if="isHandleEditorOpen"
-      :zone-name="props.data.zoneName || props.id"
-      :initial-handles="props.data.customHandles && props.data.customHandles.length > 0 ? props.data.customHandles : getDefaultHandles(props.data.mapShape)"
-      :is-toggle-mode="props.data.mapShape !== 'rest'"
-      @save="saveCustomHandles"
-      @close="isHandleEditorOpen = false"
-    />
-
-    <Handle 
-      v-for="handle in customHandles" 
-      :key="handle.id"
-      type="source" 
-      :position="handle.position" 
-      :id="handle.id" 
-      :style="handle.style"
-    />
+    </TooltipProvider>
   </div>
 </template>
 
@@ -465,6 +524,7 @@ const customHandles = computed(() => {
   border-radius: 50%;
   z-index: 20;
   transition: background-color 0.2s;
+  transform: translate(-50%, -50%);
 }
 
 :deep(.vue-flow__handle:hover) {
@@ -505,4 +565,21 @@ const customHandles = computed(() => {
 .goto-glow {
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.5) !important;
 }
+
+.cores-nw-container {
+  position: absolute;
+  top: 65px;
+  left: 165px;
+  transform: rotate(45deg);
+  transform-origin: top left;
+}
+
+.reds-ne-container {
+  position: absolute;
+  top: 65px;
+  right: 165px;
+  transform: rotate(-45deg);
+  transform-origin: top right;
+}
+
 </style>

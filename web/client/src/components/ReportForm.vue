@@ -55,8 +55,8 @@ async function submit() {
       fromZoneId.value,
       toZoneId.value,
       Number(secondsRemaining.value!),
-      fromHandleId.value || undefined,
-      toHandleId.value || undefined,
+      fromHandleId.value || 'center',
+      toHandleId.value || 'center',
       reportedBy.value || undefined,
     );
 

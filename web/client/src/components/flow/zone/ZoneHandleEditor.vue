@@ -124,6 +124,32 @@ onUnmounted(() => {
 function save() {
   emit('save', handles.value);
 }
+
+function clearAll() {
+  handles.value = [];
+}
+
+function rotate(degrees: number) {
+  handles.value = handles.value.map(h => {
+    const x = parseFloat(h.left);
+    const y = parseFloat(h.top);
+    const t = getTFromPos(x, y);
+    
+    let nextT;
+    if (degrees === 90) {
+      nextT = (t + 1) % 4;
+    } else if (degrees === -90) {
+      nextT = (t + 3) % 4;
+    } else {
+      return h;
+    }
+    
+    return {
+      ...h,
+      ...getPosFromT(nextT)
+    };
+  });
+}
 </script>
 
 <template>
@@ -141,9 +167,40 @@ function save() {
         </template>
       </p>
 
+      <div class="flex items-center justify-between w-full mb-6">
+        <div class="flex gap-2">
+          <button 
+            class="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-sm rounded border border-gray-600 transition-colors flex items-center gap-2"
+            title="Rotate Counter-Clockwise"
+            @click="rotate(-90)"
+          >
+            <span>↺ 90°</span>
+          </button>
+          <button 
+            class="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-sm rounded border border-gray-600 transition-colors flex items-center gap-2"
+            title="Rotate Clockwise"
+            @click="rotate(90)"
+          >
+            <span>90° ↻</span>
+          </button>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <p class="text-[10px] text-gray-500 max-w-[150px] leading-tight text-right italic">
+            Clearing all points will clear all connections and you will need to re-add them manually
+          </p>
+          <button 
+            @click="clearAll" 
+            class="px-3 py-1.5 bg-red-900/40 hover:bg-red-900/60 text-red-200 text-xs rounded border border-red-800/60 transition-colors whitespace-nowrap"
+          >
+            Clear All
+          </button>
+        </div>
+      </div>
+
       <div 
         ref="containerRef"
-        class="relative w-64 h-64 mb-8"
+        class="relative w-[400px] h-[400px] mb-8"
         :class="isToggleMode ? '' : 'cursor-crosshair'"
         @click="handleEdgeClick"
       >

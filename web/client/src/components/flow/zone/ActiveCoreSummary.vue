@@ -5,7 +5,7 @@ interface ActiveCore {
   zoneId: string;
   zoneName: string;
   expiresAt: number;
-  coreType: 'green' | 'blue' | 'purple';
+  coreType: 'green' | 'blue' | 'purple' | 'yellow';
 }
 
 defineProps<{
@@ -30,6 +30,7 @@ const config = {
   green: { img: '/images/core-green.png', borderClass: 'border-green-500' },
   blue: { img: '/images/core-blue.png', borderClass: 'border-blue-500' },
   purple: { img: '/images/core-purple.png', borderClass: 'border-purple-500' },
+  yellow: { img: '/images/core-yellow.png', borderClass: 'border-yellow-500' },
 };
 </script>
 

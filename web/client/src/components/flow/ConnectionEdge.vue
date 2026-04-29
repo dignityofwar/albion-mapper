@@ -98,7 +98,8 @@ defineExpose({
     :animated="style.animated"
     :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2 }"
     class="cursor-pointer"
-    @click="showPopover = !showPopover"
+    @click.stop="showPopover = !showPopover"
+    @mousedown.stop
   />
 
   <EdgeLabelRenderer>
@@ -114,7 +115,8 @@ defineExpose({
         data-trigger="true"
         class="text-xs px-3 h-7 inline-flex items-center justify-center rounded-full text-white cursor-pointer shadow-sm leading-none"
         :style="{ backgroundColor: style.color, border: `1px solid ${style.stroke}` }"
-        @click="showPopover = !showPopover"
+        @click.stop="showPopover = !showPopover"
+        @mousedown.stop
       >
         {{ formatCountdown(remainingMs) }}
       </div>
@@ -125,6 +127,7 @@ defineExpose({
         ref="popoverRef"
         class="absolute top-9 left-1/2 -translate-x-1/2 w-48 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
         @click.stop
+        @mousedown.stop
       >
         <button
           class="absolute top-2 right-2 text-gray-400 hover:text-white p-1"

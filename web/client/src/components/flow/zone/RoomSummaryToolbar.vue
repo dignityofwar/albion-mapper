@@ -10,7 +10,7 @@ interface ZoneFeatureInfo {
 
 interface ActiveCore extends ZoneFeatureInfo {
   expiresAt: number;
-  coreType: 'green' | 'blue' | 'purple';
+  coreType: 'green' | 'blue' | 'purple' | 'yellow';
 }
 
 const props = defineProps<{
@@ -37,7 +37,7 @@ watch(() => props.cores.length, (newCount, oldCount) => {
 }, { immediate: true });
 
 const coreCounts = computed(() => {
-  const counts = { green: 0, blue: 0, purple: 0 };
+  const counts = { green: 0, blue: 0, purple: 0, yellow: 0 };
   props.cores.forEach(c => counts[c.coreType]++);
   return counts;
 });

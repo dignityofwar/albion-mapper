@@ -172,6 +172,40 @@ describe('ReportForm', () => {
     wrapper.unmount();
   });
 
+  it('defaults handle IDs to "center" on submission if null', async () => {
+    const mockResponse = {
+      ok: true,
+      json: async () => ({}),
+    };
+    global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
+
+    const wrapper = mountForm();
+    const store = useRoomStore();
+    store.setCredentials('room123', 'test-token');
+    
+    const vm = wrapper.vm as any;
+
+    vm.fromZoneId = 'zoneA';
+    vm.toZoneId = 'zoneB';
+    vm.secondsRemaining = 1800;
+
+    await vm.submit();
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('/rooms/room123/connections'),
+      expect.objectContaining({
+        body: expect.stringContaining('"fromHandleId":"center"'),
+      })
+    );
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('/rooms/room123/connections'),
+      expect.objectContaining({
+        body: expect.stringContaining('"toHandleId":"center"'),
+      })
+    );
+    wrapper.unmount();
+  });
+
   it('setConnection updates fields correctly and does not throw', () => {
     const wrapper = mountForm();
     const vm = wrapper.vm as any;

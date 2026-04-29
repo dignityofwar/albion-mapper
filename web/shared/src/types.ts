@@ -77,9 +77,11 @@ export interface NodeFeatures {
   powercoreBlue?: boolean;
   powercorePurple?: boolean;
   powercoreGreen?: boolean;
+  powercoreYellow?: boolean;
   powercoreTimerGreen?: number; // Expiration timestamp in ms
   powercoreTimerBlue?: number;  // Expiration timestamp in ms
   powercoreTimerPurple?: number; // Expiration timestamp in ms
+  powercoreTimerYellow?: number; // Expiration timestamp in ms
   crystalCreaturePresent?: boolean;
   dungeonStatic?: boolean;
   dungeonGroup?: boolean;
