@@ -70,11 +70,10 @@ describe('RoomView Viewport Issue', () => {
     // Note: Vitest/JSDOM doesn't actually process CSS classes like 'hidden xl:flex' 
     // unless we use a tool that supports it, but we can check the classes.
     
-    const desktopHeader = wrapper.find('[data-testid="desktop-side-header"]');
-    expect(desktopHeader.exists()).toBe(true);
-    expect(desktopHeader.classes()).toContain('xl:flex');
+    const header = wrapper.find('header');
+    expect(header.exists()).toBe(true);
     
-    const title = wrapper.find('[data-testid="room-title-desktop"]');
+    const title = wrapper.find('[data-testid="room-title"]');
     expect(title.exists()).toBe(true);
     expect(title.text()).toBe('Test Room Title');
   });

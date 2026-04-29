@@ -78,7 +78,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
     }
 
-    const { fromZoneId, toZoneId, fromHandleId, toHandleId, secondsRemaining, reportedBy } = parsed.data;
+    const { fromZoneId, toZoneId, fromHandleId, toHandleId, secondsRemaining, reportedBy, targetPosition } = parsed.data;
 
     if (fromZoneId === toZoneId) {
       return reply.status(400).send({ error: 'fromZoneId and toZoneId must be different' });
@@ -90,6 +90,29 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
 
     if (!ZONE_BY_ID.has(toZoneId)) {
       return reply.status(400).send({ error: 'toZoneId not found in zone catalogue' });
+    }
+
+    // If target position is provided, save it
+    if (targetPosition) {
+      await app.db.query(`
+        INSERT INTO room_node_positions (room_id, zone_id, x, y)
+        VALUES ($1, $2, $3, $4)
+        ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y
+      `, [id, toZoneId, targetPosition.x, targetPosition.y]);
+
+      const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
+        'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
+        [id]
+      );
+      const nodePositions = positions.map(p => ({ 
+        zoneId: p.zone_id, 
+        x: p.x, 
+        y: p.y,
+        features: p.features,
+        customHandles: p.custom_handles 
+      }));
+      
+      broadcast(id, { type: 'node_positions_updated', nodePositions });
     }
 
     const now = new Date();

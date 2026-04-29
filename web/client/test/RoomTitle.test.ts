@@ -50,9 +50,9 @@ describe('RoomTitleVisibility', () => {
 
     await nextTick();
 
-    const desktopTitle = wrapper.find('[data-testid="room-title-desktop"]');
-    expect(desktopTitle.exists()).toBe(true);
-    expect(desktopTitle.text()).toBe(title);
+    const titleElement = wrapper.find('[data-testid="room-title"]');
+    expect(titleElement.exists()).toBe(true);
+    expect(titleElement.text()).toBe(title);
   });
 
   it('renders the room title in tablet view when available', async () => {
@@ -78,9 +78,9 @@ describe('RoomTitleVisibility', () => {
 
     await nextTick();
 
-    const tabletTitle = wrapper.find('[data-testid="room-title-tablet"]');
-    expect(tabletTitle.exists()).toBe(true);
-    expect(tabletTitle.text()).toBe(title);
+    const titleElement = wrapper.find('[data-testid="room-title"]');
+    expect(titleElement.exists()).toBe(true);
+    expect(titleElement.text()).toBe(title);
   });
 
   it('does not render room title if it is missing', async () => {
@@ -105,7 +105,6 @@ describe('RoomTitleVisibility', () => {
 
     await nextTick();
 
-    expect(wrapper.find('[data-testid="room-title-desktop"]').exists()).toBe(false);
-    expect(wrapper.find('[data-testid="room-title-tablet"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="room-title"]').exists()).toBe(false);
   });
 });

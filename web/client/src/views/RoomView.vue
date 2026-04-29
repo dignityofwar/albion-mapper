@@ -10,6 +10,7 @@ import RoomSettings from '../components/RoomSettings.vue';
 import DebugTray from '../components/DebugTray.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
+import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import ActiveCoreSummary from '../components/flow/zone/ActiveCoreSummary.vue';
 import RoomSummaryToolbar from '../components/flow/zone/RoomSummaryToolbar.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
@@ -129,7 +130,7 @@ onUnmounted(() => {
 
 
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
-const { fitView, updateNode, setCenter, updateNodeInternals } = useVueFlow();
+const { fitView, updateNode, setCenter, updateNodeInternals, screenToFlowCoordinate } = useVueFlow();
 const openPopoverId = ref<string | null>(null);
 provide('openPopoverId', openPopoverId);
 
@@ -139,6 +140,20 @@ const isSkippingAutoLayout = ref(false);
 let wasConnected = false;
 let draggingFromNodeId: string | null = null;
 let draggingFromHandleId: string | null = null;
+
+const ghostNode = ref<Node | null>(null);
+const ghostEdge = ref<Edge | null>(null);
+
+function removeGhost() {
+  if (ghostNode.value) {
+    flowNodes.value = flowNodes.value.filter(n => n.id !== ghostNode.value!.id);
+    ghostNode.value = null;
+  }
+  if (ghostEdge.value) {
+    flowEdges.value = flowEdges.value.filter(e => e.id !== ghostEdge.value!.id);
+    ghostEdge.value = null;
+  }
+}
 
 function getEdgeParams(conn: Connection, currentTime: number) {
   const expiresAt = new Date(conn.expiresAt).getTime();
@@ -219,76 +234,29 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         positions.push({ zoneId: homeZoneId.value, x: 0, y: 0 });
         existingNodeIds.add(homeZoneId.value);
     }
-    let hasNewNodes = false;
 
-    for (const conn of addedConnections) {
-        let newNodeId = null;
-        let parentNodeId = null;
-
-        // Find anchor node (prefer source)
-        if (existingNodeIds.has(conn.fromZoneId)) {
-            if (!existingNodeIds.has(conn.toZoneId)) {
-                newNodeId = conn.toZoneId;
-                parentNodeId = conn.fromZoneId; // Anchor to Source
-            }
-        } else if (existingNodeIds.has(conn.toZoneId)) {
-            // Source is not in graph! This is the problematic case.
-            // But let's see if we can do something else.
-            newNodeId = conn.fromZoneId;
-            parentNodeId = conn.toZoneId; // Anchor to Target (as fallback)
+    // Ensure all connected nodes exist (if not in nodePositions, add with (0,0))
+    connections.value.forEach(conn => {
+        if (!positions.some(p => p.zoneId === conn.fromZoneId)) {
+            positions.push({ zoneId: conn.fromZoneId, x: 0, y: 0 });
         }
-
-        if (newNodeId && parentNodeId) {
-            const parentPos = positions.find(np => np.zoneId === parentNodeId);
-            if (parentPos) {
-                const homePos = positions.find(np => np.zoneId === homeZoneId.value);
-                const direction = parentPos.x >= (homePos?.x ?? 0) ? 400 : -400;
-                let newX = parentPos.x + direction;
-                let newY = parentPos.y;
-                    
-                // Collision check against ALL updated positions
-                while (positions.some(p => p.x === newX && p.y === newY)) {
-                    newY += 300;
-                }
-                    
-                positions.push({ zoneId: newNodeId, x: newX, y: newY, virtualGridPos: { x: newX, y: newY } });
-                existingNodeIds.add(newNodeId);
-                hasNewNodes = true;
-            }
+        if (!positions.some(p => p.zoneId === conn.toZoneId)) {
+            positions.push({ zoneId: conn.toZoneId, x: 0, y: 0 });
         }
-    }
+    });
 
-    if (hasNewNodes) {
-        isSkippingAutoLayout.value = true;
-        store.updateNodePositionsInStore(positions);
-    } else {
-        if (isSkippingAutoLayout.value) {
-            isSkippingAutoLayout.value = false;
-        }
-
-        // Ensure all connected nodes exist (if not in nodePositions, add with (0,0))
-        connections.value.forEach(conn => {
-            if (!positions.some(p => p.zoneId === conn.fromZoneId)) {
-                positions.push({ zoneId: conn.fromZoneId, x: 0, y: 0 });
-            }
-            if (!positions.some(p => p.zoneId === conn.toZoneId)) {
-                positions.push({ zoneId: conn.toZoneId, x: 0, y: 0 });
-            }
-        });
-
-        // If new nodes were added, update the store.
-        const hasNewPositions = positions.some(p => !nodePositions.value.find(np => np.zoneId === p.zoneId));
-        if (hasNewPositions) {
-            const updatedPositions = positions.map(p => ({ 
-                zoneId: p.zoneId, 
-                x: p.x, 
-                y: p.y, 
-                features: p.features,
-                customHandles: p.customHandles,
-                virtualGridPos: p.virtualGridPos 
-            }));
-            store.updateNodePositionsInStore(updatedPositions);
-        }
+    // If new nodes were added, update the store.
+    const hasNewPositions = positions.some(p => !nodePositions.value.find(np => np.zoneId === p.zoneId));
+    if (hasNewPositions) {
+        const updatedPositions = positions.map(p => ({ 
+            zoneId: p.zoneId, 
+            x: p.x, 
+            y: p.y, 
+            features: p.features,
+            customHandles: p.customHandles,
+            virtualGridPos: p.virtualGridPos 
+        }));
+        store.updateNodePositionsInStore(updatedPositions);
     }
     
     // 2. Map to VueFlow nodes
@@ -538,6 +506,11 @@ function goToNode(nodeId: string) {
 
 function handleSuccess(msg: string) {
   showToast(msg);
+  removeGhost();
+}
+
+function handleReportClose() {
+  removeGhost();
 }
 
 async function onEdgeUpdate({ edge, connection }: any) {
@@ -556,7 +529,24 @@ async function onEdgeUpdate({ edge, connection }: any) {
 async function handleConnect(params: any) {
   wasConnected = true;
 
-  // Check for existing connection between these two zones
+  // Check if source handle is already occupied by ANY connection
+  const sourceHandleOccupied = store.connections.find(c => 
+    !c.isExpired && (
+      (c.fromZoneId === params.source && (c.fromHandleId === params.sourceHandle || (!c.fromHandleId && params.sourceHandle === 'center'))) ||
+      (c.toZoneId === params.source && (c.toHandleId === params.sourceHandle || (!c.toHandleId && params.sourceHandle === 'center')))
+    )
+  );
+
+  if (sourceHandleOccupied) {
+    // If it's occupied, it must be the SAME connection (modifying handles)
+    if (!((sourceHandleOccupied.fromZoneId === params.source && sourceHandleOccupied.toZoneId === params.target) ||
+          (sourceHandleOccupied.toZoneId === params.source && sourceHandleOccupied.fromZoneId === params.target))) {
+      showToast("When modifying connections, you must use the same zones. You cannot have multiple connections coming out of one portal.", "error");
+      return;
+    }
+  }
+
+  // Check for existing connection between these two zones (to update it)
   const existing = store.connections.find(c =>
     !c.isExpired &&
     ((c.fromZoneId === params.source && c.toZoneId === params.target) ||
@@ -579,7 +569,7 @@ async function handleConnect(params: any) {
         toHandleId: tHandleId
       });
     } catch (err: any) {
-      showToast(err.message || 'Failed to update connection', 'error');
+      showToast(err.message || 'Failed to update connection.', 'error');
     }
     return;
   }
@@ -598,20 +588,90 @@ function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent 
   draggingFromHandleId = params.handleId ?? null;
 }
 
+function getOppositeHandleId(handleId: string | null): string | undefined {
+  if (!handleId) return undefined;
+  if (handleId === 'default-nw') return 'default-se';
+  if (handleId === 'default-se') return 'default-nw';
+  if (handleId === 'default-ne') return 'default-sw';
+  if (handleId === 'default-sw') return 'default-ne';
+  if (handleId === 'top') return 'bottom';
+  if (handleId === 'bottom') return 'top';
+  if (handleId === 'left') return 'right';
+  if (handleId === 'right') return 'left';
+  return undefined;
+}
+
 function handleConnectEnd(event?: MouseEvent) {
   if (wasConnected) {
     wasConnected = false;
     draggingFromNodeId = null;
+    draggingFromHandleId = null;
     return;
   }
   
   const fromNodeId = draggingFromNodeId;
   const fromHandleId = draggingFromHandleId;
   
-  if (fromNodeId) {
-     reportForm.value?.setFromZoneId(fromNodeId, fromHandleId);
-     reportForm.value?.focusToCombobox();
-     reportForm.value?.flashToCombobox();
+  if (fromNodeId && event) {
+     const { x, y } = screenToFlowCoordinate({
+       x: event.clientX,
+       y: event.clientY,
+     });
+
+     // Check if handle already has a connection
+     const existingConn = store.connections.find(c => 
+       !c.isExpired && (
+         (c.fromZoneId === fromNodeId && (c.fromHandleId === fromHandleId || (!c.fromHandleId && fromHandleId === 'center'))) ||
+         (c.toZoneId === fromNodeId && (c.toHandleId === fromHandleId || (!c.toHandleId && fromHandleId === 'center')))
+       )
+     );
+
+     if (existingConn) {
+       showToast("When modifying connections, you must use the same zones. You cannot have multiple connections coming out of one portal.", "error");
+       draggingFromNodeId = null;
+       draggingFromHandleId = null;
+       return;
+     }
+
+     removeGhost();
+
+     const ghostId = `ghost-${Date.now()}`;
+     const ghostPos = { x: x - 200, y: y - 200 };
+     const ghostN: any = {
+       id: ghostId,
+       type: 'zone',
+       // Offset to center the diamond (approx 400x400 total size, but visual diamond is smaller)
+       // Actually ZoneNode has min-w-[400px] min-h-[400px]
+       position: ghostPos,
+       data: { 
+         zoneName: 'Pending...',
+         type: 'roads',
+         isGhost: true,
+         features: {},
+         tier: 0,
+         isHome: false,
+       },
+       selectable: false,
+       draggable: false,
+     };
+     
+     const ghostE: any = {
+       id: `e-${fromNodeId}-${ghostId}`,
+       source: fromNodeId,
+       target: ghostId,
+       sourceHandle: fromHandleId,
+       targetHandle: getOppositeHandleId(fromHandleId),
+       type: 'connection',
+       animated: true,
+       data: { isGhost: true }
+     };
+
+     ghostNode.value = ghostN;
+     ghostEdge.value = ghostE;
+     flowNodes.value.push(ghostN);
+     flowEdges.value.push(ghostE);
+
+     reportForm.value?.setFromZoneId(fromNodeId, fromHandleId, ghostPos);
   }
   
   draggingFromNodeId = null;
@@ -619,27 +679,36 @@ function handleConnectEnd(event?: MouseEvent) {
 }
 
 
+function isHandleOccupied(nodeId: string, handleId: string | null) {
+  return store.connections.some(c => 
+    !c.isExpired && (
+      (c.fromZoneId === nodeId && (c.fromHandleId === handleId || (!c.fromHandleId && handleId === 'center'))) ||
+      (c.toZoneId === nodeId && (c.toHandleId === handleId || (!c.toHandleId && handleId === 'center')))
+    )
+  );
+}
+
 defineExpose({ flowNodes, onNodeDragStop });
 </script>
 
 <template>
   <div class="h-screen flex flex-col bg-gray-950 text-white">
-    <!-- Tablet Header -->
-    <div class="hidden md:flex xl:hidden items-center px-4 py-3 bg-gray-900 border-b border-gray-700 shrink-0 gap-4" data-testid="tablet-header">
-      <RoomSettings />
-      <h1 v-if="roomTitle" class="text-lg font-semibold text-indigo-400 truncate leading-none" data-testid="room-title-tablet">{{ roomTitle }}</h1>
-    </div>
-
-    <!-- Sticky report panel -->
-    <div class="shrink-0 relative">
-      <!-- Desktop side title & settings -->
-      <div class="hidden xl:flex absolute left-4 inset-y-0 z-50 items-center gap-4 xl:max-w-[calc(100vw_-_1132px)] 2xl:max-w-[calc((100vw_-_1100px)_/_2_-_32px)] pointer-events-none" data-testid="desktop-side-header">
-        <RoomSettings class="pointer-events-auto" />
-        <h1 v-if="roomTitle" class="text-2xl font-bold text-gray-200 truncate leading-none min-w-0 pointer-events-auto" :title="roomTitle" data-testid="room-title-desktop">{{ roomTitle }}</h1>
+    <!-- Header -->
+    <header class="shrink-0 bg-gray-900 border-b border-gray-700 h-14 flex items-center px-4 relative z-50">
+      <div class="flex items-center gap-4">
+        <RoomSettings />
       </div>
+      <div class="absolute left-1/2 -translate-x-1/2">
+        <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none" :title="roomTitle" data-testid="room-title">{{ roomTitle }}</h1>
+      </div>
+    </header>
 
-      <ReportForm ref="reportForm" @success="handleSuccess" @error="msg => showToast(msg, 'error')" />
-    </div>
+    <ReportForm
+      ref="reportForm"
+      @success="handleSuccess"
+      @error="msg => showToast(msg, 'error')"
+      @close="handleReportClose"
+    />
 
     <!-- WS status bar (always visible) -->
     <div class="shrink-0 px-3 py-1 text-xs flex items-center justify-center" :class="store.wsStatus === 'connected' ? 'bg-green-900 text-green-300' : store.wsStatus === 'connecting' ? 'bg-yellow-900 text-yellow-300' : 'bg-red-900 text-red-300'">
@@ -671,6 +740,9 @@ defineExpose({ flowNodes, onNodeDragStop });
         @connect-start="handleConnectStart"
         @connect-end="handleConnectEnd"
       >
+        <template #connection-line="connectionLineProps">
+          <ConnectionLine v-bind="connectionLineProps" :is-occupied="isHandleOccupied(connectionLineProps.sourceNode.id, connectionLineProps.sourceHandle?.id ?? null)" />
+        </template>
         <Background />
         <Controls />
       </VueFlow>

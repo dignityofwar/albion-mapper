@@ -1,19 +1,21 @@
 <script setup lang="ts">
 import { computed, ref, watch, onUnmounted, nextTick, inject, type Ref } from 'vue';
-import { BaseEdge, EdgeLabelRenderer, getBezierPath, useVueFlow } from '@vue-flow/core';
+import { BaseEdge, EdgeLabelRenderer, useVueFlow } from '@vue-flow/core';
 import type { EdgeProps } from '@vue-flow/core';
 import { connectionStyle } from '../../utils/connectionStyle.js';
+import { getConnectionPath } from '../../utils/connectionPath.js';
 import { formatCountdown } from '../../utils/formatters.js';
 import TimeInput from '../common/TimeInput.vue';
 import { ZONE_BY_ID, type Connection } from 'shared';
 
 type EdgeData = {
-  connection: Connection;
-  now: number; // epoch ms, updated by parent interval
-  hasChildren: boolean;
-  onDelete: (id: string) => void;
-  onDeleteRecursive: (id: string) => void;
-  onUpdate: (id: string, secondsRemaining: number) => void;
+  connection?: Connection;
+  now?: number; // epoch ms, updated by parent interval
+  hasChildren?: boolean;
+  onDelete?: (id: string) => void;
+  onDeleteRecursive?: (id: string) => void;
+  onUpdate?: (id: string, secondsRemaining: number) => void;
+  isGhost?: boolean;
 };
 
 const props = defineProps<EdgeProps<EdgeData>>();
@@ -45,6 +47,10 @@ function closePopover(event: MouseEvent) {
 
 watch(showPopover, (val) => {
   if (val) {
+    if (props.data?.isGhost) {
+      showPopover.value = false;
+      return;
+    }
     if (openPopoverId) {
       openPopoverId.value = props.id;
     }
@@ -64,18 +70,33 @@ onUnmounted(() => {
   document.removeEventListener('click', closePopover);
 });
 
-const expiresMs = computed(() => new Date(props.data.connection.expiresAt).getTime());
-const remainingMs = computed(() => expiresMs.value - props.data.now);
-const isExpired = computed(() => props.data.connection.isExpired ?? false);
+const expiresMs = computed(() => {
+  if (!props.data?.connection) return 0;
+  return new Date(props.data.connection.expiresAt).getTime();
+});
+const remainingMs = computed(() => {
+  if (!props.data?.now) return 0;
+  return expiresMs.value - props.data.now;
+});
+const isExpired = computed(() => props.data?.connection?.isExpired ?? false);
 
-const style = computed(() => connectionStyle(remainingMs.value, isExpired.value));
+const style = computed(() => {
+  if (props.data?.isGhost) {
+    return {
+      stroke: '#6366f1',
+      strokeDasharray: '5,5',
+      animated: true
+    };
+  }
+  return connectionStyle(remainingMs.value, isExpired.value);
+});
 
 function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;
 }
 
 const pathData = computed(() =>
-  getBezierPath({
+  getConnectionPath({
     sourceX: props.sourceX,
     sourceY: props.sourceY,
     targetX: props.targetX,
@@ -104,7 +125,7 @@ defineExpose({
     @mousedown.stop
   />
 
-  <EdgeLabelRenderer>
+  <EdgeLabelRenderer v-if="!props.data?.isGhost">
     <div
       :style="{
         transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,

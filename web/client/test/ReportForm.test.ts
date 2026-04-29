@@ -19,11 +19,14 @@ afterEach(() => {
   document.body.removeChild(attachTo);
 });
 
-function mountForm() {
-  return mount(ReportForm, {
+async function mountForm() {
+  const wrapper = mount(ReportForm, {
     global: { plugins: [createPinia()], stubs: ['RoomSettings'] },
     attachTo,
   });
+  (wrapper.vm as any).open();
+  await nextTick();
+  return wrapper;
 }
 
 async function setTime(wrapper: VueWrapper<any>, timeStr: string) {
@@ -52,15 +55,15 @@ async function setTime(wrapper: VueWrapper<any>, timeStr: string) {
 }
 
 describe('ReportForm', () => {
-  it('submit button is disabled when from/to/time are empty', () => {
-    const wrapper = mountForm();
+  it('submit button is disabled when from/to/time are empty', async () => {
+    const wrapper = await mountForm();
     const btn = wrapper.find('[data-testid="submit-button"]').element as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
     wrapper.unmount();
   });
 
   it('H:MM format "1:30" is parsed as 5400 seconds', async () => {
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     await setTime(wrapper, '1:30');
     const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
     expect(vm.secondsRemaining).toBe(5400);
@@ -68,7 +71,7 @@ describe('ReportForm', () => {
   });
 
   it('H:MM format "2:45" is parsed as 9900 seconds', async () => {
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     await setTime(wrapper, '2:45');
     const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
     expect(vm.secondsRemaining).toBe(9900);
@@ -76,7 +79,7 @@ describe('ReportForm', () => {
   });
 
   it('plain minutes "90" parses to 5400 seconds', async () => {
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     await setTime(wrapper, '90');
     const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
     expect(vm.secondsRemaining).toBe(5400);
@@ -84,7 +87,7 @@ describe('ReportForm', () => {
   });
 
   it('"0:00" and empty string parse to null (invalid)', async () => {
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
 
     await setTime(wrapper, '0:00');
@@ -96,7 +99,7 @@ describe('ReportForm', () => {
   });
 
   it('"6:00" parses to 21600 seconds', async () => {
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
 
     await setTime(wrapper, '6:00');
@@ -106,7 +109,7 @@ describe('ReportForm', () => {
   });
 
   it('invalid seconds ":75" and letters parse to null', async () => {
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
 
     await setTime(wrapper, '1:75');
@@ -123,7 +126,7 @@ describe('ReportForm', () => {
     };
     global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
 
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     await setTime(wrapper, '30');
     // from/to are still empty so canSubmit is false — fetch must NOT be called
     await wrapper.findComponent({ name: 'TimeInput' }).trigger('keydown', { key: 'Enter' });
@@ -138,7 +141,7 @@ describe('ReportForm', () => {
     };
     global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
 
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; secondsRemaining: number | null; submit: () => Promise<void> };
 
     vm.fromZoneId = 'zoneA';
@@ -159,7 +162,7 @@ describe('ReportForm', () => {
     };
     global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
 
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; secondsRemaining: number | null; submit: () => Promise<void> };
 
     vm.fromZoneId = 'zoneA';
@@ -179,7 +182,7 @@ describe('ReportForm', () => {
     };
     global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
 
-    const wrapper = mountForm();
+    const wrapper = await mountForm();
     const store = useRoomStore();
     store.setCredentials('room123', 'test-token');
     
@@ -206,8 +209,8 @@ describe('ReportForm', () => {
     wrapper.unmount();
   });
 
-  it('setConnection updates fields correctly and does not throw', () => {
-    const wrapper = mountForm();
+  it('setConnection updates fields correctly and does not throw', async () => {
+    const wrapper = await mountForm();
     const vm = wrapper.vm as any;
     
     expect(() => {

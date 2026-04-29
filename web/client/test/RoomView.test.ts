@@ -365,54 +365,6 @@ describe('RoomView', () => {
     wrapper.unmount();
   });
 
-  it('positions new nodes away from the home node when added', async () => {
-    sessionStorage.setItem('token:room1', 'some-token');
-    
-    const store = useRoomStore();
-    store.setCredentials('room1', 'some-token');
-    
-    store.applyMessage({ 
-        type: 'sync', 
-        connections: [], 
-        homeZoneId: 'zone-a',
-        nodePositions: [{ zoneId: 'zone-a', x: 0, y: 0 }],
-        lastUpdatedAt: new Date().toISOString()
-    });
-
-    const wrapper = mount(RoomView, {
-      props: { id: 'room1' },
-      global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
-      }
-    });
-
-    // Simulate adding a connection between zone-a and zone-b
-    store.applyMessage({ 
-      type: 'connection_added', 
-      connection: {
-        id: 'c1',
-        roomId: 'room1',
-        fromZoneId: 'zone-a',
-        toZoneId: 'zone-b',
-        expiresAt: new Date().toISOString(),
-        reportedAt: new Date().toISOString(),
-      }
-    });
-
-    // Wait for the watcher to run
-    await nextTick();
-    await nextTick();
-    
-    const vm = wrapper.vm as any;
-    const zoneBNode = vm.flowNodes.find((n: any) => n.id === 'zone-b');
-    
-    // Check if it's not at (0,0)
-    expect(zoneBNode).toBeDefined();
-    expect(zoneBNode.position).not.toEqual({ x: 0, y: 0 });
-    
-    wrapper.unmount();
-  });
-
   it('updates an existing connection directly when dragging from handle to handle', async () => {
     const { updateConnection } = await import('../src/utils/roomOperations.js');
     sessionStorage.setItem('token:room1', 'some-token');

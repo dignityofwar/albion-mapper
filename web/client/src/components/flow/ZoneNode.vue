@@ -24,6 +24,7 @@ const props = defineProps<NodeProps<{
   highlighted?: boolean;
   mapShape?: string;
   customHandles?: CustomHandle[];
+  isGhost?: boolean;
 }>>();
 
 const store = useRoomStore();
@@ -389,7 +390,7 @@ const defaultInternalHandles = computed(() => {
 </script>
 
 <template>
-  <div class="zone-node" ref="zoneNodeRef">
+  <div class="zone-node" ref="zoneNodeRef" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost }">
     <TooltipProvider :delay-duration="300">
       <div 
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"

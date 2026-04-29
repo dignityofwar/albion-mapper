@@ -181,6 +181,7 @@ export const CreateConnectionBodySchema = z.object({
   toHandleId: z.string().nullable().optional(),
   secondsRemaining: z.number().int().min(1).max(86400),
   reportedBy: z.string().optional(),
+  targetPosition: z.object({ x: z.number(), y: z.number() }).optional(),
 });
 
 export const UpdateConnectionBodySchema = z.object({

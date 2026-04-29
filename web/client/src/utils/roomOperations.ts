@@ -61,6 +61,7 @@ export async function addConnection(
   fromHandleId?: string,
   toHandleId?: string,
   reportedBy?: string,
+  targetPosition?: { x: number, y: number },
 ): Promise<void> {
   const res = await fetch(`${API_BASE_URL}/api/rooms/${roomId}/connections`, {
     method: 'POST',
@@ -75,6 +76,7 @@ export async function addConnection(
       fromHandleId,
       toHandleId,
       reportedBy,
+      targetPosition,
     }),
   });
 

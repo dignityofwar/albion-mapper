@@ -53,22 +53,22 @@ describe('SettingsCogPlacement', () => {
 
     await nextTick();
 
-    // Check desktop side div
-    const desktopDiv = wrapper.find('[data-testid="desktop-side-header"]');
-    expect(desktopDiv.exists()).toBe(true);
+    // Check header
+    const header = wrapper.find('header');
+    expect(header.exists()).toBe(true);
     
-    const cog = desktopDiv.find('[data-testid="stub-settings-cog"]');
-    const title = desktopDiv.find('[data-testid="room-title-desktop"]');
+    const cog = header.find('[data-testid="stub-settings-cog"]');
+    const title = header.find('[data-testid="room-title"]');
     
     expect(cog.exists()).toBe(true);
     expect(title.exists()).toBe(true);
     
     // Verify cog is BEFORE title in DOM
-    const html = desktopDiv.html();
-    expect(html.indexOf('data-testid="stub-settings-cog"')).toBeLessThan(html.indexOf('data-testid="room-title-desktop"'));
+    const html = header.html();
+    expect(html.indexOf('data-testid="stub-settings-cog"')).toBeLessThan(html.indexOf('data-testid="room-title"'));
   });
 
-  it('renders RoomSettings in tablet header even without a title', async () => {
+  it('renders RoomSettings in header even without a title', async () => {
     const store = useRoomStore();
     store.applyMessage({
       type: 'sync',
@@ -94,14 +94,14 @@ describe('SettingsCogPlacement', () => {
 
     await nextTick();
 
-    // Check tablet header
-    const tabletHeader = wrapper.find('[data-testid="tablet-header"]');
-    expect(tabletHeader.exists()).toBe(true);
+    // Check header
+    const header = wrapper.find('header');
+    expect(header.exists()).toBe(true);
     
-    const cog = tabletHeader.find('[data-testid="stub-settings-cog"]');
+    const cog = header.find('[data-testid="stub-settings-cog"]');
     expect(cog.exists()).toBe(true);
     
-    const title = tabletHeader.find('[data-testid="room-title-tablet"]');
+    const title = header.find('[data-testid="room-title"]');
     expect(title.exists()).toBe(false);
   });
 });
