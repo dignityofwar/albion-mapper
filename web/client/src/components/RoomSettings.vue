@@ -3,6 +3,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import { API_BASE_URL } from '../utils/api';
+import { track } from '@vercel/analytics';
 import ChangePasswordModal from './ChangePasswordModal.vue';
 import ResetConfirmModal from './ResetConfirmModal.vue';
 
@@ -68,6 +69,7 @@ async function reset(adminPassword: string) {
     }
     open.value = false;
     resetSubForms();
+    track('reset_all_connections');
   } finally {
     resetting.value = false;
   }
@@ -79,6 +81,7 @@ function copyLink() {
   const url = `${window.location.origin}/rooms/${store.roomId}`;
   navigator.clipboard.writeText(url).then(() => {
     copied.value = true;
+    track('copy_room_link');
     setTimeout(() => { copied.value = false; }, 2000);
   });
 }
@@ -86,6 +89,7 @@ function copyLink() {
 function logout() {
   sessionStorage.removeItem(`token:${store.roomId}`);
   store.disconnect();
+  track('logout');
   router.replace({ path: '/' });
 }
 </script>

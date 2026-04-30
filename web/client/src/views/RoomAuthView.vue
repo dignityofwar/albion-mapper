@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '../stores/useRoomStore.js';
 import { API_BASE_URL } from '../utils/api';
+import { track } from '@vercel/analytics';
 
 const props = defineProps<{ id: string }>();
 const router = useRouter();
@@ -38,6 +39,7 @@ async function authenticate() {
     const { token } = await res.json() as { token: string };
     sessionStorage.setItem(`token:${props.id}`, token);
     store.setCredentials(props.id, token);
+    track('authenticate_room');
     router.push({ path: `/rooms/${props.id}` });
   } finally {
     authenticating.value = false;

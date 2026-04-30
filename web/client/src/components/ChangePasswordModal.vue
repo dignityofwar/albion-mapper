@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRoomStore } from '../stores/useRoomStore';
 import { API_BASE_URL } from '../utils/api';
+import { track } from '@vercel/analytics';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -62,6 +63,7 @@ async function savePassword() {
       return;
     }
     passwordSuccess.value = true;
+    track('change_password');
     newPassword.value = '';
     confirmPassword.value = '';
     adminPassword.value = '';

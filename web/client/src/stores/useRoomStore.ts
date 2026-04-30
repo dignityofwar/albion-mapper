@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle } from 'shared';
 import { API_BASE_URL } from '../utils/api';
+import { track } from '@vercel/analytics';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected' | 'auth_failed';
 
@@ -160,6 +161,7 @@ export const useRoomStore = defineStore('room', () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: positions }));
       nodePositions.value = positions; // Optimistic update
+      track('move_node');
     }
   }
 
@@ -168,6 +170,7 @@ export const useRoomStore = defineStore('room', () => {
     lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: [], updateLastUpdated: true }));
+      track('reset_node_positions');
     }
   }
 
@@ -180,6 +183,7 @@ export const useRoomStore = defineStore('room', () => {
     lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value, updateLastUpdated: true }));
+      track('update_node_features');
     }
   }
 
@@ -192,6 +196,7 @@ export const useRoomStore = defineStore('room', () => {
     lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value, updateLastUpdated: true }));
+      track('update_node_handles');
     }
   }
 

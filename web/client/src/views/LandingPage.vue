@@ -4,6 +4,7 @@ import { useRouter, useRoute } from 'vue-router';
 import ZoneCombobox from '../components/ZoneCombobox.vue';
 import { useRoomStore } from '../stores/useRoomStore';
 import { API_BASE_URL } from '../utils/api';
+import { track } from '@vercel/analytics';
 
 const router = useRouter();
 const route = useRoute();
@@ -78,6 +79,7 @@ async function createRoom() {
 
     sessionStorage.setItem(`token:${id}`, token);
     sessionStorage.setItem(`shareUrl:${id}`, `${window.location.origin}/rooms/${id}`);
+    track('create_room');
     resetCreateForm();
     await router.push(`/rooms/${id}`);
   } finally {
@@ -99,6 +101,7 @@ function joinRoom() {
   // Accept full URL or bare id
   const match = value.match(/rooms\/([^/?#]+)/);
   const id = match ? match[1] : value;
+  track('join_room');
   router.push(`/rooms/${id}`);
 }
 </script>

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from './api';
+import { track } from '@vercel/analytics';
 
 /**
  * API operations for a room. All functions accept the room ID and auth token
@@ -23,6 +24,8 @@ export async function deleteConnection(
     const body = await res.json() as { error?: string };
     throw new Error(body.error ?? 'Failed to delete connection');
   }
+
+  track('delete_connection');
 }
 
 /**
@@ -47,6 +50,8 @@ export async function updateConnection(
     const body = await res.json() as { error?: string };
     throw new Error(body.error ?? 'Failed to update connection');
   }
+
+  track('update_connection');
 }
 
 /**
@@ -84,4 +89,6 @@ export async function addConnection(
     const body = await res.json() as { error?: string };
     throw new Error(body.error ?? 'Failed to add connection');
   }
+
+  track('add_connection');
 }
