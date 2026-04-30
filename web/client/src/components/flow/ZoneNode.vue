@@ -12,7 +12,9 @@ import ZoneReds from './zone/ZoneReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneEditorTray from './zone/ZoneEditorTray.vue';
 import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
+import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '../../stores/useRoomStore';
+import { useTutorialStore } from '../../stores/useTutorialStore';
 import { deleteConnection } from '../../utils/roomOperations';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
@@ -31,10 +33,43 @@ const props = defineProps<NodeProps<{
 }>>();
 
 const store = useRoomStore();
+const tutorialStore = useTutorialStore();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 
 const isEditorTrayOpen = ref(false);
+const handleCloseTray = () => {
+  isEditorTrayOpen.value = false;
+  if (tutorialStore.step === 6) {
+    tutorialStore.setStep(7);
+  }
+};
 const zoneNodeRef = ref<HTMLElement | null>(null);
+const isTutorialTooltipReady = ref(false);
+
+const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow' | null>(null);
+
+watch(() => tutorialStore.step, (step) => {
+  if (step === 3) {
+    isTutorialTooltipReady.value = false;
+    setTimeout(() => {
+      isTutorialTooltipReady.value = true;
+    }, 1000);
+  } else {
+    isTutorialTooltipReady.value = false;
+  }
+});
+
+watch(activeEditingCore, (newVal, oldVal) => {
+  if (tutorialStore.completed) return;
+  
+  if (newVal === 'powercoreGreen' && tutorialStore.step === 7) {
+    tutorialStore.setStep(8);
+  }
+  
+  if (oldVal === 'powercoreGreen' && newVal === null && tutorialStore.step === 8) {
+    tutorialStore.setStep(9);
+  }
+});
 
 const { onMoveStart, onMoveEnd, onNodeDragStart } = useVueFlow();
 const isViewportMoving = ref(false);
@@ -58,12 +93,32 @@ onClickOutside(zoneNodeRef, () => {
 
 const timerValue = ref('');
 const isEditingTimer = ref(false);
-const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow' | null>(null);
 const timerComponentRef = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null);
 const timerContainerRef = ref<HTMLElement | null>(null);
 
 const isRedsOpen = ref(false);
 const isHandleEditorOpen = ref(false);
+const handleEditorButtonRef = ref<HTMLElement | null>(null);
+const mapFeaturesButtonRef = ref<HTMLElement | null>(null);
+
+watch(isHandleEditorOpen, (val) => {
+  if (val && tutorialStore.step === 3) {
+    tutorialStore.setStep(4);
+  }
+});
+
+
+const showPrompt = computed(() => {
+  if (tutorialStore.completed) return false;
+  if (props.data.isGhost) return false;
+  if (isEditorTrayOpen.value || isHandleEditorOpen.value || isEditingTimer.value) return false;
+  return tutorialStore.step === 0 && store.nodePositions.length === 1;
+});
+
+const tutorialMessage = computed(() => {
+  if (tutorialStore.step === 0) return 'Pull on this handle to add a zone';
+  return '';
+});
 
 onClickOutside(timerContainerRef, () => {
   if (activeEditingCore.value) {
@@ -320,6 +375,9 @@ async function saveCustomHandles(newHandles: CustomHandle[]) {
 
   store.updateNodeCustomHandles(props.id, newHandles);
   isHandleEditorOpen.value = false;
+  if (tutorialStore.step === 5) {
+    tutorialStore.setStep(6);
+  }
   if (showToast) showToast('Handle positions updated');
 }
 
@@ -393,6 +451,18 @@ function getHandleColor(handleId: string) {
   return connectionStyle(remainingMs, isExpired).stroke;
 }
 
+
+const GHOST_FACING_MAP: Record<string, string> = {
+  n: 's',
+  s: 'n',
+  e: 'w',
+  w: 'e',
+  ne: 'sw',
+  sw: 'ne',
+  se: 'nw',
+  nw: 'se',
+};
+
 const customHandles = computed(() => {
   let handles: CustomHandle[];
   if (props.data.customHandles && props.data.customHandles.length > 0) {
@@ -414,30 +484,46 @@ const customHandles = computed(() => {
     }
   });
 
-  return handles
-    .map(h => ({
+    return handles
+    .map(h => {
+      let facing = getHandleFacing(h.left, h.top);
+      return {
+        ...h,
+        position: getHandlePosition(h.left, h.top),
+        facing: facing,
+        style: { 
+          left: `calc(${h.left} - var(--handle-radius))`, 
+          top: `calc(${h.top} - var(--handle-radius))`,
+          '--handle-color': getHandleColor(h.id)
+        }
+      };
+    });
+});
+
+const targetHandleIndex = computed(() => {
+  const neHandle = customHandles.value.findIndex(h => h.facing === 'ne');
+  if (neHandle !== -1) return neHandle;
+  return 0;
+});
+
+const seHandleIndex = computed(() => {
+  return customHandles.value.findIndex(h => h.facing === 'se');
+});
+
+const defaultInternalHandles = computed(() => {
+  return DEFAULT_INTERNAL_HANDLES.map(h => {
+    let facing = getHandleFacing(h.left, h.top);
+    return {
       ...h,
       position: getHandlePosition(h.left, h.top),
-      facing: getHandleFacing(h.left, h.top),
+      facing: facing,
       style: { 
         left: `calc(${h.left} - var(--handle-radius))`, 
         top: `calc(${h.top} - var(--handle-radius))`,
         '--handle-color': getHandleColor(h.id)
       }
-    }));
-});
-
-const defaultInternalHandles = computed(() => {
-  return DEFAULT_INTERNAL_HANDLES.map(h => ({
-    ...h,
-    position: getHandlePosition(h.left, h.top),
-    facing: getHandleFacing(h.left, h.top),
-    style: { 
-      left: `calc(${h.left} - var(--handle-radius))`, 
-      top: `calc(${h.top} - var(--handle-radius))`,
-      '--handle-color': getHandleColor(h.id)
-    }
-  }));
+    };
+  });
 });
 
 
@@ -446,7 +532,7 @@ const defaultInternalHandles = computed(() => {
 </script>
 
 <template>
-  <div class="zone-node" ref="zoneNodeRef" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost }">
+  <div class="zone-node" ref="zoneNodeRef" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost, 'ghost-node': props.data.isGhost }">
     <TooltipProvider :delay-duration="300">
       <div 
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
@@ -522,9 +608,10 @@ const defaultInternalHandles = computed(() => {
 
           <!-- Map Features -->
           <div class="flex flex-col items-center pointer-events-auto">
-            <div class="flex items-center justify-center gap-1 mb-1">
+            <div class="flex items-center justify-center gap-1 mb-1 relative">
               <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Map Features</span>
               <button 
+                ref="mapFeaturesButtonRef"
                 @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
                 @mousedown.stop
                 class="p-1 rounded hover:bg-white/10 text-gray-500 transition-colors pointer-events-auto"
@@ -532,6 +619,12 @@ const defaultInternalHandles = computed(() => {
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
               </button>
+              <TutorialTooltip
+                v-if="tutorialStore.step === 6"
+                message="Click here to edit map features."
+                pointing="left"
+                containerClass="absolute left-full ml-2 w-max z-[10000]"
+              />
             </div>
             <ZoneFeatures 
               :active-features="activeFeatures"
@@ -544,6 +637,7 @@ const defaultInternalHandles = computed(() => {
       <!-- Edit Handles Button at Middle Bottom -->
       <button 
         v-if="props.data.mapShape && (props.data.type === 'roads' || props.data.type === 'roadsHideout')"
+        ref="handleEditorButtonRef"
         class="absolute bottom-[35px] left-1/2 -translate-x-1/2 z-10 px-2 py-1 rounded bg-gray-900/80 hover:bg-gray-700 transition-colors text-gray-300 hover:text-white flex items-center gap-1.5 border border-gray-700 shadow-lg"
         @click.stop="openHandleEditor"
         @mousedown.stop
@@ -558,7 +652,7 @@ const defaultInternalHandles = computed(() => {
         :has-reds="hasReds"
         :features="props.data.features"
         @toggle="toggleFeature"
-        @close="isEditorTrayOpen = false"
+        @close="handleCloseTray"
       />
       
       <ZoneHandleEditor
@@ -571,18 +665,43 @@ const defaultInternalHandles = computed(() => {
         @close="isHandleEditorOpen = false"
       />
 
-      <!-- Handles moved inside the relative container to match diamond coordinates exactly -->
-      <Handle 
-        v-for="handle in customHandles" 
-        :key="handle.id"
-        type="source" 
-        :position="handle.position" 
-        :id="handle.id" 
-        :style="handle.style"
-        :data-facing="handle.facing"
-        :class="{ 'is-disabled': handle.disabled }"
-        :connectable="!handle.disabled"
+      <TutorialTooltip
+        v-if="!tutorialStore.completed && tutorialStore.step === 3 && !isHandleEditorOpen && handleEditorButtonRef && isTutorialTooltipReady"
+        :message="'Open the handle editor to customize portals'"
+        pointing="down"
+        bounce
+        :style="{ left: '50%', bottom: '75px', transform: 'translateX(-50%)', 'z-index': 2000 }"
       />
+
+      <!-- Handles moved inside the relative container to match diamond coordinates exactly -->
+      <template v-for="(handle, index) in customHandles" :key="handle.id">
+        <Handle
+          type="source"
+          :position="handle.position"
+          :id="handle.id"
+          :style="{ ...handle.style, ...(showPrompt && index === targetHandleIndex ? { '--handle-color': '#2563eb', 'z-index': 2000 } : {}) }"
+          :data-facing="handle.facing"
+          :class="[
+            { 'is-disabled': handle.disabled },
+          ]"
+          :connectable="!handle.disabled"
+        />
+        <TutorialTooltip
+          v-if="showPrompt && index === targetHandleIndex"
+          :message="tutorialMessage"
+          pointing="down"
+          bounce
+          :style="{ position: 'absolute', left: handle.left, top: `calc(${handle.top} - 80px)`, transform: 'translateX(-47%)', 'z-index': 10000 }"
+        />
+        <TutorialTooltip
+          v-if="tutorialStore.step === 4 && index === seHandleIndex"
+          message="Click-drag this handle to move the portal. This should reflect roughly the position on the map in game."
+          pointing="up"
+          containerClass="w-72"
+          bounce
+          :style="{ position: 'absolute', left: handle.left, top: `calc(${handle.top} + 30px)`, transform: 'translateX(-50%)', 'z-index': 10000 }"
+        />
+      </template>
 
       <!-- Default internal handles for pending connections -->
       <Handle 
@@ -712,5 +831,6 @@ const defaultInternalHandles = computed(() => {
   top: 87px;
   right: 71px;
 }
+
 
 </style>

@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import type { CustomHandle } from 'shared';
+import { useTutorialStore } from '@/stores/useTutorialStore';
+import TutorialTooltip from '../../tutorial/TutorialTooltip.vue';
+
+const tutorialStore = useTutorialStore();
+const isModalReady = ref(false);
 
 const props = defineProps<{
   zoneName: string;
@@ -16,6 +21,7 @@ const emit = defineEmits<{
 
 const handles = ref<CustomHandle[]>([...props.initialHandles]);
 const containerRef = ref<HTMLDivElement | null>(null);
+const saveButtonRef = ref<HTMLButtonElement | null>(null);
 const draggingHandleId = ref<string | null>(null);
 
 function getPosFromT(t: number): { left: string; top: string } {
@@ -109,12 +115,18 @@ function onMouseMove(e: MouseEvent) {
 }
 
 function stopDragging() {
+  if (draggingHandleId.value && tutorialStore.step === 4) {
+    tutorialStore.setStep(5);
+  }
   draggingHandleId.value = null;
 }
 
 onMounted(() => {
   window.addEventListener('mousemove', onMouseMove);
   window.addEventListener('mouseup', stopDragging);
+  nextTick(() => {
+    isModalReady.value = true;
+  });
 });
 
 onUnmounted(() => {
@@ -215,7 +227,7 @@ function getHandleFacing(left: string, top: string): string {
               </template>
             </p>
 
-            <div class="flex gap-3 w-full mb-4 px-6">
+            <div class="relative flex gap-3 w-full mb-4 px-6">
               <button 
                 class="flex-1 px-3 py-1 bg-gray-700/90 hover:bg-gray-600 text-white rounded transition-colors text-xs shadow-xl border border-gray-600"
                 @click.stop="emit('close')"
@@ -223,11 +235,18 @@ function getHandleFacing(left: string, top: string): string {
                 Cancel
               </button>
               <button 
+                ref="saveButtonRef"
                 class="flex-1 px-3 py-1 bg-blue-600/90 hover:bg-blue-500 text-white font-bold rounded transition-colors text-xs shadow-xl border border-blue-500"
                 @click.stop="save"
               >
                 Save
               </button>
+              <TutorialTooltip
+                v-if="tutorialStore.step === 5 && isModalReady"
+                message="Click here to save your changes."
+                pointing="down"
+                :style="{ position: 'absolute', bottom: '120%', right: '-20px', 'z-index': 10000 }"
+              />
             </div>
 
             <div class="flex items-center justify-center w-full" v-if="!isToggleMode">

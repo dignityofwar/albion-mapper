@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick, inject } from 'vue';
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import ZoneCombobox from './ZoneCombobox.vue';
+import TutorialTooltip from './tutorial/TutorialTooltip.vue';
 import TimeInput from './common/TimeInput.vue';
 import { useRoomStore } from '../stores/useRoomStore.js';
+import { useTutorialStore } from '../stores/useTutorialStore.js';
 import { addConnection } from '../utils/roomOperations.js';
 import { ZONE_BY_ID } from 'shared';
 import { API_BASE_URL } from '../utils/api';
@@ -11,8 +13,14 @@ import { API_BASE_URL } from '../utils/api';
 const props = defineProps<{}>();
 
 const store = useRoomStore();
+const tutorialStore = useTutorialStore();
+const goToNode = inject<(nodeId: string) => void>('goToNode');
+
+const toZoneContainer = ref<HTMLElement | null>(null);
+const timeInputContainer = ref<HTMLElement | null>(null);
 
 const isOpen = ref(false);
+const isModalReady = ref(false);
 const fromZoneId = ref('');
 const fromHandleId = ref<string | null>(null);
 const toZoneId = ref('');
@@ -25,6 +33,9 @@ watch([fromZoneId, toZoneId], () => {
 });
 watch(toZoneId, (newId) => {
   emit('update:toZoneId', newId);
+  if (!tutorialStore.completed && tutorialStore.step === 1 && newId) {
+    tutorialStore.setStep(2);
+  }
 });
 const reportedBy = ref('');
 const submitting = ref(false);
@@ -32,8 +43,11 @@ const submitting = ref(false);
 watch(isOpen, (newVal) => {
   if (newVal) {
     nextTick(() => {
+      isModalReady.value = true;
       focusToCombobox();
     });
+  } else {
+    isModalReady.value = false;
   }
 });
 
@@ -50,6 +64,9 @@ const emit = defineEmits<{
 
 function open() {
   isOpen.value = true;
+  if (!tutorialStore.completed && tutorialStore.step === 0) {
+    tutorialStore.setStep(1);
+  }
 }
 
 function close() {
@@ -92,6 +109,28 @@ async function submit() {
     );
 
     emit('success', 'Connection added!');
+
+    if (!tutorialStore.completed && tutorialStore.step === 2) {
+      if (toZoneId.value) {
+        tutorialStore.setLastAddedNodeId(toZoneId.value);
+        tutorialStore.setStep(3);
+        goToNode?.(toZoneId.value);
+      }
+      close();
+      return;
+    }
+
+    if (!tutorialStore.completed && tutorialStore.step === 11 && targetPosition.value) {
+      tutorialStore.setStep(12);
+      close();
+      return;
+    }
+
+    if (!tutorialStore.completed && tutorialStore.step === 12) {
+      tutorialStore.setStep(13);
+      close();
+      return;
+    }
 
     // Reset To, keep From (common for mapping multiple exits from one zone)
     fromHandleId.value = null; 
@@ -192,6 +231,7 @@ defineExpose({
                       already-added-placement="top"
                       :error="secondsRemaining !== null && !fromZoneId"
                       :disabled="true"
+                      :only-roads-hideout="!tutorialStore.completed"
                       icon="🏠"
                       @tab-select="focusToCombobox"
                       @select="focusToCombobox"
@@ -215,6 +255,7 @@ defineExpose({
               :smart-already-added="true"
               already-added-placement="top"
               :error="secondsRemaining !== null && !fromZoneId"
+              :only-roads-hideout="!tutorialStore.completed"
               @tab-select="focusToCombobox"
               @select="focusToCombobox"
               @update:model-value="(val) => { if (fromHandleId && !fromHandleId.startsWith('default-')) fromHandleId = null; }"
@@ -222,27 +263,44 @@ defineExpose({
           </div>
 
           <!-- To -->
-          <div class="flex flex-col gap-1.5">
-            <label class="text-sm font-medium text-gray-400">To Zone</label>
-            <ZoneCombobox
-              ref="toComboboxInputEl"
-              v-model="toZoneId"
-              placeholder="To zone…"
-              :excluded-ids="[fromZoneId, ...connectedToFromZone]"
-              :smart-already-added="true"
-              already-added-placement="bottom"
-              data-testid="to-combobox"
-              :error="secondsRemaining !== null && !toZoneId"
-              @tab-select="focusTimeInput"
-              @select="focusTimeInput"
-              @update:model-value="(val) => { if (toHandleId && !toHandleId.startsWith('default-')) toHandleId = null; }"
+          <div ref="toZoneContainer">
+            <TutorialTooltip
+              v-if="isModalReady && !tutorialStore.completed && tutorialStore.step === 1 && toZoneContainer"
+              :target="toZoneContainer"
+              message="Enter your destination zone by hovering over the portal in game for its name. For tutorial purposes you can only choose hideouts."
+              pointing="down"
+              containerClass="w-72"
+              :offset-y="20"
             />
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-gray-400">To Zone</label>
+              <ZoneCombobox
+                ref="toComboboxInputEl"
+                v-model="toZoneId"
+                placeholder="To zone…"
+                :excluded-ids="[fromZoneId, ...connectedToFromZone]"
+                :smart-already-added="true"
+                already-added-placement="bottom"
+                data-testid="to-combobox"
+                :error="secondsRemaining !== null && !toZoneId"
+                :only-roads-hideout="!tutorialStore.completed"
+                @tab-select="focusTimeInput"
+                @select="focusTimeInput"
+                @update:model-value="(val) => { if (toHandleId && !toHandleId.startsWith('default-')) toHandleId = null; }"
+              />
+            </div>
           </div>
-
+          
           <!-- Time & Submit -->
           <div class="flex items-end gap-3">
-            <div class="flex-1 flex flex-col gap-1.5">
+            <div class="flex-1 flex flex-col gap-1.5" ref="timeInputContainer">
               <label class="text-sm font-medium text-gray-400">Expires In</label>
+              <TutorialTooltip
+                v-if="isModalReady && !tutorialStore.completed && tutorialStore.step === 2 && timeInputContainer"
+                :target="timeInputContainer"
+                message="You can find this by hovering over the portal in game."
+                pointing="up"
+              />
               <TimeInput
                 ref="timeInputEl"
                 v-model="secondsRemaining"

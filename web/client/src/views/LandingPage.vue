@@ -3,12 +3,14 @@ import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import ZoneCombobox from '../components/ZoneCombobox.vue';
 import { useRoomStore } from '../stores/useRoomStore';
+import { useTutorialStore } from '../stores/useTutorialStore';
 import { API_BASE_URL } from '../utils/api';
 import { track } from '@vercel/analytics';
 
 const router = useRouter();
 const route = useRoute();
 const store = useRoomStore();
+const tutorialStore = useTutorialStore();
 
 // ── Create Room modal ────────────────────────────────────────────────────────
 const showCreate = ref(false);
@@ -16,6 +18,14 @@ const createPassword = ref('');
 const createAdminPassword = ref('');
 const createHomeZoneId = ref('');
 const createTitle = ref('');
+const showTutorial = ref(!tutorialStore.completed);
+
+watch(showTutorial, (val) => {
+  if (!val) {
+    tutorialStore.setCompleted(true);
+  }
+});
+
 const createFormKey = ref(0);
 const creating = ref(false);
 const createError = ref('');
@@ -79,6 +89,12 @@ async function createRoom() {
 
     sessionStorage.setItem(`token:${id}`, token);
     sessionStorage.setItem(`shareUrl:${id}`, `${window.location.origin}/rooms/${id}`);
+    
+    if (showTutorial.value) {
+      tutorialStore.setCompleted(false);
+      tutorialStore.setStep(0);
+    }
+    
     track('create_room');
     resetCreateForm();
     await router.push(`/rooms/${id}`);
@@ -194,6 +210,10 @@ function joinRoom() {
           <div>
             <label class="block text-sm text-gray-400 mb-1">Home Zone</label>
             <ZoneCombobox :key="createFormKey" v-model="createHomeZoneId" placeholder="Search home zone…" only-roads-hideout />
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="checkbox" v-model="showTutorial" id="showTutorial" />
+            <label for="showTutorial" class="text-sm text-gray-300">Show Tutorial</label>
           </div>
           <p v-if="createError" class="text-red-400 text-sm">{{ createError }}</p>
           <button

@@ -3,7 +3,16 @@ import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFA
 import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import IconUnlocked from '../../icons/IconUnlocked.vue';
 import IconLocked from '../../icons/IconLocked.vue';
-import { ref, watch, nextTick, computed } from 'vue';
+import { ref, watch, nextTick, computed, onMounted } from 'vue';
+import TutorialTooltip from '../../tutorial/TutorialTooltip.vue';
+import { useTutorialStore } from '../../../stores/useTutorialStore';
+
+const tutorialStore = useTutorialStore();
+const isMounted = ref(false);
+
+onMounted(() => {
+  isMounted.value = true;
+});
 
 const props = defineProps<{
   type: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow';
@@ -75,6 +84,19 @@ defineExpose({
 <template>
   <TooltipRoot>
     <TooltipTrigger as-child>
+        <TutorialTooltip
+          v-if="isMounted && type === 'powercoreGreen' && !tutorialStore.completed && tutorialStore.step === 7"
+          message="Click here to log there is a power core in the zone"
+          pointing="down"
+          bounce
+          containerClass="absolute -top-[40px] -left-[40px] w-40 z-[10000]"
+        />
+        <TutorialTooltip
+          v-if="isMounted && type === 'powercoreGreen' && !tutorialStore.completed && tutorialStore.step === 8"
+          message="Here you can set the timer for the locked state. You can also mark it as unlocked."
+          pointing="down"
+          containerClass="absolute -top-[80px] w-40 z-[10000]"
+        />
       <div 
         @click.stop="$emit('toggle')" 
         class="core-container relative group cursor-pointer overflow-visible shrink-0 rounded-tr-md rounded-br-md"
@@ -88,6 +110,7 @@ defineExpose({
         <div class="flex items-center h-full pl-4 gap-1 relative z-10">
           <img :src="config[type].img" class="w-6 h-6 p-[2px] shrink-0" />
           
+
           <Transition name="fade" mode="out-in">
             <div v-if="label && !editing" key="timer" class="flex items-center gap-1.5">
               <span class="text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200 shrink-0">{{ label }}</span>

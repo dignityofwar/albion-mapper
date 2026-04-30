@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { useTutorialStore } from '../../../stores/useTutorialStore';
 import ActiveCoreSummary from './ActiveCoreSummary.vue';
+
+const tutorialStore = useTutorialStore();
 
 interface ZoneFeatureInfo {
   zoneId: string;
@@ -86,6 +89,9 @@ function getItemIcon(item: ZoneFeatureInfo) {
 }
 
 function toggleView(view: ViewType) {
+  if (tutorialStore.step === 15) {
+    tutorialStore.setStep(16);
+  }
   if (activeView.value === view) {
     activeView.value = null;
     if (view === 'cores') {
@@ -97,6 +103,13 @@ function toggleView(view: ViewType) {
       userClosedCores.value = false;
     }
   }
+}
+
+function handleSelect(zoneId: string) {
+  if (tutorialStore.step === 15) {
+    tutorialStore.setStep(16);
+  }
+  emit('select', zoneId);
 }
 
 </script>
@@ -179,14 +192,14 @@ function toggleView(view: ViewType) {
             v-if="activeView === 'cores'"
             :cores="cores" 
             compact 
-            @select="emit('select', $event)"
+            @select="handleSelect($event)"
           />
           
           <div v-else class="flex flex-col gap-1.5">
             <button 
               v-for="item in currentList" 
               :key="`${item.zoneId}-${item.type}`"
-              @click="emit('select', item.zoneId)"
+              @click="handleSelect(item.zoneId)"
               class="flex items-center gap-3 px-2.5 py-2 rounded bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left border border-gray-700 group"
             >
               <div class="w-5 h-5 flex items-center justify-center shrink-0">

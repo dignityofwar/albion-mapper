@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import VueKofi from 'vue-kofi';
 import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
+import { useTutorialStore } from '@/stores/useTutorialStore';
 import ReportForm from '../components/ReportForm.vue';
 import RoomSettings from '../components/RoomSettings.vue';
 import DebugTray from '../components/DebugTray.vue';
@@ -14,6 +15,7 @@ import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import ActiveCoreSummary from '../components/flow/zone/ActiveCoreSummary.vue';
 import RoomSummaryToolbar from '../components/flow/zone/RoomSummaryToolbar.vue';
+import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
@@ -26,8 +28,11 @@ import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getD
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
+const tutorialStore = useTutorialStore();
 const { connections, homeZoneId, roomTitle, nodePositions, lastUpdate } = storeToRefs(store);
 const router = useRouter();
+
+provide('goToNode', goToNode);
 
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
@@ -627,6 +632,9 @@ async function handleConnect(params: any) {
         fromHandleId: fHandleId,
         toHandleId: tHandleId
       });
+      if (!tutorialStore.completed && tutorialStore.step === 12) {
+        tutorialStore.setStep(13);
+      }
     } catch (err: any) {
       showToast(err.message || 'Failed to update connection.', 'error');
     }
@@ -898,6 +906,52 @@ defineExpose({ flowNodes, onNodeDragStop });
     <div class="fixed bottom-4 left-4 z-50">
       <VueKofi uid="K3K5156KXP" color="#302f86" text="Tip the Navigator!" />
     </div>
+    
+    <!-- Tutorial Exit -->
+    <div 
+      v-if="!tutorialStore.completed" 
+      class="fixed top-4 right-4 z-[1000]"
+    >
+      <button 
+        class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 font-medium"
+        @click="tutorialStore.setCompleted(true)"
+      >
+        Exit Tutorial
+      </button>
+    </div>
+
+    <!-- Tutorial Step 11 -->
+    <TutorialTooltip
+      v-if="!tutorialStore.completed && tutorialStore.step === 11"
+      message="Please add a new zone."
+      containerClass="fixed bottom-20 left-1/2 -translate-x-1/2 z-[10000]"
+      textClass="text-xl"
+    />
+
+    <!-- Tutorial Step 12 -->
+    <TutorialTooltip
+      v-if="!tutorialStore.completed && tutorialStore.step === 12"
+      message="You are able to drag from one zone's handle to another zone's handle to denote &quot;This North West portal in Zone X links to Zone Y at position South West&quot;. This means you can read the map and roughly know where the portals are without having to spend time trying to find it. Add a link now."
+      containerClass="fixed bottom-20 left-1/2 -translate-x-1/2 z-[10000]"
+      textClass="text-base"
+    />
+
+    <!-- Tutorial Step 15 -->
+    <TutorialTooltip
+      v-if="!tutorialStore.completed && tutorialStore.step === 15"
+      message="When you add a core or crystal spiders / dungeons, they are added to this summary. Here you can jump to zones that have certain features. Click on one of the zones in the summary to continue."
+      textClass="text-md"
+      containerClass="fixed top-[325px] right-4 z-[10000] w-64"
+      pointing="up"
+    />
+
+    <!-- Tutorial Step 16 -->
+    <TutorialTooltip
+      v-if="!tutorialStore.completed && tutorialStore.step === 16"
+      message="Tutorial complete! You can access the tutorial again by checking &quot;Show Tutorial&quot; on the Create Room page. If you enjoy the site, please consider donating with the button bottom left ❤️ Press Exit Tutorial top right to finish. Happy navigating!"
+      containerClass="fixed bottom-20 left-1/2 -translate-x-1/2 z-[10000]"
+      textClass="text-xl"
+    />
   </div>
 </template>
 
