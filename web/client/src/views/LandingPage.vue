@@ -108,7 +108,7 @@ function joinRoom() {
 
 <template>
   <div class="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center gap-8 p-6">
-    <img src="/images/share.png" alt="Albion Roads Mapper" class="max-w-xs" />
+    <img src="/images/share.png" alt="Albion Roads Mapper" class="max-w-lg" />
     <h1 class="text-4xl font-bold text-indigo-400">Albion Roads Mapper</h1>
     <p class="text-gray-400 text-center max-w-md">
       Collaborate with your guild in real-time to track Roads of Avalon portal connections.
