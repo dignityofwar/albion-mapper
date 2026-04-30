@@ -13,7 +13,7 @@ useHead({
     { property: 'og:image:height', content: '630' },
     { property: 'og:image:type', content: 'image/jpeg' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:image', content: 'https://roadmap.dignityofwar.com/share.jpg' },
+    { name: 'twitter:image', content: 'https://roadmap.dignityofwar.com/share.png' },
     { name: 'msapplication-TileColor', content: '#373737' },
     { name: 'msapplication-TileImage', content: '/ms-icon-144x144.png' },
     { name: 'theme-color', content: '#373737FF' },
