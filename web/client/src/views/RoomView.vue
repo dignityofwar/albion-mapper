@@ -294,7 +294,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     // 2. Map to VueFlow nodes
     const newNodes = positions.map((pos: NodePosition) => {
       const zone = ZONE_BY_ID.get(pos.zoneId);
-      const isDraggable = positions.length > 1 && pos.zoneId !== homeZoneId.value;
+      const isDraggable = positions.length > 1;
       const isRoads = zone?.type === 'roads' || zone?.type === 'roadsHideout';
       return {
         id: pos.zoneId,
