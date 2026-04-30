@@ -103,7 +103,7 @@ function logout() {
         :class="[
           tray
             ? 'w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg transition-colors'
-            : 'flex items-center justify-center px-3 py-2.5 md:py-2 rounded bg-indigo-700 border border-indigo-500 text-white text-sm leading-none hover:bg-indigo-600 transition-colors'
+            : 'flex items-center justify-center px-3 py-2 rounded bg-indigo-700 border border-indigo-500 text-white text-sm leading-none hover:bg-indigo-600 transition-colors'
         ]"
         title="Room settings"
         data-testid="settings-cog"
