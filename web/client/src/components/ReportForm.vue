@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import ZoneCombobox from './ZoneCombobox.vue';
 import TimeInput from './common/TimeInput.vue';
@@ -23,8 +23,19 @@ const secondsRemaining = ref<number | null>(null);
 watch([fromZoneId, toZoneId], () => {
   secondsRemaining.value = null;
 });
+watch(toZoneId, (newId) => {
+  emit('update:toZoneId', newId);
+});
 const reportedBy = ref('');
 const submitting = ref(false);
+
+watch(isOpen, (newVal) => {
+  if (newVal) {
+    nextTick(() => {
+      focusToCombobox();
+    });
+  }
+});
 
 function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;
@@ -34,6 +45,7 @@ const emit = defineEmits<{
   success: [message: string];
   error: [message: string];
   close: [];
+  'update:toZoneId': [id: string];
 }>();
 
 function open() {
@@ -88,6 +100,10 @@ async function submit() {
     toHandleId.value = null;
     targetPosition.value = null;
     secondsRemaining.value = null;
+
+    nextTick(() => {
+      focusToCombobox();
+    });
   } catch (err: any) {
     emit('error', err.message || 'Failed to submit');
   } finally {
@@ -201,7 +217,7 @@ defineExpose({
               :error="secondsRemaining !== null && !fromZoneId"
               @tab-select="focusToCombobox"
               @select="focusToCombobox"
-              @update:model-value="fromHandleId = null"
+              @update:model-value="(val) => { if (fromHandleId && !fromHandleId.startsWith('default-')) fromHandleId = null; }"
             />
           </div>
 
@@ -219,7 +235,7 @@ defineExpose({
               :error="secondsRemaining !== null && !toZoneId"
               @tab-select="focusTimeInput"
               @select="focusTimeInput"
-              @update:model-value="toHandleId = null"
+              @update:model-value="(val) => { if (toHandleId && !toHandleId.startsWith('default-')) toHandleId = null; }"
             />
           </div>
 

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, DEFAULT_INTERNAL_HANDLES } from 'shared';
+import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getOppositeHandleId } from 'shared';
+import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../constants/ui';
 import { connectionStyle } from '../../utils/connectionStyle.js';
 import { TooltipProvider } from 'reka-ui';
@@ -12,6 +13,7 @@ import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneEditorTray from './zone/ZoneEditorTray.vue';
 import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import { useRoomStore } from '../../stores/useRoomStore';
+import { deleteConnection } from '../../utils/roomOperations';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 
@@ -296,27 +298,29 @@ function openHandleEditor() {
   isHandleEditorOpen.value = true;
 }
 
-function saveCustomHandles(newHandles: CustomHandle[]) {
+async function saveCustomHandles(newHandles: CustomHandle[]) {
+  // Find disabled handles
+  const disabledHandleIds = newHandles.filter(h => h.disabled).map(h => h.id);
+  
+  if (disabledHandleIds.length > 0) {
+    // Find connections using these handles on THIS node
+    const connectionsToDelete = store.connections.filter(c => 
+      (c.fromZoneId === props.id && disabledHandleIds.includes(c.fromHandleId!)) ||
+      (c.toZoneId === props.id && disabledHandleIds.includes(c.toHandleId!))
+    );
+    
+    for (const conn of connectionsToDelete) {
+      try {
+        await deleteConnection(store.roomId, store.token, conn.id);
+      } catch (err) {
+        console.error('Failed to delete connection for disabled handle:', err);
+      }
+    }
+  }
+
   store.updateNodeCustomHandles(props.id, newHandles);
   isHandleEditorOpen.value = false;
   if (showToast) showToast('Handle positions updated');
-}
-
-function getHandlePosition(left: string, top: string): Position {
-  const l = parseFloat(left);
-  const t = parseFloat(top);
-  
-  // Points
-  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return Position.Top;
-  if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return Position.Right;
-  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return Position.Bottom;
-  if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return Position.Left;
-
-  // Diagonals
-  if (l > 50 && t < 50) return Position.Top;
-  if (l > 50 && t > 50) return Position.Right;
-  if (l < 50 && t > 50) return Position.Bottom;
-  return Position.Left;
 }
 
 function getHandleFacing(left: string, top: string): string {
@@ -376,17 +380,6 @@ function lockCore(core: string) {
   }
 }
 
-function getBorderBgClass(type: string): string {
-  switch (type) {
-    case 'royalBlue': return 'bg-blue-500';
-    case 'royalYellow': return 'bg-yellow-500';
-    case 'royalRed': return 'bg-red-500';
-    case 'outlands': return 'bg-[#1f1f1f]';
-    case 'roads': return 'bg-gray-500';
-    default: return 'bg-gray-500';
-  }
-}
-
 function getHandleColor(handleId: string) {
   const connection = store.connections.find(c => 
     (c.fromZoneId === props.id && c.fromHandleId === handleId) ||
@@ -401,20 +394,35 @@ function getHandleColor(handleId: string) {
 }
 
 const customHandles = computed(() => {
-  const handles = (props.data.customHandles && props.data.customHandles.length > 0)
-    ? props.data.customHandles
-    : getDefaultHandles(props.data.mapShape);
+  let handles: CustomHandle[];
+  if (props.data.customHandles && props.data.customHandles.length > 0) {
+    handles = [...props.data.customHandles];
+  } else if (props.data.type === 'roadsHideout') {
+    handles = [...DEFAULT_INTERNAL_HANDLES];
+  } else {
+    handles = [...getDefaultHandles(props.data.mapShape)];
+  }
+
+  // Ensure any default internal handles that have connections are included in the interactive handles list
+  DEFAULT_INTERNAL_HANDLES.forEach(dh => {
+    const isUsed = store.connections.some(c => 
+      (c.fromZoneId === props.id && c.fromHandleId === dh.id) ||
+      (c.toZoneId === props.id && c.toHandleId === dh.id)
+    );
+    if (isUsed && !handles.some(h => h.id === dh.id)) {
+      handles.push(dh);
+    }
+  });
 
   return handles
-    .filter(h => !h.disabled)
     .map(h => ({
       ...h,
       position: getHandlePosition(h.left, h.top),
       facing: getHandleFacing(h.left, h.top),
       style: { 
-        left: h.left, 
-        top: h.top,
-        backgroundColor: getHandleColor(h.id)
+        left: `calc(${h.left} - var(--handle-radius))`, 
+        top: `calc(${h.top} - var(--handle-radius))`,
+        '--handle-color': getHandleColor(h.id)
       }
     }));
 });
@@ -425,9 +433,9 @@ const defaultInternalHandles = computed(() => {
     position: getHandlePosition(h.left, h.top),
     facing: getHandleFacing(h.left, h.top),
     style: { 
-      left: h.left, 
-      top: h.top,
-      backgroundColor: getHandleColor(h.id)
+      left: `calc(${h.left} - var(--handle-radius))`, 
+      top: `calc(${h.top} - var(--handle-radius))`,
+      '--handle-color': getHandleColor(h.id)
     }
   }));
 });
@@ -498,7 +506,7 @@ const defaultInternalHandles = computed(() => {
 
       <!-- Central Content Block -->
       <div class="absolute inset-x-0 top-[37.5%] z-10 pointer-events-none flex flex-col items-center">
-        <div class="w-full flex flex-col items-center pointer-events-auto">
+        <div class="w-full flex flex-col items-center pointer-events-none">
           <!-- Zone Header -->
             <ZoneHeader
               :id="props.id" 
@@ -513,13 +521,13 @@ const defaultInternalHandles = computed(() => {
             <hr class="w-full my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 
           <!-- Map Features -->
-          <div class="flex flex-col items-center">
+          <div class="flex flex-col items-center pointer-events-auto">
             <div class="flex items-center justify-center gap-1 mb-1">
               <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Map Features</span>
               <button 
                 @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
                 @mousedown.stop
-                class="p-1 rounded hover:bg-white/10 text-gray-500 transition-colors"
+                class="p-1 rounded hover:bg-white/10 text-gray-500 transition-colors pointer-events-auto"
                 title="Edit Map Features"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -535,7 +543,7 @@ const defaultInternalHandles = computed(() => {
 
       <!-- Edit Handles Button at Middle Bottom -->
       <button 
-        v-if="props.data.mapShape && props.data.type === 'roads'"
+        v-if="props.data.mapShape && (props.data.type === 'roads' || props.data.type === 'roadsHideout')"
         class="absolute bottom-[35px] left-1/2 -translate-x-1/2 z-10 px-2 py-1 rounded bg-gray-900/80 hover:bg-gray-700 transition-colors text-gray-300 hover:text-white flex items-center gap-1.5 border border-gray-700 shadow-lg"
         @click.stop="openHandleEditor"
         @mousedown.stop
@@ -556,8 +564,9 @@ const defaultInternalHandles = computed(() => {
       <ZoneHandleEditor
         v-if="isHandleEditorOpen"
         :zone-name="props.data.zoneName || props.id"
-        :initial-handles="props.data.customHandles && props.data.customHandles.length > 0 ? props.data.customHandles : getDefaultHandles(props.data.mapShape)"
+        :initial-handles="props.data.customHandles && props.data.customHandles.length > 0 ? props.data.customHandles : (props.data.type === 'roadsHideout' ? DEFAULT_INTERNAL_HANDLES : getDefaultHandles(props.data.mapShape))"
         :is-toggle-mode="props.data.mapShape !== 'rest'"
+        :is-hideout="props.data.type === 'roadsHideout'"
         @save="saveCustomHandles"
         @close="isHandleEditorOpen = false"
       />
@@ -571,6 +580,8 @@ const defaultInternalHandles = computed(() => {
         :id="handle.id" 
         :style="handle.style"
         :data-facing="handle.facing"
+        :class="{ 'is-disabled': handle.disabled }"
+        :connectable="!handle.disabled"
       />
 
       <!-- Default internal handles for pending connections -->
@@ -590,7 +601,8 @@ const defaultInternalHandles = computed(() => {
         type="source"
         :position="Position.Top"
         id="center"
-        :style="{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)', opacity: 0, pointerEvents: 'none' }"
+        :style="{ left: '50%', top: '50%', opacity: 0, pointerEvents: 'none' }"
+        :connectable="false"
       />
     </div>
     </TooltipProvider>
@@ -598,26 +610,67 @@ const defaultInternalHandles = computed(() => {
 </template>
 
 <style scoped>
-:deep(.vue-flow__handle) {
-  width: 12px;
-  height: 12px;
-  background: #bbb;
-  border: 2px solid #222;
-  border-radius: 50%;
-  z-index: 0;
-  transition: background-color 0.2s, border-color 0.2s;
-  transform: translate(-50%, -50%);
+.zone-node {
+  --handle-radius: 16px;
 }
 
-:deep(.vue-flow__handle:hover) {
-  background: #fff;
+:deep(.vue-flow__handle) {
+  width: calc(var(--handle-radius) * 2) !important;
+  height: calc(var(--handle-radius) * 2) !important;
+  background: transparent !important;
+  border: none !important;
+  z-index: 30;
+  margin: 0 !important;
+  pointer-events: auto !important;
+}
+
+:deep(.vue-flow__handle)::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-color: var(--handle-color, #bbb);
+  border: 2px solid #222;
+  border-radius: var(--handle-radius) var(--handle-radius) 0 0;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+:deep(.vue-flow__handle:hover)::after {
+  background-color: #fff;
   border-color: #fff;
 }
 
+:deep(.vue-flow__handle.is-disabled) {
+  pointer-events: none !important;
+}
+
+:deep(.vue-flow__handle.is-disabled)::after {
+  background-color: transparent !important;
+  border: 3px solid #4b5563 !important;
+  opacity: 0.8;
+  transform: scale(0.75) !important;
+}
+
+:deep(.vue-flow__handle[data-facing="n"]) { transform: rotate(0deg) !important; }
+:deep(.vue-flow__handle[data-facing="ne"]) { transform: rotate(45deg) !important; }
+:deep(.vue-flow__handle[data-facing="e"]) { transform: rotate(90deg) !important; }
+:deep(.vue-flow__handle[data-facing="se"]) { transform: rotate(135deg) !important; }
+:deep(.vue-flow__handle[data-facing="s"]) { transform: rotate(180deg) !important; }
+:deep(.vue-flow__handle[data-facing="sw"]) { transform: rotate(225deg) !important; }
+:deep(.vue-flow__handle[data-facing="w"]) { transform: rotate(270deg) !important; }
+:deep(.vue-flow__handle[data-facing="nw"]) { transform: rotate(315deg) !important; }
+
+:deep(.vue-flow__handle-content) {
+  display: none;
+}
+
 @media (pointer: coarse) {
+  .zone-node {
+    --handle-radius: 20px;
+  }
   :deep(.vue-flow__handle) {
-    width: 24px;
-    height: 24px;
     border-width: 3px;
   }
 }

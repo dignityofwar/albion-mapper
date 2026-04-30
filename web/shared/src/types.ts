@@ -9,7 +9,7 @@ export interface Zone {
   name: string;
   type: ZoneType;
   tier: number;
-  ores?: string[];
+  knownResources?: string[];
   isRoadsHome?: boolean;
   category?: string;
   mapShape?: string;
@@ -31,7 +31,7 @@ export interface GameMap {
   tier: number;
   category?: string;
   isRoadsHideout?: true;
-  oresAvailable?: string[];
+  knownResources?: string[];
   mapShape?: string;
   socketCount?: number;
   largeSocketCount?: number;
@@ -135,7 +135,7 @@ export const ZoneSchema = z.object({
   name: z.string(),
   type: ZoneTypeSchema,
   tier: z.number().int().min(1).max(8),
-  ores: z.array(z.string()).optional(),
+  knownResources: z.array(z.string()).optional(),
   isRoadsHome: z.boolean().optional(),
   category: z.string().optional(),
 });

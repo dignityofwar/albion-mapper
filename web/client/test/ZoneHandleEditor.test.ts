@@ -18,10 +18,26 @@ describe('ZoneHandleEditor', () => {
       }
     });
 
-    expect(wrapper.text()).toContain('Test Zone Handles');
-    expect(wrapper.findAll('.bg-blue-500')).toHaveLength(1); // Active handle
-    // The background also has bg-gray-600, so we check for handles specifically
-    expect(wrapper.findAll('div.bg-gray-600.transition-all')).toHaveLength(1); // Disabled handle
+    expect(wrapper.text()).toContain('Press on a dot');
+    expect(wrapper.find('img[alt="Spoon reference"]').exists()).toBe(true);
+    expect(wrapper.findAll('.is-active')).toHaveLength(1); // Active handle
+    expect(wrapper.findAll('.is-disabled')).toHaveLength(1); // Disabled handle
+    expect(wrapper.text()).not.toContain('Clear All');
+  });
+
+  it('hides portal location text when isHideout is true', () => {
+    const wrapper = mount(ZoneHandleEditor, {
+      props: {
+        zoneName: 'Hideout Zone',
+        initialHandles,
+        isToggleMode: true,
+        isHideout: true
+      }
+    });
+
+    expect(wrapper.text()).not.toContain('Press on a dot to turn off the location of the portal.');
+    expect(wrapper.text()).toContain('If there is a golden "spoon" looking area');
+    expect(wrapper.find('img[alt="Spoon reference"]').exists()).toBe(true);
   });
 
   it('toggles handle disabled state in toggle mode', async () => {
@@ -33,11 +49,11 @@ describe('ZoneHandleEditor', () => {
       }
     });
 
-    const activeHandle = wrapper.find('.bg-blue-500');
+    const activeHandle = wrapper.find('.is-active');
     await activeHandle.trigger('click');
 
-    expect(wrapper.findAll('.bg-blue-500')).toHaveLength(0);
-    expect(wrapper.findAll('div.bg-gray-600.transition-all')).toHaveLength(2);
+    expect(wrapper.findAll('.is-active')).toHaveLength(0);
+    expect(wrapper.findAll('.is-disabled')).toHaveLength(2);
   });
 
   it('rotates handles clockwise', async () => {
@@ -55,7 +71,7 @@ describe('ZoneHandleEditor', () => {
     await rotateBtn?.trigger('click');
 
     // N (50, 0) rotated 90 CW should be E (100, 50)
-    const handle = wrapper.find('div.transition-all');
+    const handle = wrapper.find('.handle-arch');
     const style = handle.attributes('style');
     expect(style).toMatch(/left:\s*100(\.00)?%/);
     expect(style).toMatch(/top:\s*50(\.00)?%/);
@@ -76,7 +92,7 @@ describe('ZoneHandleEditor', () => {
     await rotateBtn?.trigger('click');
 
     // N (50, 0) rotated 90 CCW should be W (0, 50)
-    const handle = wrapper.find('div.transition-all');
+    const handle = wrapper.find('.handle-arch');
     const style = handle.attributes('style');
     expect(style).toMatch(/left:\s*0(\.00)?%/);
     expect(style).toMatch(/top:\s*50(\.00)?%/);
@@ -94,7 +110,7 @@ describe('ZoneHandleEditor', () => {
     const rotateBtn = wrapper.findAll('button').find(b => b.text().includes('↻'));
     await rotateBtn?.trigger('click');
 
-    const saveBtn = wrapper.findAll('button').find(b => b.text() === 'Save Changes');
+    const saveBtn = wrapper.findAll('button').find(b => b.text() === 'Save');
     await saveBtn?.trigger('click');
 
     const saveEvent = wrapper.emitted('save');
@@ -128,12 +144,12 @@ describe('ZoneHandleEditor', () => {
       }
     });
 
-    expect(wrapper.findAll('div.transition-all')).toHaveLength(2);
+    expect(wrapper.findAll('.handle-arch')).toHaveLength(2);
 
     const clearBtn = wrapper.findAll('button').find(b => b.text() === 'Clear All');
     expect(clearBtn).toBeTruthy();
     await clearBtn?.trigger('click');
 
-    expect(wrapper.findAll('div.transition-all')).toHaveLength(0);
+    expect(wrapper.findAll('.handle-arch')).toHaveLength(0);
   });
 });

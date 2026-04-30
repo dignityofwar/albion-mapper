@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { CreateConnectionBodySchema, UpdateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus } from 'shared';
 import type { Connection, NodePosition } from 'shared';
 import { broadcast } from '../broadcast.js';
+import { getInitialFeatures } from '../utils/nodeFeatures.js';
 
 interface DbConnection {
   id: string;
@@ -95,10 +96,10 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
     // If target position is provided, save it
     if (targetPosition) {
       await app.db.query(`
-        INSERT INTO room_node_positions (room_id, zone_id, x, y)
-        VALUES ($1, $2, $3, $4)
+        INSERT INTO room_node_positions (room_id, zone_id, x, y, features)
+        VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y
-      `, [id, toZoneId, targetPosition.x, targetPosition.y]);
+      `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(getInitialFeatures(toZoneId))]);
 
       const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
         'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',

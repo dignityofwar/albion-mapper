@@ -28,6 +28,11 @@ const featureRows = computed(() => {
 
 <template>
   <div class="flex flex-col items-center justify-center gap-1 mt-1 max-w-[220px] mx-auto">
+    <div v-if="activeFeatures.length === 0" 
+      class="text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-lg border border-dashed border-gray-700 text-gray-600 bg-gray-800/20"
+    >
+      No Features
+    </div>
     <div v-for="(row, rowIndex) in featureRows" :key="rowIndex" class="flex items-center justify-center gap-1">
       <div 
         v-for="feature in row" 

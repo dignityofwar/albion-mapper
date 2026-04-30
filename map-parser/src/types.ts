@@ -20,7 +20,7 @@ export interface GameMap {
   tier: number;
   category?: string;
   isRoadsHideout?: true;
-  oresAvailable?: string[];
+  knownResources?: string[];
   mapShape?: string;
   socketCount?: number;
   largeSocketCount?: number;
@@ -50,7 +50,7 @@ export const GameMapSchema = z.object({
   tier: z.number().int().min(1).max(8),
   category: z.string().optional(),
   isRoadsHideout: z.literal(true).optional(),
-  oresAvailable: z.array(z.string()).optional(),
+  knownResources: z.array(z.string()).optional(),
   mapShape: z.string().optional(),
   socketCount: z.number().int().nonnegative().optional(),
   largeSocketCount: z.number().int().nonnegative().optional(),

@@ -6,6 +6,7 @@ const props = defineProps<{
   zoneName: string;
   initialHandles: CustomHandle[];
   isToggleMode?: boolean;
+  isHideout?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -150,60 +151,100 @@ function rotate(degrees: number) {
     };
   });
 }
+
+function getHandleFacing(left: string, top: string): string {
+  const l = parseFloat(left);
+  const t = parseFloat(top);
+  
+  // Points
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return 'n';
+  if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
+  if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+
+  // Sides
+  if (l >= 50 && t < 50) return 'ne';
+  if (l > 50 && t >= 50) return 'se';
+  if (l <= 50 && t > 50) return 'sw';
+  return 'nw';
+}
 </script>
 
 <template>
-  <div class="fixed inset-0 z-[1000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" @click.self="emit('close')">
-    <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-2xl max-w-lg w-full p-6 flex flex-col items-center">
-      <h3 class="text-xl font-bold mb-2 text-white">{{ zoneName }} Handles</h3>
-      <p class="text-gray-400 text-sm mb-8 text-center px-4">
-        <template v-if="isToggleMode">
-          Press on a dot to turn off the location of the portal.<br>
-          If there is a golden "spoon" looking area like <img src="/images/spoon.jpg" class="inline-block h-5 w-auto align-middle mb-1" alt="spoon" />, don't turn it off.
-        </template>
-        <template v-else>
-          Click on the edge of the shape to add a connection point <img src="/images/spoon.jpg" class="inline-block h-5 w-auto align-middle mb-1" alt="spoon" />.<br>
-          Drag points to reposition, or double-click to remove them.
-        </template>
-      </p>
-
-      <div class="flex items-center justify-between w-full mb-6">
-        <div class="flex gap-2">
-          <button 
-            class="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-sm rounded border border-gray-600 transition-colors flex items-center gap-2"
-            title="Rotate Counter-Clockwise"
-            @click="rotate(-90)"
-          >
-            <span>↺ 90°</span>
-          </button>
-          <button 
-            class="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-sm rounded border border-gray-600 transition-colors flex items-center gap-2"
-            title="Rotate Clockwise"
-            @click="rotate(90)"
-          >
-            <span>90° ↻</span>
-          </button>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <p class="text-[10px] text-gray-500 max-w-[150px] leading-tight text-right italic">
-            Clearing all points will clear all connections and you will need to re-add them manually
-          </p>
-          <button 
-            @click="clearAll" 
-            class="px-3 py-1.5 bg-red-900/40 hover:bg-red-900/60 text-red-200 text-xs rounded border border-red-800/60 transition-colors whitespace-nowrap"
-          >
-            Clear All
-          </button>
-        </div>
-      </div>
-
+  <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-sm p-4" @click.self="emit('close')">
+    <div class="max-w-lg w-full p-2 flex flex-col items-center relative">
       <div 
         ref="containerRef"
-        class="relative w-[400px] h-[400px] mb-8"
+        class="relative w-[400px] h-[400px]"
         :class="isToggleMode ? '' : 'cursor-crosshair'"
         @click="handleEdgeClick"
       >
+        <!-- Rotation Buttons - Top Left and Top Right -->
+        <button 
+          class="absolute top-2 left-2 w-14 h-14 z-50 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded border border-gray-600 transition-colors flex flex-col items-center justify-center leading-none shadow-lg"
+          title="Rotate Counter-Clockwise"
+          @click.stop="rotate(-90)"
+        >
+          <span class="text-2xl">↺</span>
+          <span class="text-[10px] mt-1">90°</span>
+        </button>
+        <button 
+          class="absolute top-2 right-2 w-14 h-14 z-50 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded border border-gray-600 transition-colors flex flex-col items-center justify-center leading-none shadow-lg"
+          title="Rotate Clockwise"
+          @click.stop="rotate(90)"
+        >
+          <span class="text-2xl">↻</span>
+          <span class="text-[10px] mt-1">90°</span>
+        </button>
+
+        <!-- Center Content - Inside Diamond -->
+        <div class="absolute inset-0 flex flex-col items-center justify-center z-40 pointer-events-none px-12">
+          <div class="flex flex-col items-center pointer-events-auto max-w-[280px]">
+            <p class="text-gray-300 text-[11px] text-center mb-4 leading-tight drop-shadow-md">
+              <template v-if="isToggleMode">
+                <template v-if="!isHideout">
+                  Press on a dot to turn off the location of the portal.<br>
+                </template>
+                If there is a golden "spoon" looking area, don't turn it off.
+                <div class="mt-2 flex justify-center">
+                  <img src="/images/spoon.jpg" class="w-32 h-auto rounded border border-gray-600 shadow-md" alt="Spoon reference" />
+                </div>
+              </template>
+              <template v-else>
+                Click on the edge to add a connection point. Drag to reposition, or double-click to remove.
+              </template>
+            </p>
+
+            <div class="flex gap-3 w-full mb-4 px-6">
+              <button 
+                class="flex-1 px-3 py-1 bg-gray-700/90 hover:bg-gray-600 text-white rounded transition-colors text-xs shadow-xl border border-gray-600"
+                @click.stop="emit('close')"
+              >
+                Cancel
+              </button>
+              <button 
+                class="flex-1 px-3 py-1 bg-blue-600/90 hover:bg-blue-500 text-white font-bold rounded transition-colors text-xs shadow-xl border border-blue-500"
+                @click.stop="save"
+              >
+                Save
+              </button>
+            </div>
+
+            <div class="flex items-center justify-center w-full" v-if="!isToggleMode">
+              <div class="flex items-center gap-2 bg-red-900/30 px-2 py-1 rounded border border-red-900/40">
+                <p class="text-[9px] text-red-300 leading-tight italic">
+                  Clearing points clears connections
+                </p>
+                <button 
+                  @click.stop="clearAll" 
+                  class="px-1.5 py-0.5 bg-red-900/50 hover:bg-red-900/70 text-red-100 text-[9px] rounded border border-red-800/60 transition-colors whitespace-nowrap"
+                >
+                  Clear All
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <!-- Diamond Shape Background -->
         <div 
           class="absolute inset-0 bg-gray-600 pointer-events-none"
@@ -217,32 +258,61 @@ function rotate(degrees: number) {
         <div 
           v-for="h in handles" 
           :key="h.id"
-          class="absolute w-4 h-4 border-2 border-white rounded-full -ml-2 -mt-2 transition-all z-10"
+          class="absolute w-8 h-8 z-[30] handle-arch"
           :class="[
-            h.disabled ? 'bg-gray-600 opacity-50 scale-75' : 'bg-blue-500 hover:bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.5)]',
+            h.disabled ? 'is-disabled' : 'is-active',
             isToggleMode ? 'cursor-pointer' : 'cursor-move'
           ]"
           :style="{ left: h.left, top: h.top }"
+          :data-facing="getHandleFacing(h.left, h.top)"
           @mousedown="startDragging(h.id, $event)"
           @dblclick="removeHandle(h.id, $event)"
           @click="handleHandleClick(h.id, $event)"
         ></div>
       </div>
-
-      <div class="flex gap-4 w-full">
-        <button 
-          class="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
-          @click="emit('close')"
-        >
-          Cancel
-        </button>
-        <button 
-          class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded transition-colors"
-          @click="save"
-        >
-          Save Changes
-        </button>
-      </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.handle-arch {
+  margin-left: -16px;
+  margin-top: -16px;
+  background: transparent;
+  transition: all 0.2s;
+}
+
+.handle-arch::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #3b82f6;
+  border: 2px solid white;
+  border-radius: 16px 16px 0 0;
+  transition: all 0.2s;
+}
+
+.handle-arch.is-disabled::after {
+  background-color: transparent;
+  border: 3px solid #4b5563;
+  opacity: 0.8;
+  transform: scale(0.75);
+}
+
+.handle-arch.is-active:hover::after {
+  background-color: #60a5fa;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+.handle-arch[data-facing="n"] { transform: rotate(0deg); }
+.handle-arch[data-facing="ne"] { transform: rotate(45deg); }
+.handle-arch[data-facing="e"] { transform: rotate(90deg); }
+.handle-arch[data-facing="se"] { transform: rotate(135deg); }
+.handle-arch[data-facing="s"] { transform: rotate(180deg); }
+.handle-arch[data-facing="sw"] { transform: rotate(225deg); }
+.handle-arch[data-facing="w"] { transform: rotate(270deg); }
+.handle-arch[data-facing="nw"] { transform: rotate(315deg); }
+</style>

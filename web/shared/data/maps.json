@@ -289,7 +289,7 @@
     "mapName": "Cases-Ugumlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -309,7 +309,7 @@
     "mapName": "Casitos-Alieam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE",
       "ROCK"
@@ -329,7 +329,7 @@
     "mapName": "Casitos-Atinaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "c",
@@ -344,7 +344,7 @@
     "mapName": "Casitos-Avaelum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -357,7 +357,7 @@
     "mapName": "Casos-Aiagsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "c",
@@ -372,7 +372,7 @@
     "mapName": "Casos-Aximam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "c",
@@ -390,7 +390,7 @@
     "mapName": "Casos-Ayosrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -406,7 +406,7 @@
     "mapName": "Casos-Uruxtum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "c",
@@ -428,7 +428,7 @@
     "mapName": "Cebitos-Aeaylum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -444,7 +444,7 @@
     "mapName": "Cebos-Avemlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -468,7 +468,7 @@
     "mapName": "Ceres-Iooinum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -484,7 +484,7 @@
     "mapName": "Ceritos-Avulsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -497,7 +497,7 @@
     "mapName": "Ceros-Aeaylum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -513,7 +513,7 @@
     "mapName": "Cetitos-Aiayrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -529,7 +529,7 @@
     "mapName": "Cetitos-Avixnum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ORE"
@@ -546,7 +546,7 @@
     "mapName": "Cetitos-Aximam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "c",
@@ -564,7 +564,7 @@
     "mapName": "Cetos-Obaelos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -599,7 +599,7 @@
     "mapName": "Cieites-Ugumlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -619,7 +619,7 @@
     "mapName": "Cieitos-Avioaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -635,7 +635,7 @@
     "mapName": "Cieitos-Ayosrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -651,7 +651,7 @@
     "mapName": "Cieitos-Obaelos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -667,7 +667,7 @@
     "mapName": "Cieitos-Otatrom",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "c",
@@ -682,7 +682,7 @@
     "mapName": "Cieos-Atatlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -695,7 +695,7 @@
     "mapName": "Cilitos-Opodam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "c",
@@ -713,7 +713,7 @@
     "mapName": "Cilos-Avioaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -729,7 +729,7 @@
     "mapName": "Cilos-Ofailos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -745,7 +745,7 @@
     "mapName": "Cilos-Otatrom",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "c",
@@ -767,7 +767,7 @@
     "mapName": "Conitos-Ofailos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -783,7 +783,7 @@
     "mapName": "Conitos-Oxaeaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "c",
@@ -798,7 +798,7 @@
     "mapName": "Conitos-Uruxtum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "c",
@@ -813,7 +813,7 @@
     "mapName": "Conos-Avaelum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "c",
@@ -828,7 +828,7 @@
     "mapName": "Coritos-Avemlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -845,7 +845,7 @@
     "mapName": "Coros-Aiayrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -861,7 +861,7 @@
     "mapName": "Coros-Alieam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE",
       "ROCK"
@@ -881,7 +881,7 @@
     "mapName": "Coros-Atinaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "c",
@@ -896,7 +896,7 @@
     "mapName": "Coues-Exakrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -909,7 +909,7 @@
     "mapName": "Couos-Ayayaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -925,7 +925,7 @@
     "mapName": "Couos-Opodam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "c",
@@ -999,7 +999,7 @@
     "mapName": "Curites-Exakrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -1012,7 +1012,7 @@
     "mapName": "Curitos-Ayayaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -1035,7 +1035,7 @@
     "mapName": "Curos-Avulsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -1052,7 +1052,7 @@
     "mapName": "Cuyites-Iooinum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -1068,7 +1068,7 @@
     "mapName": "Cynitos-Aiagsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "c",
@@ -1083,7 +1083,7 @@
     "mapName": "Cynitos-Atatlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "c",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -1096,7 +1096,7 @@
     "mapName": "Cynos-Avixnum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ORE"
@@ -1113,7 +1113,7 @@
     "mapName": "Cynos-Oxaeaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "c",
@@ -1566,7 +1566,7 @@
     "mapName": "Fasites-Azazsum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -1582,7 +1582,7 @@
     "mapName": "Fasitos-Atezsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -1598,7 +1598,7 @@
     "mapName": "Fasitos-Oleraum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -1613,7 +1613,7 @@
     "mapName": "Fasitos-Oyuctum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -1629,7 +1629,7 @@
     "mapName": "Fasos-Ayiotum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -1646,7 +1646,7 @@
     "mapName": "Febites-Opavun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "f",
@@ -1664,7 +1664,7 @@
     "mapName": "Febos-Acalun",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -1690,7 +1690,7 @@
     "mapName": "Ferites-Ohohtum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "f",
@@ -1705,7 +1705,7 @@
     "mapName": "Feritos-Enomaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -1721,7 +1721,7 @@
     "mapName": "Feritos-Osinsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -1743,7 +1743,7 @@
     "mapName": "Feros-Oyuctum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -1759,7 +1759,7 @@
     "mapName": "Fetos-Aiaylos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -1775,7 +1775,7 @@
     "mapName": "Fiees-Ohohtum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "f",
@@ -1790,7 +1790,7 @@
     "mapName": "Fieites-Unavtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -1805,7 +1805,7 @@
     "mapName": "Fieos-Aiuttum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -1821,7 +1821,7 @@
     "mapName": "Fieos-Atezsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -1834,7 +1834,7 @@
     "mapName": "Files-Azazsum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -1850,7 +1850,7 @@
     "mapName": "Files-Izizaum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -1866,7 +1866,7 @@
     "mapName": "Filites-Izohun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -1882,7 +1882,7 @@
     "mapName": "Filitos-Uzazlum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE",
       "ROCK"
@@ -1899,7 +1899,7 @@
     "mapName": "Filos-Abalam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -1929,7 +1929,7 @@
     "mapName": "Firitos-Alodrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -1945,7 +1945,7 @@
     "mapName": "Firos-Aiavam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -1963,7 +1963,7 @@
     "mapName": "Firos-Enomaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -1979,7 +1979,7 @@
     "mapName": "Firos-Ezatam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "f",
@@ -1997,7 +1997,7 @@
     "mapName": "Firos-Osinsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -2095,7 +2095,7 @@
     "mapName": "Fones-Opavun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "f",
@@ -2113,7 +2113,7 @@
     "mapName": "Fonitos-Amaurom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "f",
@@ -2128,7 +2128,7 @@
     "mapName": "Fonos-Aiugsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -2145,7 +2145,7 @@
     "mapName": "Fonos-Oleraum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -2167,7 +2167,7 @@
     "mapName": "Foritos-Aiaylos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -2183,7 +2183,7 @@
     "mapName": "Foros-Egoisum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -2199,7 +2199,7 @@
     "mapName": "Foros-Uzazlum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE",
       "ROCK"
@@ -2216,7 +2216,7 @@
     "mapName": "Foues-Aeaosum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -2231,7 +2231,7 @@
     "mapName": "Fouitos-Aiattum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -2246,7 +2246,7 @@
     "mapName": "Fouitos-Aiuttum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -2259,7 +2259,7 @@
     "mapName": "Fouos-Agosaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -2275,7 +2275,7 @@
     "mapName": "Fouos-Amaurom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "f",
@@ -2353,7 +2353,7 @@
     "mapName": "Furitos-Aiavam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -2371,7 +2371,7 @@
     "mapName": "Fuyes-Izohun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -2387,7 +2387,7 @@
     "mapName": "Fuyitos-Acalun",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -2406,7 +2406,7 @@
     "mapName": "Fuyitos-Ayiotum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -2423,7 +2423,7 @@
     "mapName": "Fynes-Unavtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -2439,7 +2439,7 @@
     "mapName": "Fynites-Aeaosum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "f",
@@ -2454,7 +2454,7 @@
     "mapName": "Fynitos-Abalam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -2470,7 +2470,7 @@
     "mapName": "Fynitos-Agosaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "f",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -2483,7 +2483,7 @@
     "mapName": "Fynitos-Aiugsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -2500,7 +2500,7 @@
     "mapName": "Fynitos-Egoisum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -2516,7 +2516,7 @@
     "mapName": "Fynitos-Ezatam",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "f",
@@ -2534,7 +2534,7 @@
     "mapName": "Fynos-Alodrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "f",
@@ -2745,7 +2745,7 @@
     "mapName": "Hasitos-Avaolum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "h",
@@ -2760,7 +2760,7 @@
     "mapName": "Hasitos-Umayaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -2776,7 +2776,7 @@
     "mapName": "Hasos-Agoitum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -2793,7 +2793,7 @@
     "mapName": "Hasos-Ayousum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "h",
@@ -2808,7 +2808,7 @@
     "mapName": "Hasos-Inayaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -2824,7 +2824,7 @@
     "mapName": "Hasos-Iuimaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -2840,7 +2840,7 @@
     "mapName": "Hasos-Osuorom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "h",
@@ -2862,7 +2862,7 @@
     "mapName": "Hebes-Ouaylos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "h",
@@ -2880,7 +2880,7 @@
     "mapName": "Hebites-Exemrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -2896,7 +2896,7 @@
     "mapName": "Hebitos-Atontum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -2912,7 +2912,7 @@
     "mapName": "Hebos-Ulamsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -2928,7 +2928,7 @@
     "mapName": "Heritos-Exozlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -2944,7 +2944,7 @@
     "mapName": "Heritos-Eyoztum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -2957,7 +2957,7 @@
     "mapName": "Heritos-Inayaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -2973,7 +2973,7 @@
     "mapName": "Heros-Atoyam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -2989,7 +2989,7 @@
     "mapName": "Hetitos-Iuaerom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3002,7 +3002,7 @@
     "mapName": "Hieos-Aiigaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3015,7 +3015,7 @@
     "mapName": "Hieos-Avaolum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3161,7 +3161,7 @@
     "mapName": "Hiles-Izizaum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -3177,7 +3177,7 @@
     "mapName": "Hilites-Ugumtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -3193,7 +3193,7 @@
     "mapName": "Hilitos-Aiigaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE",
       "ROCK"
@@ -3210,7 +3210,7 @@
     "mapName": "Hilitos-Osuorom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "h",
@@ -3225,7 +3225,7 @@
     "mapName": "Hiros-Exozlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3241,7 +3241,7 @@
     "mapName": "Hiros-Iuaerom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3254,7 +3254,7 @@
     "mapName": "Honites-Izizaum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -3270,7 +3270,7 @@
     "mapName": "Honitos-Uxeulum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "h",
@@ -3285,7 +3285,7 @@
     "mapName": "Honos-Oyezam",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3301,7 +3301,7 @@
     "mapName": "Honos-Umayaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -3324,7 +3324,7 @@
     "mapName": "Horos-Ohenlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -3340,7 +3340,7 @@
     "mapName": "Hures-Ugumtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3353,7 +3353,7 @@
     "mapName": "Hurites-Ieatun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3369,7 +3369,7 @@
     "mapName": "Hurites-Ouaylos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "h",
@@ -3387,7 +3387,7 @@
     "mapName": "Huritos-Iuimaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -3403,7 +3403,7 @@
     "mapName": "Huritos-Oiaelos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3419,7 +3419,7 @@
     "mapName": "Huros-Atontum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -3435,7 +3435,7 @@
     "mapName": "Huyes-Ogozlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -3451,7 +3451,7 @@
     "mapName": "Huyitos-Agoitum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -3468,7 +3468,7 @@
     "mapName": "Huyitos-Ohenlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "h",
@@ -3483,7 +3483,7 @@
     "mapName": "Huyos-Eyoztum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "h",
@@ -3498,7 +3498,7 @@
     "mapName": "Huyos-Uxeulum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "h",
@@ -3513,7 +3513,7 @@
     "mapName": "Hynes-Exemrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -3529,7 +3529,7 @@
     "mapName": "Hynes-Ieatun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3545,7 +3545,7 @@
     "mapName": "Hynites-Ogozlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -3561,7 +3561,7 @@
     "mapName": "Hynitos-Atoyam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3577,7 +3577,7 @@
     "mapName": "Hynitos-Ayousum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "h",
@@ -3592,7 +3592,7 @@
     "mapName": "Hynitos-Oyezam",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3608,7 +3608,7 @@
     "mapName": "Hynitos-Ulamsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -3624,7 +3624,7 @@
     "mapName": "Hynos-Oiaelos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "h",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -3923,7 +3923,7 @@
     "mapName": "Oasitos-Aoeuam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -3942,7 +3942,7 @@
     "mapName": "Oasos-Eraerom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -3958,7 +3958,7 @@
     "mapName": "Oasos-Uromlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -3974,7 +3974,7 @@
     "mapName": "Oebitos-Eraerom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -3990,7 +3990,7 @@
     "mapName": "Oebitos-Oyozam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "o",
@@ -4008,7 +4008,7 @@
     "mapName": "Oebos-Ixakaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "o",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4021,7 +4021,7 @@
     "mapName": "Oeritos-Ecunsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ORE"
@@ -4038,7 +4038,7 @@
     "mapName": "Oeritos-Oyexlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -4058,7 +4058,7 @@
     "mapName": "Oetos-Ofailos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "o",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4074,7 +4074,7 @@
     "mapName": "Oetos-Oyexlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -4094,7 +4094,7 @@
     "mapName": "Oieitos-Ixakaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -4110,7 +4110,7 @@
     "mapName": "Oieos-Umiutum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -4126,7 +4126,7 @@
     "mapName": "Oires-Oloblum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "o",
@@ -4141,7 +4141,7 @@
     "mapName": "Oiritos-Eramtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -4158,7 +4158,7 @@
     "mapName": "Oiros-Alaiam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "o",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4174,7 +4174,7 @@
     "mapName": "Oonitos-Umiutum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -4190,7 +4190,7 @@
     "mapName": "Ooros-Ataltum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "o",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4203,7 +4203,7 @@
     "mapName": "Ooros-Ecunsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ORE"
@@ -4220,7 +4220,7 @@
     "mapName": "Oouitos-Alaiam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "o",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4242,7 +4242,7 @@
     "mapName": "Oures-Araosum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE",
       "ROCK"
@@ -4259,7 +4259,7 @@
     "mapName": "Ouritos-Ataltum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "o",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4272,7 +4272,7 @@
     "mapName": "Ouritos-Ofailos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "o",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4288,7 +4288,7 @@
     "mapName": "Ouyos-Aoeuam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -4314,7 +4314,7 @@
     "mapName": "Oynites-Araosum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "o",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4327,7 +4327,7 @@
     "mapName": "Oynites-Oloblum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "o",
@@ -4342,7 +4342,7 @@
     "mapName": "Oynitos-Uromlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -4358,7 +4358,7 @@
     "mapName": "Oynos-Eramtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -4375,7 +4375,7 @@
     "mapName": "Oynos-Oyozam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -4415,7 +4415,7 @@
     "mapName": "Pasos-Avosam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "p",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4431,7 +4431,7 @@
     "mapName": "Pebos-Avosrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "p",
@@ -4481,7 +4481,7 @@
     "mapName": "Peritos-Avosam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "p",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4497,7 +4497,7 @@
     "mapName": "Peritos-Oconun",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "p",
@@ -4515,7 +4515,7 @@
     "mapName": "Peros-Aiataum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "p",
@@ -4530,7 +4530,7 @@
     "mapName": "Petitos-Amayam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "p",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4546,7 +4546,7 @@
     "mapName": "Petitos-Avosrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "p",
@@ -4561,7 +4561,7 @@
     "mapName": "Petos-Aietam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -4580,7 +4580,7 @@
     "mapName": "Pieos-Eterrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -4597,7 +4597,7 @@
     "mapName": "Pieos-Ofairom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "p",
@@ -4612,7 +4612,7 @@
     "mapName": "Pilitos-Eterrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -4635,7 +4635,7 @@
     "mapName": "Pirites-Unatam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -4654,7 +4654,7 @@
     "mapName": "Piritos-Ofavam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "p",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4670,7 +4670,7 @@
     "mapName": "Piritos-Opabrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "p",
@@ -4685,7 +4685,7 @@
     "mapName": "Ponitos-Aiayrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -4702,7 +4702,7 @@
     "mapName": "Poros-Aiayrom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -4719,7 +4719,7 @@
     "mapName": "Poros-Oconun",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "p",
@@ -4737,7 +4737,7 @@
     "mapName": "Poues-Unatam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "p",
@@ -4755,7 +4755,7 @@
     "mapName": "Pouitos-Ofairom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "p",
@@ -4777,7 +4777,7 @@
     "mapName": "Pures-Ouozlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -4793,7 +4793,7 @@
     "mapName": "Puros-Amayam",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "p",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4809,7 +4809,7 @@
     "mapName": "Puros-Ofavam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "p",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4825,7 +4825,7 @@
     "mapName": "Puyitos-Aiataum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "p",
     "socketCount": 8,
     "largeSocketCount": 1,
@@ -4838,7 +4838,7 @@
     "mapName": "Pynites-Ouozlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -4854,7 +4854,7 @@
     "mapName": "Pynitos-Aietam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -4873,7 +4873,7 @@
     "mapName": "Pynos-Opabrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "p",
@@ -4889,7 +4889,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "rest",
@@ -4905,7 +4905,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -4921,7 +4921,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -4937,7 +4937,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -4951,7 +4951,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -4965,7 +4965,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "rest",
@@ -4981,7 +4981,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "rest",
@@ -4997,7 +4997,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5011,7 +5011,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -5027,7 +5027,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5041,7 +5041,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5055,7 +5055,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5069,7 +5069,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5083,7 +5083,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5097,7 +5097,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5111,7 +5111,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5125,7 +5125,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -5142,7 +5142,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -5159,7 +5159,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5173,7 +5173,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "rest",
@@ -5189,7 +5189,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "rest",
@@ -5205,7 +5205,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5219,7 +5219,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5233,7 +5233,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5247,7 +5247,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "HIDE",
       "ROCK"
     ],
@@ -5264,7 +5264,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5278,7 +5278,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -5294,7 +5294,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -5311,7 +5311,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -5328,7 +5328,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5342,7 +5342,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5356,7 +5356,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "rest",
@@ -5372,7 +5372,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -5388,7 +5388,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5402,7 +5402,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5416,7 +5416,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -5432,7 +5432,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -5448,7 +5448,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5462,7 +5462,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5476,7 +5476,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5490,7 +5490,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "rest",
@@ -5506,7 +5506,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5520,7 +5520,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -5536,7 +5536,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -5553,7 +5553,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -5569,7 +5569,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "rest",
@@ -5585,7 +5585,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5599,7 +5599,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5613,7 +5613,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -5629,7 +5629,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -5643,7 +5643,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -5660,7 +5660,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -5930,7 +5930,7 @@
     "mapName": "Sases-Aoarsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -5946,7 +5946,7 @@
     "mapName": "Sases-Avuotum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -5962,7 +5962,7 @@
     "mapName": "Sasitos-Oyarlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -5975,7 +5975,7 @@
     "mapName": "Sasitos-Ugersum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -5988,7 +5988,7 @@
     "mapName": "Sasitos-Umogaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -6005,7 +6005,7 @@
     "mapName": "Sasos-Abizaum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -6018,7 +6018,7 @@
     "mapName": "Sasos-Egeylos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ORE"
@@ -6038,7 +6038,7 @@
     "mapName": "Sasos-Oiozlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -6075,7 +6075,7 @@
     "mapName": "Sebos-Avoirom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "s",
@@ -6090,7 +6090,7 @@
     "mapName": "Sebos-Oyohun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -6110,7 +6110,7 @@
     "mapName": "Sebos-Ugersum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "s",
@@ -6126,7 +6126,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -6142,7 +6142,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -6159,7 +6159,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6173,7 +6173,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6187,7 +6187,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6201,7 +6201,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "rest",
@@ -6217,7 +6217,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6231,7 +6231,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6245,7 +6245,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "rest",
@@ -6261,7 +6261,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6275,7 +6275,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -6291,7 +6291,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6305,7 +6305,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -6322,7 +6322,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -6339,7 +6339,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6353,7 +6353,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -6370,7 +6370,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "rest",
@@ -6386,7 +6386,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6400,7 +6400,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6414,7 +6414,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6428,7 +6428,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -6444,7 +6444,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6458,7 +6458,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6472,7 +6472,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -6488,7 +6488,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6502,7 +6502,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -6518,7 +6518,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6532,7 +6532,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -6548,7 +6548,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -6564,7 +6564,7 @@
     "mapName": "Seritos-Egeylos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ORE"
@@ -6584,7 +6584,7 @@
     "mapName": "Seritos-Onaytum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "s",
@@ -6600,7 +6600,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -6617,7 +6617,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6631,7 +6631,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -6647,7 +6647,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6661,7 +6661,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -6678,7 +6678,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -6694,7 +6694,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6708,7 +6708,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -6725,7 +6725,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -6741,7 +6741,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -6757,7 +6757,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6771,7 +6771,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -6788,7 +6788,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -6804,7 +6804,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "rest",
@@ -6820,7 +6820,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6834,7 +6834,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "rest",
@@ -6850,7 +6850,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6864,7 +6864,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6878,7 +6878,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6892,7 +6892,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6906,7 +6906,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -6923,7 +6923,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -6940,7 +6940,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "rest",
@@ -6956,7 +6956,7 @@
     "mapType": "roads",
     "tier": 6,
     "isRoadsHideout": true,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "rest",
     "socketCount": 4,
     "largeSocketCount": 2,
@@ -6989,7 +6989,7 @@
     "mapName": "Sieos-Ofugtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "s",
@@ -7004,7 +7004,7 @@
     "mapName": "Silitos-Abizaum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "s",
@@ -7019,7 +7019,7 @@
     "mapName": "Silos-Apenlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -7036,7 +7036,7 @@
     "mapName": "Silos-Oyarlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7049,7 +7049,7 @@
     "mapName": "Siritos-Avoirom",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "s",
@@ -7064,7 +7064,7 @@
     "mapName": "Siritos-Oyohun",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "s",
@@ -7082,7 +7082,7 @@
     "mapName": "Siros-Obobrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7095,7 +7095,7 @@
     "mapName": "Siros-Ofurlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "s",
@@ -7209,7 +7209,7 @@
     "mapName": "Sonitos-Ayailos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7225,7 +7225,7 @@
     "mapName": "Soritos-Aiaitum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE"
     ],
@@ -7241,7 +7241,7 @@
     "mapName": "Soritos-Apenlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -7258,7 +7258,7 @@
     "mapName": "Soritos-Avamsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "s",
@@ -7273,7 +7273,7 @@
     "mapName": "Soros-Axaesum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7286,7 +7286,7 @@
     "mapName": "Soues-Uzurtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -7302,7 +7302,7 @@
     "mapName": "Souitos-Oiozlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -7318,7 +7318,7 @@
     "mapName": "Souos-Availos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -7338,7 +7338,7 @@
     "mapName": "Souos-Ososlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7354,7 +7354,7 @@
     "mapName": "Souos-Umogaum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7561,7 +7561,7 @@
     "mapName": "Suyites-Avuotum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "HIDE",
       "ORE"
@@ -7578,7 +7578,7 @@
     "mapName": "Suyites-Uzurtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -7594,7 +7594,7 @@
     "mapName": "Suyitos-Axaesum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7607,7 +7607,7 @@
     "mapName": "Suyitos-Ofugtum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "s",
@@ -7622,7 +7622,7 @@
     "mapName": "Suyitos-Oyarlos",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -7641,7 +7641,7 @@
     "mapName": "Suyos-Onaytum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "s",
@@ -7684,7 +7684,7 @@
     "mapName": "Synites-Aoarsum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -7700,7 +7700,7 @@
     "mapName": "Synitos-Availos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ROCK"
@@ -7720,7 +7720,7 @@
     "mapName": "Synitos-Ofurlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "s",
@@ -7738,7 +7738,7 @@
     "mapName": "Synitos-Ososlos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7754,7 +7754,7 @@
     "mapName": "Synos-Ayailos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "s",
     "socketCount": 8,
     "largeSocketCount": 2,
@@ -7770,7 +7770,7 @@
     "mapName": "Synos-Oyarlos",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -7789,7 +7789,7 @@
     "mapName": "Tasitos-Obayam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -7805,7 +7805,7 @@
     "mapName": "Tasitos-Ulaurom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -7821,7 +7821,7 @@
     "mapName": "Tasos-Iriglos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -7840,7 +7840,7 @@
     "mapName": "Tebitos-Igaelum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -7853,7 +7853,7 @@
     "mapName": "Tebitos-Odoxlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -7869,7 +7869,7 @@
     "mapName": "Teros-Auiusum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "t",
@@ -7884,7 +7884,7 @@
     "mapName": "Tetitos-Ayoslum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "t",
@@ -7899,7 +7899,7 @@
     "mapName": "Tetos-Igaelum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -7915,7 +7915,7 @@
     "mapName": "Tetos-Ulaurom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -7993,7 +7993,7 @@
     "mapName": "Tieitos-Eyexrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8006,7 +8006,7 @@
     "mapName": "Tieitos-Ouultum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "t",
@@ -8021,7 +8021,7 @@
     "mapName": "Tieos-Ayoslum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON"
     ],
     "mapShape": "t",
@@ -8036,7 +8036,7 @@
     "mapName": "Tilitos-Ataglos",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8108,7 +8108,7 @@
     "mapName": "Tiros-Odoxlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -8124,7 +8124,7 @@
     "mapName": "Tiros-Ouultum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "t",
@@ -8139,7 +8139,7 @@
     "mapName": "Tonitos-Igurlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE",
       "ROCK"
     ],
@@ -8155,7 +8155,7 @@
     "mapName": "Tonitos-Uxavrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8168,7 +8168,7 @@
     "mapName": "Tonitos-Uxavrtom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "t",
@@ -8183,7 +8183,7 @@
     "mapName": "Tonos-Aboysum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8196,7 +8196,7 @@
     "mapName": "Tonos-Obayam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8212,7 +8212,7 @@
     "mapName": "Toritos-Iriglos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ROCK"
     ],
@@ -8231,7 +8231,7 @@
     "mapName": "Touos-Ataglos",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8247,7 +8247,7 @@
     "mapName": "Touos-Uoemtum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -8264,7 +8264,7 @@
     "mapName": "Turitos-Atalos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8280,7 +8280,7 @@
     "mapName": "Turitos-Atatlos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8296,7 +8296,7 @@
     "mapName": "Turitos-Uoemtum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8309,7 +8309,7 @@
     "mapName": "Tuyitos-Aboysum",
     "mapType": "roads",
     "tier": 8,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ORE"
     ],
@@ -8325,7 +8325,7 @@
     "mapName": "Tuyitos-Auiusum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "t",
@@ -8347,7 +8347,7 @@
     "mapName": "Tynos-Atatlos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8363,7 +8363,7 @@
     "mapName": "Tynos-Eyexrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -8379,7 +8379,7 @@
     "mapName": "Tynos-Igurlum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "t",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8392,7 +8392,7 @@
     "mapName": "Tynos-Uxavrom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "t",
@@ -8791,7 +8791,7 @@
     "mapName": "Xases-Ataglos",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8807,7 +8807,7 @@
     "mapName": "Xases-Oxoulum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "x",
@@ -8822,7 +8822,7 @@
     "mapName": "Xasos-Aeoilos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8838,7 +8838,7 @@
     "mapName": "Xasos-Aoemaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8851,7 +8851,7 @@
     "mapName": "Xasos-Oneulum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -8864,7 +8864,7 @@
     "mapName": "Xebitos-Oyogam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "x",
@@ -8882,7 +8882,7 @@
     "mapName": "Xebos-Emimsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -8899,7 +8899,7 @@
     "mapName": "Xebos-Exostum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -8915,7 +8915,7 @@
     "mapName": "Xerites-Oxoulum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "x",
@@ -8930,7 +8930,7 @@
     "mapName": "Xetitos-Emimsum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS",
       "ORE",
       "ROCK"
@@ -8947,7 +8947,7 @@
     "mapName": "Xetitos-Oneulum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "HIDE"
     ],
     "mapShape": "x",
@@ -8962,7 +8962,7 @@
     "mapName": "Xetos-Obursum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "x",
@@ -8977,7 +8977,7 @@
     "mapName": "Xiles-Aiavlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -8993,7 +8993,7 @@
     "mapName": "Xilitos-Aoemaum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS",
       "ORE"
@@ -9010,7 +9010,7 @@
     "mapName": "Xilos-Osayam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -9026,7 +9026,7 @@
     "mapName": "Xiros-Aiairom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "x",
@@ -9041,7 +9041,7 @@
     "mapName": "Xonites-Aiavlum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -9054,7 +9054,7 @@
     "mapName": "Xoritos-Aiairom",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "x",
@@ -9069,7 +9069,7 @@
     "mapName": "Xoritos-Exostum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "LOGS"
     ],
@@ -9085,7 +9085,7 @@
     "mapName": "Xoritos-Osayam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -9101,7 +9101,7 @@
     "mapName": "Xouitos-Aeoilos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -9117,7 +9117,7 @@
     "mapName": "Xouitos-Eyoztum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -9130,7 +9130,7 @@
     "mapName": "Xouos-Aioblos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [],
+    "knownResources": [],
     "mapShape": "x",
     "socketCount": 8,
     "largeSocketCount": 3,
@@ -9146,7 +9146,7 @@
     "mapName": "Xurites-Ataglos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "LOGS"
     ],
     "mapShape": "x",
@@ -9164,7 +9164,7 @@
     "mapName": "Xuros-Eyoztum",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "COTTON",
       "ROCK"
     ],
@@ -9180,7 +9180,7 @@
     "mapName": "Xuyitos-Aioblos",
     "mapType": "roads",
     "tier": 4,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "x",
@@ -9198,7 +9198,7 @@
     "mapName": "Xynitos-Obursum",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ORE"
     ],
     "mapShape": "x",
@@ -9213,7 +9213,7 @@
     "mapName": "Xynos-Oyogam",
     "mapType": "roads",
     "tier": 6,
-    "oresAvailable": [
+    "knownResources": [
       "ROCK"
     ],
     "mapShape": "x",

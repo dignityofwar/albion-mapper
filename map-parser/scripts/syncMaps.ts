@@ -81,9 +81,9 @@ function classifyMapType(raw: RawEntry): MapType | null {
   return 'other';
 }
 
-// ── oresAvailable extraction ───────────────────────────────────────────────────
+// ── knownResources extraction ───────────────────────────────────────────────────
 
-function extractOres(icons: RawIcon[] | undefined): string[] {
+function extractResources(icons: RawIcon[] | undefined): string[] {
   if (!icons) return [];
   const resources = icons
     .map((i) => i.alt)
@@ -196,7 +196,7 @@ async function main(): Promise<void> {
       };
 
       if (type === 'roads' || type === 'roadsHideout') {
-        gameMap.oresAvailable = extractOres(icons);
+        gameMap.knownResources = extractResources(icons);
 
         const shape = ZoneNameParser.parseMapShape({ mapName: name, mapID: id } as any);
         const socketInfo = ZoneNameParser.resolveSocketInfo(shape);

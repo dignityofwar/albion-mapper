@@ -8,6 +8,7 @@ import {
   ZONE_BY_ID,
 } from 'shared';
 import { broadcast } from '../broadcast.js';
+import { getInitialFeatures } from '../utils/nodeFeatures.js';
 
 const BCRYPT_ROUNDS = 12;
 
@@ -46,7 +47,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       await client.query(`
         INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
         VALUES ($1, $2, $3, $4, $5, $6)
-      `, [id, homeZoneId, 0, 0, JSON.stringify({}), JSON.stringify(null)]);
+      `, [id, homeZoneId, 0, 0, JSON.stringify(getInitialFeatures(homeZoneId)), JSON.stringify(null)]);
 
       await client.query('COMMIT');
     } catch (e) {

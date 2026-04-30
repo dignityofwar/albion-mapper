@@ -10,6 +10,7 @@ vi.mock('@vue-flow/core', () => ({
   useVueFlow: () => ({
     fitView: vi.fn(),
     updateNode: vi.fn(),
+    screenToFlowCoordinate: vi.fn((pos) => pos),
   }),
   VueFlow: { template: '<div></div>' },
   ConnectionMode: { Loose: 'loose' },
@@ -52,7 +53,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -111,7 +127,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -161,7 +192,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -204,7 +250,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -227,7 +288,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -257,7 +333,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -336,7 +427,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -392,7 +498,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -442,7 +563,22 @@ describe('RoomView', () => {
     const wrapper = mount(RoomView, {
       props: { id: 'room1' },
       global: {
-        stubs: ['DebugTray', 'ReportForm', 'RoomSettings', 'VueFlow', 'Background', 'Controls']
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
       }
     });
 
@@ -463,6 +599,55 @@ describe('RoomView', () => {
       'c1',
       { fromHandleId: 'top', toHandleId: 'bottom' }
     );
+    
+    wrapper.unmount();
+  });
+
+  it('does NOT create a ghost node when dragging from a node (no handle)', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+    
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [], 
+        homeZoneId: 'zone-a',
+        nodePositions: [{ zoneId: 'zone-a', x: 0, y: 0 }],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    
+    // Simulate connection start from node, but NO handleId
+    vm.handleConnectStart({ nodeId: 'zone-a', handleId: null });
+    
+    // Simulate connection end in empty space
+    vm.handleConnectEnd({ clientX: 100, clientY: 100 } as MouseEvent);
+    
+    // Check that ghostNode is still null
+    expect(vm.ghostNode).toBeNull();
     
     wrapper.unmount();
   });
@@ -496,6 +681,67 @@ describe('RoomView Home Zone Protection', () => {
     
     // Check that handleSetHomeZone is NOT present
     expect(vm.handleSetHomeZone).toBeUndefined();
+    
+    wrapper.unmount();
+  });
+
+  it('updates ghost node type and position when target zone changes', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+    
+    store.applyMessage({ 
+        type: 'sync', 
+        connections: [], 
+        homeZoneId: 'zone-a',
+        nodePositions: [{ zoneId: 'zone-a', x: 0, y: 0 }],
+        lastUpdatedAt: new Date().toISOString()
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setFromZoneId = vi.fn();
+              const setConnection = vi.fn();
+              expose({ setFromZoneId, setConnection });
+              return { setFromZoneId, setConnection };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    
+    // 1. Create a ghost node (starts as 'zone' 400x400)
+    vm.handleConnectStart({ nodeId: 'zone-a', handleId: 'right' });
+    vm.handleConnectEnd({ clientX: 200, clientY: 200 } as MouseEvent);
+    
+    expect(vm.ghostNode).not.toBeNull();
+    expect(vm.ghostNode.type).toBe('zone');
+    const initialPos = { ...vm.ghostNode.position };
+    
+    // 2. Simulate change to a non-roads zone (e.g. 'lymhurst')
+    vm.handleToZoneChange('lymhurst');
+    
+    expect(vm.ghostNode.type).toBe('non-roads');
+    expect(vm.ghostNode.position.x).toBe(initialPos.x + 100);
+    expect(vm.ghostNode.position.y).toBe(initialPos.y + 100);
+    
+    // 3. Change back to a roads zone
+    vm.handleToZoneChange('qiient-nutis'); // This is a roads hideout
+    expect(vm.ghostNode.type).toBe('zone');
+    expect(vm.ghostNode.position.x).toBe(initialPos.x);
+    expect(vm.ghostNode.position.y).toBe(initialPos.y);
     
     wrapper.unmount();
   });

@@ -1,5 +1,5 @@
 import mapsData from '../data/maps.json' with { type: 'json' };
-import type { GameMap, Zone, CustomHandle } from './types.js';
+import type { GameMap, Zone, CustomHandle, ZoneType } from './types.js';
 
 export function getDefaultHandles(shape?: string): CustomHandle[] {
   if (shape === 'c') {
@@ -121,6 +121,21 @@ export function getHandleFacing(left: string, top: string): string {
   return 'nw';
 }
 
+export function getOppositeHandleId(handleId: string | null | undefined): string | undefined {
+  if (!handleId) return undefined;
+  if (handleId === 'default-nw') return 'default-se';
+  if (handleId === 'default-se') return 'default-nw';
+  if (handleId === 'default-ne') return 'default-sw';
+  if (handleId === 'default-sw') return 'default-ne';
+  
+  if (handleId === 'top') return 'default-se';
+  if (handleId === 'bottom') return 'default-nw';
+  if (handleId === 'left') return 'default-ne';
+  if (handleId === 'right') return 'default-sw';
+  
+  return undefined;
+}
+
 const isRoadsHome = (name: string) => /^[^-\s]+-[^-\s]+-[^-\s]+$/.test(name);
 
 export function getZoneCategory(name: string, type: string): string | undefined {
@@ -178,12 +193,13 @@ export function getZoneCategory(name: string, type: string): string | undefined 
 }
 
 export const ZONES: Zone[] = (mapsData as GameMap[]).map((m) => {
+  const type = m.isRoadsHideout ? 'roadsHideout' : m.mapType;
   const zone: Zone = {
     id: m.mapID,
     name: m.mapName,
-    type: m.mapType,
+    type: type as ZoneType,
     tier: m.tier,
-    ores: m.oresAvailable,
+    knownResources: m.knownResources,
     category: m.category ?? getZoneCategory(m.mapName, m.mapType),
     mapShape: m.mapShape,
   };

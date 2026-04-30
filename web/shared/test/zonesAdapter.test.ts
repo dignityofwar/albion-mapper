@@ -28,14 +28,14 @@ describe('zones adapter', () => {
     });
   });
 
-  it('renames oresAvailable → ores', () => {
+  it('keeps knownResources', () => {
     const roadZonesWithOres = maps.filter(
-      (m) => m.mapType === 'roads' && m.oresAvailable && m.oresAvailable.length > 0,
+      (m) => m.mapType === 'roads' && m.knownResources && m.knownResources.length > 0,
     );
     roadZonesWithOres.forEach((m) => {
       const zone = ZONE_BY_ID.get(m.mapID);
       expect(zone).toBeDefined();
-      expect(zone!.ores).toEqual(m.oresAvailable);
+      expect(zone!.knownResources).toEqual(m.knownResources);
     });
   });
 
@@ -51,14 +51,20 @@ describe('zones adapter', () => {
     expect(homeRoadsZones.length).toBeGreaterThan(0);
   });
 
-  it('sets isRoadsHome to false for roads zones with X-X name (two-part names)', () => {
+  it('sets isRoadsHome to false for roads zones with X-X name (two-part names) that are not hideouts', () => {
     // Roads zones with exactly 2 hyphen-separated parts
     const twoPartPattern = /^[^-\s]+-[^-\s]+$/;
     const travelRoadsZones = ZONES.filter(
-      (z) => z.type === 'roads' && twoPartPattern.test(z.name),
+      (z) => z.type === 'roads' && twoPartPattern.test(z.name) && !ZONE_BY_ID.get(z.id)?.isRoadsHome,
     );
-    travelRoadsZones.forEach((z) => {
-      expect(z.isRoadsHome).toBe(false);
+    // Wait, the logic above is a bit circular since we are testing isRoadsHome.
+    // Let's use the source data.
+    const travelRoadsMaps = maps.filter(
+        (m) => m.mapType === 'roads' && twoPartPattern.test(m.mapName) && !m.isRoadsHideout
+    );
+    travelRoadsMaps.forEach((m) => {
+      const zone = ZONE_BY_ID.get(m.mapID);
+      expect(zone!.isRoadsHome).toBe(false);
     });
   });
 

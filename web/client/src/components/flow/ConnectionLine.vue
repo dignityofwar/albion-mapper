@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import type { ConnectionLineProps } from '@vue-flow/core';
 import { getConnectionPath } from '../../utils/connectionPath.js';
-import { getHandleFacing, getDefaultHandles, DEFAULT_INTERNAL_HANDLES } from 'shared';
+import { getHandleFacing, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getOppositeHandleId } from 'shared';
 
 const props = defineProps<ConnectionLineProps & { isOccupied?: boolean }>();
 
@@ -18,25 +18,40 @@ const path = computed(() => {
     return undefined;
   };
 
+  const targetHandleId = props.targetHandle?.id || (!props.isOccupied ? getOppositeHandleId(props.sourceHandle?.id) : undefined);
+  let tx = props.targetX;
+  let ty = props.targetY;
+
   const sourceFacing = props.sourceHandle?.id ? findFacing(props.sourceNode, props.sourceHandle.id) : undefined;
-  const targetFacing = (props.targetNode && props.targetHandle?.id) ? findFacing(props.targetNode, props.targetHandle.id) : undefined;
+  let targetFacing = (props.targetNode && props.targetHandle?.id) ? findFacing(props.targetNode, props.targetHandle.id) : undefined;
+
+  if (!props.targetHandle && targetHandleId && !props.isOccupied) {
+    const h = DEFAULT_INTERNAL_HANDLES.find(h => h.id === targetHandleId);
+    if (h) {
+      const offsetX = (parseFloat(h.left) - 50) / 100 * 400;
+      const offsetY = (parseFloat(h.top) - 50) / 100 * 400;
+      tx += offsetX;
+      ty += offsetY;
+      targetFacing = getHandleFacing(h.left, h.top);
+    }
+  }
 
   const [d] = getConnectionPath({
     sourceX: props.sourceX,
     sourceY: props.sourceY,
-    targetX: props.targetX,
-    targetY: props.targetY,
+    targetX: tx,
+    targetY: ty,
     sourcePosition: sourceFacing || props.sourcePosition,
     targetPosition: targetFacing || props.targetPosition,
     sourceHandleId: props.sourceHandle?.id,
-    targetHandleId: props.targetHandle?.id,
+    targetHandleId: targetHandleId,
   });
   return d;
 });
 </script>
 
 <template>
-  <g>
+  <g v-if="sourceHandle">
     <path
       class="vue-flow__connection-path"
       fill="none"
@@ -46,7 +61,7 @@ const path = computed(() => {
       :d="path"
     />
     <foreignObject
-      v-if="!isOccupied"
+      v-if="!isOccupied && !targetHandle"
       :x="targetX - 200"
       :y="targetY - 200"
       width="400"
@@ -54,7 +69,12 @@ const path = computed(() => {
       class="pointer-events-none"
     >
       <div class="w-full h-full flex items-center justify-center">
-        <div class="w-full h-full bg-indigo-500/10 border-2 border-indigo-500/40 diamond-shape"></div>
+        <div class="w-full h-full bg-indigo-500/10 border-2 border-indigo-500/40 diamond-shape relative">
+          <div v-for="h in DEFAULT_INTERNAL_HANDLES" :key="h.id"
+            class="absolute w-6 h-6 rounded-full border-2 border-indigo-500/40"
+            :style="{ left: h.left, top: h.top, transform: 'translate(-50%, -50%)' }"
+          ></div>
+        </div>
       </div>
     </foreignObject>
   </g>

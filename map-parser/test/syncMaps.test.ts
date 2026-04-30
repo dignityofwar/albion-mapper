@@ -73,7 +73,7 @@ const RESOURCE_ICONS = new Set(['ROCK', 'LOGS', 'ORE', 'COTTON', 'HIDE']);
 const TWO_HYPHEN_RE = /^[^-\s]+-[^-\s]+-[^-\s]+$/;
 const ONE_HYPHEN_RE = /^[^-\s]+-[^-\s]+$/;
 
-function extractOres(icons: RawIcon[] | undefined): string[] {
+function extractResources(icons: RawIcon[] | undefined): string[] {
   if (!icons) return [];
   const resources = icons.map((i) => i.alt).filter((alt) => RESOURCE_ICONS.has(alt));
   return [...new Set(resources)].sort();
@@ -102,7 +102,7 @@ interface GameMap {
   mapType: MapType;
   tier: number;
   isRoadsHideout?: true;
-  oresAvailable?: string[];
+  knownResources?: string[];
 }
 
 function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } | { warn: true; reason: string } {
@@ -116,7 +116,7 @@ function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } |
   const mapID = raw.name.toLowerCase().replace(/\s+/g, '-');
   const result: GameMap = { mapID, mapName: raw.name, mapType, tier: tierNum };
   if (mapType === 'roads' || mapType === 'roadsHideout') {
-    result.oresAvailable = extractOres(raw.icons);
+    result.knownResources = extractResources(raw.icons);
   }
   return result;
 }
@@ -159,13 +159,13 @@ describe('classification', () => {
   });
 });
 
-describe('oresAvailable extraction', () => {
+describe('knownResources extraction', () => {
   it('empty icons → empty array', () => {
-    expect(extractOres([])).toEqual([]);
+    expect(extractResources([])).toEqual([]);
   });
 
   it('undefined icons → empty array', () => {
-    expect(extractOres(undefined)).toEqual([]);
+    expect(extractResources(undefined)).toEqual([]);
   });
 
   it('filters non-resource icons and sorts alphabetically', () => {
@@ -173,7 +173,7 @@ describe('oresAvailable extraction', () => {
       { alt: 'BLUE' }, { alt: 'GREEN' }, { alt: 'COTTON' },
       { alt: 'ROCK' }, { alt: 'LOGS' },
     ];
-    expect(extractOres(icons)).toEqual(['COTTON', 'LOGS', 'ROCK']);
+    expect(extractResources(icons)).toEqual(['COTTON', 'LOGS', 'ROCK']);
   });
 
   it('full mixed set from truth table', () => {
@@ -182,14 +182,14 @@ describe('oresAvailable extraction', () => {
       { alt: 'BLUE' }, { alt: 'GREEN' }, { alt: 'ROCK' },
       { alt: 'DUNGEON' }, { alt: 'LOGS' }, { alt: 'ORE' }, { alt: 'HIRE' },
     ];
-    expect(extractOres(icons)).toEqual(['LOGS', 'ORE', 'ROCK']);
+    expect(extractResources(icons)).toEqual(['LOGS', 'ORE', 'ROCK']);
   });
 
   it('deduplicates repeated resource icons', () => {
     const icons: RawIcon[] = [
       { alt: 'ROCK' }, { alt: 'ROCK' }, { alt: 'LOGS' },
     ];
-    expect(extractOres(icons)).toEqual(['LOGS', 'ROCK']);
+    expect(extractResources(icons)).toEqual(['LOGS', 'ROCK']);
   });
 
   it('discards FIBER, STONE, LEATHER, GROUP, YELLOW', () => {
@@ -197,7 +197,7 @@ describe('oresAvailable extraction', () => {
       { alt: 'FIBER' }, { alt: 'STONE' }, { alt: 'LEATHER' },
       { alt: 'GROUP' }, { alt: 'YELLOW' }, { alt: 'ORE' },
     ];
-    expect(extractOres(icons)).toEqual(['ORE']);
+    expect(extractResources(icons)).toEqual(['ORE']);
   });
 });
 
@@ -209,7 +209,7 @@ describe('processEntry — truth table', () => {
       mapName: 'Qiient-In-Odetum',
       mapType: 'roads',
       tier: 6,
-      oresAvailable: [],
+      knownResources: [],
     });
   });
 
@@ -224,7 +224,7 @@ describe('processEntry — truth table', () => {
       mapName: 'Cebos-Avemlum',
       mapType: 'roads',
       tier: 4,
-      oresAvailable: ['COTTON', 'LOGS', 'ROCK'],
+      knownResources: ['COTTON', 'LOGS', 'ROCK'],
     });
     expect(result).not.toHaveProperty('isRoadsHideout');
   });
@@ -240,7 +240,7 @@ describe('processEntry — truth table', () => {
       mapName: 'Cases-Ugumlos',
       mapType: 'roads',
       tier: 6,
-      oresAvailable: ['LOGS', 'ORE', 'ROCK'],
+      knownResources: ['LOGS', 'ORE', 'ROCK'],
     });
     expect(result).not.toHaveProperty('isRoadsHideout');
   });
@@ -253,19 +253,19 @@ describe('processEntry — truth table', () => {
       mapType: 'royalYellow',
       tier: 5,
     });
-    expect(result).not.toHaveProperty('oresAvailable');
+    expect(result).not.toHaveProperty('knownResources');
   });
 
   it('Vixen Tor (royalBlue)', () => {
     const result = processEntry({ name: 'Vixen Tor', tier: 4, color: 'blue' });
     expect(result).toMatchObject({ mapType: 'royalBlue', tier: 4 });
-    expect(result).not.toHaveProperty('oresAvailable');
+    expect(result).not.toHaveProperty('knownResources');
   });
 
   it('Some Red Zone (royalRed, case-insensitive)', () => {
     const result = processEntry({ name: 'Some Red Zone', tier: 6, color: 'RED' });
     expect(result).toMatchObject({ mapType: 'royalRed', tier: 6 });
-    expect(result).not.toHaveProperty('oresAvailable');
+    expect(result).not.toHaveProperty('knownResources');
   });
 
   it('Widemoor Pool (outlands, no color, no icons)', () => {
@@ -276,13 +276,13 @@ describe('processEntry — truth table', () => {
       mapType: 'outlands',
       tier: 7,
     });
-    expect(result).not.toHaveProperty('oresAvailable');
+    expect(result).not.toHaveProperty('knownResources');
   });
 
   it('Mystery Zone (unknown color → other)', () => {
     const result = processEntry({ name: 'Mystery Zone', tier: 6, color: 'green' });
     expect(result).toMatchObject({ mapType: 'other', tier: 6 });
-    expect(result).not.toHaveProperty('oresAvailable');
+    expect(result).not.toHaveProperty('knownResources');
   });
 
   it('string tier is coerced to number', () => {
@@ -427,14 +427,14 @@ describe('script integration (via --source fixture)', () => {
     expect(first).toBe(second);
   });
 
-  it('roads entry with no resource icons gets oresAvailable: []', () => {
+  it('roads entry with no resource icons gets knownResources: []', () => {
     const fixture = writeFixture('roads-no-ores.json', [
       { name: 'Qiient-In-Odetum', tier: 6, icons: [{ alt: 'BLUE' }, { alt: 'GREEN' }] },
     ]);
     runSync(fixture);
     const maps = readOutput() as GameMap[];
-    expect(maps[0]).toHaveProperty('oresAvailable');
-    expect(maps[0].oresAvailable).toEqual([]);
+    expect(maps[0]).toHaveProperty('knownResources');
+    expect(maps[0].knownResources).toEqual([]);
   });
 
   it('three-barrel roads entry initially roads', () => {
@@ -463,7 +463,7 @@ describe('script integration (via --source fixture)', () => {
     expect(maps[0].mapShape).toBe('rest');
   });
 
-  it('non-roads entries do not have oresAvailable key', () => {
+  it('non-roads entries do not have knownResources key', () => {
     const fixture = writeFixture('no-ores-key.json', [
       { name: 'Royal Place', tier: 4, color: 'blue' },
       { name: 'Outland Spot', tier: 5 },
@@ -471,7 +471,7 @@ describe('script integration (via --source fixture)', () => {
     runSync(fixture);
     const maps = readOutput() as GameMap[];
     for (const m of maps) {
-      expect(m).not.toHaveProperty('oresAvailable');
+      expect(m).not.toHaveProperty('knownResources');
     }
   });
 });

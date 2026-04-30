@@ -9,6 +9,7 @@ import ReportForm from '../components/ReportForm.vue';
 import RoomSettings from '../components/RoomSettings.vue';
 import DebugTray from '../components/DebugTray.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
+import NonRoadsNode from '../components/flow/NonRoadsNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import ActiveCoreSummary from '../components/flow/zone/ActiveCoreSummary.vue';
@@ -21,7 +22,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '../utils/formatters.js';
 import { deleteConnection, updateConnection } from '../utils/roomOperations.js';
 import { connectionStyle } from '../utils/connectionStyle.js';
-import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getHandleFacing } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getHandleFacing, getOppositeHandleId } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -279,9 +280,10 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     const newNodes = positions.map((pos: NodePosition) => {
       const zone = ZONE_BY_ID.get(pos.zoneId);
       const isDraggable = positions.length > 1 && pos.zoneId !== homeZoneId.value;
+      const isRoads = zone?.type === 'roads' || zone?.type === 'roadsHideout';
       return {
         id: pos.zoneId,
-        type: 'zone',
+        type: isRoads ? 'zone' : 'non-roads',
         position: { x: pos.x, y: pos.y },
         draggable: isDraggable,
         data: {
@@ -523,6 +525,34 @@ function goToNode(nodeId: string) {
   }
 }
 
+function handleToZoneChange(id: string) {
+  if (!ghostNode.value) return;
+  const zone = ZONE_BY_ID.get(id);
+  const isRoads = !id || zone?.type === 'roads' || zone?.type === 'roadsHideout';
+  
+  const oldType = ghostNode.value.type;
+  const newType = isRoads ? 'zone' : 'non-roads';
+
+  if (oldType !== newType) {
+    if (newType === 'non-roads') {
+      ghostNode.value.position.x += 100;
+      ghostNode.value.position.y += 100;
+    } else {
+      ghostNode.value.position.x -= 100;
+      ghostNode.value.position.y -= 100;
+    }
+  }
+  
+  ghostNode.value.type = newType;
+  ghostNode.value.data = {
+    ...ghostNode.value.data,
+    zoneName: zone?.name ?? (id || 'Pending...'),
+    type: zone?.type ?? (id ? 'other' : 'roadsHideout'),
+    tier: zone?.tier ?? 0,
+    mapShape: zone?.mapShape,
+  };
+}
+
 function handleSuccess(msg: string) {
   showToast(msg);
   removeGhost();
@@ -603,22 +633,15 @@ async function handleConnect(params: any) {
 }
 
 function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent }) {
+  if (!params.handleId) {
+    draggingFromNodeId = null;
+    draggingFromHandleId = null;
+    return;
+  }
   draggingFromNodeId = params.nodeId ?? null;
   draggingFromHandleId = params.handleId ?? null;
 }
 
-function getOppositeHandleId(handleId: string | null): string | undefined {
-  if (!handleId) return undefined;
-  if (handleId === 'default-nw') return 'default-se';
-  if (handleId === 'default-se') return 'default-nw';
-  if (handleId === 'default-ne') return 'default-sw';
-  if (handleId === 'default-sw') return 'default-ne';
-  if (handleId === 'top') return 'bottom';
-  if (handleId === 'bottom') return 'top';
-  if (handleId === 'left') return 'right';
-  if (handleId === 'right') return 'left';
-  return undefined;
-}
 
 function handleConnectEnd(event?: MouseEvent) {
   if (wasConnected) {
@@ -631,7 +654,7 @@ function handleConnectEnd(event?: MouseEvent) {
   const fromNodeId = draggingFromNodeId;
   const fromHandleId = draggingFromHandleId;
   
-  if (fromNodeId && event) {
+  if (fromNodeId && fromHandleId && event) {
      const { x, y } = screenToFlowCoordinate({
        x: event.clientX,
        y: event.clientY,
@@ -664,7 +687,7 @@ function handleConnectEnd(event?: MouseEvent) {
        position: ghostPos,
        data: { 
          zoneName: 'Pending...',
-         type: 'roads',
+         type: 'roadsHideout',
          isGhost: true,
          features: {},
          tier: 0,
@@ -727,6 +750,7 @@ defineExpose({ flowNodes, onNodeDragStop });
       @success="handleSuccess"
       @error="msg => showToast(msg, 'error')"
       @close="handleReportClose"
+      @update:to-zone-id="handleToZoneChange"
     />
 
     <!-- WS status bar (always visible) -->
@@ -747,7 +771,7 @@ defineExpose({ flowNodes, onNodeDragStop });
       <VueFlow
         v-model:nodes="flowNodes"
         v-model:edges="flowEdges"
-        :node-types="{ zone: markRaw(ZoneNode) }"
+        :node-types="{ zone: markRaw(ZoneNode), 'non-roads': markRaw(NonRoadsNode) }"
         :edge-types="{ connection: markRaw(ConnectionEdge) }"
         :fit-view-on-init="true"
         :connection-mode="ConnectionMode.Loose"
