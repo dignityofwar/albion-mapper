@@ -29,6 +29,8 @@ export async function buildApp(options: AppOptions) {
   await app.register(fastifyCors, {
     origin: [
       'https://roadmap.dignityofwar.com',
+      'https://roadmap-test.dignityofwar.com',
+      'https://roadmap-api-test.dignityofwar.com',
       'https://albion-mapper-client.vercel.app',
       'http://10.0.5.2',
       'https://10.0.5.2',
