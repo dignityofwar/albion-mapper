@@ -6,7 +6,7 @@ const getApiBaseUrl = () => {
       hostname !== 'localhost' &&
       hostname !== '127.0.0.1'
     ) {
-      return 'https://roadmap-api-test.dignityofwar.com';
+      return 'https://roadmap-api-testing.dignityofwar.com';
     }
   }
   return import.meta.env.VITE_API_URL || 'http://localhost:3001';
