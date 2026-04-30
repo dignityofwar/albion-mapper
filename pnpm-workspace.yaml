@@ -2,5 +2,6 @@ packages:
   - 'web/*'
   - 'map-parser'
 allowBuilds:
+  '@parcel/watcher': true
   bcrypt: true
   vue-demi: true
