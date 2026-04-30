@@ -156,24 +156,11 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               return;
             }
 
-            const homePos = (await client.query<{ x: number; y: number }>(
-              'SELECT x, y FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
-              [roomId, homeZoneIdRow.home_zone_id]
-            )).rows[0];
-
             await client.query('DELETE FROM room_node_positions WHERE room_id = $1', [roomId]);
             for (const pos of deduplicated) {
-              let x = pos.x;
-              let y = pos.y;
-              if (homePos && pos.zoneId === homeZoneIdRow.home_zone_id) {
-                x = homePos.x;
-                y = homePos.y;
-                pos.x = x;
-                pos.y = y;
-              }
               await client.query(
                 'INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles) VALUES ($1, $2, $3, $4, $5, $6) ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features, custom_handles = EXCLUDED.custom_handles',
-                [roomId, pos.zoneId, x, y, JSON.stringify(pos.features || {}), JSON.stringify(pos.customHandles || null)]
+                [roomId, pos.zoneId, pos.x, pos.y, JSON.stringify(pos.features || {}), JSON.stringify(pos.customHandles || null)]
               );
             }
             if (msg.updateLastUpdated) {
