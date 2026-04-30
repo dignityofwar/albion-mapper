@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   db:
+    container_name: db
     image: postgres:16-alpine
     restart: always
     environment:
@@ -14,6 +15,7 @@ services:
       - ./volumes/db-data:/var/lib/postgresql/data
 
   server:
+    container_name: server
     image: maelstromeous/applications:dig-roadmap-latest
     restart: always
     environment:
@@ -22,5 +24,18 @@ services:
       PORT: 3001
     ports:
       - '3001:3001'
+    depends_on:
+      - db
+
+  server-testing:
+    container_name: server-testing
+    image: maelstromeous/applications:dig-roadmap-latest
+    restart: always
+    environment:
+      DATABASE_URL: ${DATABASE_URL_TESTING:-postgres://user:password@db:5432/dbname}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      PORT: 3002
+    ports:
+      - '3002:3002'
     depends_on:
       - db
