@@ -545,11 +545,11 @@ const defaultInternalHandles = computed(() => {
       <!-- Diamond Shape Background -->
       <div 
         class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none z-[5]"
-        :class="[hasReds ? 'bg-red-500' : getBorderBgClass(props.data.type)]"
+        :class="[hasReds ? 'bg-red-500/80' : getBorderBgClass(props.data.type) + '/80']"
       ></div>
       <div 
         class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none z-[6]"
-        :class="[hasReds ? 'bg-red-950' : 'bg-gray-800']"
+        :class="[hasReds ? 'bg-red-950/80' : 'bg-gray-800/80']"
       ></div>
 
 
