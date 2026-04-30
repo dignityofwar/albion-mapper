@@ -748,7 +748,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     <!-- Header -->
     <header class="shrink-0 bg-gray-900 border-b border-gray-700 h-14 flex items-center px-4 relative z-50">
       <div class="flex items-center gap-4">
-        <img src="/android-icon-192x192.png" class="w-8 h-8 inline-block" alt="Site Logo" />
+        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block" alt="Site Logo" />
         <RoomSettings />
       </div>
       <div class="absolute left-1/2 -translate-x-1/2">
