@@ -21,7 +21,6 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgres://user:password@db:5432/dbname}
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
-      PORT: 3001
     ports:
       - '3001:3001'
     depends_on:
@@ -29,13 +28,12 @@ services:
 
   server-testing:
     container_name: server-testing
-    image: maelstromeous/applications:dig-roadmap-latest
+    image: maelstromeous/applications:dig-roadmap-testing
     restart: always
     environment:
       DATABASE_URL: ${DATABASE_URL_TESTING:-postgres://user:password@db:5432/dbname}
       JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
-      PORT: 3002
     ports:
-      - '3002:3002'
+      - '3002:3001'
     depends_on:
       - db
