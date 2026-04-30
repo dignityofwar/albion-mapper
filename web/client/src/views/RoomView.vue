@@ -69,6 +69,16 @@ watch(() => props.id, () => {
   initializeRoom();
 });
 
+watch(() => store.wsStatus, (status) => {
+  if (status === 'auth_failed') {
+    const id = props.id || store.roomId;
+    sessionStorage.removeItem(`token:${id}`);
+    router.replace(`/rooms/${id}/auth`).catch(() => {
+      window.location.href = `/rooms/${id}/auth`;
+    });
+  }
+}, { immediate: true });
+
 function initializeRoom() {
   const stored = sessionStorage.getItem(`token:${props.id}`);
   if (!stored) {
@@ -754,7 +764,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     />
 
     <!-- WS status bar (always visible) -->
-    <div class="shrink-0 px-3 py-1 text-xs flex items-center justify-center" :class="store.wsStatus === 'connected' ? 'bg-green-900 text-green-300' : store.wsStatus === 'connecting' ? 'bg-yellow-900 text-yellow-300' : 'bg-red-900 text-red-300'">
+    <div class="shrink-0 px-3 py-1 text-xs flex items-center justify-center" :class="store.wsStatus === 'connected' ? 'bg-green-900 text-green-300' : store.wsStatus === 'connecting' ? 'bg-yellow-900 text-yellow-300' : store.wsStatus === 'auth_failed' ? 'bg-orange-900 text-orange-300' : 'bg-red-900 text-red-300'">
       <span v-if="store.wsStatus === 'connected'">
         ● Connected – Last update
         <span
@@ -763,6 +773,7 @@ defineExpose({ flowNodes, onNodeDragStop });
         >{{ store.lastUpdate ? formatTime(store.lastUpdate) : '…' }}</span>
       </span>
       <span v-else-if="store.wsStatus === 'connecting'">⟳ Connecting…</span>
+      <span v-else-if="store.wsStatus === 'auth_failed'">⚠ Session expired — redirecting to login…</span>
       <span v-else>⚠ Disconnected — reconnecting…</span>
     </div>
 

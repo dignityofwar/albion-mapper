@@ -19,7 +19,8 @@ vi.mock('@vue-flow/core', () => ({
 
 vi.mock('vue-router', () => ({
   useRouter: () => ({
-    replace: vi.fn(),
+    replace: vi.fn(() => Promise.resolve()),
+    push: vi.fn(() => Promise.resolve()),
   }),
 }));
 

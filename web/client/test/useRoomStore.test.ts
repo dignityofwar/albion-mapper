@@ -107,4 +107,29 @@ describe('useRoomStore', () => {
     
     expect(store.lastUpdate).not.toBe(initialDate);
   });
+
+  it('should set wsStatus to auth_failed when close code is 4401', () => {
+    const store = useRoomStore();
+    
+    // Mock WebSocket with addEventListener support
+    let closeHandler: any;
+    (global as any).WebSocket = class {
+      static OPEN = 1;
+      readyState = 1;
+      send() {}
+      close() {}
+      addEventListener(type: string, handler: any) {
+        if (type === 'close') closeHandler = handler;
+      }
+      removeEventListener() {}
+    };
+
+    store.roomId = 'room1';
+    store.token = 'token1';
+    store.connect();
+    
+    closeHandler({ code: 4401 });
+    
+    expect(store.wsStatus).toBe('auth_failed');
+  });
 });

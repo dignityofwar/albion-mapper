@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle } from 'shared';
 import { API_BASE_URL } from '../utils/api';
 
-export type WsStatus = 'disconnected' | 'connecting' | 'connected';
+export type WsStatus = 'disconnected' | 'connecting' | 'connected' | 'auth_failed';
 
 export const useRoomStore = defineStore('room', () => {
   const connections = ref<Connection[]>([]);
@@ -120,7 +120,11 @@ export const useRoomStore = defineStore('room', () => {
       }
     });
 
-    ws.addEventListener('close', () => {
+    ws.addEventListener('close', (event) => {
+      if (event.code === 4401) {
+        wsStatus.value = 'auth_failed';
+        return;
+      }
       wsStatus.value = 'disconnected';
       scheduleReconnect();
     });
