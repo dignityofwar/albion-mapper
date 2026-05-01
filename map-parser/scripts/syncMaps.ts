@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import { EXCLUDED_MAP_NAMES } from './excludedMaps.js';
 import { GameMapSchema, type GameMap, type MapType } from '../src/types.js';
 import { ZoneNameParser } from '../src/ZoneNameParser.js';
+import { getZoneCategory } from 'shared';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -92,60 +93,6 @@ function extractResources(icons: RawIcon[] | undefined): string[] {
 }
 
 // ── Main ───────────────────────────────────────────────────────────────────────
-
-function getZoneCategory(name: string, type: string): string | undefined {
-  if (type.startsWith('royal')) {
-    // Exceptions first
-    if (['Pen Fenair', 'Cairn Cloch', 'Cairn Clock', 'Cairn Glascore'].includes(name)) return 'Thetford RC';
-    if (['Curlew Fen', 'Slimehag'].includes(name)) return 'Martlock RC';
-    if (['Vixen Tor', 'Goffers Knoll', 'Kilmar Tor', 'Saddle Tor', 'Carns Hill', 'Brons Hill', 'Fractured Ground'].includes(name)) return 'Bridgewatch RC';
-    if (['Goldshimmer Plain', 'Steelhide Meadow', 'Dryfield Meadow', 'Cracked Earth'].includes(name)) return 'Lymhurst RC';
-    if (['Cedar Copse', 'Cedarcopse', 'Larchroad'].includes(name)) return 'Fort Stirling RC';
-
-    // Thetford RC: Fen, Marsh, Swamp, Basin
-    if (/(Fen|Marsh|Swamp|Basin)/i.test(name)) return 'Thetford RC';
-
-    // Martlock RC: Quarry, Hill, Tor, Fell
-    if (/(Quarry|Hill|Tor|Fell)/i.test(name)) return 'Martlock RC';
-
-    // Bridgewatch RC: Plain, Steppe, Meadow
-    if (/(Plain|Steppe|Meadow)/i.test(name)) return 'Bridgewatch RC';
-
-    // Lymhurst RC: Wood, Forest, Ferndell, Birchcopse, Redlake, Stagbourne, Flynsdell, Oakcopse, Glen, Inis Mon
-    if (/(Wood|Forest|Ferndell|Birchcopse|Redlake|Stagbourne|Flynsdell|Oakcopse|Glen|Inis Mon)/i.test(name)) return 'Lymhurst RC';
-
-    // Fort Stirling RC: Fissure, Gorge, Camain, Pen, Creag, Cairn
-    if (/(Fissure|Gorge|Camain)/i.test(name) || /^(Pen|Creag|Cairn)/i.test(name)) return 'Fort Stirling RC';
-  }
-
-  if (name.toLowerCase().endsWith(' portal')) {
-    if (name.toLowerCase().startsWith('thetford')) return 'Thetford Portal';
-    if (name.toLowerCase().startsWith('fort stirling')) return 'Fort Stirling Portal';
-    if (name.toLowerCase().startsWith('lymhurst') || name.toLowerCase().startsWith('lymhurt')) return 'Lymhurst Portal';
-    if (name.toLowerCase().startsWith('bridgewatch') || name.toLowerCase().startsWith('briddgewatch')) return 'Bridgewatch Portal';
-    if (name.toLowerCase().startsWith('martlock')) return 'Martlock Portal';
-  }
-
-  if (type === 'outlands') {
-    // Specific Portal Zones
-    if (name.startsWith('Widemoor') || name.startsWith('Willowshade')) return 'Thetford Portal';
-    if (name.startsWith('Windgrass') || name.startsWith('Mudfoot') || name === 'Bleachskull Steppe' || name === 'Frostbite Mountain') return 'Martlock Portal';
-    if (name.startsWith('Sandrift') || ['Farshore Cape', 'Farshore Bay', 'Stonelake Fields', 'Springsump Melt'].includes(name)) return 'Bridgewatch Portal';
-    if (name.startsWith('Hightree') || ['Watchwood', 'Munten Rise', 'Thunderrock Rapids', 'Skullmarsh Lower'].includes(name)) return 'Lymhurst Portal';
-    if (name.startsWith('Whitebank') || name.startsWith('Deepwood') || name.startsWith('Frostpeak') || name === 'Meltwater Delta') return 'Fort Stirling Portal';
-
-    // Keyword based portals
-    if (/(Fen|Marsh|Swamp|Basin)/i.test(name)) return 'Thetford Portal';
-    if (/(Quarry|Hill|Tor|Fell)/i.test(name)) return 'Martlock Portal';
-    if (/(Plain|Steppe|Meadow)/i.test(name)) return 'Bridgewatch Portal';
-    if (/(Wood|Forest|Ferndell|Birchcopse|Redlake|Stagbourne|Flynsdell|Oakcopse)/i.test(name)) return 'Lymhurst Portal';
-    if (/(Fissure|Gorge|Camain)/i.test(name) || /^(Pen|Creag|Cairn)/i.test(name)) return 'Fort Stirling Portal';
-
-    return 'Outlands';
-  }
-
-  return undefined;
-}
 
 async function fetchRaw(): Promise<RawEntry[]> {
   if (sourcePath) {

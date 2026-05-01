@@ -166,8 +166,8 @@ export function getZoneCategory(name: string, type: string): string | undefined 
   if (name.toLowerCase().endsWith(' portal')) {
     if (name.toLowerCase().startsWith('thetford')) return 'Thetford Portal';
     if (name.toLowerCase().startsWith('fort stirling')) return 'Fort Stirling Portal';
-    if (name.toLowerCase().startsWith('lymhurst') || name.toLowerCase().startsWith('lymhurt')) return 'Lymhurst Portal';
-    if (name.toLowerCase().startsWith('bridgewatch') || name.toLowerCase().startsWith('briddgewatch')) return 'Bridgewatch Portal';
+    if (name.toLowerCase().startsWith('lymhurst')) return 'Lymhurst Portal';
+    if (name.toLowerCase().startsWith('bridgewatch')) return 'Bridgewatch Portal';
     if (name.toLowerCase().startsWith('martlock')) return 'Martlock Portal';
   }
 

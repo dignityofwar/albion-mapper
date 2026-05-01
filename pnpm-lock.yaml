@@ -17,6 +17,9 @@ importers:
 
   map-parser:
     dependencies:
+      shared:
+        specifier: workspace:*
+        version: link:../web/shared
       zod:
         specifier: ^3.23.8
         version: 3.25.76

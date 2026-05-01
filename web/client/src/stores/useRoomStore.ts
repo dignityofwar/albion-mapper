@@ -31,27 +31,17 @@ export const useRoomStore = defineStore('room', () => {
 
   function isNodeExpired(nodeId: string, currentTime: number) {
     if (nodeId === homeZoneId.value) return false;
-    const nodeConnections = connections.value.filter(c => c.fromZoneId === nodeId || c.toZoneId === nodeId);
-    
-    // Check if any direct connection is expired
-    if (nodeConnections.some(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - currentTime) <= 0)) {
-      return true;
-    }
 
-    // Check if any ancestor or descendant is expired
-    for (const conn of nodeConnections) {
-      const ancestors = treeQuery(conn.id, connections.value, 'ancestors');
-      if (ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - currentTime) <= 0)) {
-        return true;
-      }
-      
-      const descendants = treeQuery(conn.id, connections.value, 'descendants');
-      if (descendants.some(d => (d.isExpired ?? false) || (new Date(d.expiresAt).getTime() - currentTime) <= 0)) {
-        return true;
-      }
-    }
-    
-    return false;
+    const nodeConnections = connections.value.filter(c => c.fromZoneId === nodeId || c.toZoneId === nodeId);
+
+    // A node is expired if it has NO valid path to the hideout.
+    // A path is valid if the connection itself is NOT expired AND the connection is NOT isolated (i.e., its ancestors are valid).
+    const hasValidPathToHideout = nodeConnections.some(c =>
+        !isEdgeIsolated(c.id, currentTime) &&
+        !((c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - currentTime) <= 0)
+    );
+
+    return !hasValidPathToHideout;
   }
 
   function isNodeRestricted(nodeId: string, currentTime: number) {

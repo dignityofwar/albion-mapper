@@ -295,7 +295,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         id: pos.zoneId,
         type: isRoads ? 'zone' : 'non-roads',
         position: { x: pos.x, y: pos.y },
-        draggable: isDraggable,
+        draggable: isDraggable && pos.zoneId !== homeZoneId.value,
         data: {
           isHome: pos.zoneId === homeZoneId.value,
           tier: zone?.tier ?? 0,

@@ -1,9 +1,13 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import ZoneHandleEditor from '../src/components/flow/zone/ZoneHandleEditor.vue';
 import { getDefaultHandles } from 'shared';
+import { setActivePinia, createPinia } from 'pinia';
 
 describe('ZoneHandleEditor', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia());
+  });
   const initialHandles = [
     { id: '1', left: '50.00%', top: '0.00%', disabled: false },
     { id: '2', left: '100.00%', top: '50.00%', disabled: true },
