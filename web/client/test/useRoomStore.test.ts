@@ -141,6 +141,7 @@ describe('useRoomStore', () => {
     const now = Date.now();
     store.connections = [{
       id: 'conn1',
+      roomId: 'room1',
       fromZoneId: 'home-zone',
       toZoneId: 'other-zone',
       expiresAt: new Date(now - 1000).toISOString(),
