@@ -64,6 +64,9 @@ const emit = defineEmits<{
 
 function open() {
   isOpen.value = true;
+  if (!fromZoneId.value && store.homeZoneId) {
+    fromZoneId.value = store.homeZoneId;
+  }
   if (!tutorialStore.completed && tutorialStore.step === 0) {
     tutorialStore.setStep(1);
   }

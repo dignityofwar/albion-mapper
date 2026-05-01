@@ -55,6 +55,33 @@ async function setTime(wrapper: VueWrapper<any>, timeStr: string) {
 }
 
 describe('ReportForm', () => {
+  it('open() pre-fills fromZoneId with homeZoneId', async () => {
+    const wrapper = mount(ReportForm, {
+      global: { plugins: [createPinia()], stubs: ['RoomSettings'] },
+      attachTo,
+    });
+    const store = useRoomStore();
+    store.homeZoneId = 'home-zone-123';
+    
+    (wrapper.vm as any).open();
+    await nextTick();
+    expect(wrapper.vm.fromZoneId).toBe('home-zone-123');
+    wrapper.unmount();
+  });
+
+  it('setFromZoneId works when called before open', async () => {
+    const wrapper = mount(ReportForm, {
+      global: { plugins: [createPinia()], stubs: ['RoomSettings'] },
+      attachTo,
+    });
+    const vm = wrapper.vm as any;
+    vm.setFromZoneId('test-zone', 'test-handle', { x: 10, y: 20 });
+    await nextTick();
+    expect(vm.fromZoneId).toBe('test-zone');
+    expect(vm.isOpen).toBe(true);
+    wrapper.unmount();
+  });
+
   it('submitAndAddMore button is disabled when from/to/time are empty', async () => {
     const wrapper = await mountForm();
     const btn = wrapper.find('[data-testid="submitAndAddMore-button"]').element as HTMLButtonElement;

@@ -116,14 +116,15 @@ const isDirectlyExpired = computed(() => {
 
 const isExpired = computed(() => {
   if (isDirectlyExpired.value) return true;
+  if (!props.data?.connection) return false;
 
-  const ancestors = treeQuery(props.data!.connection!.id, roomStore.connections, 'ancestors');
+  const ancestors = treeQuery(props.data.connection.id, roomStore.connections, 'ancestors');
   return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - (props.data?.now ?? 0)) <= 0);
 });
 
 const isIsolated = computed(() => {
   if (!props.data?.connection) return false;
-  const ancestors = treeQuery(props.data!.connection!.id, roomStore.connections, 'ancestors');
+  const ancestors = treeQuery(props.data.connection.id, roomStore.connections, 'ancestors');
   return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - (props.data?.now ?? 0)) <= 0);
 });
 
