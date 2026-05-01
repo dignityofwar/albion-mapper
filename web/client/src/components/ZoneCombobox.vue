@@ -193,7 +193,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
           v-model="query"
           :display-value="displayValue"
           :placeholder="placeholder ?? 'Search zones…'"
-          class="flex-1 bg-transparent py-0 outline-none text-sm leading-none min-w-0"
+          class="flex-1 bg-transparent py-0 outline-none text-base leading-none min-w-0"
           :class="disabled ? 'cursor-not-allowed opacity-75' : ''"
           data-testid="zone-combobox-input"
           @focus="onInputFocus"

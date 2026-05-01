@@ -107,7 +107,7 @@ defineExpose({
       inputmode="numeric"
       v-model="hours"
       placeholder="HH"
-      class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
+      class="w-8 bg-transparent py-0 text-white text-base leading-none outline-none text-center"
       @keydown="onKeydown"
     />
     <span class="text-gray-400 leading-none">:</span>
@@ -116,7 +116,7 @@ defineExpose({
       inputmode="numeric"
       v-model="minutes"
       placeholder="MM"
-      class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
+      class="w-8 bg-transparent py-0 text-white text-base leading-none outline-none text-center"
       @keydown="onKeydown"
     />
     <span class="text-gray-400 leading-none">:</span>
@@ -125,7 +125,7 @@ defineExpose({
       inputmode="numeric"
       v-model="seconds"
       placeholder="SS"
-      class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
+      class="w-8 bg-transparent py-0 text-white text-base leading-none outline-none text-center"
       @keydown="onKeydown"
     />
   </div>
