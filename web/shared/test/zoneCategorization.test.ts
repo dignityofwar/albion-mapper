@@ -103,7 +103,7 @@ describe('zone categorization', () => {
     it('categorizes specific portal zones by prefix/list', () => {
       // Thetford
       expect(getZoneCategory('Widemoor Delta', 'outlands')).toBe('Thetford Portal');
-      expect(getZoneCategory('Willowshade Hills', 'outlands')).toBe('Thetford Portal');
+      expect(getZoneCategory('Willowshade Hills', 'outlands')).toBe('Outlands');
 
       // Martlock
       expect(getZoneCategory('Windgrass Fields', 'outlands')).toBe('Martlock Portal');
@@ -112,12 +112,11 @@ describe('zone categorization', () => {
       expect(getZoneCategory('Frostbite Mountain', 'outlands')).toBe('Martlock Portal');
 
       // Bridgewatch
-      expect(getZoneCategory('Sandrift', 'outlands')).toBe('Bridgewatch Portal');
       expect(getZoneCategory('Farshore Bay', 'outlands')).toBe('Bridgewatch Portal');
 
       // Lymhurst
       expect(getZoneCategory('Hightree Lake', 'outlands')).toBe('Lymhurst Portal');
-      expect(getZoneCategory('Watchwood', 'outlands')).toBe('Lymhurst Portal');
+      expect(getZoneCategory('Watchwood Grove', 'outlands')).toBe('Lymhurst Portal');
 
       // Fort Stirling
       expect(getZoneCategory('Whitebank Wall', 'outlands')).toBe('Fort Stirling Portal');
@@ -126,11 +125,11 @@ describe('zone categorization', () => {
       expect(getZoneCategory('Meltwater Delta', 'outlands')).toBe('Fort Stirling Portal');
     });
 
-    it('categorizes keyword-based outlands zones as portals', () => {
-      expect(getZoneCategory('Widemoor Fen', 'outlands')).toBe('Thetford Portal');
-      expect(getZoneCategory('Willowshade Hills', 'outlands')).toBe('Thetford Portal');
-      expect(getZoneCategory('Battlebrae Meadow', 'outlands')).toBe('Bridgewatch Portal');
-      expect(getZoneCategory('Southgrove Wood', 'outlands')).toBe('Lymhurst Portal');
+    it('categorizes non-portal outlands zones as Outlands', () => {
+      expect(getZoneCategory('Widemoor Fen', 'outlands')).toBe('Outlands');
+      expect(getZoneCategory('Willowshade Hills', 'outlands')).toBe('Outlands');
+      expect(getZoneCategory('Battlebrae Meadow', 'outlands')).toBe('Outlands');
+      expect(getZoneCategory('Southgrove Wood', 'outlands')).toBe('Outlands');
       expect(getZoneCategory('Deepwood Gorge', 'outlands')).toBe('Fort Stirling Portal');
     });
   });
@@ -149,7 +148,7 @@ describe('zone categorization', () => {
     it('Thetford', () => {
       // Portal
       expect(getZoneCategory('Willowshade Pools', 'outlands')).toBe('Thetford Portal');
-      expect(getZoneCategory('Willowshade Shore', 'outlands')).toBe('Thetford Portal');
+      expect(getZoneCategory('Willowshade Shore', 'outlands')).toBe('Outlands');
       // City
       expect(getZoneCategory('Dusklight Fen', 'royalBlue')).toBe('Thetford RC');
       expect(getZoneCategory('Drownhorse Basin', 'royalYellow')).toBe('Thetford RC');
@@ -182,7 +181,7 @@ describe('zone categorization', () => {
       // Portal
       expect(getZoneCategory('Hightree Cliffs', 'outlands')).toBe('Lymhurst Portal');
       expect(getZoneCategory('Watchwood Precipice', 'outlands')).toBe('Lymhurst Portal');
-      expect(getZoneCategory('Munten Rise', 'outlands')).toBe('Lymhurst Portal');
+      expect(getZoneCategory('Munten Rise', 'outlands')).toBe('Outlands');
       // City
       expect(getZoneCategory('Ferndell', 'royalRed')).toBe('Lymhurst RC');
       expect(getZoneCategory('Yew Wood', 'royalYellow')).toBe('Lymhurst RC');

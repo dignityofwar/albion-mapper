@@ -65,7 +65,7 @@
     "mapName": "Battlebrae Meadow",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "battlebrae-peaks",
@@ -79,7 +79,7 @@
     "mapName": "Battlebrae Plain",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "bellever-tor",
@@ -1149,7 +1149,7 @@
     "mapName": "Deadpine Forest",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "deadvein-gully",
@@ -1190,7 +1190,7 @@
     "mapName": "Deepwood Copse",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Fort Stirling Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "deepwood-dell",
@@ -1211,7 +1211,7 @@
     "mapName": "Deepwood Pines",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Fort Stirling Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "dewleaf-fen",
@@ -1231,21 +1231,21 @@
     "mapName": "Driftwood Glen",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "driftwood-hollow",
     "mapName": "Driftwood Hollow",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "driftwood-vale",
     "mapName": "Driftwood Vale",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "drownfield-course",
@@ -1259,7 +1259,7 @@
     "mapName": "Drownfield Fen",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "drownfield-mire",
@@ -1315,14 +1315,14 @@
     "mapName": "Drybasin Oasis",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "drybasin-riverbed",
     "mapName": "Drybasin Riverbed",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "dryfield-meadow",
@@ -1384,7 +1384,7 @@
     "mapName": "Dryvein Plain",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "dryvein-riverbed",
@@ -1398,7 +1398,7 @@
     "mapName": "Dryvein Steppe",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "drywater-meadow",
@@ -1461,7 +1461,7 @@
     "mapName": "Everwinter Gorge",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Fort Stirling Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-incline",
@@ -1489,7 +1489,7 @@
     "mapName": "Everwinter Plain",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "everwinter-reach",
@@ -1510,7 +1510,7 @@
     "mapName": "Eye of the Forest",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "falsestep-marsh",
@@ -2067,7 +2067,7 @@
     "mapName": "Floatshoal Fissure",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Fort Stirling Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "floatshoal-floe",
@@ -2591,7 +2591,7 @@
     "mapName": "Giantweald Woods",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "glacierbreak-summit",
@@ -2619,7 +2619,7 @@
     "mapName": "Glacierfall Fissure",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Fort Stirling Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "glacierfall-pass",
@@ -2675,7 +2675,7 @@
     "mapName": "Gravemound Hills",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Martlock Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "gravemound-knoll",
@@ -3049,7 +3049,7 @@
     "mapName": "Highstone Meadow",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "highstone-mound",
@@ -3063,7 +3063,7 @@
     "mapName": "Highstone Plains",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "highstone-plateau",
@@ -3077,7 +3077,7 @@
     "mapName": "Hightree Borderlands",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "hightree-cliffs",
@@ -3710,21 +3710,21 @@
     "mapName": "Longfen Arms",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "longfen-marsh",
     "mapName": "Longfen Marsh",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "longfen-veins",
     "mapName": "Longfen Veins",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "longmarch-meadow",
@@ -3819,14 +3819,14 @@
     "mapName": "Munten Fell",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Martlock Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "munten-rise",
     "mapName": "Munten Rise",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "munten-tundra",
@@ -6054,7 +6054,7 @@
     "mapName": "Scuttlesink Marsh",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "scuttlesink-mouth",
@@ -6969,7 +6969,7 @@
     "mapName": "Shaleheath Hills",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Martlock Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "shaleheath-steep",
@@ -7120,7 +7120,7 @@
     "mapName": "Skullmarsh Upper",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "skylake-bridge",
@@ -7401,7 +7401,7 @@
     "mapName": "Springsump Basin",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "springsump-melt",
@@ -7449,7 +7449,7 @@
     "mapName": "Stonelake Hillock",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Martlock Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "stonemouth-bay",
@@ -7526,7 +7526,7 @@
     "mapName": "Sunkenbough Woods",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "sunstrand-delta",
@@ -7663,7 +7663,7 @@
     "mapName": "Swiftsands Basin",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "swiftsands-chaparral",
@@ -7677,7 +7677,7 @@
     "mapName": "Swiftsands Plain",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "synites-aoarsum",
@@ -7951,7 +7951,7 @@
     "mapName": "Thirstwater Steppe",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Bridgewatch Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "thirstwater-waste",
@@ -8101,7 +8101,7 @@
     "mapName": "Timbertop Wood",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Lymhurst Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "tiros-odoxlum",
@@ -8490,7 +8490,7 @@
     "mapName": "Wetgrave Marsh",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "wetgrave-swale",
@@ -8616,7 +8616,7 @@
     "mapName": "Widemoor Fen",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "widemoor-flats",
@@ -8665,28 +8665,28 @@
     "mapName": "Willowshade Hills",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "willowshade-icemarsh",
     "mapName": "Willowshade Icemarsh",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "willowshade-lake",
     "mapName": "Willowshade Lake",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "willowshade-mire",
     "mapName": "Willowshade Mire",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "willowshade-pools",
@@ -8700,7 +8700,7 @@
     "mapName": "Willowshade Sink",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Thetford Portal"
+    "category": "Outlands"
   },
   {
     "mapID": "willowshade-wetlands",

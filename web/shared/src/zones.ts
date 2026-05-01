@@ -138,6 +138,27 @@ export function getOppositeHandleId(handleId: string | null | undefined): string
 
 const isRoadsHome = (name: string) => /^[^-\s]+-[^-\s]+-[^-\s]+$/.test(name);
 
+
+export const THETFORD_PORTAL_MAPS = new Set([
+  'Widemoor Shore', 'Widemoor Hills', 'Widemoor Pool', 'Widemoor End', 'Willowshade Pools', 'Willowshade Wetlands', 'Widemoor Woods', 'Widemoor Flats', 'Widemoor Estuary', 'Widemoor Delta'
+]);
+
+export const MARTLOCK_PORTAL_MAPS = new Set([
+  'Windgrass Coast', 'Windgrass Precipice', 'Windgrass Gully', 'Frostbite Mountain', 'Windgrass Border', 'Bleachskull Steppe', 'Windgrass Fields', 'Windgrass Rill', 'Windgrass Terrace', 'Mudfoot Sump', 'Mudfoot Mounds'
+]);
+
+export const BRIDGEWATCH_PORTAL_MAPS = new Set([
+  'Farshore Cape', 'Farshore Bay', 'Stonelake Fields', 'Sandrift Prairie', 'Sandrift Dunes', 'Sandrift Steppe', 'Springsump Melt', 'Sandrift Expanse', 'Sandrift Coast', 'Sandrift Shore', 'Sandrift Fringe'
+]);
+
+export const LYMHURST_PORTAL_MAPS = new Set([
+  'Thunderrock Rapids', 'Hightree Lake', 'Hightree Hillock', 'Hightree Pass', 'Hightree Steep', 'Hightree Strand', 'Hightree Levee', 'Hightree Enclave', 'Hightree Cliffs', 'Hightree Glade', 'Hightree Dale', 'Hightree Isle', 'Watchwood Grove', 'Watchwood Bluffs', 'Watchwood Precipice', 'Watchwood Lakeside', 'Skullmarsh Lower'
+]);
+
+export const FORT_STIRLING_PORTAL_MAPS = new Set([
+  'Whitebank Shore', 'Frostpeak Vista', 'Frostpeak Ascent', 'Deepwood Dell', 'Deepwood Gorge', 'Whitebank Cross', 'Whitebank Wall', 'Whitebank Stream', 'Whitebank Ridge', 'Whitebank Descent', 'Meltwater Delta'
+]);
+
 export function getZoneCategory(name: string, type: string): string | undefined {
   if (type.startsWith('royal')) {
     // Exceptions first
@@ -173,18 +194,11 @@ export function getZoneCategory(name: string, type: string): string | undefined 
 
   if (type === 'outlands') {
     // Specific Portal Zones
-    if (name.startsWith('Widemoor') || name.startsWith('Willowshade')) return 'Thetford Portal';
-    if (name.startsWith('Windgrass') || name.startsWith('Mudfoot') || name === 'Bleachskull Steppe' || name === 'Frostbite Mountain') return 'Martlock Portal';
-    if (name.startsWith('Sandrift') || ['Farshore Cape', 'Farshore Bay', 'Stonelake Fields', 'Springsump Melt'].includes(name)) return 'Bridgewatch Portal';
-    if (name.startsWith('Hightree') || ['Watchwood', 'Munten Rise', 'Thunderrock Rapids', 'Skullmarsh Lower'].includes(name)) return 'Lymhurst Portal';
-    if (name.startsWith('Whitebank') || name.startsWith('Deepwood') || name.startsWith('Frostpeak') || name === 'Meltwater Delta') return 'Fort Stirling Portal';
-
-    // Keyword based portals
-    if (/(Fen|Marsh|Swamp|Basin)/i.test(name)) return 'Thetford Portal';
-    if (/(Quarry|Hill|Tor|Fell)/i.test(name)) return 'Martlock Portal';
-    if (/(Plain|Steppe|Meadow)/i.test(name)) return 'Bridgewatch Portal';
-    if (/(Wood|Forest|Ferndell|Birchcopse|Redlake|Stagbourne|Flynsdell|Oakcopse)/i.test(name)) return 'Lymhurst Portal';
-    if (/(Fissure|Gorge|Camain)/i.test(name) || /^(Pen|Creag|Cairn)/i.test(name)) return 'Fort Stirling Portal';
+    if (THETFORD_PORTAL_MAPS.has(name)) return 'Thetford Portal';
+    if (MARTLOCK_PORTAL_MAPS.has(name)) return 'Martlock Portal';
+    if (BRIDGEWATCH_PORTAL_MAPS.has(name)) return 'Bridgewatch Portal';
+    if (LYMHURST_PORTAL_MAPS.has(name)) return 'Lymhurst Portal';
+    if (FORT_STIRLING_PORTAL_MAPS.has(name)) return 'Fort Stirling Portal';
 
     return 'Outlands';
   }
