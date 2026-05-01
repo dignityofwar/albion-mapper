@@ -796,6 +796,7 @@ defineExpose({ flowNodes, onNodeDragStop });
         :node-types="{ zone: markRaw(ZoneNode), 'non-roads': markRaw(NonRoadsNode) }"
         :edge-types="{ connection: markRaw(ConnectionEdge) }"
         :fit-view-on-init="true"
+        :min-zoom="0.1"
         :connection-mode="ConnectionMode.Loose"
         class="transition-colors duration-1000"
         :class="megaToastBackgroundActive ? 'bg-red-950' : 'bg-gray-950'"
