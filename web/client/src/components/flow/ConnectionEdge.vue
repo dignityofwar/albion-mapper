@@ -159,12 +159,14 @@ defineExpose({
     <path
       v-for="i in 3"
       :key="i"
-      d="M -4 -4 L 0 0 L -4 4"
+      d="M -6 -6 L 0 0 L -6 6"
       fill="none"
-      stroke="white"
-      stroke-width="2"
+      stroke-width="3"
       stroke-linecap="round"
       stroke-linejoin="round"
+      :stroke="style.stroke"
+      stroke-opacity="1"
+      stroke-dasharray="none"
     >
       <animateMotion
         dur="3s"
