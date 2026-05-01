@@ -109,13 +109,21 @@ const remainingMs = computed(() => {
   return expiresMs.value - props.data.now;
 });
 
-const isExpired = computed(() => {
+const isDirectlyExpired = computed(() => {
   if (!props.data?.connection) return false;
+  return (props.data.connection.isExpired ?? false) || remainingMs.value <= 0;
+});
 
-  const currentExpired = (props.data.connection.isExpired ?? false) || remainingMs.value <= 0;
-  if (currentExpired) return true;
+const isExpired = computed(() => {
+  if (isDirectlyExpired.value) return true;
 
-  const ancestors = treeQuery(props.data.connection.id, roomStore.connections, 'ancestors');
+  const ancestors = treeQuery(props.data!.connection!.id, roomStore.connections, 'ancestors');
+  return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - (props.data?.now ?? 0)) <= 0);
+});
+
+const isIsolated = computed(() => {
+  if (!props.data?.connection) return false;
+  const ancestors = treeQuery(props.data!.connection!.id, roomStore.connections, 'ancestors');
   return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - (props.data?.now ?? 0)) <= 0);
 });
 
@@ -212,7 +220,7 @@ defineExpose({
         @click.stop="showPopover = !showPopover"
         @mousedown.stop
       >
-        {{ formatCountdown(remainingMs) }}
+        {{ isIsolated ? 'Isolated' : (isDirectlyExpired ? 'Expired' : formatCountdown(remainingMs)) }}
       </div>
 
       <!-- Popover -->

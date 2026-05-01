@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils';
 import ConnectionEdge from '../src/components/flow/ConnectionEdge.vue';
 import { nextTick, ref } from 'vue';
 import { createPinia, setActivePinia } from 'pinia';
+import { useRoomStore } from '../src/stores/useRoomStore';
 
 const mockSetCenter = vi.fn();
 
@@ -132,5 +133,160 @@ describe('ConnectionEdge', () => {
     await nextTick();
 
     expect(mockSetCenter).not.toHaveBeenCalled();
+  });
+
+  it('displays "Expired" when the connection is expired', async () => {
+    const wrapper = mount(ConnectionEdge, {
+      props: {
+        id: 'e1',
+        sourceX: 0,
+        sourceY: 0,
+        targetX: 100,
+        targetY: 100,
+        sourcePosition: 'right' as any,
+        targetPosition: 'left' as any,
+        data: {
+          connection: {
+            id: 'c1',
+            roomId: 'r1',
+            fromZoneId: 'z1',
+            toZoneId: 'z2',
+            reportedAt: new Date().toISOString(),
+            expiresAt: new Date().toISOString(),
+            isExpired: true,
+          },
+          now: 1000,
+          hasChildren: false,
+          onDelete: vi.fn(),
+          onDeleteRecursive: vi.fn(),
+          onUpdate: vi.fn(),
+        },
+      } as any,
+      global: {
+        provide: {
+          openPopoverId: ref(null),
+        },
+        stubs: {
+          TimeInput: true
+        },
+      },
+    });
+
+    // Check if the timer displays "Expired"
+    const timer = wrapper.find('[data-trigger="true"]');
+    expect(timer.text()).toBe('Expired');
+  });
+
+  it('displays "Isolated" when an ancestor connection is expired', async () => {
+    // Setup pinia with roomStore connections
+    const store = useRoomStore();
+    store.connections = [
+        {
+            id: 'c-ancestor',
+            roomId: 'r1',
+            fromZoneId: 'z0',
+            toZoneId: 'z1',
+            reportedAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() - 1000).toISOString(), // Expired
+            isExpired: true,
+        },
+        {
+            id: 'c-child',
+            roomId: 'r1',
+            fromZoneId: 'z1',
+            toZoneId: 'z2',
+            reportedAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() + 10000).toISOString(), // Not expired
+        }
+    ];
+
+    const wrapper = mount(ConnectionEdge, {
+      props: {
+        id: 'e-child',
+        sourceX: 0,
+        sourceY: 0,
+        targetX: 100,
+        targetY: 100,
+        sourcePosition: 'right' as any,
+        targetPosition: 'left' as any,
+        data: {
+          connection: store.connections[1],
+          now: Date.now(),
+          hasChildren: false,
+          onDelete: vi.fn(),
+          onDeleteRecursive: vi.fn(),
+          onUpdate: vi.fn(),
+        },
+      } as any,
+      global: {
+        provide: {
+          openPopoverId: ref(null),
+        },
+        stubs: {
+          TimeInput: true
+        },
+      },
+    });
+
+    // Check if the timer displays "Isolated"
+    const timer = wrapper.find('[data-trigger="true"]');
+    expect(timer.text()).toBe('Isolated');
+  });
+
+  it('displays "Isolated" when connection is both expired and downstream of an expired ancestor', async () => {
+    // Setup pinia with roomStore connections
+    const store = useRoomStore();
+    store.connections = [
+        {
+            id: 'c-ancestor',
+            roomId: 'r1',
+            fromZoneId: 'z0',
+            toZoneId: 'z1',
+            reportedAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() - 1000).toISOString(), // Expired
+            isExpired: true,
+        },
+        {
+            id: 'c-child',
+            roomId: 'r1',
+            fromZoneId: 'z1',
+            toZoneId: 'z2',
+            reportedAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() - 1000).toISOString(), // Expired
+            isExpired: true,
+        }
+    ];
+
+    const wrapper = mount(ConnectionEdge, {
+      props: {
+        id: 'e-child',
+        sourceX: 0,
+        sourceY: 0,
+        targetX: 100,
+        targetY: 100,
+        sourcePosition: 'right' as any,
+        targetPosition: 'left' as any,
+        data: {
+          connection: store.connections[1],
+          now: Date.now(),
+          hasChildren: false,
+          onDelete: vi.fn(),
+          onDeleteRecursive: vi.fn(),
+          onUpdate: vi.fn(),
+        },
+      } as any,
+      global: {
+        provide: {
+          openPopoverId: ref(null),
+        },
+        stubs: {
+          TimeInput: true
+        },
+      },
+    });
+
+    // Check if the timer displays "Isolated"
+    const timer = wrapper.find('[data-trigger="true"]');
+    expect(timer.text()).toBe('Isolated');
   });
 });
