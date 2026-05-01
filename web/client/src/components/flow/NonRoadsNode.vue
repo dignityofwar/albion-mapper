@@ -32,7 +32,7 @@ const defaultInternalHandles = computed(() => {
 <template>
   <div class="non-roads-node" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost }">
     <div 
-      class="text-white text-xs text-center min-w-[200px] min-h-[200px] relative transition-all duration-300"
+      class="text-white text-xs text-center w-[150px] h-[150px] relative transition-all duration-300"
       :class="[
         hasReds ? 'red-glow' : '',
         props.data.isHome ? 'home-glow' : '',
