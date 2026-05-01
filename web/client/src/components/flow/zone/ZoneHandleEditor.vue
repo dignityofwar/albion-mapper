@@ -219,7 +219,7 @@ function getHandleFacing(left: string, top: string): string {
                 </template>
                 If there is a golden "spoon" looking area, don't turn it off.
                 <div class="mt-2 flex justify-center">
-                  <img src="/images/spoon.jpg" class="w-32 h-auto rounded border border-gray-600 shadow-md" alt="Spoon reference" />
+                  <img src="/images/spoon.jpg" class="w-12 h-auto rounded border border-gray-600 shadow-md" alt="Spoon reference" />
                 </div>
               </template>
               <template v-else>
