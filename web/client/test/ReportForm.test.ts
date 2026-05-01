@@ -144,6 +144,22 @@ describe('ReportForm', () => {
     wrapper.unmount();
   });
 
+  it('handles invalid pasted time input by resetting to 0', async () => {
+    const wrapper = await mountForm();
+    const timeInput = wrapper.findComponent({ name: 'TimeInput' });
+    const inputs = timeInput.findAll('input');
+    
+    // Simulate pasting "abc" into the hours input
+    await inputs[0].setValue('abc');
+    await nextTick();
+    await nextTick();
+    
+    const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
+    // The fix in TimeInput should cause this to be 0
+    expect(vm.secondsRemaining).toBe(0);
+    wrapper.unmount();
+  });
+
   it('enter key on time input triggers submitAndAddMore attempt', async () => {
     const mockResponse = {
       ok: false,

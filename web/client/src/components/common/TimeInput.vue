@@ -15,9 +15,9 @@ const minutes = ref<number | null>(null);
 const seconds = ref<number | null>(null);
 
 watch([hours, minutes, seconds], () => {
-  let h = Number(hours.value ?? 0);
-  let m = Number(minutes.value ?? 0);
-  let s = Number(seconds.value ?? 0);
+  let h = Number(hours.value) || 0;
+  let m = Number(minutes.value) || 0;
+  let s = Number(seconds.value) || 0;
   
   const isEmpty = (val: number | null | string) => val === null || val === '';
   
