@@ -29,27 +29,13 @@ async function pasteFromClipboard() {
 function importDataAction() {
   try {
     const data = JSON.parse(importData.value);
-    
-    // Simple validation, assuming structure
-    if (!data.connections || !data.homeZoneId) {
-        throw new Error("Invalid data format");
-    }
-    
-    // Update store (this is a simplified implementation)
-    // Note: This needs to interact with the backend probably, 
-    // but the request is simple and the current architecture relies on WS messages.
-    // I should probably just alert or inform the user that this might need more than just updating local store.
-    // Wait, the store has `connections`, `homeZoneId`, `nodePositions` as refs.
-    // If I just update them, it won't persist to the server.
-    
-    // Looking at `useRoomStore.ts`, it has `applyMessage` for `sync`.
-    // Maybe I can trigger a `sync` message if I had the backend API.
-    
-    // Given the task, I will just alert for now or suggest what needs to be done.
-    
-    alert('Import logic needs to be implemented to push data to server');
-    
-    close();
+    store.importData(data)
+      .then(() => {
+        close();
+      })
+      .catch((e) => {
+        alert('Failed to import: ' + (e instanceof Error ? e.message : 'Unknown error'));
+      });
   } catch (e) {
     alert('Invalid JSON: ' + (e instanceof Error ? e.message : 'Unknown error'));
   }
