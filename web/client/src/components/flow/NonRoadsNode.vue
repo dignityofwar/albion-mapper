@@ -4,8 +4,10 @@ import type { NodeProps } from '@vue-flow/core';
 import { DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import ZoneHeader from './zone/ZoneHeader.vue';
-import { computed } from 'vue';
+import { computed, inject, ref } from 'vue';
 import type { NodeFeatures } from 'shared';
+import { storeToRefs } from 'pinia';
+import { useRoomStore } from '@/stores/useRoomStore';
 
 const props = defineProps<NodeProps<{ 
   isHome: boolean; 
@@ -17,9 +19,12 @@ const props = defineProps<NodeProps<{
   mapShape?: string;
   isGhost?: boolean;
   features?: NodeFeatures;
-  isIsolated?: boolean;
 }>>();
 
+const store = useRoomStore();
+const isIsolated = computed(() => store.isNodeIsolated?.(props.id) ?? false);
+const isExpired = computed(() => store.isNodeExpired?.(props.id) ?? false);
+const isRestricted = computed(() => isIsolated.value || isExpired.value);
 const hasReds = computed(() => !!props.data.features?.reds);
 
 const defaultInternalHandles = computed(() => {
@@ -31,7 +36,7 @@ const defaultInternalHandles = computed(() => {
 </script>
 
 <template>
-  <div class="non-roads-node" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost || props.data.isIsolated }">
+  <div class="non-roads-node" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost || isRestricted }">
     <div 
       class="text-white text-xs text-center w-[150px] h-[150px] relative transition-all duration-300"
       :class="[
@@ -73,7 +78,8 @@ const defaultInternalHandles = computed(() => {
           type="source"
           :position="h.position"
           :style="{ left: h.left, top: h.top, opacity: 0, pointerEvents: 'auto' }"
-          :class="['z-30', props.data.isIsolated ? 'grayscale' : '']"
+          :class="['z-30', isRestricted ? 'grayscale' : '']"
+          :connectable="!isRestricted"
         />
         <Handle
           v-for="h in defaultInternalHandles"
@@ -82,7 +88,8 @@ const defaultInternalHandles = computed(() => {
           type="target"
           :position="h.position"
           :style="{ left: h.left, top: h.top, opacity: 0, pointerEvents: 'auto' }"
-          :class="['z-30', props.data.isIsolated ? 'grayscale' : '']"
+          :class="['z-30', isRestricted ? 'grayscale' : '']"
+          :connectable="!isRestricted"
         />
       </div>
     </div>

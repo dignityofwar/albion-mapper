@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle } from 'shared';
 import { API_BASE_URL } from '../utils/api';
 import { track } from '@vercel/analytics';
+import { treeQuery } from '../utils/treeQuery';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected' | 'auth_failed';
 
@@ -16,10 +17,48 @@ export const useRoomStore = defineStore('room', () => {
   const token = ref<string>('');
   const roomId = ref<string>('');
   const showDefaultHandles = ref<boolean>(false);
+  const now = ref(Date.now());
+  const ticker = setInterval(() => (now.value = Date.now()), 1000);
 
   let ws: WebSocket | null = null;
-  let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
   let reconnectDelay = 1000;
+  let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  function isNodeIsolated(nodeId: string) {
+    if (nodeId === homeZoneId.value) return false;
+    const nodeConnections = connections.value.filter(c => c.fromZoneId === nodeId || c.toZoneId === nodeId);
+    if (nodeConnections.length === 0) return true;
+    return nodeConnections.every(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - now.value) <= 0);
+  }
+
+  function isNodeExpired(nodeId: string) {
+    if (nodeId === homeZoneId.value) return false;
+    const nodeConnections = connections.value.filter(c => c.fromZoneId === nodeId || c.toZoneId === nodeId);
+    
+    // Check if any direct connection is expired
+    if (nodeConnections.some(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - now.value) <= 0)) {
+      return true;
+    }
+
+    // Check if any ancestor or descendant is expired
+    for (const conn of nodeConnections) {
+      const ancestors = treeQuery(conn.id, connections.value, 'ancestors');
+      if (ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - now.value) <= 0)) {
+        return true;
+      }
+      
+      const descendants = treeQuery(conn.id, connections.value, 'descendants');
+      if (descendants.some(d => (d.isExpired ?? false) || (new Date(d.expiresAt).getTime() - now.value) <= 0)) {
+        return true;
+      }
+    }
+    
+    return false;
+  }
+
+  function isNodeRestricted(nodeId: string) {
+    return isNodeIsolated(nodeId) || isNodeExpired(nodeId);
+  }
 
   function setCredentials(id: string, jwt: string) {
     roomId.value = id;
@@ -239,10 +278,14 @@ export const useRoomStore = defineStore('room', () => {
     updateNodePositionsInStore,
     updateNodeFeatures,
     updateNodeCustomHandles,
+    isNodeIsolated,
+    isNodeExpired,
+    isNodeRestricted,
     resetNodePositions,
     connect,
     disconnect,
     removeFromRecentRooms,
     showDefaultHandles,
+    now,
   };
 });

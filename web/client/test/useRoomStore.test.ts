@@ -132,4 +132,22 @@ describe('useRoomStore', () => {
     
     expect(store.wsStatus).toBe('auth_failed');
   });
+
+  it('should never restrict home zone', () => {
+    const store = useRoomStore();
+    store.homeZoneId = 'home-zone';
+    
+    // Add an expired connection
+    const now = Date.now();
+    store.connections = [{
+      id: 'conn1',
+      fromZoneId: 'home-zone',
+      toZoneId: 'other-zone',
+      expiresAt: new Date(now - 1000).toISOString(),
+      reportedAt: new Date().toISOString()
+    }];
+    
+    // Verify home zone is not restricted
+    expect(store.isNodeRestricted('home-zone')).toBe(false);
+  });
 });

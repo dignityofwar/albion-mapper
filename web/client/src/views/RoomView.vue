@@ -296,9 +296,6 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
       const zone = ZONE_BY_ID.get(pos.zoneId);
       const isDraggable = positions.length > 1;
       const isRoads = zone?.type === 'roads' || zone?.type === 'roadsHideout';
-      const isIsolated = (pos.zoneId !== homeZoneId.value) && 
-        connections.value.filter(c => c.fromZoneId === pos.zoneId || c.toZoneId === pos.zoneId)
-          .every(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - now.value) <= 0);
 
       return {
         id: pos.zoneId,
@@ -315,7 +312,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           features: pos.features,
           mapShape: zone?.mapShape,
           customHandles: pos.customHandles,
-          isIsolated,
+          isIsolated: store.isNodeIsolated(pos.zoneId),
         },
       };
     });
@@ -610,7 +607,7 @@ async function handleConnect(params: any) {
     // If it's occupied, it must be the SAME connection (modifying handles)
     if (!((sourceHandleOccupied.fromZoneId === params.source && sourceHandleOccupied.toZoneId === params.target) ||
           (sourceHandleOccupied.toZoneId === params.source && sourceHandleOccupied.fromZoneId === params.target))) {
-      showToast("When modifying connections, you must use the same zones. You cannot have multiple connections coming out of one portal.", "error");
+      showToast("You cannot have multiple connections coming out of a portal.", "error");
       return;
     }
   }
@@ -656,6 +653,12 @@ async function handleConnect(params: any) {
 }
 
 function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent }) {
+  if (!params.nodeId || store.isNodeRestricted(params.nodeId)) {
+    draggingFromNodeId = null;
+    draggingFromHandleId = null;
+    return;
+  }
+
   if (!params.handleId) {
     draggingFromNodeId = null;
     draggingFromHandleId = null;
@@ -692,7 +695,7 @@ function handleConnectEnd(event?: MouseEvent) {
      );
 
      if (existingConn) {
-       showToast("When modifying connections, you must use the same zones. You cannot have multiple connections coming out of one portal.", "error");
+       showToast("You cannot have multiple connections coming out of a portal.", "error");
        draggingFromNodeId = null;
        draggingFromHandleId = null;
        return;

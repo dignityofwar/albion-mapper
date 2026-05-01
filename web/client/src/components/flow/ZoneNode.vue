@@ -15,6 +15,7 @@ import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '../../stores/useRoomStore';
 import { useTutorialStore } from '../../stores/useTutorialStore';
+import { storeToRefs } from 'pinia';
 import { deleteConnection } from '../../utils/roomOperations';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
@@ -30,12 +31,16 @@ const props = defineProps<NodeProps<{
   mapShape?: string;
   customHandles?: CustomHandle[];
   isGhost?: boolean;
-  isIsolated?: boolean;
 }>>();
 
 const store = useRoomStore();
+const { connections, homeZoneId } = storeToRefs(store);
 const tutorialStore = useTutorialStore();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
+
+const isIsolated = computed(() => store.isNodeIsolated?.(props.id) ?? false);
+const isExpired = computed(() => store.isNodeExpired?.(props.id) ?? false);
+const isRestricted = computed(() => isIsolated.value || isExpired.value);
 
 const isEditorTrayOpen = ref(false);
 const handleCloseTray = () => {
@@ -533,7 +538,7 @@ const defaultInternalHandles = computed(() => {
 </script>
 
 <template>
-  <div class="zone-node" ref="zoneNodeRef" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost || props.data.isIsolated, 'ghost-node': props.data.isGhost }">
+  <div class="zone-node" ref="zoneNodeRef" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost || isRestricted, 'ghost-node': props.data.isGhost }">
     <TooltipProvider :delay-duration="300">
       <div 
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
@@ -683,9 +688,9 @@ const defaultInternalHandles = computed(() => {
           :style="{ ...handle.style, ...(showPrompt && index === targetHandleIndex ? { '--handle-color': '#2563eb', 'z-index': 2000 } : {}) }"
           :data-facing="handle.facing"
           :class="[
-            { 'is-disabled': handle.disabled, 'is-isolated': props.data.isIsolated },
+            { 'is-disabled': handle.disabled, 'is-isolated': isRestricted },
           ]"
-          :connectable="!handle.disabled"
+          :connectable="!handle.disabled && !isRestricted"
         />
         <TutorialTooltip
           v-if="showPrompt && index === targetHandleIndex"
@@ -713,7 +718,7 @@ const defaultInternalHandles = computed(() => {
         :id="handle.id" 
         :style="handle.style"
         :data-facing="handle.facing"
-        :class="['!border-orange-700 !border-b-2 !z-30 transition-opacity duration-300', store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none', props.data.isIsolated ? 'is-isolated' : '']"
+        :class="['!border-orange-700 !border-b-2 !z-30 transition-opacity duration-300', store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none', isRestricted ? 'is-isolated' : '']"
       />
 
       <!-- Legacy center handle for backward compatibility -->
