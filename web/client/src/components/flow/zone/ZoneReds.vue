@@ -141,17 +141,17 @@ const timerLabel = computed(() => {
 <template>
   <TooltipRoot>
     <TooltipTrigger as-child>
-        <TutorialTooltip
+      <TutorialTooltip
           v-if="isMounted && !tutorialStore.completed && tutorialStore.step === 9"
           message="If you spot enemies in zone, let your friends know! Press this button!"
-          pointing="down"
-          containerClass="absolute -top-[60px] -left-[75px] w-48 z-[10000]"
+          pointing="up"
+          :target="containerRef ?? undefined"
         />
-              <TutorialTooltip
+        <TutorialTooltip
           v-if="isMounted && !tutorialStore.completed && tutorialStore.step === 10"
           message="Once you know the enemies are gone, press again to sound all the clear. There is also a auto-clear timer in case you forget."
-          pointing="down"
-          containerClass="absolute -top-[95px] -left-[40px] w-48 z-[10000]"
+          pointing="up"
+          :target="containerRef ?? undefined"
         />
       <div 
         ref="containerRef"

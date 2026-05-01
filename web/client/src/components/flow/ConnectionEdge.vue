@@ -115,18 +115,15 @@ const isDirectlyExpired = computed(() => {
 });
 
 const isExpired = computed(() => {
-  if (isDirectlyExpired.value) return true;
-  if (!props.data?.connection) return false;
-
-  const ancestors = treeQuery(props.data.connection.id, roomStore.connections, 'ancestors');
-  return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - (props.data?.now ?? 0)) <= 0);
+  return isDirectlyExpired.value;
 });
 
 const isIsolated = computed(() => {
   if (!props.data?.connection) return false;
-  const ancestors = treeQuery(props.data.connection.id, roomStore.connections, 'ancestors');
-  return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - (props.data?.now ?? 0)) <= 0);
+  return roomStore.isEdgeIsolated(props.data.connection.id, props.data.now ?? 0);
 });
+
+const isRestricted = computed(() => isExpired.value || isIsolated.value);
 
 const style = computed(() => {
   if (props.data?.isGhost) {
@@ -137,7 +134,7 @@ const style = computed(() => {
       color: '#6366f1'
     };
   }
-  return connectionStyle(remainingMs.value, isExpired.value);
+  return connectionStyle(remainingMs.value, isRestricted.value);
 });
 
 function getZoneName(id: string) {
@@ -170,13 +167,13 @@ defineExpose({
     :id="id"
     :path="path"
     :animated="style.animated"
-    :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2, opacity: isExpired ? 0.3 : 1 }"
+    :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2, opacity: isRestricted ? 0.3 : 1, animation: isRestricted ? 'none' : undefined }"
     class="cursor-pointer"
     @click.stop="showPopover = !showPopover"
     @mousedown.stop
   />
   
-  <g v-if="!props.data?.isGhost && !isExpired" class="pointer-events-none">
+  <g v-if="!props.data?.isGhost && !isRestricted" class="pointer-events-none">
     <path
       v-for="i in 3"
       :key="i"

@@ -149,6 +149,6 @@ describe('useRoomStore', () => {
     }];
     
     // Verify home zone is not restricted
-    expect(store.isNodeRestricted('home-zone')).toBe(false);
+    expect(store.isNodeRestricted('home-zone', Date.now())).toBe(false);
   });
 });

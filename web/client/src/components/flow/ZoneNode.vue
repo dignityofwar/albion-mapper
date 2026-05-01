@@ -37,8 +37,8 @@ const { connections, homeZoneId } = storeToRefs(store);
 const tutorialStore = useTutorialStore();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 
-const isIsolated = computed(() => store.isNodeIsolated?.(props.id) ?? false);
-const isExpired = computed(() => store.isNodeExpired?.(props.id) ?? false);
+const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
+const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);
 
 const isEditorTrayOpen = ref(false);
@@ -50,6 +50,14 @@ const handleCloseTray = () => {
 };
 const zoneNodeRef = ref<HTMLElement | null>(null);
 const isTutorialTooltipReady = ref(false);
+
+const showDeleteOverlay = ref(false);
+
+function handleDelete() {
+  const newPositions = store.nodePositions.filter(n => n.zoneId !== props.id);
+  store.updateNodePositionsInStore(newPositions);
+  showDeleteOverlay.value = false;
+}
 
 const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow' | null>(null);
 
@@ -537,14 +545,24 @@ const defaultInternalHandles = computed(() => {
 </script>
 
 <template>
-  <div class="zone-node" ref="zoneNodeRef" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost || isRestricted, 'ghost-node': props.data.isGhost }">
+  <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
+    <div v-if="isRestricted" class="absolute inset-0 z-[100] cursor-pointer" :class="{ 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }" @click="showDeleteOverlay = true">
+       <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
+         <p class="text-white mb-4">Node is expired. Delete it?</p>
+         <div class="flex gap-2">
+           <button @click.stop="handleDelete" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Delete</button>
+           <button @click.stop="showDeleteOverlay = false" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">Cancel</button>
+         </div>
+       </div>
+    </div>
     <TooltipProvider :delay-duration="300">
       <div 
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
         :class="[
           hasReds ? 'red-glow' : '',
           props.data.isHome ? 'home-glow' : '',
-          props.data.highlighted ? 'goto-glow' : ''
+          props.data.highlighted ? 'goto-glow' : '',
+          props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
         ]"
       >
       <!-- Diamond Shape Background -->

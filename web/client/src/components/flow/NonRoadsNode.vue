@@ -4,7 +4,7 @@ import type { NodeProps } from '@vue-flow/core';
 import { DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import ZoneHeader from './zone/ZoneHeader.vue';
-import { computed } from 'vue';
+import { computed, ref, inject, type Ref } from 'vue';
 import type { NodeFeatures } from 'shared';
 import { useRoomStore } from '@/stores/useRoomStore';
 
@@ -21,10 +21,19 @@ const props = defineProps<NodeProps<{
 }>>();
 
 const store = useRoomStore();
-const isIsolated = computed(() => store.isNodeIsolated?.(props.id) ?? false);
-const isExpired = computed(() => store.isNodeExpired?.(props.id) ?? false);
+const now = inject<Ref<number>>('globalNow', ref(Date.now()));
+const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
+const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);
 const hasReds = computed(() => !!props.data.features?.reds);
+
+const showDeleteOverlay = ref(false);
+
+function handleDelete() {
+  const newPositions = store.nodePositions.filter(n => n.zoneId !== props.id);
+  store.updateNodePositionsInStore(newPositions);
+  showDeleteOverlay.value = false;
+}
 
 const defaultInternalHandles = computed(() => {
   return DEFAULT_INTERNAL_HANDLES.map(h => ({
@@ -35,13 +44,23 @@ const defaultInternalHandles = computed(() => {
 </script>
 
 <template>
-  <div class="non-roads-node" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost || isRestricted }">
+  <div class="non-roads-node relative" :class="{ 'ghost-node': props.data.isGhost }">
+    <div v-if="isRestricted" class="absolute inset-0 z-[100] cursor-pointer" :class="{ 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }" @click="showDeleteOverlay = true">
+       <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
+         <p class="text-white mb-4">Node is expired. Delete it?</p>
+         <div class="flex gap-2">
+           <button @click.stop="handleDelete" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Delete</button>
+           <button @click.stop="showDeleteOverlay = false" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">Cancel</button>
+         </div>
+       </div>
+    </div>
     <div 
       class="text-white text-xs text-center w-[150px] h-[150px] relative transition-all duration-300"
       :class="[
         hasReds ? 'red-glow' : '',
         props.data.isHome ? 'home-glow' : '',
-        props.data.highlighted ? 'goto-glow' : ''
+        props.data.highlighted ? 'goto-glow' : '',
+        props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
       ]"
     >
       <!-- Smaller Diamond Shape Background -->

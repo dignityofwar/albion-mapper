@@ -28,4 +28,51 @@ describe('useRoomStore', () => {
     expect(store.nodePositions).toHaveLength(1);
     expect(store.nodePositions[0].zoneId).toBe('home');
   });
+
+  it('marks a node as restricted when connection expires', () => {
+    const store = useRoomStore();
+    const now = Date.now();
+    const expiresAt = new Date(now + 2000).toISOString();
+    
+    store.applyMessage({
+      type: 'sync',
+      connections: [{ id: 'c1', roomId: 'r1', fromZoneId: 'home', toZoneId: 'a', expiresAt, reportedAt: new Date().toISOString() }],
+      homeZoneId: 'home',
+      nodePositions: [{ zoneId: 'home', x: 0, y: 0 }, { zoneId: 'a', x: 10, y: 10 }],
+      lastUpdatedAt: new Date().toISOString()
+    });
+
+    // Check at 1s (before expiry)
+    expect(store.isNodeRestricted('a', now + 1000)).toBe(false);
+
+    // Check at 3s (after expiry)
+    expect(store.isNodeRestricted('a', now + 3000)).toBe(true);
+  });
+
+  it('marks an edge as isolated when parent connection expires', () => {
+    const store = useRoomStore();
+    const now = Date.now();
+    
+    // Parent expires in 2s
+    const parentExpiresAt = new Date(now + 2000).toISOString();
+    // Child expires in 10m
+    const childExpiresAt = new Date(now + 600000).toISOString();
+    
+    store.applyMessage({
+      type: 'sync',
+      connections: [
+        { id: 'parent', roomId: 'r1', fromZoneId: 'home', toZoneId: 'a', expiresAt: parentExpiresAt, reportedAt: new Date().toISOString() },
+        { id: 'child', roomId: 'r1', fromZoneId: 'a', toZoneId: 'b', expiresAt: childExpiresAt, reportedAt: new Date().toISOString() }
+      ],
+      homeZoneId: 'home',
+      nodePositions: [{ zoneId: 'home', x: 0, y: 0 }, { zoneId: 'a', x: 10, y: 10 }, { zoneId: 'b', x: 20, y: 20 }],
+      lastUpdatedAt: new Date().toISOString()
+    });
+
+    // Check at 1s (before expiry)
+    expect(store.isEdgeIsolated('child', now + 1000)).toBe(false);
+
+    // Check at 3s (after expiry)
+    expect(store.isEdgeIsolated('child', now + 3000)).toBe(true);
+  });
 });

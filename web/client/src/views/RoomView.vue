@@ -306,7 +306,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           features: pos.features,
           mapShape: zone?.mapShape,
           customHandles: pos.customHandles,
-          isIsolated: store.isNodeIsolated(pos.zoneId),
+          isIsolated: store.isNodeIsolated(pos.zoneId, now.value),
         },
       };
     });
@@ -647,7 +647,7 @@ async function handleConnect(params: any) {
 }
 
 function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent }) {
-  if (!params.nodeId || store.isNodeRestricted(params.nodeId)) {
+  if (!params.nodeId || store.isNodeRestricted(params.nodeId, now.value)) {
     draggingFromNodeId = null;
     draggingFromHandleId = null;
     return;

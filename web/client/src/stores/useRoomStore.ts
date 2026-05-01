@@ -17,37 +17,36 @@ export const useRoomStore = defineStore('room', () => {
   const token = ref<string>('');
   const roomId = ref<string>('');
   const showDefaultHandles = ref<boolean>(false);
-  const now = ref(Date.now());
 
   let ws: WebSocket | null = null;
   let reconnectDelay = 1000;
   let reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  function isNodeIsolated(nodeId: string) {
+  function isNodeIsolated(nodeId: string, currentTime: number) {
     if (nodeId === homeZoneId.value) return false;
     const nodeConnections = connections.value.filter(c => c.fromZoneId === nodeId || c.toZoneId === nodeId);
     if (nodeConnections.length === 0) return true;
-    return nodeConnections.every(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - now.value) <= 0);
+    return nodeConnections.every(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - currentTime) <= 0);
   }
 
-  function isNodeExpired(nodeId: string) {
+  function isNodeExpired(nodeId: string, currentTime: number) {
     if (nodeId === homeZoneId.value) return false;
     const nodeConnections = connections.value.filter(c => c.fromZoneId === nodeId || c.toZoneId === nodeId);
     
     // Check if any direct connection is expired
-    if (nodeConnections.some(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - now.value) <= 0)) {
+    if (nodeConnections.some(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - currentTime) <= 0)) {
       return true;
     }
 
     // Check if any ancestor or descendant is expired
     for (const conn of nodeConnections) {
       const ancestors = treeQuery(conn.id, connections.value, 'ancestors');
-      if (ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - now.value) <= 0)) {
+      if (ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - currentTime) <= 0)) {
         return true;
       }
       
       const descendants = treeQuery(conn.id, connections.value, 'descendants');
-      if (descendants.some(d => (d.isExpired ?? false) || (new Date(d.expiresAt).getTime() - now.value) <= 0)) {
+      if (descendants.some(d => (d.isExpired ?? false) || (new Date(d.expiresAt).getTime() - currentTime) <= 0)) {
         return true;
       }
     }
@@ -55,8 +54,15 @@ export const useRoomStore = defineStore('room', () => {
     return false;
   }
 
-  function isNodeRestricted(nodeId: string) {
-    return isNodeIsolated(nodeId) || isNodeExpired(nodeId);
+  function isNodeRestricted(nodeId: string, currentTime: number) {
+    return isNodeIsolated(nodeId, currentTime) || isNodeExpired(nodeId, currentTime);
+  }
+
+  function isEdgeIsolated(connectionId: string, currentTime: number) {
+    const conn = connections.value.find(c => c.id === connectionId);
+    if (!conn) return false;
+    const ancestors = treeQuery(conn.id, connections.value, 'ancestors');
+    return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - currentTime) <= 0);
   }
 
   function setCredentials(id: string, jwt: string) {
@@ -280,11 +286,11 @@ export const useRoomStore = defineStore('room', () => {
     isNodeIsolated,
     isNodeExpired,
     isNodeRestricted,
+    isEdgeIsolated,
     resetNodePositions,
     connect,
     disconnect,
     removeFromRecentRooms,
     showDefaultHandles,
-    now,
   };
 });

@@ -2,17 +2,21 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '@/stores/useRoomStore';
+import { useTutorialStore } from '@/stores/useTutorialStore';
 import { API_BASE_URL } from '@/utils/api';
 import { track } from '@vercel/analytics';
 import ChangePasswordModal from './ChangePasswordModal.vue';
 import ResetConfirmModal from './ResetConfirmModal.vue';
+import TutorialTooltip from './tutorial/TutorialTooltip.vue';
 
 const props = defineProps<{
   tray?: boolean;
 }>();
 
 const store = useRoomStore();
+const tutorialStore = useTutorialStore();
 const router = useRouter();
+const cogRef = ref<HTMLElement | null>(null);
 
 const open = ref(false);
 const popupEl = ref<HTMLDivElement | null>(null);
@@ -31,6 +35,10 @@ const copied = ref(false);
 function toggleOpen() {
   open.value = !open.value;
   if (!open.value) resetSubForms();
+  if (!tutorialStore.completed && tutorialStore.step === 16) {
+    tutorialStore.setStep(17);
+    tutorialStore.setCompleted(true);
+  }
 }
 
 function resetSubForms() {
@@ -99,6 +107,7 @@ function logout() {
     <div ref="popupEl" class="relative shrink-0" style="z-index:200">
       <!-- Cog button -->
       <button
+        ref="cogRef"
         type="button"
         :class="[
           tray
@@ -116,6 +125,13 @@ function logout() {
         </svg>
       </button>
 
+      <TutorialTooltip
+        v-if="!tutorialStore.completed && tutorialStore.step === 16"
+        message="You can copy links and change the room password here"
+        pointing="up"
+        :target="cogRef ?? undefined"
+      />
+
       <!-- Popup -->
       <div
         v-if="open"
@@ -126,19 +142,6 @@ function logout() {
         style="z-index:9999"
         data-testid="settings-popup"
       >
-        <!-- Reset -->
-        <div class="border-b border-gray-700 p-2">
-          <button
-            type="button"
-            :disabled="resetting"
-            class="w-full text-left px-3 py-2 text-sm rounded text-red-400 hover:bg-gray-700 hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            data-testid="settings-reset"
-            @click="showResetConfirmModal = true"
-          >
-            {{ resetting ? 'Resetting…' : '⟳  Reset all connections' }}
-          </button>
-        </div>
-
         <!-- Change password -->
         <div class="border-b border-gray-700 p-2">
           <button
@@ -176,11 +179,5 @@ function logout() {
       </div>
     </div>
     <ChangePasswordModal v-model="showChangePasswordModal" />
-    <ResetConfirmModal
-      v-model="showResetConfirmModal"
-      :error="resetError"
-      :resetting="resetting"
-      @confirmed="reset"
-    />
   </div>
 </template>
