@@ -6,6 +6,7 @@ import IconLocked from '../../icons/IconLocked.vue';
 import { ref, watch, nextTick, computed, onMounted } from 'vue';
 import TutorialTooltip from '../../tutorial/TutorialTooltip.vue';
 import { useTutorialStore } from '../../../stores/useTutorialStore';
+import { Z_INDEX } from '@/constants/Layers';
 
 const tutorialStore = useTutorialStore();
 const isMounted = ref(false);
@@ -89,13 +90,15 @@ defineExpose({
           message="Click here to log there is a power core in the zone"
           pointing="down"
           bounce
-          containerClass="absolute -top-[40px] -left-[40px] w-40 z-[10000]"
+          :class="Z_INDEX.OVERLAY"
+          containerClass="absolute -top-[40px] -left-[40px] w-40"
         />
         <TutorialTooltip
           v-if="isMounted && type === 'powercoreGreen' && !tutorialStore.completed && tutorialStore.step === 8"
           message="Here you can set the timer for the locked state. You can also mark it as unlocked."
           pointing="down"
-          containerClass="absolute -top-[80px] w-40 z-[10000]"
+          :class="Z_INDEX.OVERLAY"
+          containerClass="absolute -top-[80px] w-40"
         />
       <div 
         @click.stop="$emit('toggle')" 

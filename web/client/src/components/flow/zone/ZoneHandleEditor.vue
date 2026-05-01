@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 import type { CustomHandle } from 'shared';
 import { useTutorialStore } from '@/stores/useTutorialStore';
+import { Z_INDEX } from '@/constants/Layers';
 import TutorialTooltip from '../../tutorial/TutorialTooltip.vue';
 
 const tutorialStore = useTutorialStore();
@@ -183,7 +184,7 @@ function getHandleFacing(left: string, top: string): string {
 </script>
 
 <template>
-  <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/20 backdrop-blur-sm p-4" @click.self="emit('close')">
+  <div class="fixed inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4" :class="Z_INDEX.MODAL" @click.self="emit('close')">
     <div class="max-w-lg w-full p-2 flex flex-col items-center relative">
       <div 
         ref="containerRef"
@@ -277,8 +278,9 @@ function getHandleFacing(left: string, top: string): string {
         <div 
           v-for="h in handles" 
           :key="h.id"
-          class="absolute w-8 h-8 z-[30] handle-arch"
+          class="absolute w-8 h-8 handle-arch"
           :class="[
+            Z_INDEX.HANDLE,
             h.disabled ? 'is-disabled' : 'is-active',
             isToggleMode ? 'cursor-pointer' : 'cursor-move'
           ]"

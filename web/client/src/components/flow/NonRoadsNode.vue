@@ -7,6 +7,7 @@ import ZoneHeader from './zone/ZoneHeader.vue';
 import { computed, ref, inject, type Ref } from 'vue';
 import type { NodeFeatures } from 'shared';
 import { useRoomStore } from '@/stores/useRoomStore';
+import { Z_INDEX } from '@/constants/Layers';
 
 const props = defineProps<NodeProps<{ 
   isHome: boolean; 
@@ -45,7 +46,7 @@ const defaultInternalHandles = computed(() => {
 
 <template>
   <div class="non-roads-node relative" :class="{ 'ghost-node': props.data.isGhost }">
-    <div v-if="isRestricted" class="absolute inset-0 z-[100] cursor-pointer" :class="{ 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }" @click="showDeleteOverlay = true">
+    <div v-if="isRestricted" class="absolute inset-0 cursor-pointer" :class="[Z_INDEX.RESTRICTED_NODE, { 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }]" @click="showDeleteOverlay = true">
        <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
          <p class="text-white mb-4">Node is expired. Delete it?</p>
          <div class="flex gap-2">
@@ -65,12 +66,12 @@ const defaultInternalHandles = computed(() => {
     >
       <!-- Smaller Diamond Shape Background -->
       <div 
-        class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none z-[5]"
-        :class="[hasReds ? 'bg-red-500' : getBorderBgClass(props.data.type)]"
+        class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
+        :class="[hasReds ? 'bg-red-500' : getBorderBgClass(props.data.type), Z_INDEX.NODE_BASE]"
       ></div>
       <div 
-        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none z-[6]"
-        :class="[hasReds ? 'bg-red-950' : 'bg-gray-800']"
+        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none"
+        :class="[hasReds ? 'bg-red-950' : 'bg-gray-800', Z_INDEX.NODE_BORDER]"
       ></div>
 
       <!-- Central Content Block -->
@@ -96,7 +97,7 @@ const defaultInternalHandles = computed(() => {
           type="source"
           :position="h.position"
           :style="{ left: h.left, top: h.top, opacity: 0, pointerEvents: 'auto' }"
-          :class="['z-30', isRestricted ? 'grayscale' : '']"
+          :class="[Z_INDEX.HANDLE, isRestricted ? 'grayscale' : '']"
           :connectable="!isRestricted"
         />
         <Handle
@@ -106,7 +107,7 @@ const defaultInternalHandles = computed(() => {
           type="target"
           :position="h.position"
           :style="{ left: h.left, top: h.top, opacity: 0, pointerEvents: 'auto' }"
-          :class="['z-30', isRestricted ? 'grayscale' : '']"
+          :class="[Z_INDEX.HANDLE, isRestricted ? 'grayscale' : '']"
           :connectable="!isRestricted"
         />
       </div>

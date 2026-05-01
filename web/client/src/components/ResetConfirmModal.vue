@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRoomStore } from '../stores/useRoomStore';
+import { Z_INDEX } from '@/constants/Layers';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -35,7 +36,8 @@ function confirm() {
 <template>
   <div
     v-if="modelValue"
-    class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[9999]"
+    class="fixed inset-0 bg-black/60 flex items-center justify-center p-4"
+    :class="Z_INDEX.MODAL"
     @click.self="close"
   >
     <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md" @click.stop>

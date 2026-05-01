@@ -11,6 +11,7 @@ import { useTutorialStore } from '@/stores/useTutorialStore';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { treeQuery } from '@/utils/treeQuery';
 import { ZONE_BY_ID, type Connection } from 'shared';
+import { Z_INDEX } from '@/constants/Layers';
 
 type EdgeData = {
   connection?: Connection;
@@ -201,14 +202,15 @@ defineExpose({
      <TutorialTooltip
           v-if="isTutorialTooltipReady && !tutorialStore.completed && tutorialStore.step === 13"
           message="Click on the rounded pill with the time."
-          containerClass="absolute -top-24 left-1/2 -translate-x-3/4 z-[10000]"
+          containerClass="absolute -top-24 left-1/2 -translate-x-3/4"
+          :class="Z_INDEX.OVERLAY"
         />
     <div
       :style="{
         transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
         pointerEvents: 'all',
       }"
-      :class="['absolute nodrag nopan', showPopover ? 'z-[7000]' : 'z-[5000]']"
+      :class="['absolute nodrag nopan', showPopover ? Z_INDEX.POPOVER_ACTIVE : Z_INDEX.DEFAULT]"
     >
       <!-- Countdown label -->
       <div
@@ -233,7 +235,8 @@ defineExpose({
           v-if="isTutorialTooltipReady && !tutorialStore.completed && tutorialStore.step === 14"
           message="Here you can edit the connection and update the time if you made a mistake. Deleting this connection will delete the node. If there are multiple connections in a chain, there will be a button to delete the whole chain beyond this connection. Delete the connection to continue."
           pointing="down"
-          containerClass="absolute -top-[115px] left-1/2 -translate-x-1/2 z-[10000] w-64"
+          containerClass="absolute -top-[115px] left-1/2 -translate-x-1/2 w-64"
+          :class="Z_INDEX.OVERLAY"
         />
         <button
           class="absolute top-2 right-2 text-gray-400 hover:text-white p-1"

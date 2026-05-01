@@ -8,6 +8,7 @@ import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { addConnection } from '@/utils/roomOperations';
 import { ZONE_BY_ID } from 'shared';
+import { Z_INDEX } from '@/constants/Layers';
 
 const props = defineProps<{}>();
 
@@ -206,7 +207,8 @@ defineExpose({
 <template>
   <div v-show="isOpen">
     <div
-      class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-[9999]"
+      class="fixed inset-0 bg-black/60 flex items-center justify-center p-4"
+      :class="Z_INDEX.MODAL"
       @click.self="close"
     >
       <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-xl shadow-2xl" @click.stop>

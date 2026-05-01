@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NodeFeatures } from 'shared';
 import ZoneFeatureToggle from './ZoneFeatureToggle.vue';
+import { Z_INDEX } from '@/constants/Layers';
 
 defineProps<{
   isOpen: boolean;
@@ -17,8 +18,11 @@ const emit = defineEmits<{
 <template>
   <Transition name="tray">
     <div v-if="isOpen" 
-      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-[240px] rounded-xl shadow-2xl backdrop-blur-xl border p-4 text-left space-y-3 transition-all duration-300"
-      :class="hasReds ? 'bg-red-950/90 border-red-500/50' : 'bg-gray-900/95 border-gray-700'"
+      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] rounded-xl shadow-2xl backdrop-blur-xl border p-4 text-left space-y-3 transition-all duration-300"
+      :class="[
+        hasReds ? 'bg-red-950/90 border-red-500/50' : 'bg-gray-900/95 border-gray-700',
+        Z_INDEX.EDITOR_TRAY
+      ]"
       @mousedown.stop
       @click.stop
     >

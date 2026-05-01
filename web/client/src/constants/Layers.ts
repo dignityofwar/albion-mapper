@@ -1,0 +1,15 @@
+export const Z_INDEX = {
+  DEFAULT: 'z-[-1]',
+  NODE_BASE: 'z-[5]',
+  NODE_BORDER: 'z-[6]',
+  HANDLE: 'z-[30]',
+  MOBILE_SUMMARY: 'z-[60]',
+  RESTRICTED_NODE: 'z-[100]',
+  EDITOR_TRAY: 'z-[100]',
+  TOAST: 'z-[100]',
+  DEBUG_SHAPE: 'z-[1100]',
+  TUTORIAL_EXIT: 'z-[1000]',
+  POPOVER_ACTIVE: 'z-[7000]',
+  MODAL: 'z-[9999]',
+  OVERLAY: 'z-[10000]',
+} as const;

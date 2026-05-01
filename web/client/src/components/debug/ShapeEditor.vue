@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { Z_INDEX } from '@/constants/Layers';
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -133,7 +134,7 @@ function clearAll() {
 </script>
 
 <template>
-  <div class="fixed inset-0 z-[1100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" @click.self="emit('close')">
+  <div class="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" :class="Z_INDEX.DEBUG_SHAPE" @click.self="emit('close')">
     <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-2xl max-w-2xl w-full p-6 flex flex-col items-center">
       <div class="w-full flex justify-between items-center mb-6">
         <h3 class="text-xl font-bold text-white">Road Shape Editor</h3>

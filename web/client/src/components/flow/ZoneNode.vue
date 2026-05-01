@@ -18,6 +18,7 @@ import { storeToRefs } from 'pinia';
 import { deleteConnection } from '@/utils/roomOperations';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
+import { Z_INDEX } from '@/constants/Layers';
 
 const props = defineProps<NodeProps<{ 
   isHome: boolean; 
@@ -546,7 +547,7 @@ const defaultInternalHandles = computed(() => {
 
 <template>
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
-    <div v-if="isRestricted" class="absolute inset-0 z-[100] cursor-pointer" :class="{ 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }" @click="showDeleteOverlay = true">
+    <div v-if="isRestricted" class="absolute inset-0 cursor-pointer" :class="[Z_INDEX.RESTRICTED_NODE, { 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }]" @click="showDeleteOverlay = true">
        <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
          <p class="text-white mb-4">Node is expired. Delete it?</p>
          <div class="flex gap-2">
@@ -567,12 +568,12 @@ const defaultInternalHandles = computed(() => {
       >
       <!-- Diamond Shape Background -->
       <div 
-        class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none z-[5]"
-        :class="[hasReds ? 'bg-red-500/80' : getBorderBgClass(props.data.type) + '/80']"
+        class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
+        :class="[hasReds ? 'bg-red-500/80' : getBorderBgClass(props.data.type) + '/80', Z_INDEX.NODE_BASE]"
       ></div>
       <div 
-        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none z-[6]"
-        :class="[hasReds ? 'bg-red-950/80' : 'bg-gray-800/80']"
+        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none"
+        :class="[hasReds ? 'bg-red-950/80' : 'bg-gray-800/80', Z_INDEX.NODE_BORDER]"
       ></div>
 
 
@@ -646,7 +647,8 @@ const defaultInternalHandles = computed(() => {
                 v-if="tutorialStore.step === 6"
                 message="Click here to edit map features."
                 pointing="left"
-                containerClass="absolute left-full ml-2 w-max z-[10000]"
+                containerClass="absolute left-full ml-2 w-max"
+                :class="Z_INDEX.OVERLAY"
               />
             </div>
             <ZoneFeatures 
