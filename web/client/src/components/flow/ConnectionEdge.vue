@@ -154,6 +154,27 @@ defineExpose({
     @click.stop="showPopover = !showPopover"
     @mousedown.stop
   />
+  
+  <g v-if="!props.data?.isGhost" class="pointer-events-none">
+    <path
+      v-for="i in 3"
+      :key="i"
+      d="M -4 -4 L 0 0 L -4 4"
+      fill="none"
+      stroke="white"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <animateMotion
+        dur="3s"
+        :begin="`${(i - 1) * 1}s`"
+        repeatCount="indefinite"
+        :path="path"
+        rotate="auto"
+      />
+    </path>
+  </g>
 
   <EdgeLabelRenderer v-if="!props.data?.isGhost">
      <TutorialTooltip
