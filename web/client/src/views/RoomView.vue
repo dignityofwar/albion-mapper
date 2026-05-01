@@ -296,6 +296,10 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
       const zone = ZONE_BY_ID.get(pos.zoneId);
       const isDraggable = positions.length > 1;
       const isRoads = zone?.type === 'roads' || zone?.type === 'roadsHideout';
+      const isIsolated = (pos.zoneId !== homeZoneId.value) && 
+        connections.value.filter(c => c.fromZoneId === pos.zoneId || c.toZoneId === pos.zoneId)
+          .every(c => (c.isExpired ?? false) || (new Date(c.expiresAt).getTime() - now.value) <= 0);
+
       return {
         id: pos.zoneId,
         type: isRoads ? 'zone' : 'non-roads',
@@ -311,6 +315,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           features: pos.features,
           mapShape: zone?.mapShape,
           customHandles: pos.customHandles,
+          isIsolated,
         },
       };
     });

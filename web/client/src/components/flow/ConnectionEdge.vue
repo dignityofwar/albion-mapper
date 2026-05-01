@@ -8,6 +8,8 @@ import { formatCountdown } from '../../utils/formatters.js';
 import TimeInput from '../common/TimeInput.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useTutorialStore } from '../../stores/useTutorialStore';
+import { useRoomStore } from '../../stores/useRoomStore';
+import { treeQuery } from '../../utils/treeQuery';
 import { ZONE_BY_ID, type Connection } from 'shared';
 
 type EdgeData = {
@@ -25,6 +27,7 @@ type EdgeData = {
 const props = defineProps<EdgeProps<EdgeData>>();
 const { setCenter } = useVueFlow();
 const tutorialStore = useTutorialStore();
+const roomStore = useRoomStore();
 
 const showPopover = ref(false);
 const isTutorialTooltipReady = ref(false);
@@ -105,7 +108,16 @@ const remainingMs = computed(() => {
   if (!props.data?.now) return 0;
   return expiresMs.value - props.data.now;
 });
-const isExpired = computed(() => props.data?.connection?.isExpired ?? false);
+
+const isExpired = computed(() => {
+  if (!props.data?.connection) return false;
+
+  const currentExpired = (props.data.connection.isExpired ?? false) || remainingMs.value <= 0;
+  if (currentExpired) return true;
+
+  const ancestors = treeQuery(props.data.connection.id, roomStore.connections, 'ancestors');
+  return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - (props.data?.now ?? 0)) <= 0);
+});
 
 const style = computed(() => {
   if (props.data?.isGhost) {
@@ -149,13 +161,13 @@ defineExpose({
     :id="id"
     :path="path"
     :animated="style.animated"
-    :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2 }"
+    :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2, opacity: isExpired ? 0.3 : 1 }"
     class="cursor-pointer"
     @click.stop="showPopover = !showPopover"
     @mousedown.stop
   />
   
-  <g v-if="!props.data?.isGhost" class="pointer-events-none">
+  <g v-if="!props.data?.isGhost && !isExpired" class="pointer-events-none">
     <path
       v-for="i in 3"
       :key="i"

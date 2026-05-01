@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 import ConnectionEdge from '../src/components/flow/ConnectionEdge.vue';
 import { nextTick, ref } from 'vue';
+import { createPinia, setActivePinia } from 'pinia';
 
 const mockSetCenter = vi.fn();
 
@@ -31,6 +32,7 @@ vi.mock('../src/utils/formatters.js', () => ({
 
 describe('ConnectionEdge', () => {
   beforeEach(() => {
+    setActivePinia(createPinia());
     vi.clearAllMocks();
     vi.stubGlobal('innerWidth', 1000);
   });

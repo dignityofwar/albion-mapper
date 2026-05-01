@@ -34,7 +34,30 @@ type ViewType = 'cores' | 'crystals' | 'dungeons' | 'chests';
 const userClosedCores = ref(false);
 const activeView = ref<ViewType | null>(null);
 const userExpanded = ref(true);
+const contentVisible = ref(true);
 const isExpanded = computed(() => props.alwaysExpanded || userExpanded.value);
+
+watch(() => props.alwaysExpanded, (newVal) => {
+  if (newVal) {
+    userExpanded.value = true;
+    contentVisible.value = true;
+  }
+});
+
+async function toggleExpanded() {
+  if (props.alwaysExpanded) return;
+
+  if (userExpanded.value) {
+    // Closing
+    contentVisible.value = false;
+    userExpanded.value = false;
+  } else {
+    // Opening
+    userExpanded.value = true;
+    await new Promise(r => setTimeout(r, 300));
+    contentVisible.value = true;
+  }
+}
 
 watch(() => props.cores.length, (newCount, oldCount) => {
   if (newCount > 0 && (oldCount === 0 || oldCount === undefined) && !userClosedCores.value) {
@@ -125,77 +148,89 @@ function handleSelect(zoneId: string) {
       <!-- Toggle Button -->
       <button 
         v-if="!alwaysExpanded"
-        @click="userExpanded = !userExpanded"
+        @click="toggleExpanded"
         class="absolute -left-3 top-2 w-6 h-6 flex items-center justify-center rounded-full bg-gray-700 border border-gray-600 text-xs shadow-md z-10"
       >
         {{ isExpanded ? '◀' : '▶' }}
       </button>
 
-      <!-- Cores Button -->
-      <button 
-        @click="toggleView('cores')"
-        :disabled="totalCount.cores === 0"
-        class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
-        :class="[
-          activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.cores > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
-          !isExpanded ? 'px-2' : ''
-        ]"
-        title="Active Cores"
-      >
-        <img src="/images/core-green.png" class="w-6 h-6 object-contain" />
-        <div v-if="isExpanded" class="flex items-center text-base font-bold leading-none whitespace-nowrap">
-          <span class="text-green-500">{{ coreCounts.green }}</span>
-          <span class="text-gray-500 mx-0.5">-</span>
-          <span class="text-blue-500">{{ coreCounts.blue }}</span>
-          <span class="text-gray-500 mx-0.5">-</span>
-          <span class="text-purple-500">{{ coreCounts.purple }}</span>
+      <Transition name="slide">
+        <div v-if="isExpanded" class="flex flex-row md:flex-col gap-2">
+          <!-- Cores Button -->
+          <button 
+            @click="toggleView('cores')"
+            :disabled="totalCount.cores === 0"
+            class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+            :class="[
+              activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.cores > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+              !isExpanded ? 'px-2' : ''
+            ]"
+            title="Active Cores"
+          >
+            <img src="/images/core-green.png" class="w-6 h-6 object-contain" />
+            <Transition name="fade">
+              <div v-if="contentVisible" class="flex items-center text-base font-bold leading-none whitespace-nowrap">
+                <span class="text-green-500">{{ coreCounts.green }}</span>
+                <span class="text-gray-500 mx-0.5">-</span>
+                <span class="text-blue-500">{{ coreCounts.blue }}</span>
+                <span class="text-gray-500 mx-0.5">-</span>
+                <span class="text-purple-500">{{ coreCounts.purple }}</span>
+              </div>
+            </Transition>
+          </button>
+
+          <!-- Crystals Button -->
+          <button 
+            @click="toggleView('crystals')"
+            :disabled="totalCount.crystals === 0"
+            class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+            :class="[
+              activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.crystals > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+              !isExpanded ? 'px-2' : ''
+            ]"
+            title="Crystals"
+          >
+            <img src="/images/crystal.png" class="w-6 h-6 object-contain" />
+            <Transition name="fade">
+              <span v-if="contentVisible" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.crystals }}</span>
+            </Transition>
+          </button>
+
+          <!-- Dungeons Button -->
+          <button 
+            @click="toggleView('dungeons')"
+            :disabled="totalCount.dungeons === 0"
+            class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+            :class="[
+              activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.dungeons > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+              !isExpanded ? 'px-2' : ''
+            ]"
+            title="Dungeons"
+          >
+            <img src="/images/dungeon-group.png" class="w-6 h-6 object-contain" />
+            <Transition name="fade">
+              <span v-if="contentVisible" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.dungeons }}</span>
+            </Transition>
+          </button>
+
+          <!-- Chests Button -->
+          <button 
+            @click="toggleView('chests')"
+            :disabled="totalCount.chests === 0"
+            class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+            :class="[
+              activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.chests > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+              !isExpanded ? 'px-2' : ''
+            ]"
+            title="Chests"
+          >
+            <img src="/images/treasures-green.png" class="w-6 h-6 object-contain" />
+            <Transition name="fade">
+              <span v-if="contentVisible" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.chests }}</span>
+            </Transition>
+          </button>
         </div>
-      </button>
-
-      <!-- Crystals Button -->
-      <button 
-        @click="toggleView('crystals')"
-        :disabled="totalCount.crystals === 0"
-        class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
-        :class="[
-          activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.crystals > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
-          !isExpanded ? 'px-2' : ''
-        ]"
-        title="Crystals"
-      >
-        <img src="/images/crystal.png" class="w-6 h-6 object-contain" />
-        <span v-if="isExpanded" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.crystals }}</span>
-      </button>
-
-      <!-- Dungeons Button -->
-      <button 
-        @click="toggleView('dungeons')"
-        :disabled="totalCount.dungeons === 0"
-        class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
-        :class="[
-          activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.dungeons > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
-          !isExpanded ? 'px-2' : ''
-        ]"
-        title="Dungeons"
-      >
-        <img src="/images/dungeon-group.png" class="w-6 h-6 object-contain" />
-        <span v-if="isExpanded" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.dungeons }}</span>
-      </button>
-
-      <!-- Chests Button -->
-      <button 
-        @click="toggleView('chests')"
-        :disabled="totalCount.chests === 0"
-        class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
-        :class="[
-          activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.chests > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
-          !isExpanded ? 'px-2' : ''
-        ]"
-        title="Chests"
-      >
-        <img src="/images/treasures-green.png" class="w-6 h-6 object-contain" />
-        <span v-if="isExpanded" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.chests }}</span>
-      </button>
+      </Transition>
     </div>
 
     <!-- Active Detail Panel -->

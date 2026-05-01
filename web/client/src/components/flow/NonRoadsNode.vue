@@ -17,6 +17,7 @@ const props = defineProps<NodeProps<{
   mapShape?: string;
   isGhost?: boolean;
   features?: NodeFeatures;
+  isIsolated?: boolean;
 }>>();
 
 const hasReds = computed(() => !!props.data.features?.reds);
@@ -30,7 +31,7 @@ const defaultInternalHandles = computed(() => {
 </script>
 
 <template>
-  <div class="non-roads-node" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost }">
+  <div class="non-roads-node" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost || props.data.isIsolated }">
     <div 
       class="text-white text-xs text-center w-[150px] h-[150px] relative transition-all duration-300"
       :class="[
@@ -72,7 +73,7 @@ const defaultInternalHandles = computed(() => {
           type="source"
           :position="h.position"
           :style="{ left: h.left, top: h.top, opacity: 0, pointerEvents: 'auto' }"
-          class="z-30"
+          :class="['z-30', props.data.isIsolated ? 'grayscale' : '']"
         />
         <Handle
           v-for="h in defaultInternalHandles"
@@ -81,7 +82,7 @@ const defaultInternalHandles = computed(() => {
           type="target"
           :position="h.position"
           :style="{ left: h.left, top: h.top, opacity: 0, pointerEvents: 'auto' }"
-          class="z-30"
+          :class="['z-30', props.data.isIsolated ? 'grayscale' : '']"
         />
       </div>
     </div>

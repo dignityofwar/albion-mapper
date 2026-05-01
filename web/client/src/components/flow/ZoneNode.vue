@@ -30,6 +30,7 @@ const props = defineProps<NodeProps<{
   mapShape?: string;
   customHandles?: CustomHandle[];
   isGhost?: boolean;
+  isIsolated?: boolean;
 }>>();
 
 const store = useRoomStore();
@@ -532,7 +533,7 @@ const defaultInternalHandles = computed(() => {
 </script>
 
 <template>
-  <div class="zone-node" ref="zoneNodeRef" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost, 'ghost-node': props.data.isGhost }">
+  <div class="zone-node" ref="zoneNodeRef" :class="{ 'opacity-50 grayscale pointer-events-none': props.data.isGhost || props.data.isIsolated, 'ghost-node': props.data.isGhost }">
     <TooltipProvider :delay-duration="300">
       <div 
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
@@ -682,7 +683,7 @@ const defaultInternalHandles = computed(() => {
           :style="{ ...handle.style, ...(showPrompt && index === targetHandleIndex ? { '--handle-color': '#2563eb', 'z-index': 2000 } : {}) }"
           :data-facing="handle.facing"
           :class="[
-            { 'is-disabled': handle.disabled },
+            { 'is-disabled': handle.disabled, 'is-isolated': props.data.isIsolated },
           ]"
           :connectable="!handle.disabled"
         />
@@ -712,7 +713,7 @@ const defaultInternalHandles = computed(() => {
         :id="handle.id" 
         :style="handle.style"
         :data-facing="handle.facing"
-        :class="['!border-orange-700 !border-b-2 !z-30 transition-opacity duration-300', store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none']"
+        :class="['!border-orange-700 !border-b-2 !z-30 transition-opacity duration-300', store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none', props.data.isIsolated ? 'is-isolated' : '']"
       />
 
       <!-- Legacy center handle for backward compatibility -->
@@ -831,6 +832,11 @@ const defaultInternalHandles = computed(() => {
   top: 87px;
   right: 71px;
 }
+
+:deep(.vue-flow__handle.is-isolated)::after {
+    background-color: #6b7280 !important;
+    border-color: #4b5563 !important;
+  }
 
 
 </style>
