@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
 import RoomSummaryToolbar from '../src/components/flow/zone/RoomSummaryToolbar.vue';
 import { nextTick } from 'vue';
 
@@ -11,32 +12,35 @@ describe('RoomSummaryToolbar', () => {
     chests: [],
   };
 
-  it('is closed by default if there are no cores', () => {
-    const wrapper = mount(RoomSummaryToolbar, {
-      props: defaultProps,
+  function mountToolbar(props = defaultProps) {
+    return mount(RoomSummaryToolbar, {
+      props,
+      global: { plugins: [createTestingPinia()] }
     });
+  }
+
+  it('is closed by default if there are no cores', () => {
+    const wrapper = mountToolbar(defaultProps);
     // Check that no button has the active class
     const buttons = wrapper.findAll('button');
     buttons.forEach(button => {
+      // The toggle button is also a button
+      if (button.text() === '◀' || button.text() === '▶') return;
       expect(button.classes()).not.toContain('bg-indigo-600/20');
     });
   });
 
   it('is open to cores by default if there are cores', () => {
-    const wrapper = mount(RoomSummaryToolbar, {
-      props: {
-        ...defaultProps,
-        cores: [{ zoneId: '1', zoneName: 'Zone 1', expiresAt: Date.now() + 10000, coreType: 'green' }],
-      },
+    const wrapper = mountToolbar({
+      ...defaultProps,
+      cores: [{ zoneId: '1', zoneName: 'Zone 1', expiresAt: Date.now() + 10000, coreType: 'green' }],
     });
     const coresButton = wrapper.find('button[title="Active Cores"]');
     expect(coresButton.classes()).toContain('bg-indigo-600/20');
   });
 
   it('automatically opens when first core is added', async () => {
-    const wrapper = mount(RoomSummaryToolbar, {
-      props: defaultProps,
-    });
+    const wrapper = mountToolbar(defaultProps);
     
     expect(wrapper.find('button[title="Active Cores"]').classes()).not.toContain('bg-indigo-600/20');
 
@@ -48,11 +52,9 @@ describe('RoomSummaryToolbar', () => {
   });
 
   it('closes automatically when last core expires/removed', async () => {
-    const wrapper = mount(RoomSummaryToolbar, {
-      props: {
-        ...defaultProps,
-        cores: [{ zoneId: '1', zoneName: 'Zone 1', expiresAt: Date.now() + 10000, coreType: 'green' }],
-      },
+    const wrapper = mountToolbar({
+      ...defaultProps,
+      cores: [{ zoneId: '1', zoneName: 'Zone 1', expiresAt: Date.now() + 10000, coreType: 'green' }],
     });
     
     expect(wrapper.find('button[title="Active Cores"]').classes()).toContain('bg-indigo-600/20');
@@ -63,11 +65,9 @@ describe('RoomSummaryToolbar', () => {
   });
 
   it('does not automatically open if user manually closed it', async () => {
-    const wrapper = mount(RoomSummaryToolbar, {
-      props: {
-        ...defaultProps,
-        cores: [{ zoneId: '1', zoneName: 'Zone 1', expiresAt: Date.now() + 10000, coreType: 'green' }],
-      },
+    const wrapper = mountToolbar({
+      ...defaultProps,
+      cores: [{ zoneId: '1', zoneName: 'Zone 1', expiresAt: Date.now() + 10000, coreType: 'green' }],
     });
     
     const coresButton = wrapper.find('button[title="Active Cores"]');
@@ -90,11 +90,9 @@ describe('RoomSummaryToolbar', () => {
   });
 
   it('resets manual close if user manually opens it', async () => {
-    const wrapper = mount(RoomSummaryToolbar, {
-      props: {
-        ...defaultProps,
-        cores: [{ zoneId: '1', zoneName: 'Zone 1', expiresAt: Date.now() + 10000, coreType: 'green' }],
-      },
+    const wrapper = mountToolbar({
+      ...defaultProps,
+      cores: [{ zoneId: '1', zoneName: 'Zone 1', expiresAt: Date.now() + 10000, coreType: 'green' }],
     });
     
     const coresButton = wrapper.find('button[title="Active Cores"]');
@@ -120,13 +118,11 @@ describe('RoomSummaryToolbar', () => {
   });
 
   it('disables buttons when there are no items', () => {
-    const wrapper = mount(RoomSummaryToolbar, {
-      props: {
-        cores: [],
-        crystals: [{ zoneId: '1', zoneName: 'Zone 1' }],
-        dungeons: [],
-        chests: [],
-      },
+    const wrapper = mountToolbar({
+      cores: [],
+      crystals: [{ zoneId: '1', zoneName: 'Zone 1' }],
+      dungeons: [],
+      chests: [],
     });
 
     const coresButton = wrapper.find('button[title="Active Cores"]');
@@ -141,12 +137,20 @@ describe('RoomSummaryToolbar', () => {
   });
 
   it('applies disabled classes to disabled buttons', () => {
-    const wrapper = mount(RoomSummaryToolbar, {
-      props: defaultProps,
-    });
+    const wrapper = mountToolbar(defaultProps);
 
     const coresButton = wrapper.find('button[title="Active Cores"]');
     expect(coresButton.classes()).toContain('disabled:opacity-40');
     expect(coresButton.classes()).toContain('disabled:cursor-not-allowed');
+  });
+
+  it('hides the toggle button when alwaysExpanded is true', () => {
+    const wrapper = mountToolbar({
+      ...defaultProps,
+      alwaysExpanded: true,
+    });
+
+    const toggleButton = wrapper.find('button.absolute.-left-3.top-2');
+    expect(toggleButton.exists()).toBe(false);
   });
 });

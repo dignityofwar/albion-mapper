@@ -16,12 +16,15 @@ interface ActiveCore extends ZoneFeatureInfo {
   coreType: 'green' | 'blue' | 'purple' | 'yellow';
 }
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   cores: ActiveCore[];
   crystals: ZoneFeatureInfo[];
   dungeons: ZoneFeatureInfo[];
   chests: ZoneFeatureInfo[];
-}>();
+  alwaysExpanded?: boolean;
+}>(), {
+  alwaysExpanded: false
+});
 
 const emit = defineEmits<{
   (e: 'select', zoneId: string): void;
@@ -30,6 +33,8 @@ const emit = defineEmits<{
 type ViewType = 'cores' | 'crystals' | 'dungeons' | 'chests';
 const userClosedCores = ref(false);
 const activeView = ref<ViewType | null>(null);
+const userExpanded = ref(true);
+const isExpanded = computed(() => props.alwaysExpanded || userExpanded.value);
 
 watch(() => props.cores.length, (newCount, oldCount) => {
   if (newCount > 0 && (oldCount === 0 || oldCount === undefined) && !userClosedCores.value) {
@@ -111,23 +116,34 @@ function handleSelect(zoneId: string) {
   }
   emit('select', zoneId);
 }
-
 </script>
 
 <template>
   <div class="flex flex-col md:flex-row-reverse items-stretch md:items-start gap-3 pointer-events-none w-full md:w-auto">
     <!-- Toolbar -->
-    <div class="flex flex-row md:flex-col gap-2 bg-gray-900/95 border border-gray-700 rounded-xl p-2 shadow-2xl backdrop-blur-md pointer-events-auto justify-center">
+    <div class="flex flex-row md:flex-col gap-2 bg-gray-900/95 border border-gray-700 rounded-xl p-2 shadow-2xl backdrop-blur-md pointer-events-auto justify-center relative">
+      <!-- Toggle Button -->
+      <button 
+        v-if="!alwaysExpanded"
+        @click="userExpanded = !userExpanded"
+        class="absolute -left-3 top-2 w-6 h-6 flex items-center justify-center rounded-full bg-gray-700 border border-gray-600 text-xs shadow-md z-10"
+      >
+        {{ isExpanded ? '◀' : '▶' }}
+      </button>
+
       <!-- Cores Button -->
       <button 
         @click="toggleView('cores')"
         :disabled="totalCount.cores === 0"
         class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
-        :class="activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'"
+        :class="[
+          activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.cores > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+          !isExpanded ? 'px-2' : ''
+        ]"
         title="Active Cores"
       >
         <img src="/images/core-green.png" class="w-6 h-6 object-contain" />
-        <div class="flex items-center text-base font-bold leading-none whitespace-nowrap">
+        <div v-if="isExpanded" class="flex items-center text-base font-bold leading-none whitespace-nowrap">
           <span class="text-green-500">{{ coreCounts.green }}</span>
           <span class="text-gray-500 mx-0.5">-</span>
           <span class="text-blue-500">{{ coreCounts.blue }}</span>
@@ -141,11 +157,14 @@ function handleSelect(zoneId: string) {
         @click="toggleView('crystals')"
         :disabled="totalCount.crystals === 0"
         class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
-        :class="activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'"
+        :class="[
+          activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.crystals > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+          !isExpanded ? 'px-2' : ''
+        ]"
         title="Crystals"
       >
         <img src="/images/crystal.png" class="w-6 h-6 object-contain" />
-        <span class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.crystals }}</span>
+        <span v-if="isExpanded" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.crystals }}</span>
       </button>
 
       <!-- Dungeons Button -->
@@ -153,11 +172,14 @@ function handleSelect(zoneId: string) {
         @click="toggleView('dungeons')"
         :disabled="totalCount.dungeons === 0"
         class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
-        :class="activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'"
+        :class="[
+          activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.dungeons > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+          !isExpanded ? 'px-2' : ''
+        ]"
         title="Dungeons"
       >
         <img src="/images/dungeon-group.png" class="w-6 h-6 object-contain" />
-        <span class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.dungeons }}</span>
+        <span v-if="isExpanded" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.dungeons }}</span>
       </button>
 
       <!-- Chests Button -->
@@ -165,18 +187,21 @@ function handleSelect(zoneId: string) {
         @click="toggleView('chests')"
         :disabled="totalCount.chests === 0"
         class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
-        :class="activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'"
+        :class="[
+          activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.chests > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+          !isExpanded ? 'px-2' : ''
+        ]"
         title="Chests"
       >
         <img src="/images/treasures-green.png" class="w-6 h-6 object-contain" />
-        <span class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.chests }}</span>
+        <span v-if="isExpanded" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.chests }}</span>
       </button>
     </div>
 
     <!-- Active Detail Panel -->
     <Transition name="fade" mode="out-in">
       <div 
-        v-if="hasItems(activeView)"
+        v-if="isExpanded && hasItems(activeView)"
         :key="activeView"
         class="bg-gray-900/95 border border-gray-700 rounded-xl p-3 shadow-2xl backdrop-blur-md pointer-events-auto w-full md:w-64 flex flex-col"
       >
@@ -187,7 +212,7 @@ function handleSelect(zoneId: string) {
           </span>
         </div>
 
-        <div class="max-h-[400px] overflow-y-auto pr-1">
+        <div class="max-h-[calc(100vh-150px)] overflow-y-auto pr-1 flex flex-col-reverse">
           <ActiveCoreSummary 
             v-if="activeView === 'cores'"
             :cores="cores" 

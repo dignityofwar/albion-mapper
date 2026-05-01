@@ -753,10 +753,10 @@ defineExpose({ flowNodes, onNodeDragStop });
 
 <template>
   <div class="h-screen flex flex-col bg-gray-950 text-white">
-    <!-- Header -->
-    <header class="shrink-0 bg-gray-900 border-b border-gray-700 h-14 flex items-center px-4 relative z-50">
+    <!-- Header (Desktop) -->
+    <header class="shrink-0 bg-gray-900 border-b border-gray-700 h-14 hidden md:flex items-center px-4 relative z-50">
       <div class="flex items-center gap-4">
-        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block" alt="Site Logo" />
+        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block ml-2" alt="Site Logo" />
         <RoomSettings />
       </div>
       <div class="absolute left-1/2 -translate-x-1/2">
@@ -790,6 +790,17 @@ defineExpose({ flowNodes, onNodeDragStop });
 
     <!-- Graph -->
     <div class="flex-1 relative">
+      <!-- Mobile header (Mobile/Tablet) -->
+      <div class="md:hidden absolute top-4 left-4 z-50 flex flex-col gap-2">
+        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2" alt="Site Logo" />
+        <RoomSettings :tray="true" />
+      </div>
+      <div class="md:hidden absolute top-4 left-1/2 -translate-x-1/2 z-50 w-full px-16 text-center">
+        <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none" :title="roomTitle" data-testid="room-title-mobile">
+          {{ roomTitle }}
+        </h1>
+      </div>
+
       <VueFlow
         v-model:nodes="flowNodes"
         v-model:edges="flowEdges"
@@ -825,7 +836,7 @@ defineExpose({ flowNodes, onNodeDragStop });
       </Transition>
 
       <!-- Summary Toolbar (Desktop) -->
-      <div v-if="hasAnySummaryItems" class="absolute top-4 right-4 z-40 hidden md:flex pointer-events-none">
+      <div class="absolute top-4 right-4 z-40 hidden md:flex pointer-events-none">
         <RoomSummaryToolbar 
           :cores="activeCores"
           :crystals="activeCrystals"
@@ -847,7 +858,6 @@ defineExpose({ flowNodes, onNodeDragStop });
       >🐛</button>
       <!-- Active Cores button (mobile only) -->
       <button
-        v-if="hasAnySummaryItems"
         class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 border border-indigo-400 text-xl shadow-lg md:hidden"
         title="Room Summary"
         @click="showMobileSummary = true"
@@ -876,6 +886,7 @@ defineExpose({ flowNodes, onNodeDragStop });
                 :crystals="activeCrystals"
                 :dungeons="activeDungeons"
                 :chests="activeChests"
+                always-expanded
                 @select="goToNode"
               />
           </div>
