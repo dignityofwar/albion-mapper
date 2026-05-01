@@ -166,7 +166,8 @@ defineExpose({
       stroke-linejoin="round"
       :stroke="style.stroke"
       stroke-opacity="1"
-      stroke-dasharray="none"
+      stroke-dasharray="0"
+      style="stroke-dasharray: 0;"
     >
       <animateMotion
         dur="3s"
