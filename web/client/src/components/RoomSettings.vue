@@ -96,7 +96,7 @@ function logout() {
 
 <template>
   <div class="contents">
-    <div ref="popupEl" :class="[tray ? '' : 'relative shrink-0']" style="z-index:200">
+    <div ref="popupEl" class="relative shrink-0" style="z-index:200">
       <!-- Cog button -->
       <button
         type="button"

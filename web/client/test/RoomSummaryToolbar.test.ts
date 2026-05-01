@@ -6,15 +6,16 @@ import { nextTick } from 'vue';
 
 describe('RoomSummaryToolbar', () => {
   const defaultProps = {
-    cores: [],
-    crystals: [],
-    dungeons: [],
-    chests: [],
+    cores: [] as any[],
+    crystals: [] as any[],
+    dungeons: [] as any[],
+    chests: [] as any[],
+    alwaysExpanded: false,
   };
 
-  function mountToolbar(props = defaultProps) {
+  function mountToolbar(props: Partial<typeof defaultProps> = {}) {
     return mount(RoomSummaryToolbar, {
-      props,
+      props: { ...defaultProps, ...props },
       global: { plugins: [createTestingPinia()] }
     });
   }

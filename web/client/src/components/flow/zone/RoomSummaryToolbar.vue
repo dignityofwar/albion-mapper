@@ -121,7 +121,7 @@ function handleSelect(zoneId: string) {
 <template>
   <div class="flex flex-col md:flex-row-reverse items-stretch md:items-start gap-3 pointer-events-none w-full md:w-auto">
     <!-- Toolbar -->
-    <div class="flex flex-row md:flex-col gap-2 bg-gray-900/95 border border-gray-700 rounded-xl p-2 shadow-2xl backdrop-blur-md pointer-events-auto justify-center relative">
+    <div class="flex flex-row md:flex-col gap-2 bg-gray-900/95 border border-gray-700 rounded-xl p-2 shadow-2xl backdrop-blur-md pointer-events-auto justify-center relative transition-all duration-300">
       <!-- Toggle Button -->
       <button 
         v-if="!alwaysExpanded"
