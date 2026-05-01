@@ -35,6 +35,7 @@ afterEach(async () => {
 describe('POST /api/rooms/:id/connections', () => {
   it('creates a connection and returns it', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
     
     const res = await app.inject({
@@ -55,6 +56,7 @@ describe('POST /api/rooms/:id/connections', () => {
 
   it('rejects same-zone connections', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
@@ -67,6 +69,7 @@ describe('POST /api/rooms/:id/connections', () => {
 
   it('rejects unknown fromZoneId', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
@@ -79,6 +82,7 @@ describe('POST /api/rooms/:id/connections', () => {
 
   it('rejects unknown toZoneId', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
@@ -91,6 +95,7 @@ describe('POST /api/rooms/:id/connections', () => {
 
   it('rejects secondsRemaining = 0', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
@@ -102,6 +107,7 @@ describe('POST /api/rooms/:id/connections', () => {
 
   it('rejects secondsRemaining > 86400', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
@@ -109,6 +115,33 @@ describe('POST /api/rooms/:id/connections', () => {
       payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 86401 },
     });
     expect(res.statusCode).toBe(400);
+  });
+
+  it('rejects connection that creates a cycle', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    // Return an existing connection: VALID_ZONE_B -> VALID_ZONE_A
+    mockDb.query.mockResolvedValueOnce({ rows: [{ 
+      id: 'conn-1', 
+      room_id: roomId, 
+      from_zone_id: VALID_ZONE_B, 
+      to_zone_id: VALID_ZONE_A, 
+      from_handle_id: null, 
+      to_handle_id: null, 
+      expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(), 
+      reported_at: new Date().toISOString(), 
+      reported_by: null 
+    }] });
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      // Try to create: VALID_ZONE_A -> VALID_ZONE_B
+      // Cycle: A -> B -> A
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
+    });
+    expect(res.statusCode).toBe(400);
+    expect(res.json<{ error: string }>().error).toMatch(/cycle/i);
   });
 
   it('requires authorization', async () => {

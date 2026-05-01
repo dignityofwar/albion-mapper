@@ -96,6 +96,7 @@ const canSubmit = computed(
 
 async function submitAndAddMore() {
   if (!canSubmit.value) return;
+
   submitting.value = true;
 
   try {

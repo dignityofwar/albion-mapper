@@ -24,7 +24,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '@/utils/formatters';
 import { deleteConnection, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
-import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getHandleFacing, getOppositeHandleId } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getHandleFacing, getOppositeHandleId, wouldCreateCycle } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -635,6 +635,11 @@ async function handleConnect(params: any) {
     } catch (err: any) {
       showToast(err.message || 'Failed to update connection.', 'error');
     }
+    return;
+  }
+
+  if (wouldCreateCycle(store.connections, params.source, params.target)) {
+    showToast("This connection would create a cycle.", "error");
     return;
   }
 

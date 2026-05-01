@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'node:crypto';
 import { CreateConnectionBodySchema, UpdateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus } from 'shared';
+import * as Shared from 'shared';
 import type { Connection, NodePosition } from 'shared';
 import { broadcast } from '../broadcast.js';
 import { getInitialFeatures } from '../utils/nodeFeatures.js';
@@ -93,6 +94,15 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'toZoneId not found in zone catalogue' });
     }
 
+    const { rows: dbConnections } = await app.db.query<DbConnection>(
+      'SELECT * FROM connections WHERE room_id = $1',
+      [id]
+    );
+    const connections = dbConnections.map(dbRowToConnection);
+    if (Shared.wouldCreateCycle(connections, fromZoneId, toZoneId)) {
+      return reply.status(400).send({ error: 'This connection would create a cycle' });
+    }
+
     // If target position is provided, save it
     if (targetPosition) {
       await app.db.query(`
@@ -141,6 +151,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
     broadcast(id, { type: 'connection_added', connection });
     return reply.status(201).send(connection);
   });
+
 
   // DELETE /api/rooms/:id/connections/:connId — delete a connection
   app.delete<{ Params: { id: string; connId: string } }>(
