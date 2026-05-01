@@ -210,7 +210,7 @@ defineExpose({
         transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
         pointerEvents: 'all',
       }"
-      :class="['absolute nodrag nopan', showPopover ? Z_INDEX.POPOVER_ACTIVE : Z_INDEX.DEFAULT]"
+      :class="['absolute nodrag nopan', showPopover ? Z_INDEX.POPOVER_ACTIVE : Z_INDEX.CONNECTION_PILL]"
     >
       <!-- Countdown label -->
       <div

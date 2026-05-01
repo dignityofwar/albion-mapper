@@ -1,5 +1,6 @@
 export const Z_INDEX = {
   DEFAULT: 'z-[-1]',
+  CONNECTION_PILL: 'z-[2]',
   NODE_BASE: 'z-[5]',
   NODE_BORDER: 'z-[6]',
   HANDLE: 'z-[30]',
