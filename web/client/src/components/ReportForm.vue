@@ -91,7 +91,7 @@ const canSubmit = computed(
   () => fromZoneId.value && toZoneId.value && secondsRemaining.value !== null && !submitting.value,
 );
 
-async function submit() {
+async function submitAndAddMore() {
   if (!canSubmit.value) return;
   submitting.value = true;
 
@@ -144,14 +144,19 @@ async function submit() {
       focusToCombobox();
     });
   } catch (err: any) {
-    emit('error', err.message || 'Failed to submit');
+    emit('error', err.message || 'Failed to submitAndAddMore');
   } finally {
     submitting.value = false;
   }
 }
 
+async function submitAndClose() {
+  await submitAndAddMore();
+  close();
+}
+
 function onTimeKeydown(e: KeyboardEvent) {
-  if (e.key === 'Enter') submit();
+  if (e.key === 'Enter') submitAndAddMore();
 }
 
 const timeInputEl = ref<{ focus: () => void } | null>(null);
@@ -213,7 +218,7 @@ defineExpose({
         <form
           class="flex flex-col gap-5"
           data-testid="report-form"
-          @submit.prevent="submit"
+          @submit.prevent="submitAndAddMore"
         >
           <!-- From -->
           <div class="flex flex-col gap-1.5">
@@ -291,31 +296,40 @@ defineExpose({
             </div>
           </div>
           
-          <!-- Time & Submit -->
-          <div class="flex items-end gap-3">
-            <div class="flex-1 flex flex-col gap-1.5" ref="timeInputContainer">
-              <label class="text-sm font-medium text-gray-400">Expires In</label>
-              <TutorialTooltip
-                v-if="isModalReady && !tutorialStore.completed && tutorialStore.step === 2 && timeInputContainer"
-                :target="timeInputContainer"
-                message="You can find this by hovering over the portal in game."
-                pointing="up"
-              />
-              <TimeInput
-                ref="timeInputEl"
-                v-model="secondsRemaining"
-                data-testid="time-input"
-                @keydown="onTimeKeydown"
-              />
-            </div>
-            
+          <!-- Time -->
+          <div class="flex flex-col gap-1.5" ref="timeInputContainer">
+            <label class="text-sm font-medium text-gray-400">Expires In</label>
+            <TutorialTooltip
+              v-if="isModalReady && !tutorialStore.completed && tutorialStore.step === 2 && timeInputContainer"
+              :target="timeInputContainer"
+              message="You can find this by hovering over the portal in game."
+              pointing="up"
+            />
+            <TimeInput
+              ref="timeInputEl"
+              v-model="secondsRemaining"
+              data-testid="time-input"
+              @keydown="onTimeKeydown"
+            />
+          </div>
+
+          <!-- Buttons -->
+          <div class="flex gap-3">
             <button
               type="submit"
               :disabled="!canSubmit"
-              class="px-8 py-2.5 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              data-testid="submit-button"
+              class="flex-1 px-4 py-2.5 rounded bg-gray-700 text-white font-semibold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              data-testid="submitAndAddMore-button"
             >
-              {{ submitting ? 'Adding...' : 'Add Connection' }}
+              {{ submitting ? 'Adding...' : 'Save and add more' }}
+            </button>
+            <button
+              type="button"
+              :disabled="!canSubmit"
+              class="flex-1 px-4 py-2.5 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              @click="submitAndClose"
+            >
+              Save and Close
             </button>
           </div>
         </form>

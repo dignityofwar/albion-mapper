@@ -103,32 +103,29 @@ defineExpose({
   >
     <input
       ref="hoursEl"
-      type="number"
-      v-model.number="hours"
+      type="text"
+      inputmode="numeric"
+      v-model="hours"
       placeholder="HH"
       class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
-      min="0"
-      max="23"
       @keydown="onKeydown"
     />
     <span class="text-gray-400 leading-none">:</span>
     <input
-      type="number"
-      v-model.number="minutes"
+      type="text"
+      inputmode="numeric"
+      v-model="minutes"
       placeholder="MM"
       class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
-      min="0"
-      max="59"
       @keydown="onKeydown"
     />
     <span class="text-gray-400 leading-none">:</span>
     <input
-      type="number"
-      v-model.number="seconds"
+      type="text"
+      inputmode="numeric"
+      v-model="seconds"
       placeholder="SS"
       class="w-8 bg-transparent py-0 text-white text-sm leading-none outline-none text-center"
-      min="0"
-      max="59"
       @keydown="onKeydown"
     />
   </div>

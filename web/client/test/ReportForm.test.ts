@@ -55,9 +55,9 @@ async function setTime(wrapper: VueWrapper<any>, timeStr: string) {
 }
 
 describe('ReportForm', () => {
-  it('submit button is disabled when from/to/time are empty', async () => {
+  it('submitAndAddMore button is disabled when from/to/time are empty', async () => {
     const wrapper = await mountForm();
-    const btn = wrapper.find('[data-testid="submit-button"]').element as HTMLButtonElement;
+    const btn = wrapper.find('[data-testid="submitAndAddMore-button"]').element as HTMLButtonElement;
     expect(btn.disabled).toBe(true);
     wrapper.unmount();
   });
@@ -119,7 +119,7 @@ describe('ReportForm', () => {
     wrapper.unmount();
   });
 
-  it('enter key on time input triggers submit attempt', async () => {
+  it('enter key on time input triggers submitAndAddMore attempt', async () => {
     const mockResponse = {
       ok: false,
       json: async () => ({ error: 'fromZoneId and toZoneId required' }),
@@ -142,13 +142,13 @@ describe('ReportForm', () => {
     global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
 
     const wrapper = await mountForm();
-    const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; secondsRemaining: number | null; submit: () => Promise<void> };
+    const vm = wrapper.vm as any;
 
     vm.fromZoneId = 'zoneA';
     vm.toZoneId = 'zoneB';
     vm.secondsRemaining = 1800;
 
-    await vm.submit();
+    await vm.submitAndAddMore();
 
     expect(vm.fromZoneId).toBe('zoneA'); // Should not change
     expect(vm.toZoneId).toBe(''); // Should reset
@@ -163,13 +163,13 @@ describe('ReportForm', () => {
     global.fetch = vi.fn().mockResolvedValueOnce(mockResponse as unknown as Response);
 
     const wrapper = await mountForm();
-    const vm = wrapper.vm as unknown as { fromZoneId: string; toZoneId: string; secondsRemaining: number | null; submit: () => Promise<void> };
+    const vm = wrapper.vm as any;
 
     vm.fromZoneId = 'zoneA';
     vm.toZoneId = 'zoneB';
     vm.secondsRemaining = 1800;
 
-    await vm.submit();
+    await vm.submitAndAddMore();
 
     expect(vm.secondsRemaining).toBeNull(); // Should reset
     wrapper.unmount();
@@ -192,7 +192,7 @@ describe('ReportForm', () => {
     vm.toZoneId = 'zoneB';
     vm.secondsRemaining = 1800;
 
-    await vm.submit();
+    await vm.submitAndAddMore();
 
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining('/rooms/room123/connections'),
