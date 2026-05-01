@@ -1,4 +1,4 @@
-import { Connection } from './types';
+import { Connection } from './types.js';
 
 export function wouldCreateCycle(
   connections: Connection[],

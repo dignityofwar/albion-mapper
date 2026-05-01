@@ -1,3 +1,3 @@
-export * from './types';
-export * from './zones';
-export * from './connections';
+export * from './types.js';
+export * from './zones.js';
+export * from './connections.js';
