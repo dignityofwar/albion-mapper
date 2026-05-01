@@ -757,7 +757,7 @@ defineExpose({ flowNodes, onNodeDragStop });
 <template>
   <div class="h-screen flex flex-col bg-gray-950 text-white">
     <!-- Header (Desktop) -->
-    <header class="shrink-0 bg-gray-900 border-b border-gray-700 h-14 hidden md:flex items-center px-4 relative z-50">
+    <header class="shrink-0 bg-gray-900 border-b border-gray-700 h-14 hidden md:flex items-center px-4 relative" :class="Z_INDEX.UI_OVERLAY">
       <div class="flex items-center gap-4">
         <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block ml-2" alt="Site Logo" />
         <RoomSettings />
@@ -794,11 +794,11 @@ defineExpose({ flowNodes, onNodeDragStop });
     <!-- Graph -->
     <div class="flex-1 relative">
       <!-- Mobile header (Mobile/Tablet) -->
-      <div class="md:hidden absolute top-4 left-4 z-50 flex flex-col gap-2">
+      <div class="md:hidden absolute top-4 left-4 flex flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
         <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2" alt="Site Logo" />
         <RoomSettings :tray="true" />
       </div>
-      <div class="md:hidden absolute top-4 left-1/2 -translate-x-1/2 z-50 w-full px-16 text-center">
+      <div class="md:hidden absolute top-4 left-1/2 -translate-x-1/2 w-full px-16 text-center" :class="Z_INDEX.UI_OVERLAY">
         <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none" :title="roomTitle" data-testid="room-title-mobile">
           {{ roomTitle }}
         </h1>
@@ -839,7 +839,7 @@ defineExpose({ flowNodes, onNodeDragStop });
       </Transition>
 
       <!-- Summary Toolbar (Desktop) -->
-      <div class="absolute top-4 right-4 z-40 hidden md:flex pointer-events-none">
+      <div class="absolute top-4 right-4 hidden md:flex pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
         <RoomSummaryToolbar 
           :cores="activeCores"
           :crystals="activeCrystals"
@@ -851,7 +851,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     </div>
 
     <!-- Tray buttons -->
-    <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-4">
+    <div class="fixed bottom-4 right-4 flex flex-col gap-4" :class="Z_INDEX.UI_OVERLAY">
       <!-- Debug tray button -->
       <button
         v-if="isLocal || showDebugOverride"
@@ -879,7 +879,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     <Transition name="toast">
       <div v-if="showMobileSummary" class="fixed inset-0 flex items-center justify-center p-4 bg-black/60 md:hidden" @click.self="showMobileSummary = false" :class="Z_INDEX.MOBILE_SUMMARY">
         <div class="bg-gray-900 border border-gray-700 rounded-xl shadow-xl w-full max-w-lg flex flex-col max-h-[90vh]">
-          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-gray-900 rounded-t-xl sticky top-0 z-10">
+          <div class="flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-gray-900 rounded-t-xl sticky top-0" :class="Z_INDEX.CONTENT_LOW">
             <h2 class="text-base font-bold uppercase text-gray-400">Room Summary</h2>
             <button class="text-gray-400 hover:text-white text-xl leading-none" @click="showMobileSummary = false">&times;</button>
           </div>
@@ -904,8 +904,11 @@ defineExpose({ flowNodes, onNodeDragStop });
     <Transition name="toast">
       <div
         v-if="toast"
-        class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
-        :class="toastType === 'error' ? 'bg-red-900 border border-red-500' : 'bg-gray-800 border border-gray-600'"
+        class="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
+        :class="[
+          Z_INDEX.UI_OVERLAY,
+          toastType === 'error' ? 'bg-red-900 border border-red-500' : 'bg-gray-800 border border-gray-600'
+        ]"
       >
         <span>{{ toast }}</span>
         <button
@@ -918,7 +921,7 @@ defineExpose({ flowNodes, onNodeDragStop });
       </div>
     </Transition>
     <!-- Ko-fi button -->
-    <div class="fixed bottom-4 left-4 z-50">
+    <div class="fixed bottom-4 left-4" :class="Z_INDEX.UI_OVERLAY">
       <VueKofi uid="K3K5156KXP" color="#302f86" text="Tip the Navigator!" />
     </div>
     

@@ -579,7 +579,7 @@ const defaultInternalHandles = computed(() => {
 
       <div 
         v-if="showFeatures"
-        class="absolute top-0 left-0 w-full h-full pointer-events-none z-20"
+        class="absolute top-0 left-0 w-full h-full pointer-events-none" :class="Z_INDEX.CONTENT_MID"
       >
         <div class="cores-nw-container pointer-events-auto" ref="timerContainerRef">
           <ZoneCoresAndReds 
@@ -615,7 +615,7 @@ const defaultInternalHandles = computed(() => {
       </div>
 
       <!-- Central Content Block -->
-      <div class="absolute inset-x-0 top-[37.5%] z-10 pointer-events-none flex flex-col items-center">
+      <div class="absolute inset-x-0 top-[37.5%] pointer-events-none flex flex-col items-center" :class="Z_INDEX.CONTENT_LOW">
         <div class="w-full flex flex-col items-center pointer-events-none">
           <!-- Zone Header -->
             <ZoneHeader
@@ -663,7 +663,7 @@ const defaultInternalHandles = computed(() => {
       <button 
         v-if="props.data.mapShape && (props.data.type === 'roads' || props.data.type === 'roadsHideout')"
         ref="handleEditorButtonRef"
-        class="absolute bottom-[35px] left-1/2 -translate-x-1/2 z-10 px-2 py-1 rounded bg-gray-900/80 hover:bg-gray-700 transition-colors text-gray-300 hover:text-white flex items-center gap-1.5 border border-gray-700 shadow-lg"
+        :class="['absolute bottom-[35px] left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-gray-900/80 hover:bg-gray-700 transition-colors text-gray-300 hover:text-white flex items-center gap-1.5 border border-gray-700 shadow-lg', Z_INDEX.CONTENT_LOW]"
         @click.stop="openHandleEditor"
         @mousedown.stop
         title="Edit Handles"
@@ -695,7 +695,8 @@ const defaultInternalHandles = computed(() => {
         :message="'Open the handle editor to customize portals'"
         pointing="down"
         bounce
-        :style="{ left: '50%', bottom: '75px', transform: 'translateX(-50%)', 'z-index': 2000 }"
+        :style="{ left: '50%', bottom: '75px', transform: 'translateX(-50%)' }"
+        :class="[Z_INDEX.HANDLE_OVERLAY]"
       />
 
       <!-- Handles moved inside the relative container to match diamond coordinates exactly -->
@@ -704,11 +705,12 @@ const defaultInternalHandles = computed(() => {
           type="source"
           :position="handle.position"
           :id="handle.id"
-          :style="{ ...handle.style, ...(showPrompt && index === targetHandleIndex ? { '--handle-color': '#2563eb', 'z-index': 2000 } : {}) }"
-          :data-facing="handle.facing"
+          :style="{ ...handle.style, ...(showPrompt && index === targetHandleIndex ? { '--handle-color': '#2563eb' } : {}) }"
           :class="[
-            { 'is-disabled': handle.disabled, 'is-isolated': isRestricted },
+            showPrompt && index === targetHandleIndex ? Z_INDEX.HANDLE_OVERLAY : '',
+            { 'is-disabled': handle.disabled, 'is-isolated': isRestricted }
           ]"
+          :data-facing="handle.facing"
           :connectable="!handle.disabled && !isRestricted"
         />
         <TutorialTooltip
@@ -716,7 +718,8 @@ const defaultInternalHandles = computed(() => {
           :message="tutorialMessage"
           pointing="down"
           bounce
-          :style="{ position: 'absolute', left: handle.left, top: `calc(${handle.top} - 80px)`, transform: 'translateX(-47%)', 'z-index': 10000 }"
+          :style="{ position: 'absolute', left: handle.left, top: `calc(${handle.top} - 80px)`, transform: 'translateX(-47%)' }"
+          :class="[Z_INDEX.OVERLAY]"
         />
         <TutorialTooltip
           v-if="tutorialStore.step === 4 && index === seHandleIndex"
@@ -724,7 +727,8 @@ const defaultInternalHandles = computed(() => {
           pointing="up"
           containerClass="w-72"
           bounce
-          :style="{ position: 'absolute', left: handle.left, top: `calc(${handle.top} + 30px)`, transform: 'translateX(-50%)', 'z-index': 10000 }"
+          :style="{ position: 'absolute', left: handle.left, top: `calc(${handle.top} + 30px)`, transform: 'translateX(-50%)' }"
+          :class="[Z_INDEX.OVERLAY]"
         />
       </template>
 
@@ -737,7 +741,7 @@ const defaultInternalHandles = computed(() => {
         :id="handle.id" 
         :style="handle.style"
         :data-facing="handle.facing"
-        :class="['!border-orange-700 !border-b-2 !z-30 transition-opacity duration-300', store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none', isRestricted ? 'is-isolated' : '']"
+        :class="['!border-orange-700 !border-b-2 transition-opacity duration-300', Z_INDEX.CONTENT_HIGH, store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none', isRestricted ? 'is-isolated' : '']"
       />
 
       <!-- Legacy center handle for backward compatibility -->

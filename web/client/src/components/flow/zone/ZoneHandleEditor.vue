@@ -194,7 +194,8 @@ function getHandleFacing(left: string, top: string): string {
       >
         <!-- Rotation Buttons - Top Left and Top Right -->
         <button 
-          class="absolute top-2 left-2 w-14 h-14 z-50 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded border border-gray-600 transition-colors flex flex-col items-center justify-center leading-none shadow-lg"
+          class="absolute top-2 left-2 w-14 h-14 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded border border-gray-600 transition-colors flex flex-col items-center justify-center leading-none shadow-lg"
+          :class="Z_INDEX.UI_OVERLAY"
           title="Rotate Counter-Clockwise"
           @click.stop="rotate(-90)"
         >
@@ -202,7 +203,8 @@ function getHandleFacing(left: string, top: string): string {
           <span class="text-[10px] mt-1">90°</span>
         </button>
         <button 
-          class="absolute top-2 right-2 w-14 h-14 z-50 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded border border-gray-600 transition-colors flex flex-col items-center justify-center leading-none shadow-lg"
+          class="absolute top-2 right-2 w-14 h-14 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded border border-gray-600 transition-colors flex flex-col items-center justify-center leading-none shadow-lg"
+          :class="Z_INDEX.UI_OVERLAY"
           title="Rotate Clockwise"
           @click.stop="rotate(90)"
         >
@@ -211,7 +213,7 @@ function getHandleFacing(left: string, top: string): string {
         </button>
 
         <!-- Center Content - Inside Diamond -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center z-40 pointer-events-none px-12">
+        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-12" :class="Z_INDEX.TOOLTIP_BASE">
           <div class="flex flex-col items-center pointer-events-auto max-w-[280px]">
             <p class="text-gray-300 text-[11px] text-center mb-4 leading-tight drop-shadow-md">
               <template v-if="isToggleMode">
@@ -246,7 +248,8 @@ function getHandleFacing(left: string, top: string): string {
                 v-if="tutorialStore.step === 5 && isModalReady"
                 message="Click here to save your changes."
                 pointing="down"
-                :style="{ position: 'absolute', bottom: '120%', right: '-20px', 'z-index': 10000 }"
+                :style="{ position: 'absolute', bottom: '120%', right: '-20px' }"
+                :class="Z_INDEX.OVERLAY"
               />
             </div>
 

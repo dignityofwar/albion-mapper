@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { Z_INDEX } from '@/constants/Layers';
 
 const props = defineProps<{
   message: string;
@@ -47,9 +48,8 @@ const tooltipStyle = computed(() => {
 
 <template>
   <div
-    class="z-50"
+    :class="[Z_INDEX.UI_OVERLAY, { 'absolute': !target }, containerClass]"
     :style="tooltipStyle"
-    :class="[{ 'absolute': !target }, containerClass]"
   >
     <div
       class="bg-blue-600 text-white text-center px-2 py-1 rounded shadow-lg w-full"

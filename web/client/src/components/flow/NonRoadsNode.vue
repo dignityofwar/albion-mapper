@@ -75,7 +75,7 @@ const defaultInternalHandles = computed(() => {
       ></div>
 
       <!-- Central Content Block -->
-      <div class="absolute inset-x-0 top-[35%] z-10 pointer-events-none flex flex-col items-center px-4">
+      <div class="absolute inset-x-0 top-[35%] pointer-events-none flex flex-col items-center px-4" :class="Z_INDEX.CONTENT_LOW">
         <ZoneHeader
           :id="props.id" 
           :zone-name="props.data.zoneName" 

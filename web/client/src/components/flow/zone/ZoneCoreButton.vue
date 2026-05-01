@@ -110,7 +110,7 @@ defineExpose({
         :style="containerStyle"
       >
         <!-- Background/Border is handled by the container itself via clip-path and styles -->
-        <div class="flex items-center h-full pl-4 gap-1 relative z-10">
+        <div class="flex items-center h-full pl-4 gap-1 relative" :class="Z_INDEX.CONTENT_LOW">
           <img :src="config[type].img" class="w-6 h-6 p-[2px] shrink-0" />
           
 
@@ -147,7 +147,7 @@ defineExpose({
 
         <!-- Lock/Unlock and X Buttons -->
         <Transition name="fade">
-          <div v-if="editing" class="absolute right-0 top-0 bottom-0 flex z-20">
+          <div v-if="editing" class="absolute right-0 top-0 bottom-0 flex" :class="Z_INDEX.CONTENT_MID">
             <button 
               v-if="!isUnlocked"
               @click.stop="emit('unlock')"
@@ -169,7 +169,7 @@ defineExpose({
               class="nodrag w-6 flex items-center justify-center text-white text-[10px] transition-colors group/clear bg-red-600 hover:bg-red-500 border-none outline-none rounded-tr-md rounded-br-md"
               title="Clear Timer"
             >
-              <span class="relative z-30">✕</span>
+              <span class="relative" :class="Z_INDEX.CONTENT_HIGH">✕</span>
             </button>
           </div>
         </Transition>
@@ -177,7 +177,8 @@ defineExpose({
     </TooltipTrigger>
     <TooltipPortal>
       <TooltipContent 
-        class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-50 side-top animate-in fade-in zoom-in duration-200"
+        class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg side-top animate-in fade-in zoom-in duration-200"
+        :class="Z_INDEX.UI_OVERLAY"
         :side-offset="5"
       >
         {{ config[type].title }}
