@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
-import { useRoomStore } from '../stores/useRoomStore.js';
-import { API_BASE_URL } from '../utils/api';
+import { useRoomStore } from '@/stores/useRoomStore';
+import { API_BASE_URL } from '@/utils/api';
 import { track } from '@vercel/analytics';
 import ChangePasswordModal from './ChangePasswordModal.vue';
 import ResetConfirmModal from './ResetConfirmModal.vue';

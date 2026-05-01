@@ -3,7 +3,7 @@ import { mount } from '@vue/test-utils';
 import ConnectionEdge from '../src/components/flow/ConnectionEdge.vue';
 import { nextTick, ref } from 'vue';
 import { createPinia, setActivePinia } from 'pinia';
-import { useRoomStore } from '../src/stores/useRoomStore';
+import { useRoomStore } from '@/stores/useRoomStore';
 
 const mockSetCenter = vi.fn();
 

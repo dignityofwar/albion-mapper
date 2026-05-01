@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, watchEffect, nextTick, markRaw, provide } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, nextTick, markRaw, provide } from 'vue';
 import { useRouter } from 'vue-router';
 // @ts-ignore
 import VueKofi from 'vue-kofi';
@@ -13,7 +13,6 @@ import ZoneNode from '../components/flow/ZoneNode.vue';
 import NonRoadsNode from '../components/flow/NonRoadsNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ConnectionLine from '../components/flow/ConnectionLine.vue';
-import ActiveCoreSummary from '../components/flow/zone/ActiveCoreSummary.vue';
 import RoomSummaryToolbar from '../components/flow/zone/RoomSummaryToolbar.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
@@ -21,9 +20,9 @@ import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { formatTime, formatExpiresIn } from '../utils/formatters.js';
-import { deleteConnection, updateConnection } from '../utils/roomOperations.js';
-import { connectionStyle } from '../utils/connectionStyle.js';
+import { formatTime, formatExpiresIn } from '@/utils/formatters';
+import { deleteConnection, updateConnection } from '@/utils/roomOperations';
+import { connectionStyle } from '@/utils/connectionStyle';
 import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getHandleFacing, getOppositeHandleId } from 'shared';
 
 const props = defineProps<{ id: string }>();
@@ -247,8 +246,6 @@ watch(nodePositions, (newPositions) => {
 watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
     if (!homeZoneId.value) return;
 
-    const newConnections = connections.value;
-    const oldConnections = (oldVal && oldVal[2]) ? oldVal[2] as Connection[] : [];
     const existingNodeIds = new Set<string>();
     let positions: NodePosition[] = [];
     for (const np of nodePositions.value) {
@@ -258,9 +255,6 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         }
     }
 
-    // Find new connections
-    const addedConnections = newConnections.filter(c => !oldConnections.find(oc => oc.id === c.id));
-    
     // Ensure home zone exists in positions
     if (homeZoneId.value && !existingNodeIds.has(homeZoneId.value)) {
         positions.push({ zoneId: homeZoneId.value, x: 0, y: 0 });
@@ -870,7 +864,7 @@ defineExpose({ flowNodes, onNodeDragStop });
         title="Room Summary"
         @click="showMobileSummary = true"
       >
-        <img src="/images/core-green.png" class="w-8 h-8 p-[2px]" />
+        <img src="/images/core-green.png" class="w-8 h-8 p-[2px]" alt="Green Core" />
       </button>
 
       <!-- Fit view button -->
@@ -976,16 +970,6 @@ defineExpose({ flowNodes, onNodeDragStop });
 </template>
 
 <style scoped>
-.toast-enter-active,
-.toast-leave-active {
-  transition: opacity 0.3s, transform 0.3s;
-}
-.toast-enter-from,
-.toast-leave-to {
-  opacity: 0;
-  transform: translateX(-50%) translateY(1rem);
-}
-
 /* Status bar: "Last update" time flash */
 .status-update-time {
   display: inline-block;
@@ -1013,13 +997,6 @@ defineExpose({ flowNodes, onNodeDragStop });
   0%   { opacity: 0.85; }
   15%  { opacity: 0.85; }
   100% { opacity: 0; }
-}
-
-.mega-toast-enter-active {
-  animation: mega-toast-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.mega-toast-leave-active {
-  animation: mega-toast-out 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 }
 
 @keyframes mega-toast-in {

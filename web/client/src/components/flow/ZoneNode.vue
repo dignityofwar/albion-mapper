@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getOppositeHandleId } from 'shared';
+import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
-import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS } from '../../constants/ui';
-import { connectionStyle } from '../../utils/connectionStyle.js';
+import { connectionStyle } from '@/utils/connectionStyle';
 import { TooltipProvider } from 'reka-ui';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
@@ -13,10 +12,10 @@ import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneEditorTray from './zone/ZoneEditorTray.vue';
 import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
-import { useRoomStore } from '../../stores/useRoomStore';
-import { useTutorialStore } from '../../stores/useTutorialStore';
+import { useRoomStore } from '@/stores/useRoomStore';
+import { useTutorialStore } from '@/stores/useTutorialStore';
 import { storeToRefs } from 'pinia';
-import { deleteConnection } from '../../utils/roomOperations';
+import { deleteConnection } from '@/utils/roomOperations';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 
@@ -392,10 +391,10 @@ function getHandleFacing(left: string, top: string): string {
   const t = parseFloat(top);
   
   // Points
-  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return 'n';
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t) < 0.1) return 'n';
   if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
   if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
-  if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+  if (Math.abs(l) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
 
   // Sides
   if (l >= 50 && t < 50) return 'ne';

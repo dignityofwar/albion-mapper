@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mount, VueWrapper } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import ReportForm from '../src/components/ReportForm.vue';
-import { useRoomStore } from '../src/stores/useRoomStore.js';
+import { useRoomStore } from '@/stores/useRoomStore';
 import { nextTick } from 'vue';
 
 let attachTo: HTMLDivElement;
@@ -137,8 +137,6 @@ describe('ReportForm', () => {
 
   it('invalid seconds ":75" and letters parse to null', async () => {
     const wrapper = await mountForm();
-    const vm = wrapper.vm as unknown as { secondsRemaining: number | null };
-
     await setTime(wrapper, '1:75');
     // TimeInput clamps m=75 to 59. So 1:75 becomes 1:59 = 119.
     // This test was likely written for a different TimeInput.

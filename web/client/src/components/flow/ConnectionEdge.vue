@@ -2,14 +2,14 @@
 import { computed, ref, watch, onMounted, onUnmounted, nextTick, inject, type Ref } from 'vue';
 import { BaseEdge, EdgeLabelRenderer, useVueFlow } from '@vue-flow/core';
 import type { EdgeProps } from '@vue-flow/core';
-import { connectionStyle } from '../../utils/connectionStyle.js';
-import { getConnectionPath } from '../../utils/connectionPath.js';
-import { formatCountdown } from '../../utils/formatters.js';
+import { connectionStyle } from '@/utils/connectionStyle';
+import { getConnectionPath } from '@/utils/connectionPath';
+import { formatCountdown } from '@/utils/formatters';
 import TimeInput from '../common/TimeInput.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
-import { useTutorialStore } from '../../stores/useTutorialStore';
-import { useRoomStore } from '../../stores/useRoomStore';
-import { treeQuery } from '../../utils/treeQuery';
+import { useTutorialStore } from '@/stores/useTutorialStore';
+import { useRoomStore } from '@/stores/useRoomStore';
+import { treeQuery } from '@/utils/treeQuery';
 import { ZONE_BY_ID, type Connection } from 'shared';
 
 type EdgeData = {
@@ -192,7 +192,7 @@ defineExpose({
     >
       <animateMotion
         dur="3s"
-        :begin="`${(i - 1) * 1}s`"
+        :begin="`${(i - 1)}s`"
         repeatCount="indefinite"
         :path="path"
         rotate="auto"
@@ -303,10 +303,6 @@ defineExpose({
 </template>
 
 <style scoped>
-:deep(.vue-flow__edge-path.animated) {
-  animation: dash 1s linear infinite;
-}
-
 @keyframes dash {
   from {
     stroke-dashoffset: 0;

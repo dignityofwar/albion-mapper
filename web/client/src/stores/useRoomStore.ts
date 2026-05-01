@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle } from 'shared';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL } from '@/utils/api';
 import { track } from '@vercel/analytics';
-import { treeQuery } from '../utils/treeQuery';
+import { treeQuery } from '@/utils/treeQuery';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected' | 'auth_failed';
 
@@ -18,7 +18,6 @@ export const useRoomStore = defineStore('room', () => {
   const roomId = ref<string>('');
   const showDefaultHandles = ref<boolean>(false);
   const now = ref(Date.now());
-  const ticker = setInterval(() => (now.value = Date.now()), 1000);
 
   let ws: WebSocket | null = null;
   let reconnectDelay = 1000;

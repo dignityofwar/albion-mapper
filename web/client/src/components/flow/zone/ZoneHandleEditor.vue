@@ -169,10 +169,10 @@ function getHandleFacing(left: string, top: string): string {
   const t = parseFloat(top);
   
   // Points
-  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return 'n';
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t) < 0.1) return 'n';
   if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
   if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
-  if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+  if (Math.abs(l) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
 
   // Sides
   if (l >= 50 && t < 50) return 'ne';

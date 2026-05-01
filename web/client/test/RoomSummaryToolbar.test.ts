@@ -1,8 +1,7 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import RoomSummaryToolbar from '../src/components/flow/zone/RoomSummaryToolbar.vue';
-import { nextTick } from 'vue';
 
 describe('RoomSummaryToolbar', () => {
   const defaultProps = {

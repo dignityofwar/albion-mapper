@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { Handle, Position } from '@vue-flow/core';
+import { Handle } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
 import { DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import ZoneHeader from './zone/ZoneHeader.vue';
-import { computed, inject, ref } from 'vue';
+import { computed } from 'vue';
 import type { NodeFeatures } from 'shared';
-import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
 
 const props = defineProps<NodeProps<{ 
@@ -99,19 +98,6 @@ const defaultInternalHandles = computed(() => {
 <style scoped>
 .diamond-shape {
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-}
-
-.goto-glow {
-  filter: drop-shadow(0 0 15px rgba(234, 179, 8, 0.6));
-}
-
-.red-glow {
-  filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.7));
-  animation: slow-glow 3s infinite ease-in-out;
-}
-
-.home-glow {
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
 }
 
 @keyframes slow-glow {

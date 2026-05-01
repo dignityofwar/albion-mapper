@@ -1,6 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { useRoomStore } from '../src/stores/useRoomStore';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { useRoomStore } from '@/stores/useRoomStore';
 
 // Mock WebSocket
 if (typeof global.WebSocket === 'undefined') {

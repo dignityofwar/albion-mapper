@@ -4,11 +4,10 @@ import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPo
 import ZoneCombobox from './ZoneCombobox.vue';
 import TutorialTooltip from './tutorial/TutorialTooltip.vue';
 import TimeInput from './common/TimeInput.vue';
-import { useRoomStore } from '../stores/useRoomStore.js';
-import { useTutorialStore } from '../stores/useTutorialStore.js';
-import { addConnection } from '../utils/roomOperations.js';
+import { useRoomStore } from '@/stores/useRoomStore';
+import { useTutorialStore } from '@/stores/useTutorialStore';
+import { addConnection } from '@/utils/roomOperations';
 import { ZONE_BY_ID } from 'shared';
-import { API_BASE_URL } from '../utils/api';
 
 const props = defineProps<{}>();
 
@@ -266,7 +265,7 @@ defineExpose({
               :only-roads-hideout="!tutorialStore.completed"
               @tab-select="focusToCombobox"
               @select="focusToCombobox"
-              @update:model-value="(val) => { if (fromHandleId && !fromHandleId.startsWith('default-')) fromHandleId = null; }"
+              @update:model-value="(_) => { if (fromHandleId && !fromHandleId.startsWith('default-')) fromHandleId = null; }"
             />
           </div>
 
@@ -294,7 +293,7 @@ defineExpose({
                 :only-roads-hideout="!tutorialStore.completed"
                 @tab-select="focusTimeInput"
                 @select="focusTimeInput"
-                @update:model-value="(val) => { if (toHandleId && !toHandleId.startsWith('default-')) toHandleId = null; }"
+                @update:model-value="(_) => { if (toHandleId && !toHandleId.startsWith('default-')) toHandleId = null; }"
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 
 import { describe, it, expect } from 'vitest';
-import { treeQuery } from '../src/utils/treeQuery';
+import { treeQuery } from '@/utils/treeQuery';
 import type { Connection } from 'shared';
 
 describe('treeQuery', () => {

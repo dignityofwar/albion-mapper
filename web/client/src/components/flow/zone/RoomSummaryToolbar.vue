@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { useTutorialStore } from '../../../stores/useTutorialStore';
+import { useTutorialStore } from '@/stores/useTutorialStore';
 import ActiveCoreSummary from './ActiveCoreSummary.vue';
 
 const tutorialStore = useTutorialStore();
@@ -167,7 +167,7 @@ function handleSelect(zoneId: string) {
             ]"
             title="Active Cores"
           >
-            <img src="/images/core-green.png" class="w-6 h-6 object-contain" />
+            <img src="/images/core-green.png" class="w-6 h-6 object-contain" alt="Green Core" />
             <Transition name="fade">
               <div v-if="contentVisible" class="flex items-center text-base font-bold leading-none whitespace-nowrap">
                 <span class="text-green-500">{{ coreCounts.green }}</span>
@@ -190,7 +190,7 @@ function handleSelect(zoneId: string) {
             ]"
             title="Crystals"
           >
-            <img src="/images/crystal.png" class="w-6 h-6 object-contain" />
+            <img src="/images/crystal.png" class="w-6 h-6 object-contain" Alt="Crystal Animal" />
             <Transition name="fade">
               <span v-if="contentVisible" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.crystals }}</span>
             </Transition>
@@ -207,7 +207,7 @@ function handleSelect(zoneId: string) {
             ]"
             title="Dungeons"
           >
-            <img src="/images/dungeon-group.png" class="w-6 h-6 object-contain" />
+            <img src="/images/dungeon-group.png" class="w-6 h-6 object-contain" alt="Group Dungeon" />
             <Transition name="fade">
               <span v-if="contentVisible" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.dungeons }}</span>
             </Transition>
@@ -224,7 +224,7 @@ function handleSelect(zoneId: string) {
             ]"
             title="Chests"
           >
-            <img src="/images/treasures-green.png" class="w-6 h-6 object-contain" />
+            <img src="/images/treasures-green.png" class="w-6 h-6 object-contain" alt="Green Treasure Chest"/>
             <Transition name="fade">
               <span v-if="contentVisible" class="text-base font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.chests }}</span>
             </Transition>
@@ -262,9 +262,9 @@ function handleSelect(zoneId: string) {
               @click="handleSelect(item.zoneId)"
               class="flex items-center gap-3 px-2.5 py-2 rounded bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left border border-gray-700 group"
             >
-              <div class="w-5 h-5 flex items-center justify-center shrink-0">
-                 <img :src="getItemIcon(item)" class="w-full h-full object-contain" />
-              </div>
+              <span class="w-5 h-5 flex items-center justify-center shrink-0">
+                 <img :src="getItemIcon(item)" class="w-full h-full object-contain" alt="Zone Item" />
+              </span>
               <span class="text-sm font-medium truncate group-hover:text-indigo-300">
                 {{ item.zoneName }}
               </span>
@@ -276,15 +276,3 @@ function handleSelect(zoneId: string) {
   </div>
 </template>
 
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateX(10px);
-}
-</style>
