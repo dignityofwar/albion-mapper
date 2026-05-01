@@ -196,6 +196,63 @@ export const ChangePasswordBodySchema = z.object({
   adminPassword: z.string().min(1),
 });
 
+export const NodeFeaturesSchema = z.object({
+  reds: z.number().nullable().optional(),
+  redsTimer: z.number().optional(),
+  powercoreBlue: z.boolean().optional(),
+  powercorePurple: z.boolean().optional(),
+  powercoreGreen: z.boolean().optional(),
+  powercoreYellow: z.boolean().optional(),
+  powercoreTimerGreen: z.number().optional(),
+  powercoreTimerBlue: z.number().optional(),
+  powercoreTimerPurple: z.number().optional(),
+  powercoreTimerYellow: z.number().optional(),
+  crystalCreaturePresent: z.boolean().optional(),
+  dungeonStatic: z.boolean().optional(),
+  dungeonGroup: z.boolean().optional(),
+  chest: z.boolean().optional(),
+  treasuresGreen: z.boolean().optional(),
+  treasuresBlue: z.boolean().optional(),
+  treasuresYellow: z.boolean().optional(),
+  resourceFibre: z.boolean().optional(),
+  resourceLeather: z.boolean().optional(),
+  resourceOre: z.boolean().optional(),
+  resourceStone: z.boolean().optional(),
+  resourceWood: z.boolean().optional(),
+}).passthrough().optional();
+
+export const CustomHandleSchema = z.object({
+  id: z.string(),
+  left: z.string(),
+  top: z.string(),
+  disabled: z.boolean().optional(),
+});
+
+export const NodePositionSchema = z.object({
+  zoneId: z.string(),
+  x: z.number(),
+  y: z.number(),
+  virtualGridPos: z.object({ x: z.number(), y: z.number() }).optional(),
+  features: NodeFeaturesSchema.optional(),
+  customHandles: z.array(CustomHandleSchema).nullable().optional(),
+});
+
+export const ImportRoomBodySchema = z.object({
+  homeZoneId: z.string(),
+  connections: z.array(z.object({
+      id: z.string().optional(),
+      roomId: z.string().optional(),
+      fromZoneId: z.string(),
+      toZoneId: z.string(),
+      fromHandleId: z.string().nullable().optional(),
+      toHandleId: z.string().nullable().optional(),
+      expiresAt: z.string().datetime(),
+      reportedAt: z.string().datetime().optional(),
+      reportedBy: z.string().optional(),
+  })),
+  nodePositions: z.array(NodePositionSchema),
+});
+
 // ── WebSocket message types ───────────────────────────────────────────────────
 
 export type ServerMessage =

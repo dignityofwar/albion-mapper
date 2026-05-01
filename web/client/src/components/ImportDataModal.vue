@@ -32,6 +32,7 @@ function importDataAction() {
     store.importData(data)
       .then(() => {
         close();
+        window.location.reload();
       })
       .catch((e) => {
         alert('Failed to import: ' + (e instanceof Error ? e.message : 'Unknown error'));

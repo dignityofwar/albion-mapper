@@ -258,28 +258,22 @@ export const useRoomStore = defineStore('room', () => {
     localStorage.setItem('recentRooms', JSON.stringify(recentlyViewedRooms.value));
   }
 
-  async function importData(data: { connections: any[] }) {
+  async function importData(data: { connections: any[], nodePositions: NodePosition[], homeZoneId: string }) {
     if (!roomId.value || !token.value) {
       throw new Error('Not authenticated');
     }
 
-    for (const conn of data.connections) {
-      const response = await fetch(`${API_BASE_URL}/api/rooms/${roomId.value}/connections`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token.value}`
-        },
-        body: JSON.stringify({
-          fromZoneId: conn.fromZoneId,
-          toZoneId: conn.toZoneId,
-          secondsRemaining: conn.secondsRemaining || 3600,
-          reportedBy: conn.reportedBy
-        })
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to import connection: ${await response.text()}`);
-      }
+    const response = await fetch(`${API_BASE_URL}/api/rooms/${roomId.value}/import`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token.value}`
+      },
+      body: JSON.stringify(data)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Failed to import data: ${await response.text()}`);
     }
   }
 

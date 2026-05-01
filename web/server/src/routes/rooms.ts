@@ -1,10 +1,12 @@
 import type { FastifyInstance } from 'fastify';
 import bcrypt from 'bcrypt';
 import { nanoid } from 'nanoid';
+import { z } from 'zod';
 import {
   CreateRoomBodySchema,
   AuthRoomBodySchema,
   ChangePasswordBodySchema,
+  ImportRoomBodySchema,
   ZONE_BY_ID,
 } from 'shared';
 import { broadcast } from '../broadcast.js';
@@ -12,12 +14,18 @@ import { getInitialFeatures } from '../utils/nodeFeatures.js';
 
 const BCRYPT_ROUNDS = 12;
 
+function formatZodError(error: z.ZodError): string {
+  const issue = error.issues[0];
+  const path = issue.path.length > 0 ? issue.path.join('.') : 'body';
+  return `Validation error at ${path}: ${issue.message}`;
+}
+
 export async function roomRoutes(app: FastifyInstance): Promise<void> {
   // POST /api/rooms — create a room
   app.post('/api/rooms', async (request, reply) => {
     const parsed = CreateRoomBodySchema.safeParse(request.body);
     if (!parsed.success) {
-      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
+      return reply.status(400).send({ error: formatZodError(parsed.error) });
     }
 
     const { password, adminPassword, homeZoneId, title } = parsed.data;
@@ -66,7 +74,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     const { id } = request.params;
     const parsed = AuthRoomBodySchema.safeParse(request.body);
     if (!parsed.success) {
-      return reply.status(400).send({ error: 'password is required' });
+      return reply.status(400).send({ error: formatZodError(parsed.error) });
     }
 
     const { rows } = await app.db.query<{ id: string; password_hash: string; home_zone_id: string; created_at: string }>(
@@ -100,7 +108,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     }
     const parsed = ChangePasswordBodySchema.safeParse(request.body);
     if (!parsed.success) {
-      return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
+      return reply.status(400).send({ error: formatZodError(parsed.error) });
     }
     const { newPassword, adminPassword } = parsed.data;
     
@@ -172,6 +180,69 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       client.release();
     }
 
+    broadcast(id, { type: 'room_reset' });
+
+    return reply.status(204).send();
+  });
+
+  // PUT /api/rooms/:id/import — import full room state
+  app.put<{ Params: { id: string }, Body: any }>('/api/rooms/:id/import', {
+    preHandler: [app.authenticate],
+  }, async (request, reply) => {
+    const { id } = request.params;
+    const jwtPayload = request.user as { roomId: string };
+    if (jwtPayload.roomId !== id) {
+      return reply.status(403).send({ error: 'Forbidden' });
+    }
+    
+    const parsed = ImportRoomBodySchema.safeParse(request.body);
+    if (!parsed.success) {
+      return reply.status(400).send({ error: formatZodError(parsed.error) });
+    }
+
+    const { homeZoneId, connections, nodePositions } = parsed.data;
+
+    // Validate homeZoneId
+    const zone = ZONE_BY_ID.get(homeZoneId);
+    if (!zone || zone.type !== 'roadsHideout') {
+      return reply.status(400).send({ error: 'Invalid hideout zone' });
+    }
+
+    const client = await app.db.connect();
+    try {
+      await client.query('BEGIN');
+      
+      // Update room homeZoneId
+      await client.query('UPDATE rooms SET home_zone_id = $1, updated_at = $2 WHERE id = $3', [homeZoneId, new Date().toISOString(), id]);
+
+      // Delete all existing data
+      await client.query('DELETE FROM connections WHERE room_id = $1', [id]);
+      await client.query('DELETE FROM room_node_positions WHERE room_id = $1', [id]);
+      
+      // Insert new connections
+      for (const conn of connections) {
+        await client.query(`
+          INSERT INTO connections (id, room_id, from_zone_id, to_zone_id, from_handle_id, to_handle_id, expires_at, reported_at, reported_by)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        `, [nanoid(), id, conn.fromZoneId, conn.toZoneId, conn.fromHandleId, conn.toHandleId, conn.expiresAt, conn.reportedAt || new Date().toISOString(), conn.reportedBy || null]);
+      }
+      
+      // Insert new node positions
+      for (const node of nodePositions) {
+        await client.query(`
+          INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
+          VALUES ($1, $2, $3, $4, $5, $6)
+        `, [id, node.zoneId, node.x, node.y, JSON.stringify(node.features || {}), JSON.stringify(node.customHandles || null)]);
+      }
+
+      await client.query('COMMIT');
+    } catch (e) {
+      await client.query('ROLLBACK');
+      throw e;
+    } finally {
+      client.release();
+    }
+    
     broadcast(id, { type: 'room_reset' });
 
     return reply.status(204).send();
