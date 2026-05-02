@@ -91,18 +91,18 @@ export function getDefaultHandles(shape?: string): CustomHandle[] {
 
   // Default 4 corners for others
   return [
-    { id: 'top', left: '50%', top: '0%' },
-    { id: 'right', left: '100%', top: '50%' },
-    { id: 'bottom', left: '50%', top: '100%' },
-    { id: 'left', left: '0%', top: '50%' },
+    { id: 'top', left: '65%', top: '15%' },
+    { id: 'right', left: '15%', top: '35%' },
+    { id: 'bottom', left: '35%', top: '85%' },
+    { id: 'left', left: '85%', top: '65%' },
   ];
 }
 
 export const DEFAULT_INTERNAL_HANDLES: CustomHandle[] = [
-  { id: 'default-nw', left: '25%', top: '25%' },
-  { id: 'default-ne', left: '75%', top: '25%' },
-  { id: 'default-se', left: '75%', top: '75%' },
-  { id: 'default-sw', left: '25%', top: '75%' },
+  { id: 'default-nw', left: '65%', top: '15%' },
+  { id: 'default-ne', left: '15%', top: '35%' },
+  { id: 'default-se', left: '35%', top: '85%' },
+  { id: 'default-sw', left: '85%', top: '65%' },
 ];
 
 export function getHandleFacing(left: string, top: string): string {
