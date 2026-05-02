@@ -277,7 +277,7 @@ describe('RoomView', () => {
     const homeNode = vm.flowNodes.find((n: any) => n.id === 'zone-a');
     const otherNode = vm.flowNodes.find((n: any) => n.id === 'zone-b');
 
-    expect(homeNode.draggable).toBe(false);
+    expect(homeNode.draggable).toBe(true);
     expect(otherNode.draggable).toBe(true);
     
     wrapper.unmount();
