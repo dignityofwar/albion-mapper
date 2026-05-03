@@ -122,7 +122,7 @@ defineExpose({
           active ? '' : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_INACTIVE}`),
           { 'active': active, 'editing': editing },
           side === 'right' ? 'rounded-tl-md rounded-bl-md' : 'rounded-tr-md rounded-br-md',
-          (active && editing) ? Z_INDEX.UI_OVERLAY : Z_INDEX.CONTENT_LOW
+          (active && editing) ? Z_INDEX.UI_OVERLAY : Z_INDEX.CONTENT_HIGH
         ]"
         :style="containerStyle"
       >

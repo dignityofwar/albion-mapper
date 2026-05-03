@@ -5,6 +5,7 @@ import { onClickOutside } from '@vueuse/core';
 import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import TutorialTooltip from '../../tutorial/TutorialTooltip.vue';
 import { useTutorialStore } from '../../../stores/useTutorialStore';
+import { Z_INDEX } from '@/constants/Layers';
 
 const tutorialStore = useTutorialStore();
 const isMounted = ref(false);
@@ -159,7 +160,8 @@ const timerLabel = computed(() => {
         class="reds-container relative group cursor-pointer overflow-visible shrink-0 rounded-tl-md rounded-bl-md"
         :class="[
           (isActuallyActive || isOpen) ? '' : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_INACTIVE}`,
-          { 'active': isActuallyActive || isOpen }
+          { 'active': isActuallyActive || isOpen },
+          Z_INDEX.CONTENT_HIGH
         ]"
         :style="containerStyle"
       >
