@@ -160,7 +160,7 @@ async function submitAndClose() {
 }
 
 function onTimeKeydown(e: KeyboardEvent) {
-  if (e.key === 'Enter') submitAndAddMore();
+  if (e.key === 'Enter') submitAndClose();
 }
 
 const timeInputEl = ref<{ focus: () => void } | null>(null);
@@ -223,7 +223,7 @@ defineExpose({
         <form
           class="flex flex-col gap-5"
           data-testid="report-form"
-          @submit.prevent="submitAndAddMore"
+          @submit.prevent="submitAndClose"
         >
           <!-- From -->
           <div class="flex flex-col gap-1.5">
@@ -321,18 +321,18 @@ defineExpose({
           <!-- Buttons -->
           <div class="flex gap-3">
             <button
-              type="submit"
+              type="button"
               :disabled="!canSubmit"
               class="flex-1 px-4 py-2.5 rounded bg-gray-700 text-white font-semibold hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               data-testid="submitAndAddMore-button"
+              @click="submitAndAddMore"
             >
               {{ submitting ? 'Adding...' : 'Save and add more' }}
             </button>
             <button
-              type="button"
+              type="submit"
               :disabled="!canSubmit"
               class="flex-1 px-4 py-2.5 rounded bg-indigo-600 text-white font-semibold hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              @click="submitAndClose"
             >
               Save and Close
             </button>

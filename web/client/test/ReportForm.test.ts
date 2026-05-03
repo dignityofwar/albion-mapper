@@ -3,6 +3,7 @@ import { mount, VueWrapper } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import ReportForm from '../src/components/ReportForm.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
+import { useTutorialStore } from '@/stores/useTutorialStore';
 import { nextTick } from 'vue';
 
 let attachTo: HTMLDivElement;
@@ -160,7 +161,7 @@ describe('ReportForm', () => {
     wrapper.unmount();
   });
 
-  it('enter key on time input triggers submitAndAddMore attempt', async () => {
+  it('enter key on time input triggers submitAndClose attempt', async () => {
     const mockResponse = {
       ok: false,
       json: async () => ({ error: 'fromZoneId and toZoneId required' }),
@@ -184,6 +185,7 @@ describe('ReportForm', () => {
 
     const wrapper = await mountForm();
     const vm = wrapper.vm as any;
+    useTutorialStore().completed = true;
 
     vm.fromZoneId = 'zoneA';
     vm.toZoneId = 'zoneB';
@@ -191,6 +193,7 @@ describe('ReportForm', () => {
 
     await vm.submitAndAddMore();
 
+    expect(vm.isOpen).toBe(true);
     expect(vm.fromZoneId).toBe('zoneA'); // Should not change
     expect(vm.toZoneId).toBe(''); // Should reset
     wrapper.unmount();
@@ -261,6 +264,28 @@ describe('ReportForm', () => {
     expect(vm.fromZoneId).toBe('zone1');
     expect(vm.toZoneId).toBe('zone2');
     
+    wrapper.unmount();
+  });
+
+  it('enter key on time input triggers submitAndClose and closes form on success', async () => {
+    const mockResponse = {
+      ok: true,
+      json: async () => ({}),
+    };
+    global.fetch = vi.fn().mockResolvedValue(mockResponse as unknown as Response);
+
+    const wrapper = await mountForm();
+    const vm = wrapper.vm as any;
+
+    vm.fromZoneId = 'zoneA';
+    vm.toZoneId = 'zoneB';
+    vm.secondsRemaining = 1800;
+
+    await wrapper.findComponent({ name: 'TimeInput' }).trigger('keydown', { key: 'Enter' });
+    await nextTick();
+    await nextTick(); // Wait for any async stuff
+
+    expect(vm.isOpen).toBe(false);
     wrapper.unmount();
   });
 });
