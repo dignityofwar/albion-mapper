@@ -67,7 +67,7 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
   const sourceFacing = getFacing(sourcePosition, sourceHandleId);
   const targetFacing = getFacing(targetPosition, targetHandleId);
 
-  const isCenter = (id?: string | null) => id === 'center';
+  const isCenter = (id?: string | null) => id === 'center' || id === 'center-overlay';
 
   if (forceStraight || isCenter(targetHandleId) || isCenter(sourceHandleId)) {
     const path = `M${sourceX},${sourceY} L${targetX},${targetY}`;

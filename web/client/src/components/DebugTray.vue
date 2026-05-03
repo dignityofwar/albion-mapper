@@ -80,10 +80,6 @@ async function exportNodes() {
             <button @click="exportNodes" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs">Export</button>
             <button @click="showImportModal = true" class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs">Import</button>
             <button @click="showShapeEditor = true" class="bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded text-xs">Shape Editor</button>
-            <label class="flex items-center gap-2 cursor-pointer ml-2">
-              <input type="checkbox" v-model="store.showDefaultHandles" class="w-3 h-3 bg-gray-800 border-gray-700 rounded focus:ring-blue-500 text-blue-600">
-              <span class="text-[10px] uppercase font-bold text-gray-400">Default Handles</span>
-            </label>
           </div>
           <button class="text-gray-400 hover:text-white text-xl leading-none" @click="emit('close')">&times;</button>
         </div>

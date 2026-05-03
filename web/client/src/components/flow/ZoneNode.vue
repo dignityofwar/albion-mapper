@@ -33,7 +33,7 @@ const props = defineProps<NodeProps<{
 }>>();
 
 const store = useRoomStore();
-const { connections, homeZoneId } = storeToRefs(store);
+const { connections, homeZoneId, isConnecting } = storeToRefs(store);
 const tutorialStore = useTutorialStore();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 
@@ -70,6 +70,11 @@ const handles = computed(() => {
   const center = h.find(h => h.id === 'center');
   if (!center) {
     h.push({ id: 'center', left: '50%', top: '50%', position: Position.Right });
+  }
+
+  // Add overlay handle if connecting to allow for easy center snapping
+  if (isConnecting.value) {
+    h.push({ id: 'center-overlay', left: '50%', top: '50%', position: Position.Right });
   }
 
   return h;
@@ -433,7 +438,7 @@ function lockCore(core: string) {
         :position="handle.position ? handle.position : getHandlePosition(handle.left, handle.top)"
         :id="handle.id"
         :style="{ left: handle.left, top: handle.top }"
-        class="custom-handle"
+        :class="['custom-handle', handle.id === 'center-overlay' ? 'center-handle-snap' : '']"
       />
     </template>
     
@@ -569,13 +574,21 @@ function lockCore(core: string) {
 
 .custom-handle {
   transform: translate(-50%, -50%) !important;
-  width: 20px !important;
-  height: 20px !important;
+  width: 30px !important;
+  height: 30px !important;
   pointer-events: auto !important;
   border: none !important;
   border-radius: 50% !important;
   background-color: #b6b6b6 !important;
   box-sizing: border-box !important;
+  z-index: 100 !important;
+}
+
+.center-handle-snap {
+  width: 300px !important;
+  height: 300px !important;
+  background-color: transparent !important;
+  z-index: 99 !important;
 }
 
 

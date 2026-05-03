@@ -43,8 +43,7 @@ export interface GameMap {
 // ── Connection ───────────────────────────────────────────────────────────────
 
 export interface HandleCoordinates {
-  positionStart: { x: number; y: number };
-  positionEnd: { x: number; y: number };
+  position: { x: number; y: number };
 }
 
 export interface Connection {
@@ -159,12 +158,10 @@ export const ConnectionSchema = z.object({
   reportedAt: z.string().datetime(),
   reportedBy: z.string().optional(),
   startHandle: z.object({
-    positionStart: z.object({ x: z.number(), y: z.number() }),
-    positionEnd: z.object({ x: z.number(), y: z.number() }),
+    position: z.object({ x: z.number(), y: z.number() }),
   }).optional(),
   endHandle: z.object({
-    positionStart: z.object({ x: z.number(), y: z.number() }),
-    positionEnd: z.object({ x: z.number(), y: z.number() }),
+    position: z.object({ x: z.number(), y: z.number() }),
   }).optional(),
 });
 

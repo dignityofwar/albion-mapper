@@ -412,8 +412,8 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         const startPos = getHandlePos(sourceNode, sourceHandle);
         const endPos = getHandlePos(targetNode, targetHandle);
         
-        if (startPos) edge.data.connection.startHandle = { positionStart: startPos, positionEnd: startPos };
-        if (endPos) edge.data.connection.endHandle = { positionStart: endPos, positionEnd: endPos };
+        if (startPos) edge.data.connection.startHandle = { position: startPos };
+        if (endPos) edge.data.connection.endHandle = { position: endPos };
       }
       return edge;
     });
@@ -589,6 +589,10 @@ async function onEdgeUpdate({ edge, connection }: any) {
 async function handleConnect(params: any) {
   wasConnected = true;
 
+  // Normalize center-overlay to center
+  if (params.sourceHandle === 'center-overlay') params.sourceHandle = 'center';
+  if (params.targetHandle === 'center-overlay') params.targetHandle = 'center';
+
   // Check if source handle is already occupied by ANY connection
   const sourceHandleOccupied = store.connections.find(c => 
     !c.isExpired && (
@@ -642,8 +646,8 @@ async function handleConnect(params: any) {
     return;
   }
 
-  const sourceNode = (getNode as any).value(params.source);
-  const targetNode = (getNode as any).value(params.target);
+  const sourceNode = getNode(params.source);
+  const targetNode = getNode(params.target);
 
   if (sourceNode && targetNode) {
      if (params.targetHandle === 'center') {
@@ -681,6 +685,7 @@ async function updateNodeHandlePosition(nodeId: string, handleId: string, positi
 }
 
 function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent }) {
+  store.isConnecting = true;
   if (!params.nodeId || store.isNodeRestricted(params.nodeId, now.value)) {
     draggingFromNodeId = null;
     draggingFromHandleId = null;
@@ -698,6 +703,7 @@ function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent 
 
 
 function handleConnectEnd(event?: MouseEvent) {
+  store.isConnecting = false;
   if (wasConnected) {
     wasConnected = false;
     draggingFromNodeId = null;
@@ -709,6 +715,29 @@ function handleConnectEnd(event?: MouseEvent) {
   let fromHandleId = draggingFromHandleId;
 
   if (fromNodeId && fromHandleId && event) {
+     const target = event.target as HTMLElement;
+     
+     // Check if we dropped on a node but NOT a handle
+     const nodeElement = target?.closest?.('.vue-flow__node');
+     const handleElement = target?.closest?.('.vue-flow__handle');
+     
+     if (nodeElement && !handleElement) {
+       const targetNodeId = nodeElement.getAttribute('data-id');
+       if (targetNodeId && targetNodeId !== fromNodeId) {
+          // Snap to center!
+          handleConnect({
+            source: fromNodeId,
+            sourceHandle: fromHandleId,
+            target: targetNodeId,
+            targetHandle: 'center'
+          });
+          
+          draggingFromNodeId = null;
+          draggingFromHandleId = null;
+          return;
+       }
+     }
+
      const { x, y } = screenToFlowCoordinate({
        x: event.clientX,
        y: event.clientY,
@@ -777,10 +806,11 @@ function handleConnectEnd(event?: MouseEvent) {
 
 
 function isHandleOccupied(nodeId: string, handleId: string | null) {
+  const normalizedHandleId = handleId === 'center-overlay' ? 'center' : handleId;
   return store.connections.some(c => 
     !c.isExpired && (
-      (c.fromZoneId === nodeId && (c.fromHandleId === handleId || (!c.fromHandleId && handleId === 'center'))) ||
-      (c.toZoneId === nodeId && (c.toHandleId === handleId || (!c.toHandleId && handleId === 'center')))
+      (c.fromZoneId === nodeId && (c.fromHandleId === normalizedHandleId || (!c.fromHandleId && normalizedHandleId === 'center'))) ||
+      (c.toZoneId === nodeId && (c.toHandleId === normalizedHandleId || (!c.toHandleId && normalizedHandleId === 'center')))
     )
   );
 }

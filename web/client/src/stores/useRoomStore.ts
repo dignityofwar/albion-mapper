@@ -16,7 +16,7 @@ export const useRoomStore = defineStore('room', () => {
   const lastUpdate = ref<Date | null>(null);
   const token = ref<string>('');
   const roomId = ref<string>('');
-  const showDefaultHandles = ref<boolean>(false);
+  const isConnecting = ref(false);
 
   let ws: WebSocket | null = null;
   let reconnectDelay = 1000;
@@ -286,6 +286,7 @@ export const useRoomStore = defineStore('room', () => {
     lastUpdate,
     token,
     roomId,
+    isConnecting,
     recentlyViewedRooms,
     setCredentials,
     applyMessage,
@@ -300,7 +301,6 @@ export const useRoomStore = defineStore('room', () => {
     connect,
     disconnect,
     removeFromRecentRooms,
-    showDefaultHandles,
     importData,
   };
 });
