@@ -399,8 +399,8 @@ function updateReds(val: number | null | undefined) {
     delete features.redsTimer;
   } else {
     features.reds = val;
-    // Set/Refresh 30 minute timer
-    features.redsTimer = now.value + 30 * 60 * 1000;
+    // Set/Refresh 15 minute timer
+    features.redsTimer = now.value + 15 * 60 * 1000;
   }
   store.updateNodeFeatures(props.id, features);
 }
