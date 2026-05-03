@@ -148,8 +148,8 @@ const handles = computed(() => {
 }
 
 .center-handle {
-  width: 8px !important;
-  height: 8px !important;
+  width: 1px !important;
+  height: 1px !important;
   background-color: transparent !important;
 }
 
