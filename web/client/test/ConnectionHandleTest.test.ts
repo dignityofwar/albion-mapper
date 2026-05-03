@@ -181,4 +181,5 @@ describe('RoomView Connection Handle', () => {
     
     wrapper.unmount();
   });
+
 });

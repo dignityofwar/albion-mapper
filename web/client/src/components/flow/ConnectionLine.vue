@@ -18,39 +18,21 @@ const path = computed(() => {
   };
 
   const targetHandleId = props.targetHandle?.id || 'center';
-  let tx = props.targetX;
-  let ty = props.targetY;
+  const isStraight = props.sourceHandle?.id === 'center' || targetHandleId === 'center';
 
   const sourceFacing = props.sourceHandle?.id ? findFacing(props.sourceNode, props.sourceHandle.id) : undefined;
   let targetFacing = (props.targetNode && props.targetHandle?.id) ? findFacing(props.targetNode, props.targetHandle.id) : undefined;
 
-  if (!props.targetHandle && targetHandleId && !props.isOccupied) {
-    // No handles anymore
-  }
-
-  if (props.targetHandle?.id) {
-    console.log('ConnectionLine props:', {
-      sourceX: props.sourceX,
-      sourceY: props.sourceY,
-      targetX: tx,
-      targetY: ty,
-      sourcePosition: sourceFacing || props.sourcePosition,
-      targetPosition: targetFacing || props.targetPosition,
-      sourceHandleId: props.sourceHandle?.id,
-      targetHandleId: targetHandleId,
-    });
-  }
-
   const [d] = getConnectionPath({
     sourceX: props.sourceX,
     sourceY: props.sourceY,
-    targetX: tx,
-    targetY: ty,
+    targetX: props.targetX,
+    targetY: props.targetY,
     sourcePosition: sourceFacing || props.sourcePosition,
     targetPosition: targetFacing || props.targetPosition,
     sourceHandleId: props.sourceHandle?.id,
     targetHandleId: targetHandleId,
-    forceStraight: false,
+    forceStraight: isStraight,
   });
   return d;
 });

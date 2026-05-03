@@ -706,8 +706,8 @@ function handleConnectEnd(event?: MouseEvent) {
   }
   
   const fromNodeId = draggingFromNodeId;
-  const fromHandleId = draggingFromHandleId;
-  
+  let fromHandleId = draggingFromHandleId;
+
   if (fromNodeId && fromHandleId && event) {
      const { x, y } = screenToFlowCoordinate({
        x: event.clientX,

@@ -67,13 +67,12 @@ const handles = computed(() => {
     ...getDefaultHandles(props.data.type as ZoneType, props.data.mapShape)
   ];
   
-  const hnds = [{ id: 'center', left: '50%', top: '50%', position: Position.Right }, ...h];
-  
-  const customCenter = props.data.customHandles?.find(h => h.id === 'center');
-  if (customCenter) {
-    return [{ id: 'center', left: '50%', top: '50%', ...customCenter }, ...h];
+  const center = h.find(h => h.id === 'center');
+  if (!center) {
+    h.push({ id: 'center', left: '50%', top: '50%', position: Position.Right });
   }
-  return hnds;
+
+  return h;
 });
 
 function getHandlePosition(left: string, top: string) {
@@ -570,14 +569,15 @@ function lockCore(core: string) {
 
 .custom-handle {
   transform: translate(-50%, -50%) !important;
-  width: 4px !important;
-  height: 4px !important;
+  width: 20px !important;
+  height: 20px !important;
   pointer-events: auto !important;
   border: none !important;
   border-radius: 50% !important;
-  background-color: white !important;
+  background-color: #b6b6b6 !important;
   box-sizing: border-box !important;
 }
+
 
 .red-glow {
   filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.7));
