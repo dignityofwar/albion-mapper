@@ -21,6 +21,7 @@ vi.mock('@vue-flow/core', async () => {
     },
     useVueFlow: () => ({
       setCenter: vi.fn(),
+      getNode: vi.fn(() => ({ position: { x: 0, y: 0 } }))
     })
   };
 });

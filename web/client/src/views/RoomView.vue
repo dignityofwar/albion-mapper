@@ -24,7 +24,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '@/utils/formatters';
 import { deleteConnection, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
-import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, getDefaultHandles, DEFAULT_INTERNAL_HANDLES, getHandleFacing, getOppositeHandleId, wouldCreateCycle } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, wouldCreateCycle, getDefaultHandles } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -146,7 +146,7 @@ onUnmounted(() => {
 
 
 // ── Vue Flow nodes/edges ──────────────────────────────────────────────────────
-const { fitView, updateNode, setCenter, updateNodeInternals, screenToFlowCoordinate } = useVueFlow();
+const { fitView, updateNode, setCenter, updateNodeInternals, screenToFlowCoordinate, getNode } = useVueFlow();
 const openPopoverId = ref<string | null>(null);
 provide('openPopoverId', openPopoverId);
 
@@ -182,34 +182,12 @@ function computeHandles(sourceNode: any, targetNode: any, conn?: Connection) {
   let sourceHandleId = conn?.fromHandleId ?? 'center';
   let targetHandleId = conn?.toHandleId ?? 'center';
 
-  // Resolve 'center' to one of 4 directional default handles
-  if (sourceHandleId === 'center' || targetHandleId === 'center') {
-    const dx = targetNode.position.x - sourceNode.position.x;
-    const dy = targetNode.position.y - sourceNode.position.y;
-    const angle = Math.atan2(dy, dx);
-    let deg = (angle * 180) / Math.PI;
-    if (deg < 0) deg += 360;
-
-    const resolveDefault = (d: number) => {
-      if (d >= 0 && d < 90) return 'default-se';
-      if (d >= 90 && d < 180) return 'default-sw';
-      if (d >= 180 && d < 270) return 'default-nw';
-      return 'default-ne';
-    };
-
-    if (sourceHandleId === 'center') sourceHandleId = resolveDefault(deg);
-    if (targetHandleId === 'center') targetHandleId = resolveDefault((deg + 180) % 360);
-  }
-
   const findFacing = (node: any, handleId: string) => {
-    const handles = [
-      ...(node.data.customHandles || []),
-      ...DEFAULT_INTERNAL_HANDLES,
-      ...getDefaultHandles(node.data.mapShape)
-    ];
-    const h = handles.find(h => h.id === handleId);
-    if (h) return getHandleFacing(h.left, h.top);
-    return undefined;
+    const customHandles = node.data.customHandles || [];
+    const defaultHandles = getDefaultHandles(node.data.type, node.data.mapShape);
+    const allHandles = [...customHandles, ...defaultHandles];
+    const handle = allHandles.find((h: any) => h.id === handleId);
+    return handle?.position || handleId;
   };
 
   return { 
@@ -363,7 +341,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         type: 'connection',
         animated: style.animated,
         data: {
-          connection: conn,
+          connection: { ...conn },
           now: now.value,
           onDelete: async (id: string) => {
             try {
@@ -415,6 +393,27 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         edge.targetHandle = targetHandle;
         edge.data.sourceFacing = sourceFacing;
         edge.data.targetFacing = targetFacing;
+
+        const getHandlePos = (node: any, handleId: string) => {
+          const customHandles = node.data.customHandles || [];
+          const allHandles = [...customHandles, ...getDefaultHandles(node.data.type, node.data.mapShape)];
+          const handle = allHandles.find((h: any) => h.id === handleId) || (handleId === 'center' ? { id: 'center', left: '50%', top: '50%' } : null);
+          if (!handle) return null;
+          const leftPercent = parseFloat(handle.left) / 100;
+          const topPercent = parseFloat(handle.top) / 100;
+          const width = node.dimensions?.width || 0;
+          const height = node.dimensions?.height || 0;
+          return {
+            x: node.position.x + leftPercent * width,
+            y: node.position.y + topPercent * height
+          };
+        };
+
+        const startPos = getHandlePos(sourceNode, sourceHandle);
+        const endPos = getHandlePos(targetNode, targetHandle);
+        
+        if (startPos) edge.data.connection.startHandle = { positionStart: startPos, positionEnd: startPos };
+        if (endPos) edge.data.connection.endHandle = { positionStart: endPos, positionEnd: endPos };
       }
       return edge;
     });
@@ -643,6 +642,15 @@ async function handleConnect(params: any) {
     return;
   }
 
+  const sourceNode = (getNode as any).value(params.source);
+  const targetNode = (getNode as any).value(params.target);
+
+  if (sourceNode && targetNode) {
+     if (params.targetHandle === 'center') {
+        updateNodeHandlePosition(params.target, 'center', 'bottom');
+     }
+  }
+
   reportForm.value?.setConnection(
     params.source,
     params.sourceHandle,
@@ -650,6 +658,26 @@ async function handleConnect(params: any) {
     params.targetHandle
   );
   reportForm.value?.focusTimeInput();
+}
+
+async function updateNodeHandlePosition(nodeId: string, handleId: string, position: 'top' | 'right' | 'bottom' | 'left') {
+  const node = nodePositions.value.find(np => np.zoneId === nodeId);
+  if (!node) return;
+  
+  const customHandles = node.customHandles || [];
+  const existingHandleIndex = customHandles.findIndex(h => h.id === handleId);
+  
+  const newHandle = { id: handleId, left: '50%', top: '50%', position };
+  
+  let newCustomHandles;
+  if (existingHandleIndex !== -1) {
+    newCustomHandles = [...customHandles];
+    newCustomHandles[existingHandleIndex] = { ...newCustomHandles[existingHandleIndex], ...newHandle };
+  } else {
+    newCustomHandles = [...customHandles, newHandle];
+  }
+  
+  store.updateNodeCustomHandles(nodeId, newCustomHandles);
 }
 
 function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent }) {
@@ -728,7 +756,7 @@ function handleConnectEnd(event?: MouseEvent) {
        source: fromNodeId,
        target: ghostId,
        sourceHandle: fromHandleId,
-       targetHandle: getOppositeHandleId(fromHandleId),
+       targetHandle: 'center',
        type: 'connection',
        animated: true,
        data: { isGhost: true }
@@ -740,6 +768,7 @@ function handleConnectEnd(event?: MouseEvent) {
      flowEdges.value.push(ghostE);
 
      reportForm.value?.setFromZoneId(fromNodeId, fromHandleId, ghostPos);
+     reportForm.value?.open();
   }
   
   draggingFromNodeId = null;

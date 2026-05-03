@@ -9,6 +9,7 @@ export interface PathParams {
   targetPosition: Position | string;
   sourceHandleId?: string | null;
   targetHandleId?: string | null;
+  forceStraight?: boolean;
 }
 
 /**
@@ -34,15 +35,15 @@ const angleMap: Record<string, number> = {
 };
 
 export function getConnectionPath(params: PathParams): [string, number, number, number, number] {
-  const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, sourceHandleId, targetHandleId } = params;
+  const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, sourceHandleId, targetHandleId, forceStraight } = params;
 
   // Prefer handle ID for fine-grained facing if available
   const getFacing = (pos: string | Position, handleId?: string | null) => {
     if (handleId) {
-      if (handleId.endsWith('-n')) return 'n';
-      if (handleId.endsWith('-e')) return 'e';
-      if (handleId.endsWith('-s')) return 's';
-      if (handleId.endsWith('-w')) return 'w';
+      if (handleId === 'n' || handleId.endsWith('-n')) return 'n';
+      if (handleId === 'e' || handleId.endsWith('-e')) return 'e';
+      if (handleId === 's' || handleId.endsWith('-s')) return 's';
+      if (handleId === 'w' || handleId.endsWith('-w')) return 'w';
       if (handleId.endsWith('-ne')) return 'ne';
       if (handleId.endsWith('-se')) return 'se';
       if (handleId.endsWith('-sw')) return 'sw';
@@ -54,11 +55,43 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
       if (handleId.endsWith('-bottom')) return 's';
       if (handleId.endsWith('-left')) return 'w';
     }
+
+    if (pos === Position.Top) return 'n';
+    if (pos === Position.Bottom) return 's';
+    if (pos === Position.Left) return 'w';
+    if (pos === Position.Right) return 'e';
+
     return pos as string;
   };
 
   const sourceFacing = getFacing(sourcePosition, sourceHandleId);
   const targetFacing = getFacing(targetPosition, targetHandleId);
+
+  if (forceStraight || targetHandleId === 'center' || sourceHandleId === 'center') {
+    const path = `M${sourceX},${sourceY} L${targetX},${targetY}`;
+    return [
+      path,
+      (sourceX + targetX) / 2,
+      (sourceY + targetY) / 2,
+      0, 0
+    ];
+  }
+
+  // Orthogonal straight lines
+  if (
+    (sourceFacing === 'n' && targetFacing === 's') ||
+    (sourceFacing === 's' && targetFacing === 'n') ||
+    (sourceFacing === 'e' && targetFacing === 'w') ||
+    (sourceFacing === 'w' && targetFacing === 'e')
+  ) {
+    const path = `M${sourceX},${sourceY} L${targetX},${targetY}`;
+    return [
+      path,
+      (sourceX + targetX) / 2,
+      (sourceY + targetY) / 2,
+      0, 0
+    ];
+  }
 
   const sourceAngle = angleMap[sourceFacing];
   const targetAngle = angleMap[targetFacing];

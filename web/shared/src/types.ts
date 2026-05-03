@@ -42,6 +42,11 @@ export interface GameMap {
 
 // ── Connection ───────────────────────────────────────────────────────────────
 
+export interface HandleCoordinates {
+  positionStart: { x: number; y: number };
+  positionEnd: { x: number; y: number };
+}
+
 export interface Connection {
   id: string;
   roomId: string;
@@ -53,6 +58,8 @@ export interface Connection {
   reportedAt: string;
   reportedBy?: string;
   isExpired?: boolean;
+  startHandle?: HandleCoordinates;
+  endHandle?: HandleCoordinates;
 }
 
 export interface NodePosition {
@@ -69,6 +76,7 @@ export interface CustomHandle {
   left: string;
   top: string;
   disabled?: boolean;
+  position?: 'top' | 'right' | 'bottom' | 'left';
 }
 
 export interface NodeFeatures {
@@ -150,6 +158,14 @@ export const ConnectionSchema = z.object({
   expiresAt: z.string().datetime(),
   reportedAt: z.string().datetime(),
   reportedBy: z.string().optional(),
+  startHandle: z.object({
+    positionStart: z.object({ x: z.number(), y: z.number() }),
+    positionEnd: z.object({ x: z.number(), y: z.number() }),
+  }).optional(),
+  endHandle: z.object({
+    positionStart: z.object({ x: z.number(), y: z.number() }),
+    positionEnd: z.object({ x: z.number(), y: z.number() }),
+  }).optional(),
 });
 
 export const RoomSchema = z.object({

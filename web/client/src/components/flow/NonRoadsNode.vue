@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Handle } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import { computed, ref, inject, type Ref } from 'vue';
@@ -35,13 +34,6 @@ function handleDelete() {
   store.updateNodePositionsInStore(newPositions);
   showDeleteOverlay.value = false;
 }
-
-const defaultInternalHandles = computed(() => {
-  return DEFAULT_INTERNAL_HANDLES.map(h => ({
-    ...h,
-    position: getHandlePosition(h.left, h.top),
-  }));
-});
 </script>
 
 <template>
@@ -90,26 +82,6 @@ const defaultInternalHandles = computed(() => {
 
       <!-- Hidden Handles -->
       <div class="absolute inset-0 pointer-events-none">
-        <Handle
-          v-for="h in defaultInternalHandles"
-          :key="h.id"
-          :id="h.id"
-          type="source"
-          :position="h.position"
-          :style="{ left: h.left, top: h.top, opacity: 0, pointerEvents: 'auto' }"
-          :class="[Z_INDEX.HANDLE, isRestricted ? 'grayscale' : '']"
-          :connectable="!isRestricted"
-        />
-        <Handle
-          v-for="h in defaultInternalHandles"
-          :key="h.id"
-          :id="h.id"
-          type="target"
-          :position="h.position"
-          :style="{ left: h.left, top: h.top, opacity: 0, pointerEvents: 'auto' }"
-          :class="[Z_INDEX.HANDLE, isRestricted ? 'grayscale' : '']"
-          :connectable="!isRestricted"
-        />
       </div>
     </div>
   </div>

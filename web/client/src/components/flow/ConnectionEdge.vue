@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, onMounted, onUnmounted, nextTick, inject, type Ref } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted, nextTick, inject, type Ref, onUpdated } from 'vue';
 import { BaseEdge, EdgeLabelRenderer, useVueFlow } from '@vue-flow/core';
 import type { EdgeProps } from '@vue-flow/core';
 import { connectionStyle } from '@/utils/connectionStyle';
@@ -10,7 +10,7 @@ import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { treeQuery } from '@/utils/treeQuery';
-import { ZONE_BY_ID, type Connection } from 'shared';
+import { ZONE_BY_ID, type Connection, getDefaultHandles } from 'shared';
 import { Z_INDEX } from '@/constants/Layers';
 
 type EdgeData = {
@@ -142,8 +142,8 @@ function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;
 }
 
-const pathData = computed(() =>
-  getConnectionPath({
+const pathData = computed(() => {
+  return getConnectionPath({
     sourceX: props.sourceX,
     sourceY: props.sourceY,
     targetX: props.targetX,
@@ -151,9 +151,10 @@ const pathData = computed(() =>
     sourcePosition: props.data?.sourceFacing || props.sourcePosition,
     targetPosition: props.data?.targetFacing || props.targetPosition,
     sourceHandleId: props.sourceHandleId,
-    targetHandleId: props.targetHandleId,
-  }),
-);
+    targetHandleId: props.targetHandleId || 'center',
+    forceStraight: !props.data?.isGhost,
+  });
+});
 const path = computed(() => pathData.value[0]);
 const labelX = computed(() => pathData.value[1]);
 const labelY = computed(() => pathData.value[2]);

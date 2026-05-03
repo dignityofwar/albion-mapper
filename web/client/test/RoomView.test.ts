@@ -58,10 +58,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -132,10 +134,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -197,10 +201,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -255,10 +261,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -293,10 +301,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -338,10 +348,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -432,10 +444,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -503,10 +517,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -568,10 +584,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -624,10 +642,12 @@ describe('RoomView', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,
@@ -706,10 +726,12 @@ describe('RoomView Home Zone Protection', () => {
           ReportForm: {
             template: '<div id="report-form-stub"></div>',
             setup(props, { expose }) {
-              const setFromZoneId = vi.fn();
               const setConnection = vi.fn();
-              expose({ setFromZoneId, setConnection });
-              return { setFromZoneId, setConnection };
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open });
+              return { setConnection, focusTimeInput, setFromZoneId, open };
             }
           },
           DebugTray: true,

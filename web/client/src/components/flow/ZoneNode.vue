@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { Handle, Position, useVueFlow } from '@vue-flow/core';
+import { Position, useVueFlow, Handle } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, DEFAULT_INTERNAL_HANDLES } from 'shared';
-import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
+import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, getHandleFacing } from 'shared';
+import { getBorderBgClass } from '@/utils/zoneStyles';
 import { connectionStyle } from '@/utils/connectionStyle';
 import { TooltipProvider } from 'reka-ui';
 import ZoneHeader from './zone/ZoneHeader.vue';
@@ -10,7 +10,6 @@ import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
 import ZoneReds from './zone/ZoneReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneEditorTray from './zone/ZoneEditorTray.vue';
-import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
@@ -62,6 +61,29 @@ function handleDelete() {
 
 const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow' | null>(null);
 
+const handles = computed(() => {
+  const h = [
+    ...(props.data.customHandles || []),
+    ...getDefaultHandles(props.data.type as ZoneType, props.data.mapShape)
+  ];
+  
+  const hnds = [{ id: 'center', left: '50%', top: '50%', position: Position.Right }, ...h];
+  
+  const customCenter = props.data.customHandles?.find(h => h.id === 'center');
+  if (customCenter) {
+    return [{ id: 'center', left: '50%', top: '50%', ...customCenter }, ...h];
+  }
+  return hnds;
+});
+
+function getHandlePosition(left: string, top: string) {
+  const facing = getHandleFacing(left, top);
+  if (facing === 'n') return Position.Top;
+  if (facing === 's') return Position.Bottom;
+  if (facing === 'w') return Position.Left;
+  return Position.Right;
+}
+
 watch(() => tutorialStore.step, (step) => {
   if (step === 3) {
     isTutorialTooltipReady.value = false;
@@ -111,21 +133,13 @@ const timerComponentRef = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null
 const timerContainerRef = ref<HTMLElement | null>(null);
 
 const isRedsOpen = ref(false);
-const isHandleEditorOpen = ref(false);
-const handleEditorButtonRef = ref<HTMLElement | null>(null);
 const mapFeaturesButtonRef = ref<HTMLElement | null>(null);
-
-watch(isHandleEditorOpen, (val) => {
-  if (val && tutorialStore.step === 3) {
-    tutorialStore.setStep(4);
-  }
-});
 
 
 const showPrompt = computed(() => {
   if (tutorialStore.completed) return false;
   if (props.data.isGhost) return false;
-  if (isEditorTrayOpen.value || isHandleEditorOpen.value || isEditingTimer.value) return false;
+  if (isEditorTrayOpen.value || isEditingTimer.value) return false;
   return tutorialStore.step === 0 && store.nodePositions.length === 1;
 });
 
@@ -363,54 +377,7 @@ function onTimerBlur() {
   timerValue.value = formatTimer(newVal);
 }
 
-function openHandleEditor() {
-  isHandleEditorOpen.value = true;
-}
-
-async function saveCustomHandles(newHandles: CustomHandle[]) {
-  // Find disabled handles
-  const disabledHandleIds = newHandles.filter(h => h.disabled).map(h => h.id);
-  
-  if (disabledHandleIds.length > 0) {
-    // Find connections using these handles on THIS node
-    const connectionsToDelete = store.connections.filter(c => 
-      (c.fromZoneId === props.id && disabledHandleIds.includes(c.fromHandleId!)) ||
-      (c.toZoneId === props.id && disabledHandleIds.includes(c.toHandleId!))
-    );
-    
-    for (const conn of connectionsToDelete) {
-      try {
-        await deleteConnection(store.roomId, store.token, conn.id);
-      } catch (err) {
-        console.error('Failed to delete connection for disabled handle:', err);
-      }
-    }
-  }
-
-  store.updateNodeCustomHandles(props.id, newHandles);
-  isHandleEditorOpen.value = false;
-  if (tutorialStore.step === 5) {
-    tutorialStore.setStep(6);
-  }
-  if (showToast) showToast('Handle positions updated');
-}
-
-function getHandleFacing(left: string, top: string): string {
-  const l = parseFloat(left);
-  const t = parseFloat(top);
-  
-  // Points
-  if (Math.abs(l - 50) < 0.1 && Math.abs(t) < 0.1) return 'n';
-  if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
-  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
-  if (Math.abs(l) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
-
-  // Sides
-  if (l >= 50 && t < 50) return 'ne';
-  if (l > 50 && t >= 50) return 'se';
-  if (l <= 50 && t > 50) return 'sw';
-  return 'nw';
-}
+// ...
 
 function updateReds(val: number | null | undefined) {
   const features = { ...(props.data.features || {}) };
@@ -452,93 +419,7 @@ function lockCore(core: string) {
   }
 }
 
-function getHandleColor(handleId: string) {
-  const connection = store.connections.find(c => 
-    (c.fromZoneId === props.id && c.fromHandleId === handleId) ||
-    (c.toZoneId === props.id && c.toHandleId === handleId)
-  );
-  if (!connection) return '#bbb';
-  
-  const remainingMs = new Date(connection.expiresAt).getTime() - now.value;
-  const isExpired = connection.isExpired || remainingMs <= 0;
-  
-  return connectionStyle(remainingMs, isExpired).stroke;
-}
 
-
-const GHOST_FACING_MAP: Record<string, string> = {
-  n: 's',
-  s: 'n',
-  e: 'w',
-  w: 'e',
-  ne: 'sw',
-  sw: 'ne',
-  se: 'nw',
-  nw: 'se',
-};
-
-const customHandles = computed(() => {
-  let handles: CustomHandle[];
-  if (props.data.customHandles && props.data.customHandles.length > 0) {
-    handles = [...props.data.customHandles];
-  } else if (props.data.type === 'roadsHideout') {
-    handles = [...DEFAULT_INTERNAL_HANDLES];
-  } else {
-    handles = [...getDefaultHandles(props.data.mapShape)];
-  }
-
-  // Ensure any default internal handles that have connections are included in the interactive handles list
-  DEFAULT_INTERNAL_HANDLES.forEach(dh => {
-    const isUsed = store.connections.some(c => 
-      (c.fromZoneId === props.id && c.fromHandleId === dh.id) ||
-      (c.toZoneId === props.id && c.toHandleId === dh.id)
-    );
-    if (isUsed && !handles.some(h => h.id === dh.id)) {
-      handles.push(dh);
-    }
-  });
-
-    return handles
-    .map(h => {
-      let facing = getHandleFacing(h.left, h.top);
-      return {
-        ...h,
-        position: getHandlePosition(h.left, h.top),
-        facing: facing,
-        style: { 
-          left: `calc(${h.left} - var(--handle-radius))`, 
-          top: `calc(${h.top} - var(--handle-radius))`,
-          '--handle-color': getHandleColor(h.id)
-        }
-      };
-    });
-});
-
-const targetHandleIndex = computed(() => {
-  const neHandle = customHandles.value.findIndex(h => h.facing === 'ne');
-  if (neHandle !== -1) return neHandle;
-  return 0;
-});
-
-const seHandleIndex = computed(() => {
-  return customHandles.value.findIndex(h => h.facing === 'se');
-});
-
-const defaultInternalHandles = computed(() => {
-  return DEFAULT_INTERNAL_HANDLES.map(h => {
-    let facing = getHandleFacing(h.left, h.top);
-    return {
-      ...h,
-      position: getHandlePosition(h.left, h.top),
-      facing: facing,
-      style: { 
-        left: `calc(${h.left} - var(--handle-radius))`, 
-        top: `calc(${h.top} - var(--handle-radius))`,
-        '--handle-color': getHandleColor(h.id)
-      }
-    };
-  });
-});
 
 
 
@@ -547,6 +428,16 @@ const defaultInternalHandles = computed(() => {
 
 <template>
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
+    <template v-for="handle in handles" :key="handle.id">
+      <Handle
+        type="source"
+        :position="handle.position ? handle.position : getHandlePosition(handle.left, handle.top)"
+        :id="handle.id"
+        :style="{ left: handle.left, top: handle.top }"
+        class="custom-handle"
+      />
+    </template>
+    
     <div v-if="isRestricted" class="absolute inset-0 cursor-pointer" :class="[Z_INDEX.RESTRICTED_NODE, { 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }]" @click="showDeleteOverlay = true">
        <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
          <p class="text-white mb-4">Node is expired. Delete it?</p>
@@ -659,19 +550,6 @@ const defaultInternalHandles = computed(() => {
         </div>
       </div>
 
-      <!-- Edit Handles Button at Middle Bottom -->
-      <button 
-        v-if="props.data.mapShape && (props.data.type === 'roads' || props.data.type === 'roadsHideout')"
-        ref="handleEditorButtonRef"
-        :class="['absolute bottom-[35px] left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-gray-900/80 hover:bg-gray-700 transition-colors text-gray-300 hover:text-white flex items-center gap-1.5 border border-gray-700 shadow-lg', Z_INDEX.CONTENT_LOW]"
-        @click.stop="openHandleEditor"
-        @mousedown.stop
-        title="Edit Handles"
-      >
-        <div class="w-2.5 h-2.5 rounded-full bg-gray-500 border border-white"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-      </button>
-
       <ZoneEditorTray 
         :is-open="isEditorTrayOpen"
         :has-reds="hasReds"
@@ -680,78 +558,6 @@ const defaultInternalHandles = computed(() => {
         @close="handleCloseTray"
       />
       
-      <ZoneHandleEditor
-        v-if="isHandleEditorOpen"
-        :zone-name="props.data.zoneName || props.id"
-        :initial-handles="props.data.customHandles && props.data.customHandles.length > 0 ? props.data.customHandles : (props.data.type === 'roadsHideout' ? DEFAULT_INTERNAL_HANDLES : getDefaultHandles(props.data.mapShape))"
-        :is-toggle-mode="props.data.mapShape !== 'rest'"
-        :is-hideout="props.data.type === 'roadsHideout'"
-        @save="saveCustomHandles"
-        @close="isHandleEditorOpen = false"
-      />
-
-      <TutorialTooltip
-        v-if="!tutorialStore.completed && tutorialStore.step === 3 && !isHandleEditorOpen && handleEditorButtonRef && isTutorialTooltipReady"
-        :message="'Open the handle editor to customize portals'"
-        pointing="down"
-        bounce
-        :style="{ left: '50%', bottom: '75px', transform: 'translateX(-50%)' }"
-        :class="[Z_INDEX.HANDLE_OVERLAY]"
-      />
-
-      <!-- Handles moved inside the relative container to match diamond coordinates exactly -->
-      <template v-for="(handle, index) in customHandles" :key="handle.id">
-        <Handle
-          type="source"
-          :position="handle.position"
-          :id="handle.id"
-          :style="{ ...handle.style, ...(showPrompt && index === targetHandleIndex ? { '--handle-color': '#2563eb' } : {}) }"
-          :class="[
-            showPrompt && index === targetHandleIndex ? Z_INDEX.HANDLE_OVERLAY : '',
-            { 'is-disabled': handle.disabled, 'is-isolated': isRestricted }
-          ]"
-          :data-facing="handle.facing"
-          :connectable="!handle.disabled && !isRestricted"
-        />
-        <TutorialTooltip
-          v-if="showPrompt && index === targetHandleIndex"
-          :message="tutorialMessage"
-          pointing="down"
-          bounce
-          :style="{ position: 'absolute', left: handle.left, top: `calc(${handle.top} - 80px)`, transform: 'translateX(-47%)' }"
-          :class="[Z_INDEX.OVERLAY]"
-        />
-        <TutorialTooltip
-          v-if="tutorialStore.step === 4 && index === seHandleIndex"
-          message="Click-drag this handle to move the portal. This should reflect roughly the position on the map in game."
-          pointing="up"
-          containerClass="w-72"
-          bounce
-          :style="{ position: 'absolute', left: handle.left, top: `calc(${handle.top} + 30px)`, transform: 'translateX(-50%)' }"
-          :class="[Z_INDEX.OVERLAY]"
-        />
-      </template>
-
-      <!-- Default internal handles for pending connections -->
-      <Handle 
-        v-for="handle in defaultInternalHandles" 
-        :key="handle.id"
-        type="source" 
-        :position="handle.position" 
-        :id="handle.id" 
-        :style="handle.style"
-        :data-facing="handle.facing"
-        :class="['!border-orange-700 !border-b-2 transition-opacity duration-300', Z_INDEX.CONTENT_HIGH, store.showDefaultHandles ? '!opacity-100 !pointer-events-auto' : '!opacity-0 !pointer-events-none', isRestricted ? 'is-isolated' : '']"
-      />
-
-      <!-- Legacy center handle for backward compatibility -->
-      <Handle
-        type="source"
-        :position="Position.Top"
-        id="center"
-        :style="{ left: '50%', top: '50%', opacity: 0, pointerEvents: 'none' }"
-        :connectable="false"
-      />
     </div>
     </TooltipProvider>
   </div>
@@ -759,68 +565,18 @@ const defaultInternalHandles = computed(() => {
 
 <style scoped>
 .zone-node {
-  --handle-radius: 16px;
 }
 
-:deep(.vue-flow__handle) {
-  width: calc(var(--handle-radius) * 2) !important;
-  height: calc(var(--handle-radius) * 2) !important;
-  background: transparent !important;
-  border: none !important;
-  z-index: 30;
-  margin: 0 !important;
+
+.custom-handle {
+  transform: translate(-50%, -50%) !important;
+  width: 4px !important;
+  height: 4px !important;
   pointer-events: auto !important;
-}
-
-:deep(.vue-flow__handle)::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50%;
-  background-color: var(--handle-color, #bbb);
-  border: 2px solid #222;
-  border-radius: var(--handle-radius) var(--handle-radius) 0 0;
-  transition: background-color 0.2s, border-color 0.2s;
-}
-
-:deep(.vue-flow__handle:hover)::after {
-  background-color: #fff;
-  border-color: #fff;
-}
-
-:deep(.vue-flow__handle.is-disabled) {
-  pointer-events: none !important;
-}
-
-:deep(.vue-flow__handle.is-disabled)::after {
-  background-color: transparent !important;
-  border: 3px solid #4b5563 !important;
-  opacity: 0.8;
-  transform: scale(0.75) !important;
-}
-
-:deep(.vue-flow__handle[data-facing="n"]) { transform: rotate(0deg) !important; }
-:deep(.vue-flow__handle[data-facing="ne"]) { transform: rotate(45deg) !important; }
-:deep(.vue-flow__handle[data-facing="e"]) { transform: rotate(90deg) !important; }
-:deep(.vue-flow__handle[data-facing="se"]) { transform: rotate(135deg) !important; }
-:deep(.vue-flow__handle[data-facing="s"]) { transform: rotate(180deg) !important; }
-:deep(.vue-flow__handle[data-facing="sw"]) { transform: rotate(225deg) !important; }
-:deep(.vue-flow__handle[data-facing="w"]) { transform: rotate(270deg) !important; }
-:deep(.vue-flow__handle[data-facing="nw"]) { transform: rotate(315deg) !important; }
-
-:deep(.vue-flow__handle-content) {
-  display: none;
-}
-
-@media (pointer: coarse) {
-  .zone-node {
-    --handle-radius: 20px;
-  }
-  :deep(.vue-flow__handle) {
-    border-width: 3px;
-  }
+  border: none !important;
+  border-radius: 50% !important;
+  background-color: white !important;
+  box-sizing: border-box !important;
 }
 
 .red-glow {
@@ -861,10 +617,6 @@ const defaultInternalHandles = computed(() => {
   right: 71px;
 }
 
-:deep(.vue-flow__handle.is-isolated)::after {
-    background-color: #6b7280 !important;
-    border-color: #4b5563 !important;
-  }
 
 
 </style>
