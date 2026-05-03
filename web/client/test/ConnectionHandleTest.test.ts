@@ -105,7 +105,7 @@ describe('RoomView Connection Handle', () => {
     const newCustomHandles = args[1];
     const centerHandle = newCustomHandles.find((h: any) => h.id === 'center');
     
-    expect(centerHandle.position).toBe('bottom');
+    expect(centerHandle?.position).toBe('bottom');
     
     wrapper.unmount();
   });

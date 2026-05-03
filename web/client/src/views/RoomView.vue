@@ -646,8 +646,8 @@ async function handleConnect(params: any) {
     return;
   }
 
-  const sourceNode = getNode(params.source);
-  const targetNode = getNode(params.target);
+  const sourceNode = getNode.value(params.source);
+  const targetNode = getNode.value(params.target);
 
   if (sourceNode && targetNode) {
      if (params.targetHandle === 'center') {

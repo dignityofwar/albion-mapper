@@ -26,6 +26,7 @@ const props = defineProps<{
   isTimerTooLong?: boolean;
   isTimerValid?: boolean;
   isUnlocked?: boolean;
+  side?: 'left' | 'right';
 }>();
 
 const emit = defineEmits<{
@@ -49,11 +50,25 @@ const config = {
 const timerInputRef = ref<HTMLInputElement | null>(null);
 
 const containerStyle = computed(() => {
-  const targetWidth = props.editing ? '160px' : (props.active ? (props.isUnlocked ? '80px' : '110px') : '60px');
+  const targetWidth = props.editing ? '160px' : (props.active ? (props.isUnlocked ? '80px' : '95px') : '60px');
   const style: any = {
     width: targetWidth,
     '--target-width': targetWidth,
   };
+
+  if (props.editing) {
+    if (props.side === 'right') {
+      style.paddingLeft = '48px';
+    } else {
+      style.paddingRight = '48px';
+    }
+  }
+
+  if (props.side === 'right') {
+    style.clipPath = 'polygon(0 0, calc(100% - 32px) 0, 100% 100%, 0 100%)';
+  } else {
+    style.clipPath = 'polygon(32px 0, 100% 0, 100% 100%, 0 100%)';
+  }
 
   if (props.active) {
     style.backgroundColor = `${config[props.type].color}33`;
@@ -102,23 +117,29 @@ defineExpose({
         />
       <div 
         @click.stop="$emit('toggle')" 
-        class="core-container relative group cursor-pointer overflow-visible shrink-0 rounded-tr-md rounded-br-md"
+        class="core-container relative group cursor-pointer overflow-visible shrink-0"
         :class="[
           active ? '' : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_INACTIVE}`),
-          { 'active': active, 'editing': editing }
+          { 'active': active, 'editing': editing },
+          side === 'right' ? 'rounded-tl-md rounded-bl-md' : 'rounded-tr-md rounded-br-md',
+          (active && editing) ? Z_INDEX.UI_OVERLAY : Z_INDEX.CONTENT_LOW
         ]"
         :style="containerStyle"
       >
         <!-- Background/Border is handled by the container itself via clip-path and styles -->
-        <div class="flex items-center h-full pl-4 gap-1 relative" :class="Z_INDEX.CONTENT_LOW">
+        <div 
+          class="flex items-center h-full gap-1 relative" 
+          :class="[
+            side === 'right' ? 'flex-row-reverse pr-6' : 'pl-6'
+          ]"
+        >
           <img :src="config[type].img" class="w-6 h-6 p-[2px] shrink-0" />
-          
 
           <Transition name="fade" mode="out-in">
             <div v-if="label && !editing" key="timer" class="flex items-center gap-1.5">
               <span class="text-[13px] font-bold leading-none whitespace-nowrap overflow-hidden text-slate-200 shrink-0">{{ label }}</span>
             </div>
-            <div v-else-if="!label && active && !editing" key="unlocked" class="flex items-center justify-center pr-4">
+            <div v-else-if="!label && active && !editing" key="unlocked" class="flex items-center justify-center" :class="side === 'right' ? 'pl-4' : 'pr-4'">
               <IconUnlocked class="text-green-500" />
             </div>
             <div v-else-if="editing" key="editing" class="flex items-center gap-2 overflow-hidden whitespace-nowrap shrink-0">
@@ -147,11 +168,27 @@ defineExpose({
 
         <!-- Lock/Unlock and X Buttons -->
         <Transition name="fade">
-          <div v-if="editing" class="absolute right-0 top-0 bottom-0 flex" :class="Z_INDEX.CONTENT_MID">
+          <div 
+            v-if="editing" 
+            class="absolute top-0 bottom-0 flex" 
+            :class="[
+              Z_INDEX.CONTENT_MID,
+              side === 'right' ? 'left-0' : 'right-0'
+            ]"
+          >
+            <button 
+              @click.stop="emit('clear')"
+              class="nodrag w-6 flex items-center justify-center text-white text-[10px] transition-colors group/clear bg-red-600 hover:bg-red-500 border-none outline-none"
+              :class="side === 'right' ? 'rounded-tl-md rounded-bl-md order-1' : 'rounded-tr-md rounded-br-md order-3'"
+              title="Clear Timer"
+            >
+              <span class="relative" :class="Z_INDEX.CONTENT_HIGH">✕</span>
+            </button>
             <button 
               v-if="!isUnlocked"
               @click.stop="emit('unlock')"
               class="nodrag w-6 flex items-center justify-center text-white transition-colors bg-green-700 hover:bg-green-500 border-none outline-none"
+              :class="side === 'right' ? 'order-2' : 'order-1'"
               title="Unlock Core"
             >
               <IconUnlocked />
@@ -160,16 +197,10 @@ defineExpose({
               v-else
               @click.stop="emit('lock')"
               class="nodrag w-6 flex items-center justify-center text-blue-400 transition-colors bg-gray-600 hover:bg-gray-500 border-none outline-none"
+              :class="side === 'right' ? 'order-2' : 'order-1'"
               title="Lock Core"
             >
               <IconLocked />
-            </button>
-            <button 
-              @click.stop="emit('clear')"
-              class="nodrag w-6 flex items-center justify-center text-white text-[10px] transition-colors group/clear bg-red-600 hover:bg-red-500 border-none outline-none rounded-tr-md rounded-br-md"
-              title="Clear Timer"
-            >
-              <span class="relative" :class="Z_INDEX.CONTENT_HIGH">✕</span>
             </button>
           </div>
         </Transition>
@@ -192,14 +223,7 @@ defineExpose({
   height: 32px;
   width: var(--target-width, 44px);
   min-width: 44px;
-  transition: width 0.3s ease, padding-right 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-  clip-path: polygon(32px 0, 100% 0, 100% 100%, 0 100%);
-  padding-right: 8px;
-  padding-left: 12px;
-}
-
-.core-container.active {
-  padding-right: 8px;
+  transition: width 0.3s ease, padding-right 0.3s ease, padding-left 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .core-container.active:hover {
@@ -207,7 +231,6 @@ defineExpose({
 }
 
 .core-container.editing {
-  padding-right: 48px;
 }
 
 .fade-enter-active {

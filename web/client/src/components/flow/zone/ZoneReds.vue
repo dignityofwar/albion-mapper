@@ -210,7 +210,7 @@ const timerLabel = computed(() => {
   width: var(--target-width, 44px);
   min-width: 44px;
   transition: width 0.3s ease, padding-left 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-  clip-path: polygon(0 0, calc(100% - 44px) 0, 100% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 44px) 100%, 0 100%);
   padding-left: 8px;
   padding-right: 16px;
 }

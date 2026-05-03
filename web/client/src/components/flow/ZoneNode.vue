@@ -133,8 +133,10 @@ onClickOutside(zoneNodeRef, () => {
 
 const timerValue = ref('');
 const isEditingTimer = ref(false);
-const timerComponentRef = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null);
-const timerContainerRef = ref<HTMLElement | null>(null);
+const timerComponentRefNW = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null);
+const timerComponentRefNE = ref<InstanceType<typeof ZoneCoresAndReds> | null>(null);
+const timerContainerRefNW = ref<HTMLElement | null>(null);
+const timerContainerRefNE = ref<HTMLElement | null>(null);
 
 const isRedsOpen = ref(false);
 const mapFeaturesButtonRef = ref<HTMLElement | null>(null);
@@ -152,8 +154,14 @@ const tutorialMessage = computed(() => {
   return '';
 });
 
-onClickOutside(timerContainerRef, () => {
-  if (activeEditingCore.value) {
+onClickOutside(timerContainerRefNW, (e) => {
+  if (activeEditingCore.value && !timerContainerRefNE.value?.contains(e.target as Node)) {
+    activeEditingCore.value = null;
+  }
+}, { capture: true });
+
+onClickOutside(timerContainerRefNE, (e) => {
+  if (activeEditingCore.value && !timerContainerRefNW.value?.contains(e.target as Node)) {
     activeEditingCore.value = null;
   }
 }, { capture: true });
@@ -351,7 +359,8 @@ function saveTimer() {
       
       // Blur the input after saving
       nextTick(() => {
-        timerComponentRef.value?.blur();
+        timerComponentRefNW.value?.blur();
+        timerComponentRefNE.value?.blur();
       });
       activeEditingCore.value = null;
     }
@@ -435,7 +444,7 @@ function lockCore(core: string) {
     <template v-for="handle in handles" :key="handle.id">
       <Handle
         type="source"
-        :position="handle.position ? handle.position : getHandlePosition(handle.left, handle.top)"
+        :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
         :id="handle.id"
         :style="{ left: handle.left, top: handle.top }"
         :class="[
@@ -480,9 +489,9 @@ function lockCore(core: string) {
         v-if="showFeatures"
         class="absolute top-0 left-0 w-full h-full pointer-events-none" :class="Z_INDEX.CONTENT_MID"
       >
-        <div class="cores-nw-container pointer-events-auto" ref="timerContainerRef">
+        <div class="cores-nw-container pointer-events-auto" ref="timerContainerRefNW">
           <ZoneCoresAndReds 
-            ref="timerComponentRef"
+            ref="timerComponentRefNW"
             :features="props.data.features"
             :active-editing-core="activeEditingCore"
             :now="now"
@@ -490,6 +499,30 @@ function lockCore(core: string) {
             v-model:timer-value="timerValue"
             :is-timer-too-long="isTimerTooLong"
             :is-timer-valid="isTimerValid"
+            :cores="['powercoreGreen', 'powercoreBlue']"
+            side="left"
+            @toggle="toggleFeature"
+            @save="saveTimer"
+            @clear="clearTimer"
+            @focus="onTimerFocus"
+            @blur="onTimerBlur"
+            @unlock="unlockCore"
+            @lock="lockCore"
+          />
+        </div>
+
+        <div class="cores-ne-container pointer-events-auto" ref="timerContainerRefNE">
+          <ZoneCoresAndReds 
+            ref="timerComponentRefNE"
+            :features="props.data.features"
+            :active-editing-core="activeEditingCore"
+            :now="now"
+            :has-reds="hasReds"
+            v-model:timer-value="timerValue"
+            :is-timer-too-long="isTimerTooLong"
+            :is-timer-valid="isTimerValid"
+            :cores="['powercorePurple', 'powercoreYellow']"
+            side="right"
             @toggle="toggleFeature"
             @save="saveTimer"
             @clear="clearTimer"
@@ -629,16 +662,20 @@ function lockCore(core: string) {
 
 .cores-nw-container {
   position: absolute;
-  top: 50px;
-  left: 120px;
+  top: 70px;
+  left: 100px;
+}
+
+.cores-ne-container {
+  position: absolute;
+  top: 70px;
+  right: 100px;
 }
 
 .reds-ne-container {
   position: absolute;
-  top: 87px;
-  right: 71px;
+  top: 200px;
+  right: 2px;
 }
-
-
 
 </style>

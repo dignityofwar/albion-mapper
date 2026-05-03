@@ -11,6 +11,8 @@ const props = defineProps<{
   timerValue: string;
   isTimerTooLong: boolean;
   isTimerValid: boolean;
+  cores?: ('powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow')[];
+  side?: 'left' | 'right';
 }>();
 
 const emit = defineEmits<{
@@ -43,6 +45,8 @@ defineExpose({
       :timer-value="timerValue"
       :is-timer-too-long="isTimerTooLong"
       :is-timer-valid="isTimerValid"
+      :cores="cores"
+      :side="side"
       @update:timer-value="emit('update:timerValue', $event)"
       @toggle="emit('toggle', $event)"
       @save="emit('save')"

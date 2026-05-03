@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { NodeFeatures } from 'shared';
 import ZoneCoreButton from './ZoneCoreButton.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { Z_INDEX } from '@/constants/Layers';
 
 const props = defineProps<{
   features?: NodeFeatures;
@@ -11,6 +12,8 @@ const props = defineProps<{
   timerValue: string;
   isTimerTooLong: boolean;
   isTimerValid: boolean;
+  cores?: ('powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow')[];
+  side?: 'left' | 'right';
 }>();
 
 const emit = defineEmits<{ 
@@ -53,6 +56,8 @@ function getTimerLabel(core: 'powercoreGreen' | 'powercoreBlue' | 'powercorePurp
 
 const coreButtonRefs = ref<Record<string, any>>({});
 
+const coresToDisplay = computed(() => props.cores || (['powercoreGreen', 'powercoreBlue', 'powercorePurple', 'powercoreYellow'] as const));
+
 defineExpose({
   focus: () => {
     if (props.activeEditingCore) {
@@ -68,12 +73,16 @@ defineExpose({
 </script>
 
 <template>
-  <div class="relative w-12 h-[160px]">
+  <div class="relative w-12 h-[80px]">
     <div 
-      v-for="(core, index) in (['powercoreGreen', 'powercoreBlue', 'powercorePurple', 'powercoreYellow'] as const)" 
+      v-for="(core, index) in coresToDisplay" 
       :key="core"
-      class="absolute left-0 flex items-center"
-      :style="{ top: `${index * 36}px`, left: `${index * -36}px` }"
+      class="absolute flex items-center"
+      :class="[
+        side === 'right' ? 'right-0' : 'left-0',
+        (isCoreActive(core) && activeEditingCore === core) ? Z_INDEX.UI_OVERLAY : Z_INDEX.CONTENT_LOW
+      ]"
+      :style="{ top: `${index * 36}px`, [side === 'right' ? 'right' : 'left']: `${index * -36}px` }"
     >
       <ZoneCoreButton 
         :ref="el => { if (el) coreButtonRefs[core] = el }"
@@ -86,6 +95,7 @@ defineExpose({
         :is-timer-too-long="activeEditingCore === core ? isTimerTooLong : false"
         :is-timer-valid="activeEditingCore === core ? isTimerValid : false"
         :is-unlocked="isCoreUnlocked(core)"
+        :side="side"
         @toggle="emit('toggle', core)"
         @update:timer-value="emit('update:timerValue', $event)"
         @save="emit('save')"
