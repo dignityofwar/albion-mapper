@@ -24,7 +24,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '@/utils/formatters';
 import { deleteConnection, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
-import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, wouldCreateCycle, getDefaultHandles } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, wouldCreateCycle, getDefaultHandles, getHandleFacing } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -187,7 +187,9 @@ function computeHandles(sourceNode: any, targetNode: any, conn?: Connection) {
     const defaultHandles = getDefaultHandles(node.data.type, node.data.mapShape);
     const allHandles = [...customHandles, ...defaultHandles];
     const handle = allHandles.find((h: any) => h.id === handleId);
-    return handle?.position || handleId;
+    if (handle?.position) return handle.position;
+    if (handle) return getHandleFacing(handle.left, handle.top);
+    return handleId;
   };
 
   return { 
