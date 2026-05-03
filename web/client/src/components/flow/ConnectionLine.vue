@@ -50,7 +50,7 @@ const path = computed(() => {
     targetPosition: targetFacing || props.targetPosition,
     sourceHandleId: props.sourceHandle?.id,
     targetHandleId: targetHandleId,
-    forceStraight: true,
+    forceStraight: false,
   });
   return d;
 });

@@ -152,7 +152,7 @@ const pathData = computed(() => {
     targetPosition: props.data?.targetFacing || props.targetPosition,
     sourceHandleId: props.sourceHandleId,
     targetHandleId: props.targetHandleId || 'center',
-    forceStraight: !props.data?.isGhost,
+    forceStraight: false,
   });
 });
 const path = computed(() => pathData.value[0]);

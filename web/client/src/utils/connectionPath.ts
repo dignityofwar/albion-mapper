@@ -77,22 +77,6 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
     ];
   }
 
-  // Orthogonal straight lines
-  if (
-    (sourceFacing === 'n' && targetFacing === 's') ||
-    (sourceFacing === 's' && targetFacing === 'n') ||
-    (sourceFacing === 'e' && targetFacing === 'w') ||
-    (sourceFacing === 'w' && targetFacing === 'e')
-  ) {
-    const path = `M${sourceX},${sourceY} L${targetX},${targetY}`;
-    return [
-      path,
-      (sourceX + targetX) / 2,
-      (sourceY + targetY) / 2,
-      0, 0
-    ];
-  }
-
   const sourceAngle = angleMap[sourceFacing];
   const targetAngle = angleMap[targetFacing];
 
