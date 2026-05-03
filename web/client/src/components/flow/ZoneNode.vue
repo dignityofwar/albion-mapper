@@ -438,7 +438,11 @@ function lockCore(core: string) {
         :position="handle.position ? handle.position : getHandlePosition(handle.left, handle.top)"
         :id="handle.id"
         :style="{ left: handle.left, top: handle.top }"
-        :class="['custom-handle', handle.id === 'center-overlay' ? 'center-handle-snap' : '']"
+        :class="[
+          'custom-handle', 
+          handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
+          handle.id === 'center-overlay' ? 'center-handle-snap' : ''
+        ]"
       />
     </template>
     
@@ -584,13 +588,18 @@ function lockCore(core: string) {
   z-index: 100 !important;
 }
 
+.center-handle {
+  z-index: -1 !important;
+  width: 8px !important;
+  height: 8px !important;
+}
+
 .center-handle-snap {
   width: 300px !important;
   height: 300px !important;
   background-color: transparent !important;
-  z-index: 99 !important;
+  z-index: 100 !important;
 }
-
 
 .red-glow {
   filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.7));
