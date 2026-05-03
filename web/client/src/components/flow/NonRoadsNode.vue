@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Handle } from '@vue-flow/core';
+import { Handle, Position } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import ZoneHeader from './zone/ZoneHeader.vue';
@@ -7,6 +7,7 @@ import { computed, ref, inject, type Ref } from 'vue';
 import type { NodeFeatures } from 'shared';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { Z_INDEX } from '@/constants/Layers';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps<NodeProps<{ 
   isHome: boolean; 
@@ -21,6 +22,7 @@ const props = defineProps<NodeProps<{
 }>>();
 
 const store = useRoomStore();
+const { isConnecting } = storeToRefs(store);
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
 const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
@@ -34,10 +36,37 @@ function handleDelete() {
   store.updateNodePositionsInStore(newPositions);
   showDeleteOverlay.value = false;
 }
+
+const handles = computed(() => {
+  const h = [
+    { id: 'center', left: '50%', top: '50%', position: Position.Right }
+  ];
+  
+  // Add overlay handle if connecting to allow for easy center snapping
+  if (isConnecting.value) {
+    h.push({ id: 'center-overlay', left: '50%', top: '50%', position: Position.Right });
+  }
+
+  return h;
+});
 </script>
 
 <template>
   <div class="non-roads-node relative" :class="{ 'ghost-node': props.data.isGhost }">
+    <template v-for="handle in handles" :key="handle.id">
+      <Handle
+        type="source"
+        :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
+        :id="handle.id"
+        :style="{ left: handle.left, top: handle.top }"
+        :class="[
+          'custom-handle', 
+          handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
+          handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
+          handle.id === 'center-overlay' ? 'center-handle-snap' : ''
+        ]"
+      />
+    </template>
     <div v-if="isRestricted" class="absolute inset-0 cursor-pointer" :class="[Z_INDEX.RESTRICTED_NODE, { 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }]" @click="showDeleteOverlay = true">
        <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
          <p class="text-white mb-4">Node is expired. Delete it?</p>
@@ -103,7 +132,30 @@ function handleDelete() {
 
 .non-roads-node {
   /* Smaller than the 400px default */
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
+}
+
+.custom-handle {
+  transform: translate(-50%, -50%) !important;
+  width: 30px !important;
+  height: 30px !important;
+  pointer-events: auto !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background-color: #b6b6b6 !important;
+  box-sizing: border-box !important;
+}
+
+.center-handle {
+  width: 8px !important;
+  height: 8px !important;
+  background-color: transparent !important;
+}
+
+.center-handle-snap {
+  width: 110px !important;
+  height: 110px !important;
+  background-color: transparent !important;
 }
 </style>
