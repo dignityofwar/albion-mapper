@@ -610,6 +610,35 @@ function lockCore(core: string) {
           />
         </div>
 
+        <!-- Map Features Button on North-East Edge -->
+        <div class="map-features-button-container pointer-events-auto">
+          <button 
+            ref="mapFeaturesButtonRef"
+            @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
+            @mousedown.stop
+            class="p-1 rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 transition-colors pointer-events-auto relative"
+            :class="Z_INDEX.CONTENT_HIGH"
+            title="Edit Map Features"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          </button>
+        </div>
+
+        <!-- Handle Editor Button -->
+        <div class="handle-editor-container pointer-events-auto">
+          <button 
+            v-if="props.data.mapShape && (props.data.type === 'roads' || props.data.type === 'roadsHideout')"
+            ref="handleEditorButtonRef"
+            :class="['px-3 py-1.5 rounded bg-gray-800/80 hover:bg-gray-700/80 transition-colors text-gray-400 flex items-center gap-1.5 border border-gray-700 shadow-lg', Z_INDEX.CONTENT_LOW]"
+            @click.stop="openHandleEditor"
+            @mousedown.stop
+            title="Edit Handles"
+          >
+            <div class="w-2.5 h-2.5 rounded-full bg-gray-500 border border-white"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+          </button>
+        </div>
+
         <!-- Reds on North-East Edge -->
         <div class="reds-ne-container pointer-events-auto">
           <ZoneReds 
@@ -654,13 +683,6 @@ function lockCore(core: string) {
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
               </button>
-              <TutorialTooltip
-                v-if="tutorialStore.step === 6"
-                message="Click here to edit map features."
-                pointing="left"
-                containerClass="absolute left-full ml-2 w-max"
-                :class="Z_INDEX.OVERLAY"
-              />
             </div>
             <ZoneFeatures 
               :active-features="activeFeatures"
@@ -680,18 +702,6 @@ function lockCore(core: string) {
         @close="handleCloseTray"
       />
 
-      <!-- Edit Handles Button at Middle Bottom -->
-      <button 
-        v-if="props.data.mapShape && (props.data.type === 'roads' || props.data.type === 'roadsHideout')"
-        ref="handleEditorButtonRef"
-        :class="['absolute bottom-[35px] left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-gray-900/80 hover:bg-gray-700 transition-colors text-gray-300 hover:text-white flex items-center gap-1.5 border border-gray-700 shadow-lg', Z_INDEX.CONTENT_LOW]"
-        @click.stop="openHandleEditor"
-        @mousedown.stop
-        title="Edit Handles"
-      >
-        <div class="w-2.5 h-2.5 rounded-full bg-gray-500 border border-white"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-      </button>
 
       <ZoneHandleEditor
         v-if="isHandleEditorOpen"
@@ -706,9 +716,9 @@ function lockCore(core: string) {
       <TutorialTooltip
         v-if="!tutorialStore.completed && tutorialStore.step === 3 && !isHandleEditorOpen && handleEditorButtonRef && isTutorialTooltipReady"
         :message="'Open the handle editor to customize portals'"
-        pointing="down"
+        pointing="right"
         bounce
-        :style="{ left: '50%', bottom: '75px', transform: 'translateX(-50%)' }"
+        :target="handleEditorButtonRef ?? undefined"
         :class="[Z_INDEX.HANDLE_OVERLAY]"
       />
       
@@ -786,6 +796,12 @@ function lockCore(core: string) {
   position: absolute;
   top: 200px;
   right: 2px;
+}
+
+.handle-editor-container {
+  position: absolute;
+  top: 170px;
+  left: 60px;
 }
 
 </style>
