@@ -66,4 +66,9 @@ function handleKoFiClick() {
 .kofi-button, .kofi-button :deep(*) {
   transition: background-color 1s ease-in-out, color 1s ease-in-out !important;
 }
+
+.kofi-button:hover, .kofi-button:hover :deep(*) {
+  background-color: #126f9c !important;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out !important;
+}
 </style>
