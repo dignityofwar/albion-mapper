@@ -7,6 +7,7 @@ import { computed, ref, inject, type Ref } from 'vue';
 import { connectionStyle } from '@/utils/connectionStyle';
 import type { NodeFeatures } from 'shared';
 import { useRoomStore } from '@/stores/useRoomStore';
+import { deleteConnection } from '@/utils/roomOperations';
 import { Z_INDEX } from '@/constants/Layers';
 import { storeToRefs } from 'pinia';
 
@@ -89,9 +90,31 @@ onConnectEnd(() => {
 
 const showDeleteOverlay = ref(false);
 
-function handleDelete() {
-  const newPositions = store.nodePositions.filter(n => n.zoneId !== props.id);
-  store.updateNodePositionsInStore(newPositions);
+async function handleDelete() {
+  try {
+    const toDelete = new Set<string>();
+    const queue = store.connections
+      .filter(c => c.toZoneId === props.id)
+      .map(c => c.id);
+
+    while (queue.length > 0) {
+      const currentId = queue.shift()!;
+      if (toDelete.has(currentId)) continue;
+      toDelete.add(currentId);
+      const c = store.connections.find(x => x.id === currentId);
+      if (c) {
+        const children = store.connections.filter(x => x.fromZoneId === c.toZoneId);
+        for (const child of children) queue.push(child.id);
+      }
+    }
+
+    const toDeleteArray = Array.from(toDelete).reverse();
+    for (const connId of toDeleteArray) {
+      await deleteConnection(store.roomId, store.token, connId);
+    }
+  } catch (err) {
+    console.error('Failed to delete node connections:', err);
+  }
   showDeleteOverlay.value = false;
 }
 

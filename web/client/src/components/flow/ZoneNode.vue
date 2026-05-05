@@ -145,9 +145,31 @@ const isTutorialTooltipReady = ref(false);
 
 const showDeleteOverlay = ref(false);
 
-function handleDelete() {
-  const newPositions = store.nodePositions.filter(n => n.zoneId !== props.id);
-  store.updateNodePositionsInStore(newPositions);
+async function handleDelete() {
+  try {
+    const toDelete = new Set<string>();
+    const queue = store.connections
+      .filter(c => c.toZoneId === props.id)
+      .map(c => c.id);
+
+    while (queue.length > 0) {
+      const currentId = queue.shift()!;
+      if (toDelete.has(currentId)) continue;
+      toDelete.add(currentId);
+      const c = store.connections.find(x => x.id === currentId);
+      if (c) {
+        const children = store.connections.filter(x => x.fromZoneId === c.toZoneId);
+        for (const child of children) queue.push(child.id);
+      }
+    }
+
+    const toDeleteArray = Array.from(toDelete).reverse();
+    for (const connId of toDeleteArray) {
+      await deleteConnection(store.roomId, store.token, connId);
+    }
+  } catch (err) {
+    console.error('Failed to delete node connections:', err);
+  }
   showDeleteOverlay.value = false;
 }
 
@@ -248,6 +270,7 @@ const handleEdgeClass = (handleId: string): string => {
     (c.toZoneId === props.id && c.toHandleId === handleId)
   );
   if (!conn) return '';
+  if (isRestricted.value || store.isEdgeIsolated(conn.id, now.value)) return 'handle-edge-grey';
   const remainingMs = new Date(conn.expiresAt).getTime() - now.value;
   const style = connectionStyle(remainingMs, conn.isExpired ?? false);
   if (style.stroke === '#0ee25e') return 'handle-edge-green';
