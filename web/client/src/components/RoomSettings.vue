@@ -58,17 +58,15 @@ function onClickOutside(e: MouseEvent) {
 onMounted(() => document.addEventListener('click', onClickOutside));
 onBeforeUnmount(() => document.removeEventListener('click', onClickOutside));
 
-async function reset(adminPassword: string) {
+async function reset() {
   resetting.value = true;
   resetError.value = '';
   try {
     const res = await fetch(`${API_BASE_URL}/api/rooms/${store.roomId}/connections`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${store.token}`,
       },
-      body: JSON.stringify({ adminPassword }),
     });
     if (!res.ok) {
       const body = await res.json() as { error?: string };
@@ -166,6 +164,18 @@ function logout() {
           </button>
         </div>
 
+        <!-- Reset Room -->
+        <div class="border-b border-gray-700 p-2">
+          <button
+            type="button"
+            class="w-full text-left px-3 py-2 text-sm rounded text-red-400 hover:bg-gray-700 hover:text-red-300"
+            data-testid="settings-reset-room"
+            @click="showResetConfirmModal = true"
+          >
+            🗑️  Reset Room
+          </button>
+        </div>
+
         <!-- Logout -->
         <div class="p-2">
           <button
@@ -179,5 +189,6 @@ function logout() {
       </div>
     </div>
     <ChangePasswordModal v-model="showChangePasswordModal" />
+    <ResetConfirmModal v-model="showResetConfirmModal" @confirmed="reset" />
   </div>
 </template>

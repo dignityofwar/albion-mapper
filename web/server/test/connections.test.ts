@@ -260,15 +260,12 @@ describe('DELETE /api/rooms/:id/connections/:connId', () => {
 });
 
 describe('DELETE /api/rooms/:id/connections (Reset)', () => {
-  it('deletes all connections and removes all orphaned nodes', async () => {
+  it('deletes all connections and node positions (except home) without requiring admin password', async () => {
     const zoneA = VALID_ZONE_A; // Home
-    const adminPw = 'admin-pw';
-    const hash = await bcrypt.hash(adminPw, 1);
 
     const mockClient = await mockDb.connect();
-    // ws.ts uses a transaction and FOR UPDATE
     mockClient.query.mockResolvedValueOnce({ rows: [] }); // BEGIN
-    mockClient.query.mockResolvedValueOnce({ rows: [{ admin_password_hash: hash, home_zone_id: zoneA }] }); // SELECT room
+    mockClient.query.mockResolvedValueOnce({ rows: [{ admin_password_hash: 'irrelevant', home_zone_id: zoneA }] }); // SELECT room
     mockClient.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // DELETE FROM connections
     mockClient.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // DELETE FROM room_node_positions
     mockClient.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE rooms
@@ -278,8 +275,30 @@ describe('DELETE /api/rooms/:id/connections (Reset)', () => {
       method: 'DELETE',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { adminPassword: adminPw },
     });
     expect(res.statusCode).toBe(204);
+  });
+
+  it('returns 403 when token is for a different room', async () => {
+    const res = await app.inject({
+      method: 'DELETE',
+      url: `/api/rooms/other-room-id/connections`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+    expect(res.statusCode).toBe(403);
+  });
+
+  it('returns 404 when room does not exist', async () => {
+    const mockClient = await mockDb.connect();
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // BEGIN
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // SELECT room — not found
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // ROLLBACK
+
+    const res = await app.inject({
+      method: 'DELETE',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+    });
+    expect(res.statusCode).toBe(404);
   });
 });

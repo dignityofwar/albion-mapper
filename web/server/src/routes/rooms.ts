@@ -138,11 +138,10 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
   });
 
   // DELETE /api/rooms/:id/connections — reset (delete all connections in room)
-  app.delete<{ Params: { id: string }, Body: { adminPassword: string } }>('/api/rooms/:id/connections', {
+  app.delete<{ Params: { id: string } }>('/api/rooms/:id/connections', {
     preHandler: [app.authenticate],
   }, async (request, reply) => {
     const { id } = request.params;
-    const { adminPassword } = request.body;
     const jwtPayload = request.user as { roomId: string };
     if (jwtPayload.roomId !== id) {
       return reply.status(403).send({ error: 'Forbidden' });
@@ -162,12 +161,6 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
         return reply.status(404).send({ error: 'Room not found' });
       }
       
-      const validAdmin = await bcrypt.compare(adminPassword, room.admin_password_hash);
-      if (!validAdmin) {
-        await client.query('ROLLBACK');
-        return reply.status(401).send({ error: 'Invalid admin password' });
-      }
-
       await client.query('DELETE FROM connections WHERE room_id = $1', [id]);
       await client.query('DELETE FROM room_node_positions WHERE room_id = $1 AND zone_id != $2', [id, room.home_zone_id]);
       await client.query('UPDATE rooms SET updated_at = $1 WHERE id = $2', [new Date().toISOString(), id]);
