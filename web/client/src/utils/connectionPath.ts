@@ -69,12 +69,53 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
   const sourceFacing = getFacing(sourcePosition, sourceHandleId);
   const targetFacing = getFacing(targetPosition, targetHandleId);
 
-  if (forceStraight || isCenter(targetHandleId) || isCenter(sourceHandleId)) {
+  if (forceStraight) {
     const path = `M${sourceX},${sourceY} L${targetX},${targetY}`;
     return [
       path,
       (sourceX + targetX) / 2,
       (sourceY + targetY) / 2,
+      0, 0
+    ];
+  }
+
+  // For handle -> center connections, use a Bezier that exits the source naturally
+  if (isCenter(targetHandleId) || isCenter(sourceHandleId)) {
+    const dx = targetX - sourceX;
+    const dy = targetY - sourceY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const curvature = Math.min(distance * 0.25, 50);
+
+    const sourceAngleForCenter = angleMap[sourceFacing];
+    const targetAngleForCenter = angleMap[targetFacing];
+
+    let c0x: number, c0y: number, c1x: number, c1y: number;
+
+    if (sourceAngleForCenter !== undefined) {
+      c0x = sourceX + Math.cos(sourceAngleForCenter) * curvature;
+      c0y = sourceY + Math.sin(sourceAngleForCenter) * curvature;
+    } else {
+      c0x = sourceX + dx * 0.25;
+      c0y = sourceY + dy * 0.25;
+    }
+
+    if (targetAngleForCenter !== undefined) {
+      c1x = targetX + Math.cos(targetAngleForCenter) * curvature;
+      c1y = targetY + Math.sin(targetAngleForCenter) * curvature;
+    } else {
+      c1x = targetX - dx * 0.25;
+      c1y = targetY - dy * 0.25;
+    }
+
+    const path = `M${sourceX},${sourceY} C${c0x},${c0y} ${c1x},${c1y} ${targetX},${targetY}`;
+
+    // When the destination is a center handle, offset the pill towards the source
+    // so it doesn't overlap the target node's center.
+    const labelT = isCenter(targetHandleId) && !isCenter(sourceHandleId) ? 0.35 : 0.5;
+    return [
+      path,
+      sourceX + (targetX - sourceX) * labelT,
+      sourceY + (targetY - sourceY) * labelT,
       0, 0
     ];
   }

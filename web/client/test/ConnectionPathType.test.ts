@@ -3,7 +3,7 @@ import { getConnectionPath } from '../src/utils/connectionPath'
 import { Position } from '@vue-flow/core'
 
 describe('getConnectionPath Path Type', () => {
-  it('should return a straight line when connecting to center', () => {
+  it('should return a bezier path when connecting to center', () => {
     const path = getConnectionPath({
       sourceX: 0,
       sourceY: 0,
@@ -15,9 +15,9 @@ describe('getConnectionPath Path Type', () => {
       targetHandleId: 'center',
     })
     
-    // Straight line starts with M and has one L
-    expect(path[0]).toContain('L')
-    expect(path[0]).not.toContain('C')
+    // Bezier path uses 'C'
+    expect(path[0]).toContain('C')
+    expect(path[0]).not.toContain(' L')
   })
 
   it('should return a bezier path when connecting non-center handles that are not orthogonal (e.g. top to top)', () => {
@@ -68,6 +68,46 @@ describe('getConnectionPath Path Type', () => {
     expect(path[0]).not.toContain('L')
   })
   
+  it('should offset the label towards the source node when target is a center handle', () => {
+    const path = getConnectionPath({
+      sourceX: 0,
+      sourceY: 0,
+      targetX: 100,
+      targetY: 0,
+      sourcePosition: Position.Top,
+      targetPosition: Position.Bottom,
+      sourceHandleId: 'n',
+      targetHandleId: 'center',
+    })
+
+    const labelX = path[1]
+    const labelY = path[2]
+    const midX = (0 + 100) / 2
+
+    // Label should be closer to source (x < midpoint) not at the midpoint
+    expect(labelX).toBeLessThan(midX)
+    expect(labelY).toBe(0)
+  })
+
+  it('should offset the label towards the source node when target is a center-overlay handle', () => {
+    const path = getConnectionPath({
+      sourceX: 0,
+      sourceY: 0,
+      targetX: 0,
+      targetY: 200,
+      sourcePosition: Position.Top,
+      targetPosition: Position.Bottom,
+      sourceHandleId: 'n',
+      targetHandleId: 'center-overlay',
+    })
+
+    const labelY = path[2]
+    const midY = (0 + 200) / 2
+
+    // Label should be closer to source (y < midpoint) not at the midpoint
+    expect(labelY).toBeLessThan(midY)
+  })
+
   it('should return a straight line when forced straight even if not center', () => {
     const path = getConnectionPath({
       sourceX: 0,
