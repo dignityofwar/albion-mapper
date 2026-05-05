@@ -1,0 +1,75 @@
+@keyframes pulse-blue {
+  0%, 100% {
+    background-color: #3b82f6;
+  }
+  50% {
+    background-color: #3b82f65e;
+  }
+}
+
+.handle {
+  transform: translate(-50%, -50%) !important;
+  width: 32px !important;
+  height: 32px !important;
+  pointer-events: auto !important;
+  border-radius: 50% !important;
+  box-sizing: border-box !important;
+}
+
+.handle-default {
+  background-color: rgb(87 87 87 / 0.42);
+  border: 1px solid #919191;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #979797;
+    border: 1px solid white;
+  }
+}
+
+.handle-active {
+  background-color: #979797;
+  border: 2px solid white;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #b4b4b4 !important;
+  }
+}
+
+.pulsing-handle {
+  animation: pulse-blue 0.75s infinite ease-in-out;
+  border-color: white;
+  border-width: 2px;
+}
+
+.center-handle {
+  border-color: transparent !important;
+  background-color: transparent;
+  width: 1px !important;
+  height: 1px !important;
+
+  &.pulsing-handle {
+    width: 32px !important;
+    height: 32px !important;
+    animation: pulse-blue 0.75s infinite ease-in-out !important;
+    border: 2px solid white !important;
+  }
+
+  &.handle-active {
+    width: 32px !important;
+    height: 32px !important;
+    background-color: #979797 !important;
+    border: 1px solid white !important;
+  }
+
+  &.handle-default {
+    border-color: #919191 !important;
+  }
+}
+
+.center-handle-snap {
+  width: 300px !important;
+  height: 300px !important;
+  background-color: transparent !important;
+}

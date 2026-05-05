@@ -32,6 +32,25 @@ const hasReds = computed(() => !!props.data.features?.reds);
 
 const hoveredHandleId = ref<string | null>(null);
 
+const isPulsing = (handleId: string) => {
+    return isConnecting.value &&
+           (handleId === store.connectingSourceHandleId && props.id === store.connectingSourceNodeId || handleId === hoveredHandleId.value) &&
+           handleId !== 'center-overlay';
+};
+
+const isIdle = (handleId: string) => {
+    if (handleId === 'center-overlay') return false;
+    if (isPulsing(handleId)) return false;
+
+    if (isConnecting.value) return true;
+    return handleId !== 'center';
+};
+
+const isActive = (handleId: string) => {
+    if (handleId === 'center-overlay') return false;
+    return isConnecting.value && !isPulsing(handleId);
+};
+
 const { onConnectStart, onConnectEnd } = useVueFlow();
 
 onConnectStart((params) => {
@@ -84,15 +103,16 @@ const handles = computed(() => {
             :id="handle.id"
             :style="{ left: handle.left, top: handle.top }"
             :class="[
-              'custom-handle', 
+              'handle', 
               handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
               handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
               handle.id === 'center-overlay' ? 'center-handle-snap' : '',
-              handle.id !== 'center' && handle.id !== 'center-overlay' && !(isConnecting && (handle.id === store.connectingSourceHandleId && props.id === store.connectingSourceNodeId || handle.id === (hoveredHandleId as any))) ? 'handle-idle' : '',
-              isConnecting && (handle.id === store.connectingSourceHandleId && props.id === store.connectingSourceNodeId || handle.id === (hoveredHandleId as any)) && handle.id !== 'center' && handle.id !== 'center-overlay' ? 'pulsing-handle' : ''
+              isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
+              isActive(handle.id) ? 'handle-active' : '',
+              isPulsing(handle.id) ? 'pulsing-handle' : ''
             ]"
-            @mouseenter="hoveredHandleId = handle.id"
-            @mouseleave="hoveredHandleId = null"
+            @mouseenter="hoveredHandleId = handle.id === 'center-overlay' ? 'center' : handle.id"
+            @mouseleave="(e: MouseEvent) => { if (!(e.relatedTarget as HTMLElement)?.closest?.('.vue-flow__handle')) hoveredHandleId = null }"
           />
         </template>
     </div>
@@ -160,48 +180,11 @@ const handles = computed(() => {
   }
 }
 
-@keyframes pulse-blue {
-  0%, 100% {
-    background-color: #3b82f6 !important;
-  }
-  50% {
-    background-color: #1d4ed8 !important;
-  }
-}
-
-.pulsing-handle {
-  animation: pulse-blue 1.5s infinite ease-in-out !important;
-}
 
 
 .non-roads-node {
   width: 200px;
   height: 200px;
-}
-
-.custom-handle {
-  transform: translate(-50%, -50%) !important;
-  width: 30px !important;
-  height: 30px !important;
-  pointer-events: auto !important;
-  border: none !important;
-  border-radius: 50% !important;
-  box-sizing: border-box !important;
-}
-
-.handle-idle {
-  background-color: #b4b4b46b;
-  transition: background-color 0.3s ease;
-}
-
-.handle-idle:hover {
-  background-color: #b4b4b4;
-}
-
-.center-handle {
-  width: 1px !important;
-  height: 1px !important;
-  background-color: transparent !important;
 }
 
 .center-handle-snap {
