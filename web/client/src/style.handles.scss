@@ -9,11 +9,32 @@
 
 .handle {
   transform: translate(-50%, -50%) !important;
-  width: 32px !important;
-  height: 32px !important;
+  width: 32px;
+  height: 32px;
   pointer-events: auto !important;
   border-radius: 50% !important;
   box-sizing: border-box !important;
+  backdrop-filter: blur(2px);
+
+  &.handle-edge-green {
+    background-color: rgb(3 140 54 / 0.5);
+    border-color: #0ee25e;
+  }
+
+  &.handle-edge-orange {
+    background-color: rgb(172 105 0 / 0.5);
+    border-color: #f59e0b;
+  }
+
+  &.handle-edge-red {
+    background-color: rgb(163 0 0 / 0.5);
+    border-color: #ef4444;
+  }
+
+  &.handle-edge-grey {
+    background-color: #6b7280;
+    border-color: #acadae;
+  }
 }
 
 .handle-default {
@@ -67,6 +88,7 @@
     border-color: #919191 !important;
   }
 }
+
 
 .center-handle-snap {
   width: 300px !important;

@@ -4,6 +4,7 @@ import type { NodeProps } from '@vue-flow/core';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import { computed, ref, inject, type Ref } from 'vue';
+import { connectionStyle } from '@/utils/connectionStyle';
 import type { NodeFeatures } from 'shared';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { Z_INDEX } from '@/constants/Layers';
@@ -23,7 +24,7 @@ const props = defineProps<NodeProps<{
 }>>();
 
 const store = useRoomStore();
-const { isConnecting } = storeToRefs(store);
+const { isConnecting, connections } = storeToRefs(store);
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
 const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
@@ -49,6 +50,20 @@ const isIdle = (handleId: string) => {
 const isActive = (handleId: string) => {
     if (handleId === 'center-overlay') return false;
     return isConnecting.value && !isPulsing(handleId);
+};
+
+const handleEdgeClass = (handleId: string): string => {
+  const conn = connections.value.find(c =>
+    (c.fromZoneId === props.id && c.fromHandleId === handleId) ||
+    (c.toZoneId === props.id && c.toHandleId === handleId)
+  );
+  if (!conn) return '';
+  const remainingMs = new Date(conn.expiresAt).getTime() - now.value;
+  const style = connectionStyle(remainingMs, conn.isExpired ?? false);
+  if (style.stroke === '#0ee25e') return 'handle-edge-green';
+  if (style.stroke === '#f59e0b') return 'handle-edge-orange';
+  if (style.stroke === '#ef4444') return 'handle-edge-red';
+  return 'handle-edge-grey';
 };
 
 const { onConnectStart, onConnectEnd } = useVueFlow();
@@ -109,7 +124,8 @@ const handles = computed(() => {
               handle.id === 'center-overlay' ? 'center-handle-snap' : '',
               isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
               isActive(handle.id) ? 'handle-active' : '',
-              isPulsing(handle.id) ? 'pulsing-handle' : ''
+              isPulsing(handle.id) ? 'pulsing-handle' : '',
+              handleEdgeClass(handle.id)
             ]"
             @mouseenter="hoveredHandleId = handle.id === 'center-overlay' ? 'center' : handle.id"
             @mouseleave="(e: MouseEvent) => { if (!(e.relatedTarget as HTMLElement)?.closest?.('.vue-flow__handle')) hoveredHandleId = null }"

@@ -201,6 +201,20 @@ const isActive = (handleId: string) => {
     if (handleId === 'center-overlay') return false;
     return isConnecting.value && !isPulsing(handleId);
 };
+
+const handleEdgeClass = (handleId: string): string => {
+  const conn = connections.value.find(c =>
+    (c.fromZoneId === props.id && c.fromHandleId === handleId) ||
+    (c.toZoneId === props.id && c.toHandleId === handleId)
+  );
+  if (!conn) return '';
+  const remainingMs = new Date(conn.expiresAt).getTime() - now.value;
+  const style = connectionStyle(remainingMs, conn.isExpired ?? false);
+  if (style.stroke === '#0ee25e') return 'handle-edge-green';
+  if (style.stroke === '#f59e0b') return 'handle-edge-orange';
+  if (style.stroke === '#ef4444') return 'handle-edge-red';
+  return 'handle-edge-grey';
+};
 const isViewportMoving = ref(false);
 onMoveStart(() => {
   isViewportMoving.value = true;
@@ -574,7 +588,8 @@ function lockCore(core: string) {
               handle.id === 'center-overlay' ? 'center-handle-snap' : '',
               isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
               isActive(handle.id) ? 'handle-active' : '',
-              isPulsing(handle.id) ? 'pulsing-handle' : ''
+              isPulsing(handle.id) ? 'pulsing-handle' : '',
+              handleEdgeClass(handle.id)
             ]"
             @mouseenter="hoveredHandleId = handle.id === 'center-overlay' ? 'center' : handle.id"
             @mouseleave="(e: MouseEvent) => { if (!(e.relatedTarget as HTMLElement)?.closest?.('.vue-flow__handle')) hoveredHandleId = null }"
