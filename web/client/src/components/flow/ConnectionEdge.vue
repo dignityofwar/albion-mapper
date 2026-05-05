@@ -247,7 +247,7 @@ defineExpose({
       <animate 
         attributeName="stroke-opacity"
         values="0;1;1;0"
-        keyTimes="0;0.2;0.8;1"
+        keyTimes="0;0.1;0.9;1"
         :dur="`${duration}s`"
         :begin="`${(i - 1) * (duration / numChevrons)}s`"
         repeatCount="indefinite"
