@@ -193,18 +193,22 @@ const stableDistance = ref(distance.value);
 const chevronsVisible = ref(true);
 const chevronEpoch = ref(0);
 
-onNodeDrag(() => {
-  isDragging.value = true;
-  chevronsVisible.value = false;
+onNodeDrag(({ node }) => {
+  if (node.id === props.source || node.id === props.target) {
+    isDragging.value = true;
+    chevronsVisible.value = false;
+  }
 });
-onNodeDragStop(() => {
-  isDragging.value = false;
-  stableDistance.value = distance.value;
-  chevronEpoch.value++;
-  // Fade back in after recalculating
-  nextTick(() => {
-    chevronsVisible.value = true;
-  });
+onNodeDragStop(({ node }) => {
+  if (node.id === props.source || node.id === props.target) {
+    isDragging.value = false;
+    stableDistance.value = distance.value;
+    chevronEpoch.value++;
+    // Fade back in after recalculating
+    nextTick(() => {
+      chevronsVisible.value = true;
+    });
+  }
 });
 
 watch(distance, (val) => {
@@ -245,7 +249,7 @@ defineExpose({
       stroke-linecap="round"
       stroke-linejoin="round"
       :stroke="style.stroke"
-      stroke-opacity="1"
+      stroke-opacity="0"
       stroke-dasharray="0"
       style="stroke-dasharray: 0;"
     >
