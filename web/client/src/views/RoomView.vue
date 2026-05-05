@@ -261,7 +261,8 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
             y: p.y, 
             features: p.features,
             customHandles: p.customHandles,
-            virtualGridPos: p.virtualGridPos 
+            virtualGridPos: p.virtualGridPos,
+            proximityTo: p.proximityTo || ZONE_BY_ID.get(p.zoneId)?.proximityTo
         }));
         store.updateNodePositionsInStore(updatedPositions);
     }
@@ -287,6 +288,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           features: pos.features,
           mapShape: zone?.mapShape,
           customHandles: pos.customHandles,
+          proximityTo: zone?.proximityTo,
           isIsolated: store.isNodeIsolated(pos.zoneId, now.value),
         },
       };

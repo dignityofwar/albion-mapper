@@ -13,6 +13,7 @@ export interface Zone {
   isRoadsHome?: boolean;
   category?: string;
   mapShape?: string;
+  proximityTo?: string;
 }
 
 // ── GameMap (on-disk shape from maps.json) ──────────────────────────────────
@@ -38,6 +39,7 @@ export interface GameMap {
   smallSocketCount?: number;
   socketCountIsMinimum?: boolean;
   guaranteedContent?: GuaranteedContent | null;
+  proximityTo?: string;
 }
 
 // ── Connection ───────────────────────────────────────────────────────────────
@@ -68,6 +70,7 @@ export interface NodePosition {
   virtualGridPos?: { x: number; y: number };
   features?: NodeFeatures;
   customHandles?: CustomHandle[];
+  proximityTo?: string;
 }
 
 export interface CustomHandle {

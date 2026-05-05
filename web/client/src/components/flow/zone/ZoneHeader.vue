@@ -12,6 +12,7 @@ defineProps<{
   mapShape?: string;
   tier?: number;
   compact?: boolean;
+  proximityTo?: string;
 }>();
 </script>
 
@@ -26,7 +27,8 @@ defineProps<{
     </div>
     <div class="flex items-center gap-1.5" :class="{ 'scale-75 origin-top': compact }">
       <TagTier v-if="tier" :tier="tier" :type="type" />
-      <TagZone :type="type" :category="category" :map-shape="mapShape" />
+      <TagZone :type="type" :category="category" :map-shape="mapShape" :proximity-to="proximityTo" :zone-name="zoneName" />
     </div>
   </div>
 </template>
+m

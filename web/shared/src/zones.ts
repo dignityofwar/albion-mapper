@@ -81,6 +81,7 @@ export const ZONES: Zone[] = (mapsData as GameMap[]).map((m) => {
     knownResources: m.knownResources,
     category: m.category ?? getZoneCategory(m.mapName, m.mapType),
     mapShape: m.mapShape,
+    proximityTo: m.proximityTo,
   };
 
   if (m.mapType === 'roads') {

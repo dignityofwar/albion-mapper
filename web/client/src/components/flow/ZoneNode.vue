@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Position, useVueFlow, Handle } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, getHandleFacing } from 'shared';
+import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, getHandleFacing, DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { getBorderBgClass } from '@/utils/zoneStyles';
 import { connectionStyle } from '@/utils/connectionStyle';
 import { TooltipProvider } from 'reka-ui';
@@ -10,6 +10,7 @@ import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
 import ZoneReds from './zone/ZoneReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneEditorTray from './zone/ZoneEditorTray.vue';
+import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
@@ -26,6 +27,7 @@ const props = defineProps<NodeProps<{
   type: string; 
   features?: NodeFeatures;
   category?: string;
+  proximityTo?: string;
   highlighted?: boolean;
   mapShape?: string;
   customHandles?: CustomHandle[];
@@ -42,6 +44,64 @@ const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);
 
 const isEditorTrayOpen = ref(false);
+const isHandleEditorOpen = ref(false);
+
+function getInitialHandles(): CustomHandle[] {
+  let handles = props.data.customHandles || [];
+  
+  if (handles.length === 0) {
+    return getDefaultHandles(props.data.type as ZoneType, props.data.mapShape);
+  }
+  
+  if (props.data.type === 'roadsHideout') {
+    // Filter out shape handles for hideouts
+    return handles.filter(h => !/^[cfhoptxs]-p\d+$/.test(h.id));
+  }
+  
+  return handles;
+}
+
+const handleEditorButtonRef = ref<HTMLElement | null>(null);
+const mapFeaturesButtonRef = ref<HTMLElement | null>(null);
+watch(isHandleEditorOpen, (val) => {
+  if (val && tutorialStore.step === 3) {
+    tutorialStore.setStep(4);
+  }
+});
+
+function openHandleEditor() {
+  isHandleEditorOpen.value = true;
+}
+
+async function saveCustomHandles(newHandles: CustomHandle[]) {
+  // Find disabled handles
+  const disabledHandleIds = newHandles.filter(h => h.disabled).map(h => h.id);
+  
+  if (disabledHandleIds.length > 0) {
+    // Find connections using these handles on THIS node
+    const connectionsToDelete = store.connections.filter(c => 
+      (c.fromZoneId === props.id && disabledHandleIds.includes(c.fromHandleId!)) ||
+      (c.toZoneId === props.id && disabledHandleIds.includes(c.toHandleId!))
+    );
+    
+    for (const conn of connectionsToDelete) {
+      try {
+        await deleteConnection(store.roomId, store.token, conn.id);
+      } catch (err) {
+        console.error('Failed to delete connection for disabled handle:', err);
+      }
+    }
+  }
+
+  store.updateNodeCustomHandles(props.id, newHandles);
+  isHandleEditorOpen.value = false;
+  if (tutorialStore.step === 5) {
+    tutorialStore.setStep(6);
+  }
+  // @ts-ignore
+  if (typeof showToast !== 'undefined') showToast('Handle positions updated');
+}
+
 const handleCloseTray = () => {
   isEditorTrayOpen.value = false;
   if (tutorialStore.step === 6) {
@@ -62,10 +122,15 @@ function handleDelete() {
 const activeEditingCore = ref<'powercoreGreen' | 'powercoreBlue' | 'powercorePurple' | 'powercoreYellow' | null>(null);
 
 const handles = computed(() => {
-  const h = [
-    ...(props.data.customHandles || []),
-    ...getDefaultHandles(props.data.type as ZoneType, props.data.mapShape)
-  ];
+  const custom = props.data.customHandles || [];
+  const defaults = getDefaultHandles(props.data.type as ZoneType, props.data.mapShape);
+  
+  const h = [...custom];
+  for (const def of defaults) {
+    if (!h.find(c => c.id === def.id)) {
+      h.push(def);
+    }
+  }
   
   const center = h.find(h => h.id === 'center');
   if (!center) {
@@ -139,7 +204,6 @@ const timerContainerRefNW = ref<HTMLElement | null>(null);
 const timerContainerRefNE = ref<HTMLElement | null>(null);
 
 const isRedsOpen = ref(false);
-const mapFeaturesButtonRef = ref<HTMLElement | null>(null);
 
 
 const showPrompt = computed(() => {
@@ -443,6 +507,7 @@ function lockCore(core: string) {
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
     <template v-for="handle in handles" :key="handle.id">
       <Handle
+        v-show="!isHandleEditorOpen"
         type="source"
         :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
         :id="handle.id"
@@ -559,6 +624,7 @@ function lockCore(core: string) {
               :category="props.data.category"
               :map-shape="props.data.mapShape"
               :tier="props.data.tier"
+              :proximity-to="props.data.proximityTo"
             />
 
             <hr class="w-full my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
@@ -599,6 +665,38 @@ function lockCore(core: string) {
         :features="props.data.features"
         @toggle="toggleFeature"
         @close="handleCloseTray"
+      />
+
+      <!-- Edit Handles Button at Middle Bottom -->
+      <button 
+        v-if="props.data.mapShape && (props.data.type === 'roads' || props.data.type === 'roadsHideout')"
+        ref="handleEditorButtonRef"
+        :class="['absolute bottom-[35px] left-1/2 -translate-x-1/2 px-2 py-1 rounded bg-gray-900/80 hover:bg-gray-700 transition-colors text-gray-300 hover:text-white flex items-center gap-1.5 border border-gray-700 shadow-lg', Z_INDEX.CONTENT_LOW]"
+        @click.stop="openHandleEditor"
+        @mousedown.stop
+        title="Edit Handles"
+      >
+        <div class="w-2.5 h-2.5 rounded-full bg-gray-500 border border-white"></div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      </button>
+
+      <ZoneHandleEditor
+        v-if="isHandleEditorOpen"
+        :zone-name="props.data.zoneName || props.id"
+        :initial-handles="getInitialHandles()"
+        :is-toggle-mode="props.data.mapShape !== 'rest' && props.data.type !== 'roadsHideout'"
+        :is-hideout="props.data.type === 'roadsHideout'"
+        @save="saveCustomHandles"
+        @close="isHandleEditorOpen = false"
+      />
+
+      <TutorialTooltip
+        v-if="!tutorialStore.completed && tutorialStore.step === 3 && !isHandleEditorOpen && handleEditorButtonRef && isTutorialTooltipReady"
+        :message="'Open the handle editor to customize portals'"
+        pointing="down"
+        bounce
+        :style="{ left: '50%', bottom: '75px', transform: 'translateX(-50%)' }"
+        :class="[Z_INDEX.HANDLE_OVERLAY]"
       />
       
     </div>

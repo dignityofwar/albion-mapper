@@ -19,6 +19,7 @@ const props = defineProps<NodeProps<{
   mapShape?: string;
   isGhost?: boolean;
   features?: NodeFeatures;
+  proximityTo?: string;
 }>>();
 
 const store = useRoomStore();
@@ -105,6 +106,7 @@ const handles = computed(() => {
           :category="props.data.category"
           :map-shape="props.data.mapShape"
           :tier="props.data.tier"
+          :proximity-to="props.data.proximityTo"
           compact
         />
       </div>

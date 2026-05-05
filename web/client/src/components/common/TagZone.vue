@@ -9,13 +9,17 @@ const props = defineProps<{
   label?: string;
   category?: string;
   mapShape?: string;
+  proximityTo?: string;
+  zoneName?: string;
 }>();
 
 const display = computed(() => {
-  if (props.category && FACTION_MAP[props.category]) {
-    const faction = FACTION_MAP[props.category];
+  let labelToUse = props.proximityTo || props.category;
+
+  if (labelToUse && FACTION_MAP[labelToUse]) {
+    const faction = FACTION_MAP[labelToUse];
     return {
-      label: props.category,
+      label: labelToUse,
       style: { 
         backgroundColor: faction.bgColor,
         borderColor: faction.borderColor

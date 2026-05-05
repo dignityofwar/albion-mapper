@@ -86,3 +86,36 @@ describe('NonRoadsNode Styling', () => {
     expect(container.classes()).toContain('goto-glow')
   })
 })
+
+describe('NonRoadsNode proximityTo', () => {
+  it('renders "Arthur\'s Rest" tag when proximityTo is set', async () => {
+    const wrapper = mount(NonRoadsNode as any, {
+      props: {
+        id: 'battlebrae-peaks',
+        type: 'non-roads',
+        data: {
+          type: 'outlands',
+          isHome: false,
+          tier: 5,
+          zoneName: 'Battlebrae Peaks',
+          proximityTo: "Arthur's Rest"
+        },
+        selected: false,
+        dragging: false,
+        resizing: false,
+        connectable: true,
+        zIndex: 0,
+        position: { x: 0, y: 0 },
+        dimensions: { width: 150, height: 150 },
+        events: {} as any,
+      },
+      global: {
+        plugins: [createTestingPinia({ createSpy: vi.fn })],
+        stubs: { Handle: true }
+      }
+    })
+
+    await new Promise(resolve => setTimeout(resolve, 50))
+    expect(wrapper.text()).toContain("Arthur's Rest")
+  })
+})

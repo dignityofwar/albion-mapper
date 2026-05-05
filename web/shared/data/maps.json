@@ -44,42 +44,48 @@
     "mapName": "Battlebrae Flatland",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "battlebrae-grassland",
     "mapName": "Battlebrae Grassland",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "battlebrae-lake",
     "mapName": "Battlebrae Lake",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "battlebrae-meadow",
     "mapName": "Battlebrae Meadow",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "battlebrae-peaks",
     "mapName": "Battlebrae Peaks",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "battlebrae-plain",
     "mapName": "Battlebrae Plain",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "bellever-tor",
@@ -1162,7 +1168,8 @@
     "mapName": "Deathreach Priory",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "deathwisp-bog",
@@ -1259,28 +1266,32 @@
     "mapName": "Drownfield Fen",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "drownfield-mire",
     "mapName": "Drownfield Mire",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "drownfield-quag",
     "mapName": "Drownfield Quag",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "drownfield-rut",
     "mapName": "Drownfield Rut",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "drownfield-sink",
@@ -1294,7 +1305,8 @@
     "mapName": "Drownfield Slough",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "drownfield-wetland",
@@ -1363,7 +1375,8 @@
     "mapName": "Dryvein Cross",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "dryvein-end",
@@ -1454,14 +1467,16 @@
     "mapName": "Everwinter Gap",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "everwinter-gorge",
     "mapName": "Everwinter Gorge",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "everwinter-incline",
@@ -1545,7 +1560,8 @@
     "mapName": "Farshore Esker",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "farshore-heath",
@@ -2612,7 +2628,8 @@
     "mapName": "Glacierfall Cross",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "glacierfall-fissure",
@@ -2626,7 +2643,8 @@
     "mapName": "Glacierfall Pass",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "glacierfall-passage",
@@ -2640,7 +2658,8 @@
     "mapName": "Glacierfall Valley",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "goffers-knoll",
@@ -3724,7 +3743,8 @@
     "mapName": "Longfen Veins",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "longmarch-meadow",
@@ -3784,7 +3804,8 @@
     "mapName": "Meltwater Channel",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "meltwater-delta",
@@ -4401,7 +4422,8 @@
     "mapName": "Parchsand Drought",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "parchthroat-plain",
@@ -7148,7 +7170,8 @@
     "mapName": "Skysand Ridge",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Morgana's Rest"
   },
   {
     "mapID": "slakesands-canyon",
@@ -7498,7 +7521,8 @@
     "mapName": "Sunfang Dawn",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "sunfang-ravine",
@@ -8581,14 +8605,16 @@
     "mapName": "Whitewall Pass",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "whitewall-ridge",
     "mapName": "Whitewall Ridge",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Arthur's Rest"
   },
   {
     "mapID": "widemoor-delta",
