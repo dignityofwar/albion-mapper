@@ -37,6 +37,8 @@ const angleMap: Record<string, number> = {
 export function getConnectionPath(params: PathParams): [string, number, number, number, number] {
   const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, sourceHandleId, targetHandleId, forceStraight } = params;
 
+  const isCenter = (id?: string | null) => id === 'center' || id === 'center-overlay';
+
   // Prefer handle ID for fine-grained facing if available
   const getFacing = (pos: string | Position, handleId?: string | null) => {
     if (handleId) {
@@ -66,8 +68,6 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
 
   const sourceFacing = getFacing(sourcePosition, sourceHandleId);
   const targetFacing = getFacing(targetPosition, targetHandleId);
-
-  const isCenter = (id?: string | null) => id === 'center' || id === 'center-overlay';
 
   if (forceStraight || isCenter(targetHandleId) || isCenter(sourceHandleId)) {
     const path = `M${sourceX},${sourceY} L${targetX},${targetY}`;

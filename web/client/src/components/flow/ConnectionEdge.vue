@@ -141,16 +141,52 @@ function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;
 }
 
+const isCenter = (id?: string | null) => id === 'center' || id === 'center-overlay';
+
+const sourceTrueCenter = computed(() => {
+  const node = props.sourceNode;
+  if (!node) return null;
+  return {
+    x: node.position.x + (node.dimensions.width ?? 0) / 2,
+    y: node.position.y + (node.dimensions.height ?? 0) / 2,
+  };
+});
+
+const targetTrueCenter = computed(() => {
+  const node = props.targetNode;
+  if (!node) return null;
+  return {
+    x: node.position.x + (node.dimensions.width ?? 0) / 2,
+    y: node.position.y + (node.dimensions.height ?? 0) / 2,
+  };
+});
+
 const pathData = computed(() => {
+  const srcHandleId = props.sourceHandleId;
+  const tgtHandleId = props.targetHandleId || 'center';
+
+  const sourceX = isCenter(srcHandleId)
+    ? (sourceTrueCenter.value?.x ?? props.sourceX)
+    : props.sourceX;
+  const sourceY = isCenter(srcHandleId)
+    ? (sourceTrueCenter.value?.y ?? props.sourceY)
+    : props.sourceY;
+  const targetX = isCenter(tgtHandleId)
+    ? (targetTrueCenter.value?.x ?? props.targetX)
+    : props.targetX;
+  const targetY = isCenter(tgtHandleId)
+    ? (targetTrueCenter.value?.y ?? props.targetY)
+    : props.targetY;
+
   return getConnectionPath({
-    sourceX: props.sourceX,
-    sourceY: props.sourceY,
-    targetX: props.targetX,
-    targetY: props.targetY,
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
     sourcePosition: props.data?.sourceFacing || props.sourcePosition,
     targetPosition: props.data?.targetFacing || props.targetPosition,
-    sourceHandleId: props.sourceHandleId,
-    targetHandleId: props.targetHandleId || 'center',
+    sourceHandleId: srcHandleId,
+    targetHandleId: tgtHandleId,
     forceStraight: false,
   });
 });
@@ -183,29 +219,8 @@ watch(distance, (val) => {
 const duration = computed(() => Math.max(1, stableDistance.value / 100));
 const numChevrons = computed(() => Math.max(1, Math.round(stableDistance.value / 100)));
 
-const labelX = computed(() => {
-  const isCenterTarget = (props.targetHandleId || 'center') === 'center';
-  if (!isCenterTarget) return pathData.value[1];
-  // The center handle is at the middle of the node rather than its edge.
-  // Offset the pill halfway back towards the source (half node width = 80px)
-  // by moving it along the source→midpoint direction.
-  const mx = pathData.value[1];
-  const dx = mx - props.sourceX;
-  const dy = pathData.value[2] - props.sourceY;
-  const len = Math.sqrt(dx * dx + dy * dy);
-  if (len === 0) return mx;
-  return mx - (dx / len) * (props.targetNode?.type === 'non-roads' ? 40 : 80);
-});
-const labelY = computed(() => {
-  const isCenterTarget = (props.targetHandleId || 'center') === 'center';
-  if (!isCenterTarget) return pathData.value[2];
-  const my = pathData.value[2];
-  const dx = pathData.value[1] - props.sourceX;
-  const dy = my - props.sourceY;
-  const len = Math.sqrt(dx * dx + dy * dy);
-  if (len === 0) return my;
-  return my - (dy / len) * (props.targetNode?.type === 'non-roads' ? 40 : 80);
-});
+const labelX = computed(() => pathData.value[1]);
+const labelY = computed(() => pathData.value[2]);
 
 defineExpose({
   showPopover,
