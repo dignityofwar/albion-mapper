@@ -143,46 +143,41 @@ function getZoneName(id: string) {
 
 const isCenter = (id?: string | null) => id === 'center' || id === 'center-overlay';
 
-const sourceTrueCenter = computed(() => {
-  const node = props.sourceNode;
+/**
+ * Vue Flow passes edge sourceX/Y using getHandlePosition(..., center=false), which for a
+ * Right-positioned handle gives x + width (the right edge), not the visual center.
+ * The connection line preview uses center=true (x + width/2, y + height/2).
+ * We replicate center=true here by looking up the handle's bounds directly.
+ */
+function getTrueHandleCenter(node: any, handleId: string | null | undefined): { x: number; y: number } | null {
   if (!node) return null;
+  if (isCenter(handleId)) {
+    return {
+      x: node.computedPosition.x + (node.dimensions.width ?? 0) / 2,
+      y: node.computedPosition.y + (node.dimensions.height ?? 0) / 2,
+    };
+  }
+  const allBounds = [...(node.handleBounds?.source ?? []), ...(node.handleBounds?.target ?? [])];
+  const handle = handleId ? allBounds.find((h: any) => h.id === handleId) : allBounds[0];
+  if (!handle) return null;
   return {
-    x: node.position.x + (node.dimensions.width ?? 0) / 2,
-    y: node.position.y + (node.dimensions.height ?? 0) / 2,
+    x: node.computedPosition.x + handle.x + handle.width / 2,
+    y: node.computedPosition.y + handle.y + handle.height / 2,
   };
-});
-
-const targetTrueCenter = computed(() => {
-  const node = props.targetNode;
-  if (!node) return null;
-  return {
-    x: node.position.x + (node.dimensions.width ?? 0) / 2,
-    y: node.position.y + (node.dimensions.height ?? 0) / 2,
-  };
-});
+}
 
 const pathData = computed(() => {
   const srcHandleId = props.sourceHandleId;
   const tgtHandleId = props.targetHandleId || 'center';
 
-  const sourceX = isCenter(srcHandleId)
-    ? (sourceTrueCenter.value?.x ?? props.sourceX)
-    : props.sourceX;
-  const sourceY = isCenter(srcHandleId)
-    ? (sourceTrueCenter.value?.y ?? props.sourceY)
-    : props.sourceY;
-  const targetX = isCenter(tgtHandleId)
-    ? (targetTrueCenter.value?.x ?? props.targetX)
-    : props.targetX;
-  const targetY = isCenter(tgtHandleId)
-    ? (targetTrueCenter.value?.y ?? props.targetY)
-    : props.targetY;
+  const srcCenter = getTrueHandleCenter(props.sourceNode, srcHandleId);
+  const tgtCenter = getTrueHandleCenter(props.targetNode, tgtHandleId);
 
   return getConnectionPath({
-    sourceX,
-    sourceY,
-    targetX,
-    targetY,
+    sourceX: srcCenter?.x ?? props.sourceX,
+    sourceY: srcCenter?.y ?? props.sourceY,
+    targetX: tgtCenter?.x ?? props.targetX,
+    targetY: tgtCenter?.y ?? props.targetY,
     sourcePosition: props.data?.sourceFacing || props.sourcePosition,
     targetPosition: props.data?.targetFacing || props.targetPosition,
     sourceHandleId: srcHandleId,
