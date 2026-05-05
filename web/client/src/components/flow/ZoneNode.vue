@@ -158,9 +158,14 @@ const handles = computed(() => {
   const defaults = getDefaultHandles(props.data.type as ZoneType, props.data.mapShape);
   
   const h = [...custom];
-  for (const def of defaults) {
-    if (!h.find(c => c.id === def.id)) {
-      h.push(def);
+  // Only merge defaults if no custom handles have been saved yet.
+  // If customHandles is non-empty, the user has explicitly configured handles
+  // (including deletions), so we must not add defaults back.
+  if (custom.length === 0) {
+    for (const def of defaults) {
+      if (!h.find(c => c.id === def.id)) {
+        h.push(def);
+      }
     }
   }
   
