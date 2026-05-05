@@ -312,7 +312,7 @@ const showFeatures = computed(() => {
 const activeFeatures = computed(() => {
   if (!props.data.features) return [];
   const features = props.data.features;
-  const list: { type: string; title: string; icon: string }[] = [];
+  const list: { type: string; title: string; icon: string; size?: 'S' | 'L'; isResource: boolean }[] = [];
   
   const allFeatures = [
     { key: 'chest', title: 'Chests', icon: '/images/chest.png' },
@@ -331,7 +331,9 @@ const activeFeatures = computed(() => {
 
   for (const f of allFeatures) {
     if (features[f.key as keyof NodeFeatures]) {
-      list.push({ type: f.key, title: f.title, icon: f.icon });
+      const sizeKey = `${f.key}Size` as keyof NodeFeatures;
+      const size = features[sizeKey] as 'S' | 'L' | undefined;
+      list.push({ type: f.key, title: f.title, icon: f.icon, size, isResource: f.key.startsWith('resource') });
     }
   }
   return list;
@@ -388,6 +390,15 @@ function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercore
     features[feature] = !features[feature];
   }
   
+  store.updateNodeFeatures(props.id, features);
+}
+
+function setFeatureSize(type: keyof NodeFeatures, size: 'S' | 'L') {
+  const currentFeatures = props.data.features || {};
+  const features = { ...currentFeatures };
+  const sizeKey = `${type}Size` as keyof NodeFeatures;
+  features[sizeKey] = size;
+  features[type] = true;
   store.updateNodeFeatures(props.id, features);
 }
 
@@ -507,7 +518,7 @@ function lockCore(core: string) {
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
     <template v-for="handle in handles" :key="handle.id">
       <Handle
-        v-show="!isHandleEditorOpen"
+        v-show="!isHandleEditorOpen && !isEditorTrayOpen"
         type="source"
         :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
         :id="handle.id"
@@ -632,12 +643,12 @@ function lockCore(core: string) {
           <!-- Map Features -->
           <div class="flex flex-col items-center pointer-events-auto">
             <div class="flex items-center justify-center gap-1 mb-1 relative">
-              <span class="text-[9px] text-gray-500 uppercase font-bold tracking-wider">Map Features</span>
+              <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Map Features</span>
               <button 
                 ref="mapFeaturesButtonRef"
                 @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
                 @mousedown.stop
-                class="p-1 rounded hover:bg-white/10 text-gray-500 transition-colors pointer-events-auto relative"
+                class="p-1 rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 transition-colors pointer-events-auto relative"
                 :class="Z_INDEX.CONTENT_HIGH"
                 title="Edit Map Features"
               >
@@ -654,6 +665,7 @@ function lockCore(core: string) {
             <ZoneFeatures 
               :active-features="activeFeatures"
               :has-reds="hasReds"
+              @edit="isEditorTrayOpen = true"
             />
           </div>
         </div>
@@ -664,6 +676,7 @@ function lockCore(core: string) {
         :has-reds="hasReds"
         :features="props.data.features"
         @toggle="toggleFeature"
+        @size="setFeatureSize"
         @close="handleCloseTray"
       />
 

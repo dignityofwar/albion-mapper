@@ -3,13 +3,17 @@ import { computed } from 'vue';
 import { ZONE_BUTTON_BG_HAS_REDS } from '../../../constants/ui';
 
 const props = defineProps<{
-  activeFeatures: { type: string; title: string; icon: string }[];
+  activeFeatures: { type: string; title: string; icon: string; size?: 'S' | 'L'; isResource: boolean }[];
   hasReds: boolean;
 }>();
 
+const emit = defineEmits<{
+  (e: 'edit'): void;
+}>();
+
 const featureRows = computed(() => {
-  const rows: { type: string; title: string; icon: string }[][] = [];
-  const limits = [5, 4, 3];
+  const rows: { type: string; title: string; icon: string; size?: 'S' | 'L'; isResource: boolean }[][] = [];
+  const limits = [4, 3, 2];
   let current = 0;
   
   for (const limit of limits) {
@@ -33,15 +37,25 @@ const featureRows = computed(() => {
     >
       No Features
     </div>
-    <div v-for="(row, rowIndex) in featureRows" :key="rowIndex" class="flex items-center justify-center gap-1">
+    <div v-for="(row, rowIndex) in featureRows" :key="rowIndex" class="flex items-center justify-center gap-1 h-8">
       <div 
         v-for="feature in row" 
         :key="feature.type"
-        class="rounded p-1 flex items-center justify-center"
+        class="rounded flex items-stretch overflow-hidden h-8"
         :class="hasReds ? ZONE_BUTTON_BG_HAS_REDS : 'bg-gray-700'"
         :title="feature.title"
       >
-        <img :src="feature.icon" class="w-5 h-5 object-contain" />
+        <div class="flex items-center justify-center h-full">
+          <img :src="feature.icon" class="w-8 h-8 object-cover aspect-square p-1" />
+        </div>
+        <div v-if="feature.size || feature.isResource" class="bg-gray-800/80 px-1 flex items-center justify-center h-full">
+          <span v-if="feature.size" class="text-xs font-bold text-white">{{ feature.size }}</span>
+          <span 
+            v-else-if="feature.isResource" 
+            @click.stop="$emit('edit')"
+            class="text-xs font-bold text-white/50 cursor-pointer"
+          >?</span>
+        </div>
       </div>
     </div>
   </div>

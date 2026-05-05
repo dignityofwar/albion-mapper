@@ -104,6 +104,11 @@ export interface NodeFeatures {
   resourceOre?: boolean;
   resourceStone?: boolean;
   resourceWood?: boolean;
+  resourceFibreSize?: 'S' | 'L';
+  resourceLeatherSize?: 'S' | 'L';
+  resourceOreSize?: 'S' | 'L';
+  resourceStoneSize?: 'S' | 'L';
+  resourceWoodSize?: 'S' | 'L';
 }
 
 export type ConnectionStatus = 'active' | 'expired';
@@ -236,6 +241,11 @@ export const NodeFeaturesSchema = z.object({
   resourceOre: z.boolean().optional(),
   resourceStone: z.boolean().optional(),
   resourceWood: z.boolean().optional(),
+  resourceFibreSize: z.enum(['S', 'L']).optional(),
+  resourceLeatherSize: z.enum(['S', 'L']).optional(),
+  resourceOreSize: z.enum(['S', 'L']).optional(),
+  resourceStoneSize: z.enum(['S', 'L']).optional(),
+  resourceWoodSize: z.enum(['S', 'L']).optional(),
 }).passthrough().optional();
 
 export const CustomHandleSchema = z.object({
