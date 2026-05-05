@@ -9,7 +9,7 @@ import ZoneHeader from './zone/ZoneHeader.vue';
 import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
 import ZoneReds from './zone/ZoneReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
-import ZoneEditorTray from './zone/ZoneEditorTray.vue';
+import ZoneMapFeaturesModal from './zone/ZoneMapFeaturesModal.vue';
 import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import ZoneHandleEditorButton from './zone/ZoneHandleEditorButton.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
@@ -44,8 +44,10 @@ const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
 const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);
 
-const isEditorTrayOpen = ref(false);
+const isMapFeaturesModalOpen = ref(false);
 const isHandleEditorOpen = ref(false);
+const mapFeaturesModalContainerRef = ref<HTMLElement | null>(null);
+const featuresContainerRef = ref<HTMLElement | null>(null);
 
 function getInitialHandles(): CustomHandle[] {
   let handles = props.data.customHandles || [];
@@ -104,7 +106,7 @@ async function saveCustomHandles(newHandles: CustomHandle[]) {
 }
 
 const handleCloseTray = () => {
-  isEditorTrayOpen.value = false;
+  isMapFeaturesModalOpen.value = false;
   if (tutorialStore.step === 6) {
     tutorialStore.setStep(7);
   }
@@ -177,7 +179,7 @@ watch(activeEditingCore, (newVal, oldVal) => {
   }
 });
 
-const { onMoveStart, onMoveEnd, onNodeDragStart } = useVueFlow();
+const { onMoveStart, onMoveEnd, onNodeDragStart, onConnectStart } = useVueFlow();
 const isViewportMoving = ref(false);
 onMoveStart(() => {
   isViewportMoving.value = true;
@@ -189,13 +191,18 @@ onMoveEnd(() => {
 });
 
 onNodeDragStart(() => {
-  isEditorTrayOpen.value = false;
+  isMapFeaturesModalOpen.value = false;
 });
 
-onClickOutside(zoneNodeRef, () => {
-  if (isViewportMoving.value) return;
-  isEditorTrayOpen.value = false;
+onConnectStart(() => {
+  isMapFeaturesModalOpen.value = false;
 });
+
+onClickOutside(mapFeaturesModalContainerRef, (e) => {
+  if (!isMapFeaturesModalOpen.value) return;
+  if (isViewportMoving.value) return;
+  isMapFeaturesModalOpen.value = false;
+}, { ignore: [featuresContainerRef] });
 
 const timerValue = ref('');
 const isEditingTimer = ref(false);
@@ -210,7 +217,7 @@ const isRedsOpen = ref(false);
 const showPrompt = computed(() => {
   if (tutorialStore.completed) return false;
   if (props.data.isGhost) return false;
-  if (isEditorTrayOpen.value || isEditingTimer.value) return false;
+  if (isMapFeaturesModalOpen.value || isEditingTimer.value) return false;
   return tutorialStore.step === 0 && store.nodePositions.length === 1;
 });
 
@@ -519,7 +526,7 @@ function lockCore(core: string) {
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
     <template v-for="handle in handles" :key="handle.id">
       <Handle
-        v-show="!isHandleEditorOpen && !isEditorTrayOpen"
+        v-show="!isHandleEditorOpen && !isMapFeaturesModalOpen"
         type="source"
         :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
         :id="handle.id"
@@ -615,7 +622,7 @@ function lockCore(core: string) {
         <div class="map-features-button-container pointer-events-auto">
           <button 
             ref="mapFeaturesButtonRef"
-            @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
+            @click.stop="isMapFeaturesModalOpen = !isMapFeaturesModalOpen"
             @mousedown.stop
             class="zone-button p-1 pointer-events-auto relative"
             :class="Z_INDEX.CONTENT_HIGH"
@@ -666,12 +673,12 @@ function lockCore(core: string) {
             <hr class="w-full my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 
           <!-- Map Features -->
-          <div class="flex flex-col items-center pointer-events-auto">
+          <div class="nodrag flex flex-col items-center pointer-events-auto" ref="featuresContainerRef">
             <div class="flex items-center justify-center gap-1 mb-1 relative">
               <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Map Features</span>
               <button 
                 ref="mapFeaturesButtonRef"
-                @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
+                @click.stop="isMapFeaturesModalOpen = !isMapFeaturesModalOpen"
                 @mousedown.stop
                 class="zone-button p-1 pointer-events-auto relative"
                 :class="Z_INDEX.CONTENT_HIGH"
@@ -683,20 +690,22 @@ function lockCore(core: string) {
             <ZoneFeatures 
               :active-features="activeFeatures"
               :has-reds="hasReds"
-              @edit="isEditorTrayOpen = true"
+              @edit="isMapFeaturesModalOpen = true"
             />
           </div>
         </div>
       </div>
 
-      <ZoneEditorTray 
-        :is-open="isEditorTrayOpen"
-        :has-reds="hasReds"
-        :features="props.data.features"
-        @toggle="toggleFeature"
-        @size="setFeatureSize"
-        @close="handleCloseTray"
-      />
+      <div ref="mapFeaturesModalContainerRef">
+        <ZoneMapFeaturesModal 
+          :is-open="isMapFeaturesModalOpen"
+          :has-reds="hasReds"
+          :features="props.data.features"
+          @toggle="toggleFeature"
+          @size="setFeatureSize"
+          @close="handleCloseTray"
+        />
+      </div>
 
 
       <ZoneHandleEditor
