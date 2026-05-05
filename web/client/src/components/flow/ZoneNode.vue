@@ -656,7 +656,7 @@ function lockCore(core: string) {
               :proximity-to="props.data.proximityTo"
             />
 
-            <hr class="w-full my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
+            <hr class="w-[85%] my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 
           <!-- Map Features -->
           <div class="nodrag flex flex-col items-center pointer-events-auto" ref="featuresContainerRef">
@@ -735,8 +735,9 @@ function lockCore(core: string) {
 }
 
 .center-handle {
-  width: 8px !important;
-  height: 8px !important;
+  width: 1px !important;
+  height: 1px !important;
+  background-color: rgb(85 85 85 / 0) !important;
 }
 
 .center-handle-snap {
