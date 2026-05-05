@@ -179,7 +179,8 @@ const handles = computed(() => {
     h.push({ id: 'center-overlay', left: '50%', top: '50%', position: Position.Right });
   }
 
-  return h;
+  // Hide disabled handles outside the editor
+  return h.filter(handle => !handle.disabled);
 });
 
 function getHandlePosition(left: string, top: string) {
