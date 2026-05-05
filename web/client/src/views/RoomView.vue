@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick, markRaw, provide } from 'vue';
 import { useRouter } from 'vue-router';
-// @ts-ignore
-import VueKofi from 'vue-kofi';
 import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
@@ -14,6 +12,7 @@ import ZoneNode from '../components/flow/ZoneNode.vue';
 import NonRoadsNode from '../components/flow/NonRoadsNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ConnectionLine from '../components/flow/ConnectionLine.vue';
+import TipButton from '../components/TipButton.vue';
 import RoomSummaryToolbar from '../components/flow/zone/RoomSummaryToolbar.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
@@ -155,6 +154,7 @@ provide('showToast', showToast);
 const now = ref(Date.now());
 provide('globalNow', now);
 const ticker = setInterval(() => (now.value = Date.now()), 1000);
+
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
   clearInterval(ticker);
@@ -1010,13 +1010,11 @@ defineExpose({ flowNodes, onNodeDragStop });
       </div>
     </Transition>
     <!-- Ko-fi button -->
-    <div class="fixed bottom-4 left-4" :class="Z_INDEX.UI_OVERLAY">
-      <VueKofi uid="K3K5156KXP" color="#302f86" text="Tip the Navigator!" />
-    </div>
+    <TipButton />
     
     <!-- Tutorial Exit -->
     <div 
-      v-if="!tutorialStore.completed" 
+      v-if="!tutorialStore.completed"
       class="fixed top-4 right-4"
       :class="Z_INDEX.TUTORIAL_EXIT"
     >
