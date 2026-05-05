@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Handle, Position } from '@vue-flow/core';
+import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import ZoneHeader from './zone/ZoneHeader.vue';
@@ -30,6 +30,28 @@ const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);
 const hasReds = computed(() => !!props.data.features?.reds);
 
+const hoveredHandleId = ref<string | null>(null);
+
+const { onConnectStart, onConnectEnd } = useVueFlow();
+
+onConnectStart((params) => {
+  store.isConnecting = true;
+  const { handleId, nodeId } = params;
+  if (handleId && nodeId) {
+    store.connectingSourceHandleId = handleId;
+    store.connectingSourceNodeId = nodeId;
+  } else {
+    store.connectingSourceHandleId = null;
+    store.connectingSourceNodeId = null;
+  }
+});
+
+onConnectEnd(() => {
+  store.connectingSourceHandleId = null;
+  store.connectingSourceNodeId = null;
+  store.isConnecting = false;
+});
+
 const showDeleteOverlay = ref(false);
 
 function handleDelete() {
@@ -54,20 +76,26 @@ const handles = computed(() => {
 
 <template>
   <div class="non-roads-node relative" :class="{ 'ghost-node': props.data.isGhost }">
-    <template v-for="handle in handles" :key="handle.id">
-      <Handle
-        type="source"
-        :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
-        :id="handle.id"
-        :style="{ left: handle.left, top: handle.top }"
-        :class="[
-          'custom-handle', 
-          handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
-          handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
-          handle.id === 'center-overlay' ? 'center-handle-snap' : ''
-        ]"
-      />
-    </template>
+    <div :class="[isConnecting ? 'connecting-mode' : '']">
+        <template v-for="handle in handles" :key="handle.id">
+          <Handle
+            type="source"
+            :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
+            :id="handle.id"
+            :style="{ left: handle.left, top: handle.top }"
+            :class="[
+              'custom-handle', 
+              handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
+              handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
+              handle.id === 'center-overlay' ? 'center-handle-snap' : '',
+              handle.id !== 'center' && handle.id !== 'center-overlay' && !(isConnecting && (handle.id === store.connectingSourceHandleId && props.id === store.connectingSourceNodeId || handle.id === (hoveredHandleId as any))) ? 'handle-idle' : '',
+              isConnecting && (handle.id === store.connectingSourceHandleId && props.id === store.connectingSourceNodeId || handle.id === (hoveredHandleId as any)) && handle.id !== 'center' && handle.id !== 'center-overlay' ? 'pulsing-handle' : ''
+            ]"
+            @mouseenter="hoveredHandleId = handle.id"
+            @mouseleave="hoveredHandleId = null"
+          />
+        </template>
+    </div>
     <div v-if="isRestricted" class="absolute inset-0 cursor-pointer" :class="[Z_INDEX.RESTRICTED_NODE, { 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }]" @click="showDeleteOverlay = true">
        <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
          <p class="text-white mb-4">Node is expired. Delete it?</p>
@@ -132,6 +160,20 @@ const handles = computed(() => {
   }
 }
 
+@keyframes pulse-blue {
+  0%, 100% {
+    background-color: #3b82f6 !important;
+  }
+  50% {
+    background-color: #1d4ed8 !important;
+  }
+}
+
+.pulsing-handle {
+  animation: pulse-blue 1.5s infinite ease-in-out !important;
+}
+
+
 .non-roads-node {
   width: 200px;
   height: 200px;
@@ -144,8 +186,16 @@ const handles = computed(() => {
   pointer-events: auto !important;
   border: none !important;
   border-radius: 50% !important;
-  background-color: #b6b6b6 !important;
   box-sizing: border-box !important;
+}
+
+.handle-idle {
+  background-color: #b4b4b46b;
+  transition: background-color 0.3s ease;
+}
+
+.handle-idle:hover {
+  background-color: #b4b4b4;
 }
 
 .center-handle {

@@ -179,7 +179,9 @@ watch(activeEditingCore, (newVal, oldVal) => {
   }
 });
 
-const { onMoveStart, onMoveEnd, onNodeDragStart, onConnectStart } = useVueFlow();
+const hoveredHandleId = ref<string | null>(null);
+
+const { onMoveStart, onMoveEnd, onNodeDragStart, onConnectStart, onConnectEnd } = useVueFlow();
 const isViewportMoving = ref(false);
 onMoveStart(() => {
   isViewportMoving.value = true;
@@ -194,8 +196,23 @@ onNodeDragStart(() => {
   isMapFeaturesModalOpen.value = false;
 });
 
-onConnectStart(() => {
+onConnectStart((params) => {
   isMapFeaturesModalOpen.value = false;
+  store.isConnecting = true;
+  const { handleId, nodeId } = params;
+  if (handleId && nodeId) {
+    store.connectingSourceHandleId = handleId;
+    store.connectingSourceNodeId = nodeId;
+  } else {
+    store.connectingSourceHandleId = null;
+    store.connectingSourceNodeId = null;
+  }
+});
+
+onConnectEnd(() => {
+  store.connectingSourceHandleId = null;
+  store.connectingSourceNodeId = null;
+  store.isConnecting = false;
 });
 
 onClickOutside(mapFeaturesModalContainerRef, (e) => {
@@ -524,21 +541,26 @@ function lockCore(core: string) {
 
 <template>
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
-    <template v-for="handle in handles" :key="handle.id">
-      <Handle
-        v-show="!isHandleEditorOpen && !isMapFeaturesModalOpen"
-        type="source"
-        :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
-        :id="handle.id"
-        :style="{ left: handle.left, top: handle.top }"
-        :class="[
-          'custom-handle', 
-          handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
-          handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
-          handle.id === 'center-overlay' ? 'center-handle-snap' : ''
-        ]"
-      />
-    </template>
+    <div :class="[isConnecting ? 'connecting-mode' : '']">
+        <template v-for="handle in handles" :key="handle.id">
+          <Handle
+            type="source"
+            :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
+            :id="handle.id"
+            :style="{ left: handle.left, top: handle.top }"
+            :class="[
+              'custom-handle', 
+              handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
+              handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
+              handle.id === 'center-overlay' ? 'center-handle-snap' : '',
+              handle.id !== 'center' && handle.id !== 'center-overlay' && !(isConnecting && (handle.id === store.connectingSourceHandleId && props.id === store.connectingSourceNodeId || handle.id === (hoveredHandleId as any))) ? 'handle-idle' : '',
+              isConnecting && (handle.id === store.connectingSourceHandleId && props.id === store.connectingSourceNodeId || handle.id === (hoveredHandleId as any)) && handle.id !== 'center' && handle.id !== 'center-overlay' ? 'pulsing-handle' : ''
+            ]"
+            @mouseenter="hoveredHandleId = handle.id"
+            @mouseleave="hoveredHandleId = null"
+          />
+        </template>
+    </div>
     
     <div v-if="isRestricted" class="absolute inset-0 cursor-pointer" :class="[Z_INDEX.RESTRICTED_NODE, { 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }]" @click="showDeleteOverlay = true">
        <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
@@ -719,10 +741,6 @@ function lockCore(core: string) {
 </template>
 
 <style scoped>
-.zone-node {
-}
-
-
 .custom-handle {
   transform: translate(-50%, -50%) !important;
   width: 30px !important;
@@ -730,8 +748,16 @@ function lockCore(core: string) {
   pointer-events: auto !important;
   border: none !important;
   border-radius: 50% !important;
-  background-color: #b6b6b6 !important;
   box-sizing: border-box !important;
+}
+
+.handle-idle {
+  background-color: #b4b4b46b;
+  transition: background-color 0.3s ease;
+}
+
+.handle-idle:hover {
+  background-color: #b4b4b4;
 }
 
 .center-handle {
@@ -766,6 +792,19 @@ function lockCore(core: string) {
   50% {
     filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.8));
   }
+}
+
+@keyframes pulse-blue {
+  0%, 100% {
+    background-color: #3b82f6;
+  }
+  50% {
+    background-color: #1d4ed8;
+  }
+}
+
+.pulsing-handle {
+  animation: pulse-blue 0.75s infinite ease-in-out !important;
 }
 
 .goto-glow {
