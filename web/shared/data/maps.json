@@ -1327,7 +1327,8 @@
     "mapName": "Drybasin Oasis",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Merlyn's Rest"
   },
   {
     "mapID": "drybasin-riverbed",
@@ -1525,7 +1526,8 @@
     "mapName": "Eye of the Forest",
     "mapType": "outlands",
     "tier": 8,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Merlyn's Rest"
   },
   {
     "mapID": "falsestep-marsh",
@@ -2042,7 +2044,8 @@
     "mapName": "Flammog Valley",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Merlyn's Rest"
   },
   {
     "mapID": "flatriver-trough",
@@ -2572,14 +2575,16 @@
     "mapName": "Giantweald Copse",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Merlyn's Rest"
   },
   {
     "mapID": "giantweald-dale",
     "mapName": "Giantweald Dale",
     "mapType": "outlands",
     "tier": 5,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Merlyn's Rest"
   },
   {
     "mapID": "giantweald-edge",
@@ -2593,21 +2598,24 @@
     "mapName": "Giantweald Glade",
     "mapType": "outlands",
     "tier": 7,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Merlyn's Rest"
   },
   {
     "mapID": "giantweald-roots",
     "mapName": "Giantweald Roots",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Merlyn's Rest"
   },
   {
     "mapID": "giantweald-woods",
     "mapName": "Giantweald Woods",
     "mapType": "outlands",
     "tier": 6,
-    "category": "Outlands"
+    "category": "Outlands",
+    "proximityTo": "Merlyn's Rest"
   },
   {
     "mapID": "glacierbreak-summit",

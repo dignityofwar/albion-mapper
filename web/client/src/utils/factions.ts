@@ -4,8 +4,8 @@ export const FACTIONS = {
   Bridgewatch: { bgColor: '#d06723', borderColor: '#eca67b' },
   Lymhurst: { bgColor: '#4c560f', borderColor: '#049f00' },
   FortStirling: { bgColor: '#808080', borderColor: '#fff' },
-  MorganasRest: { bgColor: '#1f1f1f', borderColor: '#006400' },
-  MerlinsRest: { bgColor: '#1f1f1f', borderColor: '#004d40' },
+  MorganasRest: { bgColor: '#1f1f1f', borderColor: '#71562a' },
+  MerlynsRest: { bgColor: '#1f1f1f', borderColor: '#004d40' },
   ArthursRest: { bgColor: '#1f1f1f', borderColor: '#D3D3D3' },
 };
 
@@ -21,6 +21,6 @@ export const FACTION_MAP: Record<string, { bgColor: string, borderColor: string 
   'Fort Stirling RC': FACTIONS.FortStirling,
   'Fort Stirling Portal': FACTIONS.FortStirling,
   'Morgana\'s Rest': FACTIONS.MorganasRest,
-  'Merlin\'s Rest': FACTIONS.MerlinsRest,
+  'Merlyn\'s Rest': FACTIONS.MerlynsRest,
   'Arthur\'s Rest': FACTIONS.ArthursRest,
 };

@@ -78,7 +78,7 @@ const handles = computed(() => {
        </div>
     </div>
     <div 
-      class="text-white text-xs text-center w-[150px] h-[150px] relative transition-all duration-300"
+      class="text-white text-xs text-center w-full h-full relative transition-all duration-300"
       :class="[
         hasReds ? 'red-glow' : '',
         props.data.isHome ? 'home-glow' : '',
@@ -97,7 +97,7 @@ const handles = computed(() => {
       ></div>
 
       <!-- Central Content Block -->
-      <div class="absolute inset-x-0 top-[35%] pointer-events-none flex flex-col items-center px-4" :class="Z_INDEX.CONTENT_LOW">
+      <div class="absolute inset-x-0 top-[45%] pointer-events-none flex flex-col items-center px-4" :class="Z_INDEX.CONTENT_LOW">
         <ZoneHeader
           :id="props.id" 
           :zone-name="props.data.zoneName" 
@@ -133,9 +133,8 @@ const handles = computed(() => {
 }
 
 .non-roads-node {
-  /* Smaller than the 400px default */
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
 }
 
 .custom-handle {
