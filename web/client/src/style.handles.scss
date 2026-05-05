@@ -65,14 +65,18 @@
 }
 
 .center-handle {
-  display: none;
+  width: 1px !important;
+  height: 1px !important;
+  background-color: transparent;
+  border: none;
+  backdrop-filter: blur(0px) !important;
 
   &.handle-active {
     display: block !important;
     width: 32px !important;
     height: 32px !important;
     background-color: rgb(151 151 151 / 0.5) !important;
-    border: 1px solid white !important;
+    border: 2px solid white !important;
   }
 
   &.pulsing-handle {
@@ -83,15 +87,14 @@
     border: 2px solid white !important;
   }
 
-
   &.handle-default {
     border-color: #919191 !important;
   }
 }
 
 .center-handle-snap {
-  width: 300px !important;
-  height: 300px !important;
+  width: 200px !important;
+  height: 200px !important;
   background-color: transparent !important;
   backdrop-filter: blur(0px) !important;
 }

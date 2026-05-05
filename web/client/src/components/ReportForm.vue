@@ -201,7 +201,10 @@ defineExpose({
   },
   focusTimeInput,
   focusToCombobox, 
-  flashToCombobox 
+  flashToCombobox,
+  setTargetPosition: (pos: { x: number, y: number }) => {
+    targetPosition.value = pos;
+  },
 });
 </script>
 

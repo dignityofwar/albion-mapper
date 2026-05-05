@@ -62,8 +62,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -138,8 +139,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -205,8 +207,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -265,8 +268,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -305,8 +309,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -352,8 +357,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -448,8 +454,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -521,8 +528,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -588,8 +596,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -646,8 +655,9 @@ describe('RoomView', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,
@@ -730,8 +740,9 @@ describe('RoomView Home Zone Protection', () => {
               const focusTimeInput = vi.fn();
               const setFromZoneId = vi.fn();
               const open = vi.fn();
-              expose({ setConnection, focusTimeInput, setFromZoneId, open });
-              return { setConnection, focusTimeInput, setFromZoneId, open };
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
             }
           },
           DebugTray: true,

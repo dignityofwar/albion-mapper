@@ -53,6 +53,7 @@ const isActive = (handleId: string) => {
 };
 
 const handleEdgeClass = (handleId: string): string => {
+  if (handleId === 'center' || handleId === 'center-overlay') return '';
   const conn = connections.value.find(c =>
     (c.fromZoneId === props.id && c.fromHandleId === handleId) ||
     (c.toZoneId === props.id && c.toHandleId === handleId)

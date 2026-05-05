@@ -561,6 +561,8 @@ function handleToZoneChange(id: string) {
       ghostNode.value.position.x -= 100;
       ghostNode.value.position.y -= 100;
     }
+    // Keep targetPosition in sync with the ghost node's updated position
+    reportForm.value?.setTargetPosition({ x: ghostNode.value.position.x, y: ghostNode.value.position.y });
   }
   
   ghostNode.value.type = newType;
