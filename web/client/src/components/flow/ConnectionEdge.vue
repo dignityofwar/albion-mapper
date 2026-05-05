@@ -156,8 +156,29 @@ const pathData = computed(() => {
   });
 });
 const path = computed(() => pathData.value[0]);
-const labelX = computed(() => pathData.value[1]);
-const labelY = computed(() => pathData.value[2]);
+const labelX = computed(() => {
+  const isCenterTarget = (props.targetHandleId || 'center') === 'center';
+  if (!isCenterTarget) return pathData.value[1];
+  // The center handle is at the middle of the node rather than its edge.
+  // Offset the pill halfway back towards the source (half node width = 80px)
+  // by moving it along the source→midpoint direction.
+  const mx = pathData.value[1];
+  const dx = mx - props.sourceX;
+  const dy = pathData.value[2] - props.sourceY;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len === 0) return mx;
+  return mx - (dx / len) * 80;
+});
+const labelY = computed(() => {
+  const isCenterTarget = (props.targetHandleId || 'center') === 'center';
+  if (!isCenterTarget) return pathData.value[2];
+  const my = pathData.value[2];
+  const dx = pathData.value[1] - props.sourceX;
+  const dy = my - props.sourceY;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  if (len === 0) return my;
+  return my - (dy / len) * 80;
+});
 
 defineExpose({
   showPopover,
