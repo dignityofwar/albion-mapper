@@ -114,7 +114,7 @@ async function createRoom() {
       createError.value = body.error ?? 'Failed to create room';
       return;
     }
-    const { id, vanityUrl } = await res.json() as { id: string; vanityUrl: string };
+    const { id } = await res.json() as { id: string };
 
     // Authenticate immediately
     const authRes = await fetch(`${API_BASE_URL}/api/rooms/${id}/auth`, {
@@ -124,8 +124,8 @@ async function createRoom() {
     });
     const { token } = await authRes.json() as { token: string };
 
-    sessionStorage.setItem(`token:${vanityUrl}`, token);
-    sessionStorage.setItem(`shareUrl:${vanityUrl}`, `${window.location.origin}/rooms/${vanityUrl}`);
+    sessionStorage.setItem(`token:${id}`, token);
+    sessionStorage.setItem(`shareUrl:${id}`, `${window.location.origin}/rooms/${id}`);
 
     if (showTutorial.value) {
       tutorialStore.setCompleted(false);
@@ -135,7 +135,7 @@ async function createRoom() {
     track('create_room');
     resetForm();
     emit('close');
-    await router.push(`/rooms/${vanityUrl}`);
+    await router.push(`/rooms/${id}`);
   } finally {
     creating.value = false;
   }
