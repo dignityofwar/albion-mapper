@@ -3,6 +3,13 @@
 
 @tailwind base;
 @tailwind components;
+
+@layer components {
+  .zone-button {
+    @apply rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 border border-gray-700 hover:border-gray-500 transition-colors;
+  }
+}
+
 @tailwind utilities;
 
 @keyframes flash {

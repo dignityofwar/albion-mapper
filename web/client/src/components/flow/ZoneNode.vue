@@ -11,6 +11,7 @@ import ZoneReds from './zone/ZoneReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneEditorTray from './zone/ZoneEditorTray.vue';
 import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
+import ZoneHandleEditorButton from './zone/ZoneHandleEditorButton.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
@@ -61,7 +62,7 @@ function getInitialHandles(): CustomHandle[] {
   return handles;
 }
 
-const handleEditorButtonRef = ref<HTMLElement | null>(null);
+const handleEditorButtonRef = ref<any>(null);
 const mapFeaturesButtonRef = ref<HTMLElement | null>(null);
 watch(isHandleEditorOpen, (val) => {
   if (val && tutorialStore.step === 3) {
@@ -616,7 +617,7 @@ function lockCore(core: string) {
             ref="mapFeaturesButtonRef"
             @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
             @mousedown.stop
-            class="p-1 rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 transition-colors pointer-events-auto relative"
+            class="zone-button p-1 pointer-events-auto relative"
             :class="Z_INDEX.CONTENT_HIGH"
             title="Edit Map Features"
           >
@@ -626,17 +627,12 @@ function lockCore(core: string) {
 
         <!-- Handle Editor Button -->
         <div class="handle-editor-container pointer-events-auto">
-          <button 
-            v-if="props.data.mapShape && (props.data.type === 'roads' || props.data.type === 'roadsHideout')"
+          <ZoneHandleEditorButton
             ref="handleEditorButtonRef"
-            :class="['px-3 py-1.5 rounded bg-gray-800/80 hover:bg-gray-700/80 transition-colors text-gray-400 flex items-center gap-1.5 border border-gray-700 shadow-lg', Z_INDEX.CONTENT_LOW]"
-            @click.stop="openHandleEditor"
-            @mousedown.stop
-            title="Edit Handles"
-          >
-            <div class="w-2.5 h-2.5 rounded-full bg-gray-500 border border-white"></div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-          </button>
+            :map-shape="props.data.mapShape"
+            :type="props.data.type"
+            @click="openHandleEditor"
+          />
         </div>
 
         <!-- Reds on North-East Edge -->
@@ -677,7 +673,7 @@ function lockCore(core: string) {
                 ref="mapFeaturesButtonRef"
                 @click.stop="isEditorTrayOpen = !isEditorTrayOpen"
                 @mousedown.stop
-                class="p-1 rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 transition-colors pointer-events-auto relative"
+                class="zone-button p-1 pointer-events-auto relative"
                 :class="Z_INDEX.CONTENT_HIGH"
                 title="Edit Map Features"
               >
@@ -718,7 +714,7 @@ function lockCore(core: string) {
         :message="'Open the handle editor to customize portals'"
         pointing="right"
         bounce
-        :target="handleEditorButtonRef ?? undefined"
+        :target="handleEditorButtonRef?.$el ?? undefined"
         :class="[Z_INDEX.HANDLE_OVERLAY]"
       />
       
@@ -800,7 +796,7 @@ function lockCore(core: string) {
 
 .handle-editor-container {
   position: absolute;
-  top: 170px;
+  top: 165px;
   left: 60px;
 }
 
