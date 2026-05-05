@@ -395,7 +395,7 @@ function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercore
 
 function setFeatureSize(type: keyof NodeFeatures, size: 'S' | 'L') {
   const currentFeatures = props.data.features || {};
-  const features = { ...currentFeatures };
+  const features: any = { ...currentFeatures };
   const sizeKey = `${type}Size` as keyof NodeFeatures;
   features[sizeKey] = size;
   features[type] = true;
