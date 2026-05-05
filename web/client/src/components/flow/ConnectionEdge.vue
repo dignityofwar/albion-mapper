@@ -191,6 +191,7 @@ const distance = computed(() => Math.sqrt((props.targetX - props.sourceX) ** 2 +
 const isDragging = ref(false);
 const stableDistance = ref(distance.value);
 const chevronsVisible = ref(true);
+const chevronEpoch = ref(0);
 
 onNodeDrag(() => {
   isDragging.value = true;
@@ -199,6 +200,7 @@ onNodeDrag(() => {
 onNodeDragStop(() => {
   isDragging.value = false;
   stableDistance.value = distance.value;
+  chevronEpoch.value++;
   // Fade back in after recalculating
   nextTick(() => {
     chevronsVisible.value = true;
@@ -236,7 +238,7 @@ defineExpose({
   <g v-if="!props.data?.isGhost && !isRestricted" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
     <path
       v-for="i in numChevrons"
-      :key="i"
+      :key="`${chevronEpoch}-${i}`"
       d="M -6 -6 L 0 0 L -6 6"
       fill="none"
       stroke-width="3"
