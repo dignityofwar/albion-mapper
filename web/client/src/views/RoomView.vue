@@ -115,6 +115,11 @@ async function initializeRoom() {
   }
 }
 
+function logout() {
+  store.logout();
+  router.replace({ path: '/' });
+}
+
 // ── Toast (kept below) ───────────────────────────────────────────────────────
 let toastTimeout: ReturnType<typeof setTimeout> | null = null;
 const isShareUrl = computed(() => toast.value.startsWith('Share URL: '));
@@ -843,7 +848,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     <!-- Header (Desktop) -->
     <header class="shrink-0 bg-gray-900 border-b border-gray-700 h-14 hidden md:flex items-center px-4 relative" :class="Z_INDEX.UI_OVERLAY">
       <div class="flex items-center gap-4">
-        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block ml-2" alt="Site Logo" />
+        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block ml-2 cursor-pointer" alt="Site Logo" @click="logout" />
         <RoomSettings />
       </div>
       <div class="absolute left-1/2 -translate-x-1/2">
@@ -879,7 +884,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     <div class="flex-1 relative">
       <!-- Mobile header (Mobile/Tablet) -->
       <div class="md:hidden absolute top-4 left-4 flex flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
-        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2" alt="Site Logo" />
+        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2 cursor-pointer" alt="Site Logo" @click="logout" />
         <RoomSettings :tray="true" />
       </div>
       <div class="md:hidden absolute top-4 left-1/2 -translate-x-1/2 w-full px-16 text-center" :class="Z_INDEX.UI_OVERLAY">

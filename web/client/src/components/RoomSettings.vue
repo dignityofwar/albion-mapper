@@ -93,9 +93,7 @@ function copyLink() {
 }
 
 function logout() {
-  sessionStorage.removeItem(`token:${store.roomSlug || store.roomId}`);
-  store.disconnect();
-  track('logout');
+  store.logout();
   router.replace({ path: '/' });
 }
 </script>

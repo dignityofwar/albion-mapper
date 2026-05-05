@@ -192,6 +192,12 @@ export const useRoomStore = defineStore('room', () => {
     token.value = '';
   }
 
+  function logout() {
+    sessionStorage.removeItem(`token:${roomSlug.value || roomId.value}`);
+    disconnect();
+    track('logout');
+  }
+
   function updateNodePositionsInStore(positions: NodePosition[]) {
     if (!positions) return;
     if (ws && ws.readyState === WebSocket.OPEN) {
@@ -308,6 +314,7 @@ export const useRoomStore = defineStore('room', () => {
     resetNodePositions,
     connect,
     disconnect,
+    logout,
     removeFromRecentRooms,
     importData,
   };
