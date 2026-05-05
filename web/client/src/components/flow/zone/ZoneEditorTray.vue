@@ -19,7 +19,7 @@ const emit = defineEmits<{
 <template>
   <Transition name="tray">
     <div v-if="isOpen" 
-      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[430px] rounded-xl shadow-2xl backdrop-blur-xl border p-4 text-left space-y-3 transition-all duration-300"
+      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] rounded-xl shadow-2xl backdrop-blur-xl border p-4 text-left space-y-3 transition-all duration-300"
       :class="[
         hasReds ? 'bg-red-950/90 border-red-500/50' : 'bg-gray-900/95 border-gray-700',
         Z_INDEX.MODAL
@@ -66,7 +66,7 @@ const emit = defineEmits<{
       <!-- Resources -->
       <div>
         <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Resources">Resources</div>
-        <div class="flex flex-wrap gap-1.5 justify-start">
+        <div class="flex flex-wrap gap-1.5 justify-center">
           <ZoneFeatureToggle 
             v-for="f in [
               { type: 'resourceFibre', title: 'Fibre' },
