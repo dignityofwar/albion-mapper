@@ -29,20 +29,19 @@ describe('POST /api/rooms', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID, vanityUrl: 'my-test-room' },
     });
     expect(res.statusCode).toBe(201);
     const body = res.json<{ id: string; shareUrl: string }>();
-    expect(body.id).toBeDefined();
-    expect(body.id).toHaveLength(12);
-    expect(body.shareUrl).toContain(body.id);
+    expect(body.id).toBe('my-test-room');
+    expect(body.shareUrl).toContain('my-test-room');
   });
 
   it('hashes the password (not stored as plaintext)', async () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'mypassword', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
+      payload: { password: 'mypassword', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID, vanityUrl: 'my-test-room' },
     });
     expect(res.statusCode).toBe(201);
     const { id } = res.json<{ id: string }>();
@@ -59,27 +58,30 @@ describe('POST /api/rooms', () => {
     expect(row!.password_hash).toMatch(/^\$2b\$/); // bcrypt hash prefix
   });
 
-  it('generates unique slugs', async () => {
-    mockDb.query.mockResolvedValue({ rowCount: 1, rows: [] });
-    
-    const res1 = await app.inject({
+  it('rejects duplicate vanity URLs', async () => {
+    const clientMock = {
+      query: vi.fn()
+        .mockResolvedValueOnce({ rows: [], rowCount: 0 }) // BEGIN
+        .mockResolvedValueOnce({ rows: [{ id: 'my-room' }], rowCount: 1 }) // existing check — taken
+        .mockResolvedValueOnce({ rows: [], rowCount: 0 }), // ROLLBACK
+      release: vi.fn(),
+    };
+    mockDb.connect.mockResolvedValueOnce(clientMock);
+
+    const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'pw1', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
+      payload: { password: 'pw1', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID, vanityUrl: 'my-room' },
     });
-    const res2 = await app.inject({
-      method: 'POST',
-      url: '/api/rooms',
-      payload: { password: 'pw2', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
-    });
-    expect(res1.json<{ id: string }>().id).not.toBe(res2.json<{ id: string }>().id);
+    expect(res.statusCode).toBe(409);
+    expect(res.json<{ error: string }>().error).toMatch(/already taken/i);
   });
 
   it('rejects when homeZoneId is missing', async () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', adminPassword: 'admin' },
+      payload: { password: 'secret', adminPassword: 'admin', vanityUrl: 'my-room' },
     });
     expect(res.statusCode).toBe(400);
   });
@@ -88,7 +90,7 @@ describe('POST /api/rooms', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: '' },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: '', vanityUrl: 'my-room' },
     });
     expect(res.statusCode).toBe(400);
   });
@@ -97,7 +99,7 @@ describe('POST /api/rooms', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: 'totally-unknown-zone-xyz' },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: 'totally-unknown-zone-xyz', vanityUrl: 'my-room' },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/zone catalogue/i);
@@ -107,7 +109,7 @@ describe('POST /api/rooms', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: 'willow-wood' },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: 'willow-wood', vanityUrl: 'my-room' },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/not a valid roads home/i);

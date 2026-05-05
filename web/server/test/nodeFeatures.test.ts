@@ -50,7 +50,7 @@ describe('Auto-pre-population in routes', () => {
     await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'pw', adminPassword: 'admin', homeZoneId: 'qiient-al-nusom' },
+      payload: { password: 'pw', adminPassword: 'admin', homeZoneId: 'qiient-al-nusom', vanityUrl: 'test-room' },
     });
 
     const connectMock = await mockDb.connect();

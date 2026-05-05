@@ -157,7 +157,8 @@ describe('POST /api/rooms/:id/connections', () => {
     // PATCH /api/rooms/:id/connections/:connId
     const connId = 'conn-1';
     
-    mockDb.query.mockResolvedValueOnce({ rows: [{ id: connId }] }); // existence check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room existence check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: connId }] }); // connection existence check
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE
     mockDb.query.mockResolvedValueOnce({ rows: [{ 
       id: connId, room_id: roomId, from_zone_id: VALID_ZONE_A, to_zone_id: VALID_ZONE_B,

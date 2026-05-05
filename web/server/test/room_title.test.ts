@@ -38,7 +38,8 @@ describe('Room Title Persistence', () => {
         password: 'password', 
         adminPassword: 'admin', 
         homeZoneId: VALID_ZONE_ID,
-        title: title
+        title: title,
+        vanityUrl: 'test-room'
       },
     });
     
@@ -66,7 +67,8 @@ describe('Room Title Persistence', () => {
         password: 'password', 
         adminPassword: 'admin', 
         homeZoneId: VALID_ZONE_ID,
-        title: longTitle
+        title: longTitle,
+        vanityUrl: 'test-room'
       },
     });
     

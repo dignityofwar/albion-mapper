@@ -12,22 +12,12 @@ const store = useRoomStore();
 const password = ref('');
 const authError = ref('');
 const authenticating = ref(false);
-const realId = ref(props.id);
 
 onMounted(async () => {
-  // Resolve vanity URL / slug to real room id
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/rooms/resolve/${encodeURIComponent(props.id)}`);
-    if (res.ok) {
-      const data = await res.json() as { id: string };
-      realId.value = data.id;
-    }
-  } catch { /* use props.id as-is */ }
-
   // If already authenticated (token in session storage), go straight to the room
   const stored = sessionStorage.getItem(`token:${props.id}`);
   if (stored) {
-    store.setCredentials(realId.value, stored, props.id);
+    store.setCredentials(props.id, stored);
     router.replace({ path: `/rooms/${props.id}` });
   }
 });
@@ -37,7 +27,7 @@ async function authenticate() {
   authenticating.value = true;
   authError.value = '';
   try {
-    const res = await fetch(`${API_BASE_URL}/api/rooms/${realId.value}/auth`, {
+    const res = await fetch(`${API_BASE_URL}/api/rooms/${props.id}/auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: password.value }),
@@ -48,7 +38,7 @@ async function authenticate() {
     }
     const { token } = await res.json() as { token: string };
     sessionStorage.setItem(`token:${props.id}`, token);
-    store.setCredentials(realId.value, token, props.id);
+    store.setCredentials(props.id, token);
     track('authenticate_room');
     router.push({ path: `/rooms/${props.id}` });
   } finally {

@@ -34,8 +34,8 @@ describe('CORS', () => {
     await app.ready();
 
     const testOrigins = [
-      'https://roadmap-test.dignityofwar.com',
-      'https://roadmap-api-test.dignityofwar.com',
+      'https://roadmap-testing.dignityofwar.com',
+      'https://roadmap-api-testing.dignityofwar.com',
     ];
 
     for (const origin of testOrigins) {

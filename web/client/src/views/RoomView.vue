@@ -84,33 +84,17 @@ watch(() => store.wsStatus, (status) => {
 }, { immediate: true });
 
 async function initializeRoom() {
-  // Resolve vanity URL or nanoid slug to the real room id
-  let realId = props.id;
-  try {
-    const res = await fetch(`/api/rooms/resolve/${encodeURIComponent(props.id)}`);
-    if (res.ok) {
-      const data = await res.json() as { id: string };
-      realId = data.id;
-    } else {
-      router.replace('/');
-      return;
-    }
-  } catch {
-    // fall through and try with props.id as-is
-  }
-
-  const stored = sessionStorage.getItem(`token:${props.id}`) ?? sessionStorage.getItem(`token:${realId}`);
+  const stored = sessionStorage.getItem(`token:${props.id}`);
   if (!stored) {
     router.replace({ path: `/rooms/${props.id}/auth` });
     return;
   }
-  store.setCredentials(realId, stored, props.id);
+  store.setCredentials(props.id, stored);
   store.connect();
-  const shareUrl = sessionStorage.getItem(`shareUrl:${props.id}`) ?? sessionStorage.getItem(`shareUrl:${realId}`);
+  const shareUrl = sessionStorage.getItem(`shareUrl:${props.id}`);
   if (shareUrl) {
     showToast(`Share URL: ${shareUrl}`);
     sessionStorage.removeItem(`shareUrl:${props.id}`);
-    sessionStorage.removeItem(`shareUrl:${realId}`);
   }
 }
 

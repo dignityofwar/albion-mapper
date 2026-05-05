@@ -21,11 +21,11 @@ function formatZodError(error: z.ZodError): string {
 }
 
 export async function roomRoutes(app: FastifyInstance): Promise<void> {
-  // GET /api/rooms/resolve/:slug — resolve a vanity URL to a room id
+  // GET /api/rooms/resolve/:slug — kept for backward compatibility, returns the slug as-is
   app.get<{ Params: { slug: string } }>('/api/rooms/resolve/:slug', async (request, reply) => {
     const { slug } = request.params;
     const { rows } = await app.db.query<{ id: string }>(
-      'SELECT id FROM rooms WHERE vanity_url = $1 OR id = $1',
+      'SELECT id FROM rooms WHERE id = $1',
       [slug]
     );
     if (rows.length === 0) {
@@ -41,7 +41,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'Invalid slug format' });
     }
     const { rows } = await app.db.query<{ id: string }>(
-      'SELECT id FROM rooms WHERE vanity_url = $1',
+      'SELECT id FROM rooms WHERE id = $1',
       [slug]
     );
     return reply.send({ available: rows.length === 0 });
@@ -65,7 +65,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'homeZoneId is not a valid roads home' });
     }
 
-    const id = nanoid(12);
+    const id = vanityUrl;
     const passwordHash = await bcrypt.hash(password, BCRYPT_ROUNDS);
     const adminPasswordHash = await bcrypt.hash(adminPassword, BCRYPT_ROUNDS);
     const createdAt = new Date().toISOString();
@@ -74,8 +74,8 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     try {
       await client.query('BEGIN');
       const { rows: existing } = await client.query<{ id: string }>(
-        'SELECT id FROM rooms WHERE vanity_url = $1',
-        [vanityUrl]
+        'SELECT id FROM rooms WHERE id = $1',
+        [id]
       );
       if (existing.length > 0) {
         await client.query('ROLLBACK');
@@ -83,9 +83,9 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       }
 
       await client.query(`
-        INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, title, created_at, vanity_url)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-      `, [id, passwordHash, adminPasswordHash, homeZoneId, title || null, createdAt, vanityUrl]);
+        INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, title, created_at)
+        VALUES ($1, $2, $3, $4, $5, $6)
+      `, [id, passwordHash, adminPasswordHash, homeZoneId, title || null, createdAt]);
 
       await client.query(`
         INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
@@ -100,8 +100,8 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       client.release();
     }
 
-    const shareUrl = `${request.protocol}://${request.hostname}/rooms/${vanityUrl}`;
-    return reply.status(201).send({ id, vanityUrl, shareUrl });
+    const shareUrl = `${request.protocol}://${request.hostname}/rooms/${id}`;
+    return reply.status(201).send({ id, shareUrl });
   });
 
   // POST /api/rooms/:id/auth — authenticate and get JWT
@@ -127,7 +127,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(401).send({ error: 'Invalid password' });
     }
 
-    const token = app.jwt.sign({ roomId: id }, { expiresIn: '24h' });
+    const token = app.jwt.sign({ roomId: room.id }, { expiresIn: '24h' });
     return reply.send({ token });
   });
 

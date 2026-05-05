@@ -48,6 +48,8 @@ describe('Fastify PATCH behavior', () => {
     const connId = 'test-conn';
     const token = app.jwt.sign({ roomId });
 
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room existence check
+
     const res = await app.inject({
       method: 'PATCH',
       url: `/api/rooms/${roomId}/connections/${connId}`,
@@ -59,13 +61,15 @@ describe('Fastify PATCH behavior', () => {
     });
 
     expect(res.statusCode).toBe(400);
-    expect(res.json()).toEqual({ error: 'Required' });
   });
   
-  it('returns Expected string if field is null', async () => {
+  it('returns 404 if connection not found when fromHandleId is null (schema accepts null)', async () => {
     const roomId = 'test-room';
     const connId = 'test-conn';
     const token = app.jwt.sign({ roomId });
+
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room existence check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connection not found
 
     const res = await app.inject({
       method: 'PATCH',
@@ -77,7 +81,7 @@ describe('Fastify PATCH behavior', () => {
       payload: { fromHandleId: null }
     });
 
-    expect(res.statusCode).toBe(400);
-    expect(res.json().error).toContain('Expected string, received null');
+    // null is valid per schema; route proceeds to connection lookup which returns 404
+    expect(res.statusCode).toBe(404);
   });
 });

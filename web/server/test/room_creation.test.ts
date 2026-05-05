@@ -30,7 +30,7 @@ describe('Room Creation - Node Initialization', () => {
     const res = await app.inject({
       method: 'POST',
       url: '/api/rooms',
-      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID },
+      payload: { password: 'secret', adminPassword: 'admin', homeZoneId: VALID_ZONE_ID, vanityUrl: 'test-room' },
     });
     
     expect(res.statusCode).toBe(201);

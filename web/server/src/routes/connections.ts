@@ -240,6 +240,15 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
         return reply.status(403).send({ error: 'Forbidden' });
       }
 
+      const { rows: roomRows } = await app.db.query<{ id: string }>(
+        'SELECT id FROM rooms WHERE id = $1',
+        [id]
+      );
+      if (roomRows.length === 0) {
+        return reply.status(404).send({ error: 'Room not found' });
+      }
+      const actualId = id;
+
       const parsed = UpdateConnectionBodySchema.safeParse(request.body);
       if (!parsed.success) {
         return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
@@ -249,7 +258,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
 
       const { rows } = await app.db.query<{ id: string }>(
         'SELECT id FROM connections WHERE id = $1 AND room_id = $2',
-        [connId, id]
+        [connId, actualId]
       );
       const conn = rows[0];
 
@@ -280,7 +289,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       }
 
       if (updates.length > 0) {
-        values.push(connId, id);
+        values.push(connId, actualId);
         await app.db.query(
           `UPDATE connections SET ${updates.join(', ')} WHERE id = $${idx++} AND room_id = $${idx++}`,
           values
@@ -289,13 +298,13 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
 
       const { rows: updatedConns } = await app.db.query<DbConnection>(
         'SELECT * FROM connections WHERE id = $1 AND room_id = $2',
-        [connId, id]
+        [connId, actualId]
       );
       const updatedConn = updatedConns[0];
 
       const connection = dbRowToConnection(updatedConn);
 
-      broadcast(id, { type: 'connection_updated', connection });
+      broadcast(actualId, { type: 'connection_updated', connection });
       return reply.send(connection);
     },
   );

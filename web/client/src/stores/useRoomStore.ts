@@ -16,7 +16,6 @@ export const useRoomStore = defineStore('room', () => {
   const lastUpdate = ref<Date | null>(null);
   const token = ref<string>('');
   const roomId = ref<string>('');
-  const roomSlug = ref<string>('');
   const isConnecting = ref(false);
 
   let ws: WebSocket | null = null;
@@ -56,10 +55,9 @@ export const useRoomStore = defineStore('room', () => {
     return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - currentTime) <= 0);
   }
 
-  function setCredentials(id: string, jwt: string, slug?: string) {
+  function setCredentials(id: string, jwt: string) {
     roomId.value = id;
     token.value = jwt;
-    roomSlug.value = slug ?? id;
   }
 
   function applyMessage(msg: ServerMessage) {
@@ -70,7 +68,7 @@ export const useRoomStore = defineStore('room', () => {
         roomTitle.value = msg.title || '';
         nodePositions.value = msg.nodePositions;
         lastUpdate.value = new Date(msg.lastUpdatedAt);
-        addToRecentRooms(roomId.value, roomSlug.value, roomTitle.value);
+        addToRecentRooms(roomId.value, roomId.value, roomTitle.value);
         break;
 
       case 'connection_added':
@@ -193,7 +191,7 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   function logout() {
-    sessionStorage.removeItem(`token:${roomSlug.value || roomId.value}`);
+    sessionStorage.removeItem(`token:${roomId.value}`);
     disconnect();
     track('logout');
   }
@@ -299,7 +297,6 @@ export const useRoomStore = defineStore('room', () => {
     lastUpdate,
     token,
     roomId,
-    roomSlug,
     isConnecting,
     recentlyViewedRooms,
     setCredentials,
