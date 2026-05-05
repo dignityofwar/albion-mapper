@@ -9,8 +9,7 @@ import TimeInput from '../common/TimeInput.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { useRoomStore } from '@/stores/useRoomStore';
-import { treeQuery } from '@/utils/treeQuery';
-import { ZONE_BY_ID, type Connection, getDefaultHandles } from 'shared';
+import { ZONE_BY_ID, type Connection } from 'shared';
 import { Z_INDEX } from '@/constants/Layers';
 
 type EdgeData = {
@@ -26,7 +25,7 @@ type EdgeData = {
 };
 
 const props = defineProps<EdgeProps<EdgeData>>();
-const { setCenter } = useVueFlow();
+const { setCenter, onNodeDrag, onNodeDragStop } = useVueFlow();
 const tutorialStore = useTutorialStore();
 const roomStore = useRoomStore();
 
@@ -156,6 +155,34 @@ const pathData = computed(() => {
   });
 });
 const path = computed(() => pathData.value[0]);
+const distance = computed(() => Math.sqrt((props.targetX - props.sourceX) ** 2 + (props.targetY - props.sourceY) ** 2));
+
+const isDragging = ref(false);
+const stableDistance = ref(distance.value);
+const chevronsVisible = ref(true);
+
+onNodeDrag(() => {
+  isDragging.value = true;
+  chevronsVisible.value = false;
+});
+onNodeDragStop(() => {
+  isDragging.value = false;
+  stableDistance.value = distance.value;
+  // Fade back in after recalculating
+  nextTick(() => {
+    chevronsVisible.value = true;
+  });
+});
+
+watch(distance, (val) => {
+  if (!isDragging.value) {
+    stableDistance.value = val;
+  }
+}, { immediate: true });
+
+const duration = computed(() => Math.max(1, stableDistance.value / 100));
+const numChevrons = computed(() => Math.max(1, Math.round(stableDistance.value / 100)));
+
 const labelX = computed(() => {
   const isCenterTarget = (props.targetHandleId || 'center') === 'center';
   if (!isCenterTarget) return pathData.value[1];
@@ -196,9 +223,9 @@ defineExpose({
     @mousedown.stop
   />
   
-  <g v-if="!props.data?.isGhost && !isRestricted" class="pointer-events-none">
+  <g v-if="!props.data?.isGhost && !isRestricted" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
     <path
-      v-for="i in 3"
+      v-for="i in numChevrons"
       :key="i"
       d="M -6 -6 L 0 0 L -6 6"
       fill="none"
@@ -211,11 +238,19 @@ defineExpose({
       style="stroke-dasharray: 0;"
     >
       <animateMotion
-        dur="3s"
-        :begin="`${(i - 1)}s`"
+        :dur="`${duration}s`"
+        :begin="`${(i - 1) * (duration / numChevrons)}s`"
         repeatCount="indefinite"
         :path="path"
         rotate="auto"
+      />
+      <animate 
+        attributeName="stroke-opacity"
+        values="0;1;1;0"
+        keyTimes="0;0.2;0.8;1"
+        :dur="`${duration}s`"
+        :begin="`${(i - 1) * (duration / numChevrons)}s`"
+        repeatCount="indefinite"
       />
     </path>
   </g>
@@ -238,7 +273,7 @@ defineExpose({
       <div
         data-trigger="true"
         class="text-xs px-3 h-7 inline-flex items-center justify-center rounded-full text-white cursor-pointer shadow-sm leading-none"
-        :style="{ backgroundColor: style.color, border: `1px solid ${style.stroke}` }"
+        :style="{ backgroundColor: style.color + 'b3', border: `1px solid ${style.stroke}` }"
         @click.stop="showPopover = !showPopover"
         @mousedown.stop
       >
