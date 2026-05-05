@@ -19,7 +19,7 @@ const emit = defineEmits<{
 <template>
   <Transition name="tray">
     <div v-if="isOpen" 
-      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] rounded-xl shadow-2xl backdrop-blur-xl border p-4 text-left space-y-3 transition-all duration-300"
+      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[430px] rounded-xl shadow-2xl backdrop-blur-xl border p-4 text-left space-y-3 transition-all duration-300"
       :class="[
         hasReds ? 'bg-red-950/90 border-red-500/50' : 'bg-gray-900/95 border-gray-700',
         Z_INDEX.MODAL
@@ -28,10 +28,10 @@ const emit = defineEmits<{
       @click.stop
     >
       <div class="flex items-center justify-between mb-1">
-        <div class="text-[10px] uppercase text-gray-500 font-bold tracking-widest">Edit Map Features</div>
+        <div class="text-[10px] uppercase text-white font-bold tracking-widest">Edit Map Features</div>
         <button 
           @click="emit('close')"
-          class="p-1 rounded-full hover:bg-white/10 text-gray-500 transition-colors"
+          class="p-1 rounded-full hover:bg-white/10 text-white transition-colors"
           title="Close"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
@@ -42,7 +42,7 @@ const emit = defineEmits<{
 
       <!-- Chests -->
       <div>
-        <div class="text-[9px] uppercase text-gray-500 font-bold mb-1.5 tracking-wider" title="Chests">Chests</div>
+        <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Chests">Chests</div>
         <div class="flex flex-wrap gap-1.5 justify-start">
           <ZoneFeatureToggle 
             v-for="f in [
@@ -65,7 +65,7 @@ const emit = defineEmits<{
 
       <!-- Resources -->
       <div>
-        <div class="text-[9px] uppercase text-gray-500 font-bold mb-1.5 tracking-wider" title="Resources">Resources</div>
+        <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Resources">Resources</div>
         <div class="flex flex-wrap gap-1.5 justify-start">
           <ZoneFeatureToggle 
             v-for="f in [
@@ -91,7 +91,7 @@ const emit = defineEmits<{
 
       <!-- Other -->
       <div>
-        <div class="text-[9px] uppercase text-gray-500 font-bold mb-1.5 tracking-wider" title="Other">Other</div>
+        <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Other">Other</div>
         <div class="flex flex-wrap gap-1.5 justify-start pb-1">
           <ZoneFeatureToggle 
             v-for="f in [

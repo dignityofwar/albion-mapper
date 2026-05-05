@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS, ZONE_BUTTON_BG_ACTIVE_HAS_REDS, ZONE_BUTTON_RING_ACTIVE_HAS_REDS, ZONE_BUTTON_HOVER_REDS, ZONE_BUTTON_HOVER_INACTIVE, ZONE_BUTTON_HOVER_ACTIVE } from '../../../constants/ui';
 import type { NodeFeatures } from 'shared';
 
@@ -38,20 +39,28 @@ const getImageSrc = (type: string) => {
 </script>
 
 <template>
-  <button 
-    @click.stop="$emit('toggle')" 
-    :class="[
-      active 
-        ? (hasReds ? `${ZONE_BUTTON_BG_ACTIVE_HAS_REDS} ${ZONE_BUTTON_RING_ACTIVE_HAS_REDS} ring-1 hover:bg-red-500` : `bg-gray-600 ring-white ring-1 ${ZONE_BUTTON_HOVER_ACTIVE}`) 
-        : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_INACTIVE}`),
-      'text-white rounded ring-inset leading-none transition-colors flex items-center justify-center'
-    ]"
-    :title="title"
-  >
-    <img :src="getImageSrc(type)" class="w-16 h-16 py-2 object-contain" :alt="title" />
-    <div v-if="isResource" class="flex flex-col h-16">
-      <button @click.stop="$emit('size', type, 'S')" class="px-1.5 rounded-t hover:bg-black/50 flex-1 flex items-center justify-center text-[10px] border-b border-white/10" :class="size === 'S' ? 'bg-gray-500' : 'bg-black/30'">S</button>
-      <button @click.stop="$emit('size', type, 'L')" class="px-1.5 rounded-b hover:bg-black/50 flex-1 flex items-center justify-center text-[10px]" :class="size === 'L' ? 'bg-gray-500' : 'bg-black/30'">L</button>
-    </div>
-  </button>
+  <TooltipRoot>
+    <TooltipTrigger as-child>
+      <button 
+        @click.stop="$emit('toggle')" 
+        :class="[
+          active 
+            ? (hasReds ? `${ZONE_BUTTON_BG_ACTIVE_HAS_REDS} ${ZONE_BUTTON_RING_ACTIVE_HAS_REDS} ring-1 hover:bg-red-500` : `bg-gray-600 ring-white ring-1 ${ZONE_BUTTON_HOVER_ACTIVE}`) 
+            : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_INACTIVE}`),
+          'text-white rounded ring-inset leading-none transition-colors flex items-center justify-center'
+        ]"
+      >
+        <img :src="getImageSrc(type)" class="w-14 h-14 object-cover p-1" :alt="title" />
+        <div v-if="isResource" class="flex flex-col h-16">
+          <button @click.stop="$emit('size', type, 'S')" class="px-1.5 rounded-t hover:bg-black/50 flex-1 flex items-center justify-center text-[10px] border-b border-white/10" :class="size === 'S' ? 'bg-gray-500' : 'bg-black/30'">S</button>
+          <button @click.stop="$emit('size', type, 'L')" class="px-1.5 rounded-b hover:bg-black/50 flex-1 flex items-center justify-center text-[10px]" :class="size === 'L' ? 'bg-gray-500' : 'bg-black/30'">L</button>
+        </div>
+      </button>
+    </TooltipTrigger>
+    <TooltipPortal>
+      <TooltipContent class="bg-black text-white text-md px-2 py-1 rounded shadow-lg z-[10000]">
+        {{ title }}
+      </TooltipContent>
+    </TooltipPortal>
+  </TooltipRoot>
 </template>

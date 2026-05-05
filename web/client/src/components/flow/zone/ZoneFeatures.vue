@@ -46,7 +46,7 @@ const featureRows = computed(() => {
         :title="feature.title"
       >
         <div class="flex items-center justify-center h-full">
-          <img :src="feature.icon" class="w-8 h-8 object-cover aspect-square p-1" />
+          <img :src="feature.icon" class="w-8 h-8 object-cover aspect-square p-1" :alt="feature.title" />
         </div>
         <div v-if="feature.size || feature.isResource" class="bg-gray-800/80 px-1 flex items-center justify-center h-full">
           <span v-if="feature.size" class="text-xs font-bold text-white">{{ feature.size }}</span>
