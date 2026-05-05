@@ -157,6 +157,36 @@ describe('ZoneHandleEditor', () => {
     expect(wrapper.findAll('.handle-arch')).toHaveLength(0);
   });
 
+  it('does not create a new custom handle when dragging an existing handle', async () => {
+    const wrapper = mount(ZoneHandleEditor, {
+      props: {
+        zoneName: 'Hideout Zone',
+        initialHandles: [
+          { id: 'w', left: '0.00%', top: '50.00%' }
+        ],
+        isToggleMode: false,
+        isHideout: true
+      },
+      attachTo: document.body
+    });
+
+    const handle = wrapper.find('.handle-arch');
+    // Simulate drag: mousedown on handle, mousemove on window, mouseup on window
+    await handle.trigger('mousedown', { clientX: 10, clientY: 10 });
+    window.dispatchEvent(new MouseEvent('mousemove', { clientX: 20, clientY: 20, bubbles: true }));
+    window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+    // Simulate the click that fires on the container after drag
+    await wrapper.find('.relative.w-\\[400px\\]').trigger('click', { clientX: 20, clientY: 20 });
+
+    // Should still only have 1 handle — no spurious custom handle created
+    expect(wrapper.findAll('.handle-arch')).toHaveLength(1);
+    expect(wrapper.findAll('.handle-arch[data-facing]').map(h => h.attributes('style'))).not.toContain(
+      expect.stringContaining('custom-')
+    );
+
+    wrapper.unmount();
+  });
+
   it('renders hideout handles correctly', () => {
     const hideoutHandles = getDefaultHandles('roadsHideout');
     const wrapper = mount(ZoneHandleEditor, {

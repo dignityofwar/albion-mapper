@@ -21,6 +21,8 @@
     "pinia": "^2.2.2",
     "reka-ui": "^2.2.0",
     "shared": "workspace:*",
+    "slug": "^11.0.1",
+    "unique-names-generator": "^4.7.1",
     "vue": "^3.5.12",
     "vue-kofi": "^1.1.1",
     "vue-router": "^4.4.5"
@@ -30,6 +32,7 @@
     "@testing-library/user-event": "^14.5.2",
     "@testing-library/vue": "^8.1.0",
     "@types/node": "^22.7.4",
+    "@types/slug": "^5.0.9",
     "@vitejs/plugin-vue": "^5.1.4",
     "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.20",

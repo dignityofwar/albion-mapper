@@ -185,6 +185,7 @@ export const CreateRoomBodySchema = z.object({
   adminPassword: z.string().min(1),
   homeZoneId: z.string().min(1),
   title: z.string().max(50).optional(),
+  vanityUrl: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/),
 });
 
 export const AuthRoomBodySchema = z.object({

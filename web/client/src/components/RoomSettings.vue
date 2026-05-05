@@ -84,7 +84,7 @@ async function reset() {
 // savePassword function removed from here, it's now in ChangePasswordModal.vue
 
 function copyLink() {
-  const url = `${window.location.origin}/rooms/${store.roomId}`;
+  const url = window.location.href;
   navigator.clipboard.writeText(url).then(() => {
     copied.value = true;
     track('copy_room_link');
@@ -93,7 +93,7 @@ function copyLink() {
 }
 
 function logout() {
-  sessionStorage.removeItem(`token:${store.roomId}`);
+  sessionStorage.removeItem(`token:${store.roomSlug || store.roomId}`);
   store.disconnect();
   track('logout');
   router.replace({ path: '/' });

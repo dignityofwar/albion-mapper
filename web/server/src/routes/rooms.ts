@@ -21,6 +21,32 @@ function formatZodError(error: z.ZodError): string {
 }
 
 export async function roomRoutes(app: FastifyInstance): Promise<void> {
+  // GET /api/rooms/resolve/:slug — resolve a vanity URL to a room id
+  app.get<{ Params: { slug: string } }>('/api/rooms/resolve/:slug', async (request, reply) => {
+    const { slug } = request.params;
+    const { rows } = await app.db.query<{ id: string }>(
+      'SELECT id FROM rooms WHERE vanity_url = $1 OR id = $1',
+      [slug]
+    );
+    if (rows.length === 0) {
+      return reply.status(404).send({ error: 'Room not found' });
+    }
+    return reply.send({ id: rows[0].id });
+  });
+
+  // GET /api/slugs/check/:slug — check if a vanity URL slug is available
+  app.get<{ Params: { slug: string } }>('/api/slugs/check/:slug', async (request, reply) => {
+    const { slug } = request.params;
+    if (!/^[a-z0-9-]+$/.test(slug) || slug.length < 1 || slug.length > 100) {
+      return reply.status(400).send({ error: 'Invalid slug format' });
+    }
+    const { rows } = await app.db.query<{ id: string }>(
+      'SELECT id FROM rooms WHERE vanity_url = $1',
+      [slug]
+    );
+    return reply.send({ available: rows.length === 0 });
+  });
+
   // POST /api/rooms — create a room
   app.post('/api/rooms', async (request, reply) => {
     const parsed = CreateRoomBodySchema.safeParse(request.body);
@@ -28,7 +54,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: formatZodError(parsed.error) });
     }
 
-    const { password, adminPassword, homeZoneId, title } = parsed.data;
+    const { password, adminPassword, homeZoneId, title, vanityUrl } = parsed.data;
 
     const zone = ZONE_BY_ID.get(homeZoneId);
     if (!zone) {
@@ -47,10 +73,19 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     const client = await app.db.connect();
     try {
       await client.query('BEGIN');
+      const { rows: existing } = await client.query<{ id: string }>(
+        'SELECT id FROM rooms WHERE vanity_url = $1',
+        [vanityUrl]
+      );
+      if (existing.length > 0) {
+        await client.query('ROLLBACK');
+        return reply.status(409).send({ error: 'Vanity URL is already taken' });
+      }
+
       await client.query(`
-        INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, title, created_at)
-        VALUES ($1, $2, $3, $4, $5, $6)
-      `, [id, passwordHash, adminPasswordHash, homeZoneId, title || null, createdAt]);
+        INSERT INTO rooms (id, password_hash, admin_password_hash, home_zone_id, title, created_at, vanity_url)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `, [id, passwordHash, adminPasswordHash, homeZoneId, title || null, createdAt, vanityUrl]);
 
       await client.query(`
         INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
@@ -65,8 +100,8 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       client.release();
     }
 
-    const shareUrl = `${request.protocol}://${request.hostname}/rooms/${id}`;
-    return reply.status(201).send({ id, shareUrl });
+    const shareUrl = `${request.protocol}://${request.hostname}/rooms/${vanityUrl}`;
+    return reply.status(201).send({ id, vanityUrl, shareUrl });
   });
 
   // POST /api/rooms/:id/auth — authenticate and get JWT

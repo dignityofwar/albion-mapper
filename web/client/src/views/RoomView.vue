@@ -84,18 +84,34 @@ watch(() => store.wsStatus, (status) => {
   }
 }, { immediate: true });
 
-function initializeRoom() {
-  const stored = sessionStorage.getItem(`token:${props.id}`);
+async function initializeRoom() {
+  // Resolve vanity URL or nanoid slug to the real room id
+  let realId = props.id;
+  try {
+    const res = await fetch(`/api/rooms/resolve/${encodeURIComponent(props.id)}`);
+    if (res.ok) {
+      const data = await res.json() as { id: string };
+      realId = data.id;
+    } else {
+      router.replace('/');
+      return;
+    }
+  } catch {
+    // fall through and try with props.id as-is
+  }
+
+  const stored = sessionStorage.getItem(`token:${props.id}`) ?? sessionStorage.getItem(`token:${realId}`);
   if (!stored) {
     router.replace({ path: `/rooms/${props.id}/auth` });
     return;
   }
-  store.setCredentials(props.id, stored);
+  store.setCredentials(realId, stored, props.id);
   store.connect();
-  const shareUrl = sessionStorage.getItem(`shareUrl:${props.id}`);
+  const shareUrl = sessionStorage.getItem(`shareUrl:${props.id}`) ?? sessionStorage.getItem(`shareUrl:${realId}`);
   if (shareUrl) {
     showToast(`Share URL: ${shareUrl}`);
     sessionStorage.removeItem(`shareUrl:${props.id}`);
+    sessionStorage.removeItem(`shareUrl:${realId}`);
   }
 }
 

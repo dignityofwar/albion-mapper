@@ -24,6 +24,7 @@ const handles = ref<CustomHandle[]>([...props.initialHandles]);
 const containerRef = ref<HTMLDivElement | null>(null);
 const saveButtonRef = ref<HTMLButtonElement | null>(null);
 const draggingHandleId = ref<string | null>(null);
+const didDrag = ref(false);
 
 function getPosFromT(t: number): { left: string; top: string } {
   let x, y;
@@ -60,6 +61,7 @@ function getTFromPos(xPercent: number, yPercent: number): number {
 
 function handleEdgeClick(e: MouseEvent) {
   if (props.isToggleMode || !containerRef.value) return;
+  if (didDrag.value) { didDrag.value = false; return; }
   const rect = containerRef.value.getBoundingClientRect();
   const x = ((e.clientX - rect.left) / rect.width) * 100;
   const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -96,11 +98,13 @@ function handleHandleClick(id: string, e: Event) {
 function startDragging(id: string, e: MouseEvent) {
   if (props.isToggleMode) return;
   e.stopPropagation();
+  didDrag.value = false;
   draggingHandleId.value = id;
 }
 
 function onMouseMove(e: MouseEvent) {
   if (!draggingHandleId.value || !containerRef.value) return;
+  didDrag.value = true;
   
   const rect = containerRef.value.getBoundingClientRect();
   const x = ((e.clientX - rect.left) / rect.width) * 100;

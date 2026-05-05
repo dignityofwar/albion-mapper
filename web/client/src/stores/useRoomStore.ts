@@ -16,6 +16,7 @@ export const useRoomStore = defineStore('room', () => {
   const lastUpdate = ref<Date | null>(null);
   const token = ref<string>('');
   const roomId = ref<string>('');
+  const roomSlug = ref<string>('');
   const isConnecting = ref(false);
 
   let ws: WebSocket | null = null;
@@ -55,9 +56,10 @@ export const useRoomStore = defineStore('room', () => {
     return ancestors.some(a => (a.isExpired ?? false) || (new Date(a.expiresAt).getTime() - currentTime) <= 0);
   }
 
-  function setCredentials(id: string, jwt: string) {
+  function setCredentials(id: string, jwt: string, slug?: string) {
     roomId.value = id;
     token.value = jwt;
+    roomSlug.value = slug ?? id;
   }
 
   function applyMessage(msg: ServerMessage) {
@@ -68,7 +70,7 @@ export const useRoomStore = defineStore('room', () => {
         roomTitle.value = msg.title || '';
         nodePositions.value = msg.nodePositions;
         lastUpdate.value = new Date(msg.lastUpdatedAt);
-        addToRecentRooms(roomId.value, roomTitle.value);
+        addToRecentRooms(roomId.value, roomSlug.value, roomTitle.value);
         break;
 
       case 'connection_added':
@@ -237,18 +239,23 @@ export const useRoomStore = defineStore('room', () => {
   // Recently Viewed Rooms
   interface RecentRoom {
     id: string;
+    vanityUrl: string;
     title: string;
   }
 
-  const recentlyViewedRooms = ref<RecentRoom[]>(JSON.parse(localStorage.getItem('recentRooms') || '[]'));
+  const recentlyViewedRooms = ref<RecentRoom[]>(JSON.parse(localStorage.getItem('recentRooms') || '[]').map((r: any) => ({
+    id: r.id,
+    vanityUrl: r.vanityUrl || r.id,
+    title: r.title,
+  })));
 
-  function addToRecentRooms(id: string, title: string) {
+  function addToRecentRooms(id: string, vanityUrl: string, title: string) {
     if (!id) return;
     const existing = recentlyViewedRooms.value.findIndex(r => r.id === id);
     if (existing !== -1) {
       recentlyViewedRooms.value.splice(existing, 1);
     }
-    recentlyViewedRooms.value.unshift({ id, title: title || id });
+    recentlyViewedRooms.value.unshift({ id, vanityUrl, title: title || id });
     recentlyViewedRooms.value = recentlyViewedRooms.value.slice(0, 10); // Keep last 10
     localStorage.setItem('recentRooms', JSON.stringify(recentlyViewedRooms.value));
   }
@@ -286,6 +293,7 @@ export const useRoomStore = defineStore('room', () => {
     lastUpdate,
     token,
     roomId,
+    roomSlug,
     isConnecting,
     recentlyViewedRooms,
     setCredentials,
