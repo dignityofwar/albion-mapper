@@ -77,21 +77,50 @@ function openHandleEditor() {
 }
 
 async function saveCustomHandles(newHandles: CustomHandle[]) {
-  // Find disabled handles
+  const currentHandles = getInitialHandles();
+  const newHandleIds = new Set(newHandles.map(h => h.id));
+
+  // Handles that were removed entirely (not just disabled)
+  const removedHandleIds = currentHandles.filter(h => !newHandleIds.has(h.id)).map(h => h.id);
+
+  // Handles that are disabled in the new set
   const disabledHandleIds = newHandles.filter(h => h.disabled).map(h => h.id);
-  
-  if (disabledHandleIds.length > 0) {
-    // Find connections using these handles on THIS node
-    const connectionsToDelete = store.connections.filter(c => 
-      (c.fromZoneId === props.id && disabledHandleIds.includes(c.fromHandleId!)) ||
-      (c.toZoneId === props.id && disabledHandleIds.includes(c.toHandleId!))
-    );
-    
+
+  const affectedHandleIds = [...new Set([...removedHandleIds, ...disabledHandleIds])];
+
+  if (affectedHandleIds.length > 0) {
+    // Find connections using these handles on THIS node (deduplicated)
+    const seenConnIds = new Set<string>();
+    const connectionsToDelete = store.connections.filter(c => {
+      if (seenConnIds.has(c.id)) return false;
+      const affected =
+        (c.fromZoneId === props.id && affectedHandleIds.includes(c.fromHandleId!)) ||
+        (c.toZoneId === props.id && affectedHandleIds.includes(c.toHandleId!));
+      if (affected) seenConnIds.add(c.id);
+      return affected;
+    });
+
+    // For each connection, do a recursive delete (same as "Delete this and children")
     for (const conn of connectionsToDelete) {
       try {
-        await deleteConnection(store.roomId, store.token, conn.id);
+        const toDelete = new Set<string>();
+        const queue = [conn.id];
+        while (queue.length > 0) {
+          const currentId = queue.shift()!;
+          if (toDelete.has(currentId)) continue;
+          toDelete.add(currentId);
+          const c = store.connections.find(x => x.id === currentId);
+          if (c) {
+            const children = store.connections.filter(x => x.fromZoneId === c.toZoneId);
+            for (const child of children) queue.push(child.id);
+          }
+        }
+        const toDeleteArray = Array.from(toDelete).reverse();
+        for (const connId of toDeleteArray) {
+          await deleteConnection(store.roomId, store.token, connId);
+        }
       } catch (err) {
-        console.error('Failed to delete connection for disabled handle:', err);
+        console.error('Failed to delete connection for handle:', err);
       }
     }
   }
@@ -576,7 +605,7 @@ function lockCore(core: string) {
 <template>
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
     <div :class="[isConnecting ? 'connecting-mode' : '']">
-        <template v-for="handle in handles" :key="handle.id">
+        <template v-if="!isHandleEditorOpen" v-for="handle in handles" :key="handle.id">
           <Handle
             type="source"
             :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"

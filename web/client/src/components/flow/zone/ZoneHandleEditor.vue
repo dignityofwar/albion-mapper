@@ -287,7 +287,7 @@ function getHandleFacing(left: string, top: string): string {
           :key="h.id"
           class="absolute w-8 h-8 handle-arch"
           :class="[
-            Z_INDEX.MODAL,
+            Z_INDEX.HANDLE_OVERLAY,
             h.disabled ? 'is-disabled' : 'is-active',
             isToggleMode ? 'cursor-pointer' : 'cursor-move'
           ]"
