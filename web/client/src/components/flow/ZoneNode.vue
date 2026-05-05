@@ -216,7 +216,11 @@ watch(activeEditingCore, (newVal, oldVal) => {
 
 const hoveredHandleId = ref<string | null>(null);
 
-const { onMoveStart, onMoveEnd, onNodeDragStart, onConnectStart, onConnectEnd } = useVueFlow();
+const { onMoveStart, onMoveEnd, onNodeDragStart, onConnectStart, onConnectEnd, updateNode } = useVueFlow();
+
+watch(isMapFeaturesModalOpen, (val) => {
+  updateNode(props.id, { zIndex: val ? 9999 : 0 });
+});
 
 const isPulsing = (handleId: string) => {
     return isConnecting.value &&
@@ -482,6 +486,11 @@ function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercore
     }
   } else {
     features[feature] = !features[feature];
+    // If a resource is being deselected, wipe its size
+    if (feature.startsWith('resource') && !features[feature]) {
+      const sizeKey = `${feature}Size` as keyof NodeFeatures;
+      delete features[sizeKey];
+    }
   }
   
   store.updateNodeFeatures(props.id, features);
@@ -611,7 +620,7 @@ function lockCore(core: string) {
 <template>
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
     <div :class="[isConnecting ? 'connecting-mode' : '']">
-        <template v-if="!isHandleEditorOpen" v-for="handle in handles" :key="handle.id">
+        <template v-if="!isHandleEditorOpen && !isMapFeaturesModalOpen" v-for="handle in handles" :key="handle.id">
           <Handle
             type="source"
             :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
