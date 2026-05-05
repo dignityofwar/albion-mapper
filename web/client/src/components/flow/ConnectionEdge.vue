@@ -167,7 +167,7 @@ const labelX = computed(() => {
   const dy = pathData.value[2] - props.sourceY;
   const len = Math.sqrt(dx * dx + dy * dy);
   if (len === 0) return mx;
-  return mx - (dx / len) * 80;
+  return mx - (dx / len) * (props.targetNode?.type === 'non-roads' ? 40 : 80);
 });
 const labelY = computed(() => {
   const isCenterTarget = (props.targetHandleId || 'center') === 'center';
@@ -177,7 +177,7 @@ const labelY = computed(() => {
   const dy = my - props.sourceY;
   const len = Math.sqrt(dx * dx + dy * dy);
   if (len === 0) return my;
-  return my - (dy / len) * 80;
+  return my - (dy / len) * (props.targetNode?.type === 'non-roads' ? 40 : 80);
 });
 
 defineExpose({
