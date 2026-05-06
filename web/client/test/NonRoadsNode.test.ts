@@ -64,7 +64,7 @@ describe('NonRoadsNode Styling', () => {
     const wrapper = mountNode({ 
       features: { reds: 1 }
     })
-    const container = wrapper.find('.w-\\[150px\\]')
+    const container = wrapper.find('.non-roads-node .w-full.h-full.relative')
     expect(container.classes()).toContain('red-glow')
     
     const border = wrapper.find('.diamond-shape.z-\\[5\\]')
@@ -76,13 +76,13 @@ describe('NonRoadsNode Styling', () => {
 
   it('applies home-glow when isHome is true', () => {
     const wrapper = mountNode({ isHome: true })
-    const container = wrapper.find('.w-\\[150px\\]')
+    const container = wrapper.find('.non-roads-node .w-full.h-full.relative')
     expect(container.classes()).toContain('home-glow')
   })
 
   it('applies goto-glow when highlighted is true', () => {
     const wrapper = mountNode({ highlighted: true })
-    const container = wrapper.find('.w-\\[150px\\]')
+    const container = wrapper.find('.non-roads-node .w-full.h-full.relative')
     expect(container.classes()).toContain('goto-glow')
   })
 })

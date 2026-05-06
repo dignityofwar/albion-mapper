@@ -47,7 +47,7 @@ describe('RoomSettings', () => {
     expect(wrapper.find('[data-testid="settings-popup"]').exists()).toBe(true);
 
     // Click inside (on the reset button)
-    const resetBtn = wrapper.find('[data-testid="settings-reset"]');
+    const resetBtn = wrapper.find('[data-testid="settings-reset-room"]');
     await resetBtn.trigger('click');
     
     // Check if still open

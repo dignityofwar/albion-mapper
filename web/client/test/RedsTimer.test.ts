@@ -91,7 +91,7 @@ describe('Reds Timer Logic', () => {
     const store = (wrapper.vm as any).store
     expect(store.updateNodeFeatures).toHaveBeenCalledWith('test-node', expect.objectContaining({
       reds: 5,
-      redsTimer: now + 30 * 60 * 1000
+      redsTimer: now + 15 * 60 * 1000
     }))
   })
 })

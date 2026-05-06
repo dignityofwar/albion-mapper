@@ -285,11 +285,12 @@ function getHandleFacing(left: string, top: string): string {
         <div 
           v-for="h in handles" 
           :key="h.id"
-          class="absolute w-8 h-8 handle-arch"
+          class="absolute w-8 h-8 handle"
           :class="[
             Z_INDEX.HANDLE_OVERLAY,
             h.disabled ? 'is-disabled' : 'is-active',
-            isToggleMode ? 'cursor-pointer' : 'cursor-move'
+            isToggleMode ? 'cursor-pointer' : 'cursor-move',
+            `facing-${getHandleFacing(h.left, h.top)}`
           ]"
           :style="{ left: h.left, top: h.top }"
           :data-facing="getHandleFacing(h.left, h.top)"
@@ -303,44 +304,28 @@ function getHandleFacing(left: string, top: string): string {
 </template>
 
 <style scoped>
-.handle-arch {
-  margin-left: -16px;
-  margin-top: -16px;
-  background: transparent;
-  transition: all 0.2s;
-}
-
-.handle-arch::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+.handle.is-active::after {
   background-color: #3b82f6;
   border: 2px solid white;
-  border-radius: 50%;
-  transition: all 0.2s;
 }
 
-.handle-arch.is-disabled::after {
-  background-color: transparent;
-  border: 3px solid #4b5563;
-  opacity: 0.8;
-  transform: scale(0.75);
+.handle.is-active::before {
+  border-top: 2px solid white;
 }
 
-.handle-arch.is-active:hover::after {
+.handle.is-active:hover::after {
   background-color: #60a5fa;
   box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
-.handle-arch[data-facing="n"] { transform: rotate(0deg); }
-.handle-arch[data-facing="ne"] { transform: rotate(45deg); }
-.handle-arch[data-facing="e"] { transform: rotate(90deg); }
-.handle-arch[data-facing="se"] { transform: rotate(135deg); }
-.handle-arch[data-facing="s"] { transform: rotate(180deg); }
-.handle-arch[data-facing="sw"] { transform: rotate(225deg); }
-.handle-arch[data-facing="w"] { transform: rotate(270deg); }
-.handle-arch[data-facing="nw"] { transform: rotate(315deg); }
+.handle.is-disabled::after {
+  background-color: transparent;
+  border: 3px solid #4b5563;
+  opacity: 0.8;
+}
+
+.handle.is-disabled::before {
+  border-top: 3px solid #4b5563;
+  opacity: 0.8;
+}
 </style>

@@ -17,7 +17,7 @@ vi.mock('@vue-flow/core', async () => {
     return {
         ...actual as any,
         useVueFlow: () => ({
-            getNode: (id: string) => ({ position: { x: 0, y: 0 } }),
+            getNode: ref((id: string) => ({ position: { x: 0, y: 0 } })),
             fitView: vi.fn(),
             updateNode: vi.fn(),
             setCenter: vi.fn(),

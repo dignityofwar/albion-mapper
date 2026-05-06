@@ -8,96 +8,170 @@
 }
 
 .handle {
-  transform: translate(-50%, -50%) !important;
   width: 40px;
   height: 40px;
   pointer-events: auto !important;
-  border-radius: 50% !important;
+  border-radius: 0 !important;
+  border: none !important;
+  background: transparent !important;
   box-sizing: border-box !important;
 
-  // Half-circle clip-paths based on facing direction
-  // border-radius: 50% makes the element a circle; clip-path cuts it to the outward-facing half
-  &.facing-n  { clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%); }
-  &.facing-ne { clip-path: polygon(100% 0%, 100% 100%, 0% 0%); }
-  &.facing-e  { clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%); }
-  &.facing-se { clip-path: polygon(100% 0%, 100% 100%, 0% 100%); }
-  &.facing-s  { clip-path: polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%); }
-  &.facing-sw { clip-path: polygon(0% 0%, 100% 100%, 0% 100%); }
-  &.facing-w  { clip-path: polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%); }
-  &.facing-nw { clip-path: polygon(0% 0%, 100% 0%, 0% 100%); }
+  // facing-* classes combine translate (centering) + rotate (direction)
+  &.facing-n  { transform: translate(-50%, -50%) rotate(0deg) !important; }
+  &.facing-ne { transform: translate(-50%, -50%) rotate(45deg) !important; }
+  &.facing-e  { transform: translate(-50%, -50%) rotate(90deg) !important; }
+  &.facing-se { transform: translate(-50%, -50%) rotate(135deg) !important; }
+  &.facing-s  { transform: translate(-50%, -50%) rotate(180deg) !important; }
+  &.facing-sw { transform: translate(-50%, -50%) rotate(225deg) !important; }
+  &.facing-w  { transform: translate(-50%, -50%) rotate(270deg) !important; }
+  &.facing-nw { transform: translate(-50%, -50%) rotate(315deg) !important; }
 
-  &.handle-edge-green {
-    background-color: rgb(3 140 54);
-    border-color: #0ee25e;
+  // Semicircle: clip top half of a full circle
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+    box-sizing: border-box;
+    transition: background-color 0.2s, border-color 0.2s;
   }
 
-  &.handle-edge-orange {
-    background-color: rgb(172 105 0);
-    border-color: #f59e0b;
+  // Straight-edge border line at the diameter
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 0;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
   }
 
-  &.handle-edge-red {
-    background-color: rgb(163 0 0);
-    border-color: #ef4444;
+  // Canvas handle state colors
+  &.handle-default::after {
+    background-color: rgb(87 87 87 / 0.42);
+    border: 1px solid #919191;
   }
 
-  &.handle-edge-grey {
-    background-color: #6b7280;
-    border-color: #acadae;
+  &.handle-default::before {
+    border-top: 1px solid #919191;
   }
-}
 
-.handle-default {
-  background-color: rgb(87 87 87 / 0.42);
-  border: 1px solid #919191;
-  transition: background-color 0.3s ease;
-
-  &:hover {
+  &.handle-default:hover::after {
     background-color: #979797;
     border: 1px solid white;
   }
-}
 
-.handle-active {
-  background-color: #979797;
-  border: 2px solid white;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #b4b4b4 !important;
+  &.handle-default:hover::before {
+    border-top-color: white;
   }
-}
 
-.pulsing-handle {
-  animation: pulse-blue 0.75s infinite ease-in-out;
-  border-color: white;
-  border-width: 2px;
+  &.handle-active::after {
+    background-color: #979797;
+    border: 2px solid white;
+  }
+
+  &.handle-active::before {
+    border-top: 2px solid white;
+  }
+
+  &.handle-active:hover::after {
+    background-color: #b4b4b4;
+  }
+
+  &.pulsing-handle::after {
+    animation: pulse-blue 0.75s infinite ease-in-out;
+    border: 2px solid white;
+  }
+
+  &.pulsing-handle::before {
+    border-top: 2px solid white;
+  }
+
+  &.handle-edge-green::after {
+    background-color: rgb(3 140 54);
+    border: 2px solid #0ee25e;
+  }
+
+  &.handle-edge-green::before {
+    border-top: 2px solid #0ee25e;
+  }
+
+  &.handle-edge-orange::after {
+    background-color: rgb(172 105 0);
+    border: 2px solid #f59e0b;
+  }
+
+  &.handle-edge-orange::before {
+    border-top: 2px solid #f59e0b;
+  }
+
+  &.handle-edge-red::after {
+    background-color: rgb(163 0 0);
+    border: 2px solid #ef4444;
+  }
+
+  &.handle-edge-red::before {
+    border-top: 2px solid #ef4444;
+  }
+
+  &.handle-edge-grey::after {
+    background-color: #6b7280;
+    border: 2px solid #acadae;
+  }
+
+  &.handle-edge-grey::before {
+    border-top: 2px solid #acadae;
+  }
 }
 
 .center-handle {
   width: 1px !important;
   height: 1px !important;
-  background-color: transparent;
-  border: none;
+
+  &::after {
+    display: none;
+  }
+
+  &::before {
+    display: none;
+  }
 
   &.handle-active {
     display: block !important;
     width: 32px !important;
     height: 32px !important;
-    background-color: rgb(151 151 151 / 0.5) !important;
-    border: 2px solid white !important;
+
+    &::after {
+      display: block;
+      background-color: rgb(151 151 151 / 0.5);
+      border: 2px solid white;
+      border-radius: 50%;
+      clip-path: none;
+    }
   }
 
   &.pulsing-handle {
     display: block !important;
     width: 32px !important;
     height: 32px !important;
-    animation: pulse-blue 0.75s infinite ease-in-out !important;
-    border: 2px solid white !important;
+
+    &::after {
+      display: block;
+      animation: pulse-blue 0.75s infinite ease-in-out;
+      border: 2px solid white;
+      border-radius: 50%;
+      clip-path: none;
+    }
   }
 
-  &.handle-default {
-    border-color: #919191 !important;
+  &.handle-default::after {
+    display: none;
   }
 }
 

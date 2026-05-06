@@ -21,7 +21,9 @@ vi.mock('@vue-flow/core', async () => {
     },
     useVueFlow: () => ({
       setCenter: vi.fn(),
-      getNode: vi.fn(() => ({ position: { x: 0, y: 0 } }))
+      getNode: vi.fn(() => ({ position: { x: 0, y: 0 } })),
+      onNodeDrag: vi.fn(),
+      onNodeDragStop: vi.fn(),
     })
   };
 });
@@ -73,8 +75,8 @@ describe('ConnectionEdge', () => {
           },
           now: currentTime
         },
-        sourceNode: {} as any,
-        targetNode: {} as any,
+        sourceNode: { computedPosition: { x: 0, y: 0 }, dimensions: { width: 0, height: 0 }, handleBounds: {} } as any,
+        targetNode: { computedPosition: { x: 10, y: 10 }, dimensions: { width: 0, height: 0 }, handleBounds: {} } as any,
         source: 'a',
         target: 'b',
         type: 'default',

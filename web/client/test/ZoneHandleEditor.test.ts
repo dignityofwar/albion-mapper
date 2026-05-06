@@ -75,7 +75,7 @@ describe('ZoneHandleEditor', () => {
     await rotateBtn?.trigger('click');
 
     // N (50, 0) rotated 90 CW should be E (100, 50)
-    const handle = wrapper.find('.handle-arch');
+    const handle = wrapper.find('.handle');
     const style = handle.attributes('style');
     expect(style).toMatch(/left:\s*100(\.00)?%/);
     expect(style).toMatch(/top:\s*50(\.00)?%/);
@@ -96,7 +96,7 @@ describe('ZoneHandleEditor', () => {
     await rotateBtn?.trigger('click');
 
     // N (50, 0) rotated 90 CCW should be W (0, 50)
-    const handle = wrapper.find('.handle-arch');
+    const handle = wrapper.find('.handle');
     const style = handle.attributes('style');
     expect(style).toMatch(/left:\s*0(\.00)?%/);
     expect(style).toMatch(/top:\s*50(\.00)?%/);
@@ -148,13 +148,13 @@ describe('ZoneHandleEditor', () => {
       }
     });
 
-    expect(wrapper.findAll('.handle-arch')).toHaveLength(2);
+    expect(wrapper.findAll('.handle')).toHaveLength(2);
 
     const clearBtn = wrapper.findAll('button').find(b => b.text() === 'Clear All');
     expect(clearBtn).toBeTruthy();
     await clearBtn?.trigger('click');
 
-    expect(wrapper.findAll('.handle-arch')).toHaveLength(0);
+    expect(wrapper.findAll('.handle')).toHaveLength(0);
   });
 
   it('does not create a new custom handle when dragging an existing handle', async () => {
@@ -170,7 +170,7 @@ describe('ZoneHandleEditor', () => {
       attachTo: document.body
     });
 
-    const handle = wrapper.find('.handle-arch');
+    const handle = wrapper.find('.handle');
     // Simulate drag: mousedown on handle, mousemove on window, mouseup on window
     await handle.trigger('mousedown', { clientX: 10, clientY: 10 });
     window.dispatchEvent(new MouseEvent('mousemove', { clientX: 20, clientY: 20, bubbles: true }));
@@ -179,8 +179,8 @@ describe('ZoneHandleEditor', () => {
     await wrapper.find('.relative.w-\\[400px\\]').trigger('click', { clientX: 20, clientY: 20 });
 
     // Should still only have 1 handle — no spurious custom handle created
-    expect(wrapper.findAll('.handle-arch')).toHaveLength(1);
-    expect(wrapper.findAll('.handle-arch[data-facing]').map(h => h.attributes('style'))).not.toContain(
+    expect(wrapper.findAll('.handle')).toHaveLength(1);
+    expect(wrapper.findAll('.handle[data-facing]').map(h => h.attributes('style'))).not.toContain(
       expect.stringContaining('custom-')
     );
 
@@ -198,6 +198,6 @@ describe('ZoneHandleEditor', () => {
       }
     });
 
-    expect(wrapper.findAll('.handle-arch')).toHaveLength(4);
+    expect(wrapper.findAll('.handle')).toHaveLength(4);
   });
 });

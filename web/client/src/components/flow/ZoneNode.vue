@@ -632,12 +632,6 @@ function lockCore(core: string) {
     timerValue.value = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   }
 }
-
-
-
-
-
-// getDefaultHandles removed, now using from 'shared'
 </script>
 
 <template>

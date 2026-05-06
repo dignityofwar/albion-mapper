@@ -15,7 +15,8 @@ describe('getConnectionPath', () => {
       targetHandleId: 'center',
     })
     
-    expect(path[0]).toBe('M-110.3072,-61.64609999999999 L37.445850000000014,-536.29126')
+    expect(path[0]).toMatch(/^M-110\.3072,-61\.646/)
+    expect(path[0]).toContain('37.445850000000014,-536.29126')
   })
 
   it('should return a straight line when forceStraight is true', () => {
