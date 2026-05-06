@@ -162,21 +162,38 @@ function getTrueHandleCenter(node: any, handleId: string | null | undefined): { 
       y: node.computedPosition.y + (node.dimensions.height ?? 0) / 2,
     };
   }
-  const allBounds = [...(node.handleBounds?.source ?? []), ...(node.handleBounds?.target ?? [])];
-  const handle = handleId ? allBounds.find((h: any) => h.id === handleId) : allBounds[0];
-  if (!handle) return null;
+  // Compute handle center from CSS left%/top% values — more reliable than handleBounds x/y
+  // which can be affected by CSS transforms.
+  const customHandles = node.data?.customHandles ?? node.data?.handles;
+  const defaultHandles = getDefaultHandles(node.data?.type as ZoneType, node.data?.mapShape);
+  const allHandleDefs = [...(customHandles ?? []), ...defaultHandles];
+  const handleDef = handleId ? allHandleDefs.find((h: any) => h.id === handleId) : null;
 
-  const cx = node.computedPosition.x + handle.x + handle.width /2;
-  const cy = node.computedPosition.y + handle.y + handle.height;
+  const nodeW = node.dimensions?.width ?? 0;
+  const nodeH = node.dimensions?.height ?? 0;
+
+  let cx: number, cy: number;
+  if (handleDef) {
+    const leftPct = parseFloat(handleDef.left) / 100;
+    const topPct = parseFloat(handleDef.top) / 100;
+    cx = node.computedPosition.x + leftPct * nodeW;
+    cy = node.computedPosition.y + topPct * nodeH;
+  } else {
+    // Fall back to handleBounds center
+    const allBounds = [...(node.handleBounds?.source ?? []), ...(node.handleBounds?.target ?? [])];
+    const handle = handleId ? allBounds.find((h: any) => h.id === handleId) : allBounds[0];
+    if (!handle) return null;
+    cx = node.computedPosition.x + handle.x + handle.width / 2;
+    cy = node.computedPosition.y + handle.y + handle.height / 2;
+  }
 
   // The handle is a semicircle whose visual tip is at the top-center before rotation.
-  // After CSS rotation by θ degrees, the tip is offset from the bounding-box center by:
-  //   dx = sin(θ) * (height/2),  dy = -cos(θ) * (height/2)
-  // We use the handle's facing direction to determine θ.
+  // After CSS rotation by θ degrees, the tip is offset from the CSS origin by:
+  //   dx = sin(θ) * r,  dy = -cos(θ) * r  where r = half the handle size (20px for 40px handle)
   const facing = handleId ? getHandleFacingFromId(handleId, node) : null;
   if (facing && facingRotationDeg[facing] !== undefined) {
     const theta = facingRotationDeg[facing] * (Math.PI / 180);
-    const r = handle.height / 2;
+    const r = 20; // half of the 40px handle size
     return {
       x: cx + Math.sin(theta) * r,
       y: cy - Math.cos(theta) * r,
