@@ -39,8 +39,18 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
 
   const isCenter = (id?: string | null) => id === 'center' || id === 'center-overlay';
 
-  // Prefer handle ID for fine-grained facing if available
+  // Prefer position string if it's already a known facing direction
+  const knownFacings = new Set(['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw']);
   const getFacing = (pos: string | Position, handleId?: string | null) => {
+    // If pos is already a resolved facing direction, trust it directly
+    if (knownFacings.has(pos as string)) return pos as string;
+
+    if (pos === Position.Top) return 'n';
+    if (pos === Position.Bottom) return 's';
+    if (pos === Position.Left) return 'w';
+    if (pos === Position.Right) return 'e';
+
+    // Fall back to handle ID suffix
     if (handleId) {
       if (handleId === 'n' || handleId.endsWith('-n')) return 'n';
       if (handleId === 'e' || handleId.endsWith('-e')) return 'e';
@@ -50,18 +60,11 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
       if (handleId.endsWith('-se')) return 'se';
       if (handleId.endsWith('-sw')) return 'sw';
       if (handleId.endsWith('-nw')) return 'nw';
-      
-      // Points for default shapes
       if (handleId.endsWith('-top')) return 'n';
       if (handleId.endsWith('-right')) return 'e';
       if (handleId.endsWith('-bottom')) return 's';
       if (handleId.endsWith('-left')) return 'w';
     }
-
-    if (pos === Position.Top) return 'n';
-    if (pos === Position.Bottom) return 's';
-    if (pos === Position.Left) return 'w';
-    if (pos === Position.Right) return 'e';
 
     return pos as string;
   };
@@ -87,7 +90,18 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
     const curvature = Math.min(distance * 0.25, 50);
 
     const sourceAngleForCenter = angleMap[sourceFacing];
-    const targetAngleForCenter = angleMap[targetFacing];
+
+    // For a center target, snap the incoming angle to the nearest 45° pointing from target toward source
+    // This makes the curve arrive at the center from the direction of the source node.
+    let targetAngleForCenter: number;
+    if (isCenter(targetHandleId)) {
+      const rawAngle = Math.atan2(sourceY - targetY, sourceX - targetX);
+      // Snap to nearest 45°
+      const snapped = Math.round(rawAngle / (Math.PI / 4)) * (Math.PI / 4);
+      targetAngleForCenter = snapped;
+    } else {
+      targetAngleForCenter = angleMap[targetFacing];
+    }
 
     let c0x: number, c0y: number, c1x: number, c1y: number;
 
@@ -127,14 +141,31 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
   if (sourceAngle !== undefined && targetAngle !== undefined) {
     const dx = targetX - sourceX;
     const dy = targetY - sourceY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    
+
+    // When the two handles face directly opposite directions (angles differ by π),
+    // the control points cancel out and the line should be straight.
+    const angleDiff = Math.abs(((targetAngle - sourceAngle + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+    const isOpposite = angleDiff < 0.01;
+
+    if (isOpposite) {
+      const path = `M${sourceX},${sourceY} L${targetX},${targetY}`;
+      return [
+        path,
+        (sourceX + targetX) / 2,
+        (sourceY + targetY) / 2,
+        0, 0
+      ];
+    }
+
     // Curvature scales slightly with distance, but capped
+    const distance = Math.sqrt(dx * dx + dy * dy);
     const curvature = Math.min(distance * 0.25, 50);
     
     const c0x = sourceX + Math.cos(sourceAngle) * curvature;
     const c0y = sourceY + Math.sin(sourceAngle) * curvature;
     
+    // Target control point pushes outward along the target's facing direction
+    // (the curve arrives from outside the handle, approaching inward)
     const c1x = targetX + Math.cos(targetAngle) * curvature;
     const c1y = targetY + Math.sin(targetAngle) * curvature;
     

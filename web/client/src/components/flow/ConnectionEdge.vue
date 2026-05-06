@@ -9,7 +9,7 @@ import TimeInput from '../common/TimeInput.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { useRoomStore } from '@/stores/useRoomStore';
-import { ZONE_BY_ID, type Connection } from 'shared';
+import { ZONE_BY_ID, type Connection, getDefaultHandles, type ZoneType } from 'shared';
 import { Z_INDEX } from '@/constants/Layers';
 
 type EdgeData = {
@@ -149,6 +149,11 @@ const isCenter = (id?: string | null) => id === 'center' || id === 'center-overl
  * The connection line preview uses center=true (x + width/2, y + height/2).
  * We replicate center=true here by looking up the handle's bounds directly.
  */
+// Rotation degrees for each facing direction (matches CSS .facing-* classes)
+const facingRotationDeg: Record<string, number> = {
+  n: 0, ne: 45, e: 90, se: 135, s: 180, sw: 225, w: 270, nw: 315,
+};
+
 function getTrueHandleCenter(node: any, handleId: string | null | undefined): { x: number; y: number } | null {
   if (!node) return null;
   if (isCenter(handleId)) {
@@ -160,26 +165,90 @@ function getTrueHandleCenter(node: any, handleId: string | null | undefined): { 
   const allBounds = [...(node.handleBounds?.source ?? []), ...(node.handleBounds?.target ?? [])];
   const handle = handleId ? allBounds.find((h: any) => h.id === handleId) : allBounds[0];
   if (!handle) return null;
-  return {
-    x: node.computedPosition.x + handle.x + handle.width / 2,
-    y: node.computedPosition.y + handle.y + handle.height / 2,
-  };
+
+  const cx = node.computedPosition.x + handle.x + handle.width /2;
+  const cy = node.computedPosition.y + handle.y + handle.height;
+
+  // The handle is a semicircle whose visual tip is at the top-center before rotation.
+  // After CSS rotation by θ degrees, the tip is offset from the bounding-box center by:
+  //   dx = sin(θ) * (height/2),  dy = -cos(θ) * (height/2)
+  // We use the handle's facing direction to determine θ.
+  const facing = handleId ? getHandleFacingFromId(handleId, node) : null;
+  if (facing && facingRotationDeg[facing] !== undefined) {
+    const theta = facingRotationDeg[facing] * (Math.PI / 180);
+    const r = handle.height / 2;
+    return {
+      x: cx + Math.sin(theta) * r,
+      y: cy - Math.cos(theta) * r,
+    };
+  }
+
+  return { x: cx, y: cy };
 }
+
+function getHandleFacingFromId(handleId: string, node: any): string | null {
+  // First try position-based facing from custom handle data (matches CSS facing-* class logic)
+  const customHandles: Array<{ id: string; top: string; left: string }> | undefined =
+    node.data?.customHandles ?? node.data?.handles;
+  if (customHandles) {
+    const ch = customHandles.find((h: any) => h.id === handleId);
+    if (ch) {
+      const l = parseFloat(ch.left);
+      const t = parseFloat(ch.top);
+      if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return 'n';
+      if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
+      if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
+      if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+      if (l >= 50 && t < 50) return 'ne';
+      if (l > 50 && t >= 50) return 'se';
+      if (l <= 50 && t > 50) return 'sw';
+      return 'nw';
+    }
+  }
+  // Fall back to default handles for the node's type/shape (e.g. roadsHideout)
+  const defaultHandles = getDefaultHandles(node.data?.type as ZoneType, node.data?.mapShape);
+  const dh = defaultHandles.find((h: any) => h.id === handleId);
+  if (dh) {
+    const l = parseFloat(dh.left);
+    const t = parseFloat(dh.top);
+    if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return 'n';
+    if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
+    if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
+    if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+    if (l >= 50 && t < 50) return 'ne';
+    if (l > 50 && t >= 50) return 'se';
+    if (l <= 50 && t > 50) return 'sw';
+    return 'nw';
+  }
+  // Last resort: derive facing from the handle id suffix
+  for (const dir of ['ne', 'nw', 'se', 'sw', 'n', 'e', 's', 'w']) {
+    if (handleId === dir || handleId.endsWith('-' + dir)) return dir;
+  }
+  return null;
+}
+
+const srcCenter = computed(() => getTrueHandleCenter(props.sourceNode, props.sourceHandleId));
+const tgtCenter = computed(() => getTrueHandleCenter(props.targetNode, props.targetHandleId || 'center'));
 
 const pathData = computed(() => {
   const srcHandleId = props.sourceHandleId;
   const tgtHandleId = props.targetHandleId || 'center';
 
-  const srcCenter = getTrueHandleCenter(props.sourceNode, srcHandleId);
-  const tgtCenter = getTrueHandleCenter(props.targetNode, tgtHandleId);
+  // Use position-based facing (matches CSS facing-* class) when available
+  const srcFacing = srcHandleId && !isCenter(srcHandleId)
+    ? (getHandleFacingFromId(srcHandleId, props.sourceNode) ?? props.data?.sourceFacing ?? props.sourcePosition)
+    : props.sourcePosition;
+  const tgtFacing = tgtHandleId && !isCenter(tgtHandleId)
+    ? (getHandleFacingFromId(tgtHandleId, props.targetNode) ?? props.data?.targetFacing ?? props.targetPosition)
+    : props.targetPosition;
 
   return getConnectionPath({
-    sourceX: srcCenter?.x ?? props.sourceX,
-    sourceY: srcCenter?.y ?? props.sourceY,
-    targetX: tgtCenter?.x ?? props.targetX,
-    targetY: tgtCenter?.y ?? props.targetY,
-    sourcePosition: props.data?.sourceFacing || props.sourcePosition,
-    targetPosition: props.data?.targetFacing || props.targetPosition,
+    sourceX: srcCenter.value?.x ?? props.sourceX,
+    sourceY: srcCenter.value?.y ?? props.sourceY,
+    targetX: tgtCenter.value?.x ?? props.targetX,
+    targetY: tgtCenter.value?.y ?? props.targetY,
+    sourcePosition: srcFacing as any,
+    targetPosition: tgtFacing as any,
     sourceHandleId: srcHandleId,
     targetHandleId: tgtHandleId,
     forceStraight: false,

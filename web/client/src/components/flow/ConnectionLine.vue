@@ -2,34 +2,20 @@
 import { computed } from 'vue';
 import type { ConnectionLineProps } from '@vue-flow/core';
 import { getConnectionPath } from '../../utils/connectionPath.js';
-import { getHandleFacing, getDefaultHandles, getOppositeHandleId } from 'shared';
 
 const props = defineProps<ConnectionLineProps & { isOccupied?: boolean }>();
 
 const path = computed(() => {
-  const findFacing = (node: any, handleId: string) => {
-    const handles = [
-      ...(node.data.customHandles || []),
-      ...getDefaultHandles(node.data.type, node.data.mapShape)
-    ];
-    const h = handles.find(h => h.id === handleId);
-    if (h) return getHandleFacing(h.left, h.top);
-    return undefined;
-  };
-
   const targetHandleId = props.targetHandle?.id || 'center';
   const isStraight = props.sourceHandle?.id === 'center' || targetHandleId === 'center';
-
-  const sourceFacing = props.sourceHandle?.id ? findFacing(props.sourceNode, props.sourceHandle.id) : undefined;
-  let targetFacing = (props.targetNode && props.targetHandle?.id) ? findFacing(props.targetNode, props.targetHandle.id) : undefined;
 
   const [d] = getConnectionPath({
     sourceX: props.sourceX,
     sourceY: props.sourceY,
     targetX: props.targetX,
     targetY: props.targetY,
-    sourcePosition: sourceFacing || props.sourcePosition,
-    targetPosition: targetFacing || props.targetPosition,
+    sourcePosition: props.sourcePosition,
+    targetPosition: props.targetPosition,
     sourceHandleId: props.sourceHandle?.id,
     targetHandleId: targetHandleId,
     forceStraight: isStraight,
