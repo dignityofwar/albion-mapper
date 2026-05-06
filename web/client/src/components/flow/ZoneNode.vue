@@ -654,6 +654,7 @@ function lockCore(core: string) {
               handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
               handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
               handle.id === 'center-overlay' ? 'center-handle-snap' : '',
+              handle.id !== 'center' && handle.id !== 'center-overlay' ? `facing-${getHandleFacing(handle.left, handle.top)}` : '',
               isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
               isActive(handle.id) ? 'handle-active' : '',
               isPulsing(handle.id) ? 'pulsing-handle' : '',

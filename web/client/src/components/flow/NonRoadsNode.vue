@@ -2,6 +2,7 @@
 import { Handle, Position, useVueFlow } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
+import { getHandleFacing } from 'shared';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import { computed, ref, inject, type Ref } from 'vue';
 import { connectionStyle } from '@/utils/connectionStyle';
@@ -146,6 +147,7 @@ const handles = computed(() => {
               handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
               handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
               handle.id === 'center-overlay' ? 'center-handle-snap' : '',
+              handle.id !== 'center' && handle.id !== 'center-overlay' ? `facing-${getHandleFacing(handle.left, handle.top)}` : '',
               isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
               isActive(handle.id) ? 'handle-active' : '',
               isPulsing(handle.id) ? 'pulsing-handle' : '',
