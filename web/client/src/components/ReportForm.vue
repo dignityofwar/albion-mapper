@@ -7,7 +7,7 @@ import TimeInput from './common/TimeInput.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { addConnection } from '@/utils/roomOperations';
-import { ZONE_BY_ID } from 'shared';
+import { ZONE_BY_ID, getHandleFacing } from 'shared';
 import { Z_INDEX } from '@/constants/Layers';
 
 const props = defineProps<{}>();
@@ -94,10 +94,50 @@ const canSubmit = computed(
   () => fromZoneId.value && toZoneId.value && secondsRemaining.value !== null && !submitting.value,
 );
 
+function getFallbackPosition(sourceZoneId: string, handleId: string | null): { x: number; y: number } | undefined {
+  const sourceNode = store.nodePositions.find(n => n.zoneId === sourceZoneId);
+  if (!sourceNode) return { x: 300, y: 300 };
+
+  let facing = 'se'; // default
+  const hid = handleId ?? 'center';
+
+  if (['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'].includes(hid)) {
+    facing = hid;
+  } else if (hid === 'center') {
+    facing = 'se';
+  } else {
+    // custom handle — look up left/top
+    const customHandle = sourceNode.customHandles?.find(h => h.id === hid);
+    if (customHandle) {
+      facing = getHandleFacing(customHandle.left, customHandle.top);
+    }
+  }
+
+  const DIST = 300;
+  const offsets: Record<string, { dx: number; dy: number }> = {
+    n:  { dx: 0,     dy: -DIST },
+    s:  { dx: 0,     dy:  DIST },
+    e:  { dx: DIST,  dy: 0     },
+    w:  { dx: -DIST, dy: 0     },
+    ne: { dx: DIST,  dy: -DIST },
+    nw: { dx: -DIST, dy: -DIST },
+    se: { dx: DIST,  dy:  DIST },
+    sw: { dx: -DIST, dy:  DIST },
+  };
+  const { dx, dy } = offsets[facing] ?? offsets['se'];
+  return { x: sourceNode.x + dx, y: sourceNode.y + dy };
+}
+
 async function submitAndAddMore() {
   if (!canSubmit.value) return;
 
   submitting.value = true;
+
+  const resolvedPosition = (targetPosition.value?.x != null && targetPosition.value?.y != null)
+    ? targetPosition.value
+    : getFallbackPosition(fromZoneId.value, fromHandleId.value);
+
+  console.log('[ReportForm] resolvedPosition for submission:', resolvedPosition);
 
   try {
     await addConnection(
@@ -109,7 +149,7 @@ async function submitAndAddMore() {
       fromHandleId.value || 'center',
       toHandleId.value || 'center',
       reportedBy.value || undefined,
-      targetPosition.value || undefined,
+      resolvedPosition,
     );
 
     emit('success', 'Connection added!');
@@ -189,6 +229,7 @@ defineExpose({
     fromZoneId.value = id;
     fromHandleId.value = handleId ?? null;
     targetPosition.value = pos ?? null;
+    console.log('[ReportForm] targetPosition from drag event:', pos ?? null);
     open();
   }, 
   setConnection: (fromId: string, fHandleId: string | null, toId: string, tHandleId: string | null) => {

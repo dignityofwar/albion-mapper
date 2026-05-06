@@ -749,10 +749,14 @@ function handleConnectEnd(event?: MouseEvent) {
        }
      }
 
-     const { x, y } = screenToFlowCoordinate({
-       x: event.clientX,
-       y: event.clientY,
-     });
+     const clientX = (event as MouseEvent).clientX;
+     const clientY = (event as MouseEvent).clientY;
+     const hasValidCoords = typeof clientX === 'number' && !isNaN(clientX) &&
+                            typeof clientY === 'number' && !isNaN(clientY);
+
+     const flowCoords = hasValidCoords
+       ? screenToFlowCoordinate({ x: clientX, y: clientY })
+       : null;
 
      // Check if handle already has a connection
      const existingConn = store.connections.find(c => 
@@ -772,7 +776,39 @@ function handleConnectEnd(event?: MouseEvent) {
      removeGhost();
 
      const ghostId = `ghost-${Date.now()}`;
-     const ghostPos = { x: x - 200, y: y - 200 };
+
+     let ghostPos: { x: number; y: number } | undefined = flowCoords
+       ? { x: flowCoords.x - 200, y: flowCoords.y - 200 }
+       : undefined;
+
+     if (!ghostPos) {
+       const sourceNode = nodePositions.value.find(n => n.zoneId === fromNodeId);
+       if (sourceNode) {
+         const hid = fromHandleId ?? 'center';
+         let facing = 'se';
+         if (['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'].includes(hid)) {
+           facing = hid;
+         } else if (hid !== 'center') {
+           const customHandle = sourceNode.customHandles?.find(h => h.id === hid);
+           if (customHandle) facing = getHandleFacing(customHandle.left, customHandle.top);
+         }
+         const DIST = 300;
+         const offsets: Record<string, { dx: number; dy: number }> = {
+           n:  { dx: 0,     dy: -DIST },
+           s:  { dx: 0,     dy:  DIST },
+           e:  { dx: DIST,  dy: 0     },
+           w:  { dx: -DIST, dy: 0     },
+           ne: { dx: DIST,  dy: -DIST },
+           nw: { dx: -DIST, dy: -DIST },
+           se: { dx: DIST,  dy:  DIST },
+           sw: { dx: -DIST, dy:  DIST },
+         };
+         const { dx, dy } = offsets[facing] ?? offsets['se'];
+         ghostPos = { x: sourceNode.x + dx, y: sourceNode.y + dy };
+       } else {
+         ghostPos = { x: 300, y: 300 };
+       }
+     }
      const ghostN: any = {
        id: ghostId,
        type: 'zone',
@@ -807,7 +843,8 @@ function handleConnectEnd(event?: MouseEvent) {
      flowNodes.value.push(ghostN);
      flowEdges.value.push(ghostE);
 
-     reportForm.value?.setFromZoneId(fromNodeId, fromHandleId, ghostPos);
+     console.log('[RoomView] ghost position before opening form:', ghostN.position);
+     reportForm.value?.setFromZoneId(fromNodeId, fromHandleId, ghostN.position);
      reportForm.value?.open();
   }
   
