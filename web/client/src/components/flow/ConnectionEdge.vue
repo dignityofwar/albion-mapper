@@ -157,9 +157,12 @@ const facingRotationDeg: Record<string, number> = {
 function getTrueHandleCenter(node: any, handleId: string | null | undefined): { x: number; y: number } | null {
   if (!node) return null;
   if (isCenter(handleId)) {
+    const w = node.dimensions?.width ?? 0;
+    const h = node.dimensions?.height ?? 0;
+    if (w === 0 || h === 0) return null;
     return {
-      x: node.computedPosition.x + (node.dimensions.width ?? 0) / 2,
-      y: node.computedPosition.y + (node.dimensions.height ?? 0) / 2,
+      x: node.computedPosition.x + w / 2,
+      y: node.computedPosition.y + h / 2,
     };
   }
   // Compute handle center from CSS left%/top% values — more reliable than handleBounds x/y

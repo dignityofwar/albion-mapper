@@ -156,6 +156,7 @@
 .center-handle {
   width: 1px !important;
   height: 1px !important;
+  transform: translate(-50%, -50%) !important;
 
   &::after {
     display: none;
@@ -199,7 +200,8 @@
 }
 
 .center-handle-snap {
-  width: 200px !important;
-  height: 200px !important;
+  width: 150px !important;
+  height: 150px !important;
   background-color: transparent !important;
+  transform: translate(-50%, -50%) !important;
 }
