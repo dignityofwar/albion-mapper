@@ -8,6 +8,27 @@ import { track } from '@vercel/analytics';
 
 
 /**
+ * Deletes an orphaned node position (no connections) from the given room.
+ */
+export async function deleteNode(
+  roomId: string,
+  token: string,
+  zoneId: string,
+): Promise<void> {
+  const res = await fetch(`${API_BASE_URL}/api/rooms/${roomId}/nodes/${zoneId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    const body = await res.json() as { error?: string };
+    throw new Error(body.error ?? 'Failed to delete node');
+  }
+
+  track('delete_node');
+}
+
+/**
  * Deletes a connection by ID from the given room.
  */
 export async function deleteConnection(

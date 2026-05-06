@@ -16,7 +16,7 @@ import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { storeToRefs } from 'pinia';
-import { deleteConnection } from '@/utils/roomOperations';
+import { deleteConnection, deleteNode } from '@/utils/roomOperations';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { Z_INDEX } from '@/constants/Layers';
@@ -147,28 +147,36 @@ const showDeleteOverlay = ref(false);
 
 async function handleDelete() {
   try {
-    const toDelete = new Set<string>();
-    const queue = store.connections
-      .filter(c => c.toZoneId === props.id)
-      .map(c => c.id);
+    const nodeConns = store.connections.filter(
+      c => c.fromZoneId === props.id || c.toZoneId === props.id
+    );
 
-    while (queue.length > 0) {
-      const currentId = queue.shift()!;
-      if (toDelete.has(currentId)) continue;
-      toDelete.add(currentId);
-      const c = store.connections.find(x => x.id === currentId);
-      if (c) {
-        const children = store.connections.filter(x => x.fromZoneId === c.toZoneId);
-        for (const child of children) queue.push(child.id);
+    if (nodeConns.length === 0) {
+      // Orphaned node — no connections at all, just remove the position
+      await deleteNode(store.roomId, store.token, props.id);
+    } else {
+      // Collect all connections touching this node plus their descendants
+      const toDelete = new Set<string>();
+      const queue = nodeConns.map(c => c.id);
+
+      while (queue.length > 0) {
+        const currentId = queue.shift()!;
+        if (toDelete.has(currentId)) continue;
+        toDelete.add(currentId);
+        const c = store.connections.find(x => x.id === currentId);
+        if (c) {
+          const children = store.connections.filter(x => x.fromZoneId === c.toZoneId);
+          for (const child of children) queue.push(child.id);
+        }
+      }
+
+      const toDeleteArray = Array.from(toDelete).reverse();
+      for (const connId of toDeleteArray) {
+        await deleteConnection(store.roomId, store.token, connId);
       }
     }
-
-    const toDeleteArray = Array.from(toDelete).reverse();
-    for (const connId of toDeleteArray) {
-      await deleteConnection(store.roomId, store.token, connId);
-    }
   } catch (err) {
-    console.error('Failed to delete node connections:', err);
+    console.error('Failed to delete node:', err);
   }
   showDeleteOverlay.value = false;
 }

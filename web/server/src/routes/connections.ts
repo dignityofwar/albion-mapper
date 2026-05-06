@@ -226,6 +226,56 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
     },
   );
 
+  // DELETE /api/rooms/:id/nodes/:zoneId — delete an orphaned node position (no connections)
+  app.delete<{ Params: { id: string; zoneId: string } }>(
+    '/api/rooms/:id/nodes/:zoneId',
+    {
+      preHandler: [app.authenticate],
+    },
+    async (request, reply) => {
+      const { id, zoneId } = request.params;
+      const jwtPayload = request.user as { roomId: string };
+
+      if (jwtPayload.roomId !== id) {
+        return reply.status(403).send({ error: 'Forbidden' });
+      }
+
+      const { rows: rooms } = await app.db.query<{ home_zone_id: string }>(
+        'SELECT home_zone_id FROM rooms WHERE id = $1',
+        [id]
+      );
+      const room = rooms[0];
+      if (!room) {
+        return reply.status(404).send({ error: 'Room not found' });
+      }
+
+      if (zoneId === room.home_zone_id) {
+        return reply.status(400).send({ error: 'Cannot delete the home zone' });
+      }
+
+      await app.db.query(
+        'DELETE FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
+        [id, zoneId]
+      );
+
+      const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
+        'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
+        [id]
+      );
+      const nodePositions = positions.map(p => ({
+        zoneId: p.zone_id,
+        x: p.x,
+        y: p.y,
+        features: p.features,
+        customHandles: p.custom_handles,
+      }));
+
+      broadcast(id, { type: 'node_positions_updated', nodePositions });
+
+      return reply.status(204).send();
+    },
+  );
+
   // PATCH /api/rooms/:id/connections/:connId — update a connection
   app.patch<{ Params: { id: string; connId: string } }>(
     '/api/rooms/:id/connections/:connId',
