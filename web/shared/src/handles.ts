@@ -9,10 +9,10 @@ export interface HandleDefinition {
 export function getDefaultHandles(type: ZoneType, shape?: string): CustomHandle[] {
   if (type === 'roadsHideout') {
     return [
-      { id: 'n', left: '50%', top: '0%' },
-      { id: 'e', left: '100%', top: '50%' },
-      { id: 's', left: '50%', top: '100%' },
-      { id: 'w', left: '0%', top: '50%' },
+      { id: 'n', left: '75%', top: '25%' },
+      { id: 'e', left: '75%', top: '75%' },
+      { id: 's', left: '25%', top: '75%' },
+      { id: 'w', left: '25%', top: '25%' },
     ];
   }
   if (shape) {

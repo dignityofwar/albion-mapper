@@ -17,14 +17,37 @@
   box-sizing: border-box !important;
 
   // facing-* classes combine translate (centering) + rotate (direction)
-  &.facing-n  { transform: translate(-50%, -50%) rotate(0deg) !important; }
-  &.facing-ne { transform: translate(-50%, -50%) rotate(45deg) !important; }
-  &.facing-e  { transform: translate(-50%, -50%) rotate(90deg) !important; }
-  &.facing-se { transform: translate(-50%, -50%) rotate(135deg) !important; }
-  &.facing-s  { transform: translate(-50%, -50%) rotate(180deg) !important; }
-  &.facing-sw { transform: translate(-50%, -50%) rotate(225deg) !important; }
-  &.facing-w  { transform: translate(-50%, -50%) rotate(270deg) !important; }
-  &.facing-nw { transform: translate(-50%, -50%) rotate(315deg) !important; }
+  &.facing-n {
+    transform: translate(-50%, -50%) rotate(0deg) !important;
+  }
+
+  &.facing-ne {
+    transform: translate(-50%, -50%) rotate(45deg) !important;
+  }
+
+  &.facing-e {
+    transform: translate(-50%, -50%) rotate(90deg) !important;
+  }
+
+  &.facing-se {
+    transform: translate(-50%, -50%) rotate(135deg) !important;
+  }
+
+  &.facing-s {
+    transform: translate(-50%, -50%) rotate(180deg) !important;
+  }
+
+  &.facing-sw {
+    transform: translate(-50%, -50%) rotate(225deg) !important;
+  }
+
+  &.facing-w {
+    transform: translate(-50%, -50%) rotate(270deg) !important;
+  }
+
+  &.facing-nw {
+    transform: translate(-50%, -50%) rotate(315deg) !important;
+  }
 
   // Semicircle: clip top half of a full circle
   &::after {
