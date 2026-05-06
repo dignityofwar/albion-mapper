@@ -905,10 +905,23 @@ defineExpose({ flowNodes, onNodeDragStop });
 
     <!-- Graph -->
     <div class="flex-1 relative">
+      <!-- Desktop header (Desktop) -->
+      <div class="hidden md:flex absolute top-4 left-4 flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
+        <button
+          class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg transition-colors"
+          title="Fit view"
+          @click="fitView({ padding: 0.2, duration: 300 })"
+        >🔄</button>
+      </div>
       <!-- Mobile header (Mobile/Tablet) -->
       <div class="md:hidden absolute top-4 left-4 flex flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
         <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2 cursor-pointer" alt="Site Logo" @click="logout" />
         <RoomSettings :tray="true" />
+        <button
+          class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg transition-colors"
+          title="Fit view"
+          @click="fitView({ padding: 0.2, duration: 300 })"
+        >🔄</button>
       </div>
       <div class="md:hidden absolute top-4 left-1/2 -translate-x-1/2 w-full px-16 text-center" :class="Z_INDEX.UI_OVERLAY">
         <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none" :title="roomTitle" data-testid="room-title-mobile">
@@ -979,13 +992,6 @@ defineExpose({ flowNodes, onNodeDragStop });
       >
         <img src="/images/core-green.png" class="w-8 h-8 p-[2px]" alt="Green Core" />
       </button>
-
-      <!-- Fit view button -->
-      <button
-        class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
-        title="Fit view"
-        @click="fitView({ padding: 0.2, duration: 300 })"
-      >🔄</button>
     </div>
 
     <Transition name="toast">
