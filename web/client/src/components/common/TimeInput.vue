@@ -89,6 +89,13 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
+function onChangeCoerce(field: 'hours' | 'minutes' | 'seconds', e: Event) {
+  const val = (e.target as HTMLInputElement).value;
+  if (field === 'hours') hours.value = val === '' ? null : Number(val) || 0;
+  else if (field === 'minutes') minutes.value = val === '' ? null : Number(val) || 0;
+  else seconds.value = val === '' ? null : Number(val) || 0;
+}
+
 defineExpose({
   focus: () => {
     hoursEl.value?.focus();
@@ -109,6 +116,7 @@ defineExpose({
       placeholder="HH"
       class="w-8 bg-transparent py-0 text-white text-base leading-none outline-none text-center"
       @keydown="onKeydown"
+      @change="onChangeCoerce('hours', $event)"
     />
     <span class="text-gray-400 leading-none">:</span>
     <input
@@ -118,6 +126,7 @@ defineExpose({
       placeholder="MM"
       class="w-8 bg-transparent py-0 text-white text-base leading-none outline-none text-center"
       @keydown="onKeydown"
+      @change="onChangeCoerce('minutes', $event)"
     />
     <span class="text-gray-400 leading-none">:</span>
     <input
@@ -127,6 +136,7 @@ defineExpose({
       placeholder="SS"
       class="w-8 bg-transparent py-0 text-white text-base leading-none outline-none text-center"
       @keydown="onKeydown"
+      @change="onChangeCoerce('seconds', $event)"
     />
   </div>
 </template>
