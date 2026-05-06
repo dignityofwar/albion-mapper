@@ -91,14 +91,12 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
 
     const sourceAngleForCenter = angleMap[sourceFacing];
 
-    // For a center target, snap the incoming angle to the nearest 45° pointing from target toward source
-    // This makes the curve arrive at the center from the direction of the source node.
+    // For a center target, compute the exact angle from target toward source so the
+    // curve always arrives from the current source direction as nodes are moved.
     let targetAngleForCenter: number;
     if (isCenter(targetHandleId)) {
-      const rawAngle = Math.atan2(sourceY - targetY, sourceX - targetX);
-      // Snap to nearest 45°
-      const snapped = Math.round(rawAngle / (Math.PI / 4)) * (Math.PI / 4);
-      targetAngleForCenter = snapped;
+      // Use the exact angle from target toward source (no snapping)
+      targetAngleForCenter = Math.atan2(sourceY - targetY, sourceX - targetX);
     } else {
       targetAngleForCenter = angleMap[targetFacing];
     }
