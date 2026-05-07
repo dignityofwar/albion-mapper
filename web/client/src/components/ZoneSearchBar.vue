@@ -98,7 +98,7 @@ function onKeydown(e: KeyboardEvent) {
 
     <div
       v-if="isOpen"
-      class="absolute z-[200] mt-1 w-full frosted-background border border-gray-700/50 rounded shadow-lg max-h-64 overflow-y-auto !bg-gray-800/80"
+      class="absolute z-[200] mt-1 w-full frosted-background border border-gray-700/50 rounded-xl shadow-2xl max-h-64 overflow-y-auto"
     >
       <div v-if="filteredNodes.length === 0" class="px-3 py-2 text-sm text-gray-400">
         No active zones found
