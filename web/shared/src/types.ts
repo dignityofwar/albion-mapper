@@ -82,6 +82,7 @@ export interface CustomHandle {
 }
 
 export interface NodeFeatures {
+  slots?: 7 | 20;
   reds?: number | null;
   redsTimer?: number; // Expiration timestamp in ms
   powercoreBlue?: boolean;
@@ -219,6 +220,7 @@ export const ChangePasswordBodySchema = z.object({
 });
 
 export const NodeFeaturesSchema = z.object({
+  slots: z.union([z.literal(7), z.literal(20)]).optional(),
   reds: z.number().nullable().optional(),
   redsTimer: z.number().optional(),
   powercoreBlue: z.boolean().optional(),

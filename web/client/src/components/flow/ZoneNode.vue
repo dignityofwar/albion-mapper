@@ -616,6 +616,17 @@ function onTimerBlur() {
 
 // ...
 
+function toggleSlots() {
+  const features = { ...(props.data.features || {}) };
+  const current = features.slots;
+  if (current === undefined) {
+    features.slots = props.data.tier === 8 && props.data.type === 'roads' ? 20 : 7;
+  } else {
+    features.slots = current === 20 ? 7 : 20;
+  }
+  store.updateNodeFeatures(props.id, features);
+}
+
 function updateReds(val: number | null | undefined) {
   const features = { ...(props.data.features || {}) };
   if (val === undefined) {
@@ -827,6 +838,15 @@ function lockCore(core: string) {
               :tier="props.data.tier"
               :proximity-to="props.data.proximityTo"
             />
+            <div class="nodrag flex items-center gap-1 mt-1 pointer-events-auto">
+              <button
+                class="inline-flex items-center h-5 px-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 font-semibold text-[10px] whitespace-nowrap leading-none border border-gray-600 transition-colors"
+                title="Toggle slots (7 or 20)"
+                @click.stop="toggleSlots"
+              >
+                {{ props.data.features?.slots !== undefined ? props.data.features.slots + 's' : '?s' }}
+              </button>
+            </div>
 
             <hr class="w-[85%] my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 

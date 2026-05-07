@@ -28,6 +28,7 @@ const toHandleId = ref<string | null>(null);
 const targetPosition = ref<{ x: number, y: number } | null>(null);
 const isLocked = computed(() => store.connections.length === 0);
 const secondsRemaining = ref<number | null>(null);
+const slots = ref<7 | 20>(7);
 watch([fromZoneId, toZoneId], () => {
   secondsRemaining.value = null;
 });
@@ -36,6 +37,9 @@ watch(toZoneId, (newId) => {
   if (!tutorialStore.completed && tutorialStore.step === 1 && newId) {
     tutorialStore.setStep(2);
   }
+  if (!newId) return;
+  const zone = ZONE_BY_ID.get(newId);
+  slots.value = zone?.tier === 8 && zone?.type === 'roads' ? 20 : 7;
 });
 const reportedBy = ref('');
 const submitting = ref(false);
@@ -153,6 +157,12 @@ async function submitAndAddMore() {
     );
 
     emit('success', 'Connection added!');
+
+    // Persist slots on the destination node
+    const toNodePos = store.nodePositions.find(n => n.zoneId === toZoneId.value);
+    if (toNodePos) {
+      store.updateNodeFeatures(toZoneId.value, { ...(toNodePos.features || {}), slots: slots.value });
+    }
 
     if (!tutorialStore.completed && tutorialStore.step === 2) {
       if (toZoneId.value) {
@@ -345,21 +355,38 @@ defineExpose({
             </div>
           </div>
           
-          <!-- Time -->
-          <div class="flex flex-col gap-1.5" ref="timeInputContainer">
-            <label class="text-sm font-medium text-gray-400">Expires In</label>
-            <TutorialTooltip
-              v-if="isModalReady && !tutorialStore.completed && tutorialStore.step === 2 && timeInputContainer"
-              :target="timeInputContainer"
-              message="You can find this by hovering over the portal in game."
-              pointing="up"
-            />
-            <TimeInput
-              ref="timeInputEl"
-              v-model="secondsRemaining"
-              data-testid="time-input"
-              @keydown="onTimeKeydown"
-            />
+          <!-- Time + Slots -->
+          <div class="grid grid-cols-2 gap-3" ref="timeInputContainer">
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-gray-400">Expires In</label>
+              <TutorialTooltip
+                v-if="isModalReady && !tutorialStore.completed && tutorialStore.step === 2 && timeInputContainer"
+                :target="timeInputContainer"
+                message="You can find this by hovering over the portal in game."
+                pointing="up"
+              />
+              <TimeInput
+                ref="timeInputEl"
+                v-model="secondsRemaining"
+                data-testid="time-input"
+                @keydown="onTimeKeydown"
+              />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label class="text-sm font-medium text-gray-400">Slots</label>
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 7 ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700']"
+                  @click="slots = 7"
+                >7</button>
+                <button
+                  type="button"
+                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700']"
+                  @click="slots = 20"
+                >20</button>
+              </div>
+            </div>
           </div>
 
           <!-- Buttons -->
