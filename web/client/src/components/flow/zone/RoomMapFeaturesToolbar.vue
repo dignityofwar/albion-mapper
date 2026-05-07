@@ -48,13 +48,15 @@ async function toggleExpanded() {
   if (props.alwaysExpanded) return;
 
   if (userExpanded.value) {
-    // Closing
+    // Closing: fade out content, then collapse to icons only
     contentVisible.value = false;
+    activeView.value = null;
+    await new Promise(r => setTimeout(r, 200));
     userExpanded.value = false;
   } else {
-    // Opening
+    // Opening: show buttons, then fade in content
     userExpanded.value = true;
-    await new Promise(r => setTimeout(r, 300));
+    await new Promise(r => setTimeout(r, 50));
     contentVisible.value = true;
   }
 }
@@ -66,6 +68,23 @@ watch(() => props.cores.length, (newCount, oldCount) => {
     activeView.value = null;
   }
 }, { immediate: true });
+
+// Flash state per button (counter increments to force animation restart)
+const flash = ref<Record<string, number>>({
+  cores: 0,
+  crystals: 0,
+  dungeons: 0,
+  chests: 0,
+});
+
+function triggerFlash(key: string) {
+  flash.value[key]++;
+}
+
+watch(() => props.cores.length,    (n, o) => { if (o !== undefined && n !== o) triggerFlash('cores'); });
+watch(() => props.crystals.length, (n, o) => { if (o !== undefined && n !== o) triggerFlash('crystals'); });
+watch(() => props.dungeons.length, (n, o) => { if (o !== undefined && n !== o) triggerFlash('dungeons'); });
+watch(() => props.chests.length,   (n, o) => { if (o !== undefined && n !== o) triggerFlash('chests'); });
 
 const coreCounts = computed(() => {
   const counts = { green: 0, blue: 0, purple: 0, yellow: 0 };
@@ -145,24 +164,24 @@ function handleSelect(zoneId: string) {
   <div class="flex flex-col md:flex-row-reverse items-stretch md:items-start gap-3 pointer-events-none w-full md:w-auto">
     <!-- Toolbar -->
     <div class="flex flex-row md:flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300">
-      <Transition name="slide">
-        <div v-if="isExpanded" class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2">
           <!-- Cores Button -->
           <button 
             @click="toggleView('cores')"
             :disabled="totalCount.cores === 0"
-            class="flex-1 md:flex-none flex flex-col gap-1 px-4 py-2 md:px-4 md:py-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+            class="flex-1 md:flex-none flex flex-col gap-1 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
             :class="[
               activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.cores > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
-              !isExpanded ? 'px-2' : ''
+              userExpanded ? 'px-4 py-2 md:px-4 md:py-2' : 'p-2',
             ]"
             title="Active Cores"
           >
-            <div class="flex items-center justify-center gap-2 w-full pb-1 border-b border-gray-600/50">
+            <span v-if="flash.cores > 0" :key="flash.cores" class="btn-flash-overlay" />
+            <div class="flex items-center justify-center gap-2 w-full" :class="userExpanded ? 'pb-1 border-b border-gray-600/50' : ''">
               <img src="/images/core-green.png" class="w-6 h-6 object-contain" alt="Green Core" />
-              <span class="text-lg font-bold text-gray-200">{{ totalCount.cores }}</span>
+              <span class="text-lg font-bold text-gray-200 min-w-[12px] text-center">{{ totalCount.cores }}</span>
             </div>
-            <Transition name="fade">
+            <Transition name="fade-fast">
               <div v-if="contentVisible" class="flex items-center justify-center gap-2 text-lg font-bold leading-none whitespace-nowrap pt-1">
                 <span class="text-green-500">{{ coreCounts.green }}</span>
                 <span class="text-blue-500">{{ coreCounts.blue }}</span>
@@ -177,55 +196,51 @@ function handleSelect(zoneId: string) {
             <button 
               @click="toggleView('crystals')"
               :disabled="totalCount.crystals === 0"
-              class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 md:p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+              class="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
               :class="[
                 activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.crystals > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
-                !isExpanded ? 'px-2' : ''
+                userExpanded ? 'px-4 py-2 md:p-2' : 'p-2',
               ]"
               title="Crystals"
             >
+              <span v-if="flash.crystals > 0" :key="flash.crystals" class="btn-flash-overlay" />
               <img src="/images/crystal.png" class="w-6 h-6 object-contain" Alt="Crystal Animal" />
-              <Transition name="fade">
-                <span v-if="contentVisible" class="text-lg font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.crystals }}</span>
-              </Transition>
+              <span class="text-lg font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.crystals }}</span>
             </button>
 
             <!-- Dungeons Button -->
             <button 
               @click="toggleView('dungeons')"
               :disabled="totalCount.dungeons === 0"
-              class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 md:p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+              class="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
               :class="[
                 activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.dungeons > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
-                !isExpanded ? 'px-2' : ''
+                userExpanded ? 'px-4 py-2 md:p-2' : 'p-2',
               ]"
               title="Dungeons"
             >
+              <span v-if="flash.dungeons > 0" :key="flash.dungeons" class="btn-flash-overlay" />
               <img src="/images/dungeon-group.png" class="w-6 h-6 object-contain" alt="Group Dungeon" />
-              <Transition name="fade">
-                <span v-if="contentVisible" class="text-lg font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.dungeons }}</span>
-              </Transition>
+              <span class="text-lg font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.dungeons }}</span>
             </button>
 
             <!-- Chests Button -->
             <button 
               @click="toggleView('chests')"
               :disabled="totalCount.chests === 0"
-              class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 md:p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+              class="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
               :class="[
                 activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.chests > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
-                !isExpanded ? 'px-2' : ''
+                userExpanded ? 'px-4 py-2 md:p-2' : 'p-2',
               ]"
               title="Chests"
             >
+              <span v-if="flash.chests > 0" :key="flash.chests" class="btn-flash-overlay" />
               <img src="/images/treasures-green.png" class="w-6 h-6 object-contain" alt="Green Treasure Chest"/>
-              <Transition name="fade">
-                <span v-if="contentVisible" class="text-lg font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.chests }}</span>
-              </Transition>
+              <span class="text-lg font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.chests }}</span>
             </button>
           </div>
         </div>
-      </Transition>
 
       <!-- Toggle Button (bottom center) -->
       <button 
@@ -233,14 +248,14 @@ function handleSelect(zoneId: string) {
         @click="toggleExpanded"
         class="hidden md:flex absolute -bottom-5 left-1/2 -translate-x-1/2 w-6 h-6 items-center justify-center rounded-full bg-gray-700 border border-gray-600 text-xs shadow-md z-20 pointer-events-auto hover:border-white transition-colors duration-300"
       >
-        {{ isExpanded ? '▶' : '◀' }}
+        {{ userExpanded ? '▶' : '◀' }}
       </button>
     </div>
 
     <!-- Active Detail Panel -->
     <Transition name="fade" mode="out-in">
       <div 
-        v-if="isExpanded && hasItems(activeView)"
+        v-if="userExpanded && hasItems(activeView)"
         :key="activeView"
         class="relative frosted-background border border-gray-700/50 rounded-xl p-3 shadow-2xl pointer-events-auto w-full md:w-64 flex flex-col"
       >
@@ -286,4 +301,32 @@ function handleSelect(zoneId: string) {
     </Transition>
   </div>
 </template>
+
+<style scoped>
+.fade-fast-enter-active,
+.fade-fast-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-fast-enter-from,
+.fade-fast-leave-to {
+  opacity: 0;
+}
+
+.btn-flash-wrap {
+  position: relative;
+}
+.btn-flash-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: white;
+  pointer-events: none;
+  animation: btn-update-flash 2s ease-out forwards;
+}
+@keyframes btn-update-flash {
+  0%   { opacity: 0.35; }
+  15%  { opacity: 0.35; }
+  100% { opacity: 0; }
+}
+</style>
 

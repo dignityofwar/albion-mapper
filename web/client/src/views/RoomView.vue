@@ -13,8 +13,8 @@ import NonRoadsNode from '../components/flow/NonRoadsNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import TipButton from '../components/TipButton.vue';
-import RoomSummaryToolbar from '../components/flow/zone/RoomSummaryToolbar.vue';
-import ResourceSummaryTray from '../components/flow/zone/ResourceSummaryTray.vue';
+import RoomMapFeaturesToolbar from '../components/flow/zone/RoomMapFeaturesToolbar.vue';
+import RoomResourcesToolbar from '../components/flow/zone/RoomResourcesToolbar.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import MegaToast from '../components/common/MegaToast.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
@@ -1041,7 +1041,7 @@ defineExpose({ flowNodes, onNodeDragStop });
 
       <!-- Summary Toolbar (Desktop) -->
       <div class="absolute top-24 right-4 hidden md:flex pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
-        <RoomSummaryToolbar 
+        <RoomMapFeaturesToolbar 
           :cores="activeCores"
           :crystals="activeCrystals"
           :dungeons="activeDungeons"
@@ -1052,7 +1052,7 @@ defineExpose({ flowNodes, onNodeDragStop });
 
       <!-- Resource Summary Tray (Desktop) -->
       <div class="absolute top-24 left-4 hidden md:flex flex-col gap-2 pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
-        <ResourceSummaryTray
+        <RoomResourcesToolbar
           :fibre="activeResources.fibre"
           :leather="activeResources.leather"
           :ore="activeResources.ore"
@@ -1095,7 +1095,7 @@ defineExpose({ flowNodes, onNodeDragStop });
             <button class="text-gray-400 hover:text-white text-xl leading-none" @click="showMobileSummary = false">&times;</button>
           </div>
           <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
-             <RoomSummaryToolbar 
+             <RoomMapFeaturesToolbar 
                 :cores="activeCores"
                 :crystals="activeCrystals"
                 :dungeons="activeDungeons"
@@ -1103,7 +1103,7 @@ defineExpose({ flowNodes, onNodeDragStop });
                 always-expanded
                 @select="goToNode"
               />
-              <ResourceSummaryTray
+              <RoomResourcesToolbar
                 :fibre="activeResources.fibre"
                 :leather="activeResources.leather"
                 :ore="activeResources.ore"
