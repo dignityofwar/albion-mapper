@@ -50,10 +50,15 @@ const config = {
 const timerInputRef = ref<HTMLInputElement | null>(null);
 
 const containerStyle = computed(() => {
-  const targetWidth = props.editing ? '160px' : (props.active ? (props.isUnlocked ? '80px' : '95px') : '60px');
+  const targetWidth = props.editing ? '160px' : (props.active ? (props.isUnlocked ? '80px' : '105px') : '70px');
+  const color = config[props.type].color;
+  const shadow = config[props.type].shadow;
+  
   const style: any = {
     width: targetWidth,
     '--target-width': targetWidth,
+    '--border-color': color,
+    '--outer-shadow': `0 4px 10px -2px ${shadow}`,
   };
 
   if (props.editing) {
@@ -71,13 +76,15 @@ const containerStyle = computed(() => {
   }
 
   if (props.active) {
-    style.backgroundColor = `${config[props.type].color}33`;
-    style['--hover-bg'] = `${config[props.type].color}4D`;
-    style.boxShadow = `inset 0 0 0 1px ${config[props.type].color}, 0 4px 10px -2px ${config[props.type].shadow}`;
+    style.backgroundColor = `${color}33`;
+    style['--hover-bg'] = `${color}4D`;
+    style.boxShadow = `inset 0 0 0 1px var(--border-color), var(--outer-shadow)`;
+  } else {
+    style['--hover-bg'] = '#4b5563';
   }
   
   if (props.editing) {
-    style.boxShadow = `inset 0 0 0 1px ${config[props.type].color}, 0 4px 10px -2px ${config[props.type].shadow}`;
+    style.boxShadow = `inset 0 0 0 1px var(--border-color), var(--outer-shadow)`;
   }
 
   return style;
@@ -130,7 +137,7 @@ defineExpose({
         <div 
           class="flex items-center h-full gap-1 relative" 
           :class="[
-            side === 'right' ? 'flex-row-reverse pr-6' : 'pl-6'
+            side === 'right' ? 'flex-row-reverse pr-8' : 'pl-8'
           ]"
         >
           <img :src="config[type].img" class="w-6 h-6 p-[2px] shrink-0" />
@@ -226,28 +233,8 @@ defineExpose({
   transition: width 0.3s ease, padding-right 0.3s ease, padding-left 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.core-container.active:hover {
+.core-container:hover {
   background-color: var(--hover-bg) !important;
-}
-
-.core-container.editing {
-}
-
-.fade-enter-active {
-  transition: opacity 0.15s ease;
-}
-
-.fade-leave-active {
-  transition: opacity 0.15s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
+  box-shadow: inset 0 0 0 1px var(--border-color), var(--outer-shadow) !important;
 }
 </style>

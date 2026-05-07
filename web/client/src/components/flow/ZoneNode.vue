@@ -708,7 +708,7 @@ function lockCore(core: string) {
       <TooltipRoot>
         <TooltipTrigger asChild>
           <button
-            class="absolute left-1/2 -translate-x-1/2 top-6 w-7 h-7 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
+            class="absolute left-1/2 -translate-x-1/2 top-7 w-9 h-9 flex items-center justify-center ping-button shadow-lg text-lg pointer-events-auto"
             :class="Z_INDEX.CONTENT_LOW"
             title="Ping this zone"
             @click.stop="handlePing"
@@ -894,14 +894,14 @@ function lockCore(core: string) {
 
 .cores-nw-container {
   position: absolute;
-  top: 70px;
-  left: 100px;
+  top: 76px;
+  left: 94px;
 }
 
 .cores-ne-container {
   position: absolute;
-  top: 70px;
-  right: 100px;
+  top: 76px;
+  right: 94px;
 }
 
 .reds-ne-container {

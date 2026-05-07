@@ -119,13 +119,13 @@ const containerStyle = computed(() => {
 });
 
 const tooltipText = computed(() => {
-  if (!isActuallyActive.value || !props.redsTimer || !props.now) return 'Reds';
+  if (!isActuallyActive.value || !props.redsTimer || !props.now) return 'Enemies Sighted?';
   const remaining = Math.max(0, Math.floor((props.redsTimer - props.now) / 1000));
-  if (remaining <= 0) return 'Reds';
+  if (remaining <= 0) return 'Enemies Sighted?';
   
   const m = Math.floor(remaining / 60);
   const s = remaining % 60;
-  return `Reds (expires in ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')})`;
+  return `Enemies Sighted? (expires in ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')})`;
 });
 
 const timerLabel = computed(() => {
@@ -221,8 +221,9 @@ const timerLabel = computed(() => {
   padding-left: 8px;
 }
 
-.reds-container.active:hover {
-  background-color: var(--hover-bg, rgba(239, 68, 68, 0.35)) !important;
+.reds-container:hover {
+  background-color: rgb(153, 27, 27) !important; /* Darker red */
+  box-shadow: inset 0 0 0 1px rgb(239, 68, 68); /* Red border */
 }
 
 .fade-slide-enter-active,
