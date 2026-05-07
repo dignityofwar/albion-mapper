@@ -80,10 +80,10 @@ describe('NonRoadsNode Styling', () => {
     expect(container.classes()).toContain('home-glow')
   })
 
-  it('applies goto-glow when highlighted is true', () => {
+  it('applies goto-glow-animation when highlighted is true', () => {
     const wrapper = mountNode({ highlighted: true })
     const container = wrapper.find('.non-roads-node .w-full.h-full.relative')
-    expect(container.classes()).toContain('goto-glow')
+    expect(container.classes()).toContain('goto-glow-animation')
   })
 })
 

@@ -27,6 +27,7 @@ const props = defineProps<NodeProps<{
 
 const store = useRoomStore();
 const { isConnecting, connections } = storeToRefs(store);
+const { updateNodeData } = useVueFlow();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
 const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
@@ -172,9 +173,10 @@ const handles = computed(() => {
       :class="[
         hasReds ? 'red-glow' : '',
         props.data.isHome ? 'home-glow' : '',
-        props.data.highlighted ? 'goto-glow' : '',
+        props.data.highlighted ? 'goto-glow-animation' : '',
         props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
       ]"
+      @animationend="updateNodeData(props.id, { highlighted: false })"
     >
       <!-- Smaller Diamond Shape Background -->
       <div 
@@ -209,20 +211,7 @@ const handles = computed(() => {
 </template>
 
 <style scoped>
-.diamond-shape {
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-}
-
-@keyframes slow-glow {
-  0%, 100% {
-    filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.8));
-  }
-}
-
-
+@import './nodes.css';
 
 .non-roads-node {
   width: 200px;

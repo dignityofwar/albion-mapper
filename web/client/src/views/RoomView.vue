@@ -561,14 +561,14 @@ function goToNode(nodeId: string) {
     const height = node.dimensions?.height || 160;
     const centerX = node.position.x + (width / 2);
     const centerY = node.position.y + (height / 2);
-    setCenter(centerX, centerY, { zoom: 2, duration: 800 });
+    setCenter(centerX, centerY, { zoom: 1.5, duration: 800 });
     showMobileSummary.value = false;
 
-    // Apply brief glow
+    // Apply brief glow — removed via animationend to avoid snap on duration change
     node.data.highlighted = true;
     setTimeout(() => {
       node.data.highlighted = false;
-    }, 1500);
+    }, 5000);
   }
 }
 

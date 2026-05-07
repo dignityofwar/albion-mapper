@@ -37,6 +37,7 @@ const props = defineProps<NodeProps<{
 
 const store = useRoomStore();
 const { connections, homeZoneId, isConnecting } = storeToRefs(store);
+const { updateNodeData } = useVueFlow();
 const tutorialStore = useTutorialStore();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 
@@ -683,9 +684,10 @@ function lockCore(core: string) {
         :class="[
           hasReds ? 'red-glow' : '',
           props.data.isHome ? 'home-glow' : '',
-          props.data.highlighted ? 'goto-glow' : '',
+          props.data.highlighted ? 'goto-glow-animation' : '',
           props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
         ]"
+        @animationend="updateNodeData(props.id, { highlighted: false })"
       >
       <!-- Diamond Shape Background -->
       <div 
@@ -847,32 +849,7 @@ function lockCore(core: string) {
 </template>
 
 <style scoped>
-
-.red-glow {
-  filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.7));
-  animation: slow-glow 3s infinite ease-in-out;
-}
-
-.home-glow {
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
-}
-
-.diamond-shape {
-  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-}
-
-@keyframes slow-glow {
-  0%, 100% {
-    filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.8));
-  }
-}
-
-.goto-glow {
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5) !important;
-}
+@import './nodes.css';
 
 .cores-nw-container {
   position: absolute;
