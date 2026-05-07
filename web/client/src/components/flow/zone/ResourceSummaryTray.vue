@@ -75,7 +75,7 @@ const totalCount = computed(() => ({
             :key="tab.type"
             @click="toggleTab(tab.type)"
             :disabled="totalCount[tab.type] === 0"
-            class="flex-1 md:flex-none flex items-center justify-center px-4 py-2 md:p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
+            class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 md:p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
             :class="[
               activeTab === tab.type
                 ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60'
@@ -86,6 +86,9 @@ const totalCount = computed(() => ({
             :title="tab.label"
           >
             <img :src="tab.icon" class="w-6 h-6 object-contain" :alt="tab.label" />
+            <span class="text-lg font-bold text-gray-300 min-w-[12px] text-center">
+              {{ totalCount[tab.type] }}
+            </span>
           </button>
         </div>
       </Transition>
