@@ -291,7 +291,7 @@ function handleSelect(zoneId: string) {
               <span class="w-5 h-5 flex items-center justify-center shrink-0">
                  <img :src="getItemIcon(item)" class="w-full h-full object-contain" alt="Zone Item" />
               </span>
-              <span class="text-sm font-medium truncate group-hover:text-indigo-300">
+              <span class="text-sm font-medium truncate group-hover:text-white">
                 {{ item.zoneName }}
               </span>
             </button>

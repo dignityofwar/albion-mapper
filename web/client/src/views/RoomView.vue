@@ -15,6 +15,7 @@ import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import TipButton from '../components/TipButton.vue';
 import RoomMapFeaturesToolbar from '../components/flow/zone/RoomMapFeaturesToolbar.vue';
 import RoomResourcesToolbar from '../components/flow/zone/RoomResourcesToolbar.vue';
+import ZoneSearchBar from '../components/ZoneSearchBar.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import MegaToast from '../components/common/MegaToast.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
@@ -945,6 +946,10 @@ defineExpose({ flowNodes, onNodeDragStop });
       </div>
     </header>
 
+    <div class="absolute top-20 md:top-24 left-1/2 -translate-x-1/2 z-[50]">
+      <ZoneSearchBar :nodes="flowNodes" @select="goToNode" />
+    </div>
+
     <ReportForm
       ref="reportForm"
       @success="handleSuccess"
@@ -954,7 +959,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     />
 
     <!-- WS status bar (always visible) -->
-    <div class="absolute left-0 right-0 md:top-14 top-0 px-3 py-1 text-xs flex items-center justify-center" :class="[Z_INDEX.UI_OVERLAY, store.wsStatus === 'connected' ? 'frosted-status-connected' : store.wsStatus === 'connecting' ? 'frosted-status-connecting' : store.wsStatus === 'auth_failed' ? 'frosted-status-auth-failed' : 'frosted-status-disconnected']">
+    <div class="absolute left-0 right-0 md:top-14 top-0 px-3 py-1 text-xs flex items-center justify-center" :class="[Z_INDEX.HEADER, store.wsStatus === 'connected' ? 'frosted-status-connected' : store.wsStatus === 'connecting' ? 'frosted-status-connecting' : store.wsStatus === 'auth_failed' ? 'frosted-status-auth-failed' : 'frosted-status-disconnected']">
       <span v-if="store.wsStatus === 'connected'">
         ● Connected – Last update
         <span

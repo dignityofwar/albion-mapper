@@ -17,16 +17,14 @@ const emit = defineEmits<{
       v-for="zone in zones"
       :key="zone.zoneId"
       @click="emit('select', zone.zoneId)"
-      class="flex items-center justify-between gap-3 px-2.5 py-2 rounded bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left border border-gray-700 group"
+      class="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-white cursor-pointer bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left rounded border border-gray-700 group"
     >
-      <div class="flex items-center gap-2">
-        <TagTier :tier="zone.tier" :type="zone.type" />
-        <span class="text-sm font-medium truncate group-hover:text-indigo-300">
-          {{ zone.zoneName }}
-        </span>
-      </div>
+      <TagTier :tier="zone.tier" :type="zone.type" />
+      <span class="truncate flex-1 font-medium group-hover:text-white">
+        {{ zone.zoneName }}
+      </span>
       <span
-        class="shrink-0 text-[16px] font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-2 py-0.5 leading-none"
+        class="shrink-0 text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none"
       >
         {{ zone.size ?? '?' }}
       </span>
