@@ -140,21 +140,6 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
     const dx = targetX - sourceX;
     const dy = targetY - sourceY;
 
-    // When the two handles face directly opposite directions (angles differ by π),
-    // the control points cancel out and the line should be straight.
-    const angleDiff = Math.abs(((targetAngle - sourceAngle + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
-    const isOpposite = angleDiff < 0.01;
-
-    if (isOpposite) {
-      const path = `M${sourceX},${sourceY} L${targetX},${targetY}`;
-      return [
-        path,
-        (sourceX + targetX) / 2,
-        (sourceY + targetY) / 2,
-        0, 0
-      ];
-    }
-
     // Curvature scales slightly with distance, but capped
     const distance = Math.sqrt(dx * dx + dy * dy);
     const curvature = Math.min(distance * 0.25, 50);
