@@ -432,6 +432,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
             await updateConnection(props.id, store.token!, id, { secondsRemaining: Number(secondsRemaining) });
           },
           hasChildren: connections.value.some(c => c.fromZoneId === conn.toZoneId),
+          slots: (targetNode?.data?.features as any)?.slots as (7 | 20 | undefined),
         },
       };
 

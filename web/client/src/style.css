@@ -35,6 +35,9 @@
   .ping-button {
     @apply rounded-full bg-gray-800/80 border border-gray-700 text-gray-400 hover:bg-blue-600 hover:border-blue-300 hover:text-white transition-colors duration-500;
   }
+  .key {
+    @apply bg-gray-800 text-gray-300 px-1.5 py-0.5 rounded border border-gray-700 font-mono text-[10px] uppercase;
+  }
 }
 
 @tailwind utilities;

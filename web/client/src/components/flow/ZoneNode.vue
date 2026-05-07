@@ -616,16 +616,6 @@ function onTimerBlur() {
 
 // ...
 
-function toggleSlots() {
-  const features = { ...(props.data.features || {}) };
-  const current = features.slots;
-  if (current === undefined) {
-    features.slots = props.data.tier === 8 && props.data.type === 'roads' ? 20 : 7;
-  } else {
-    features.slots = current === 20 ? 7 : 20;
-  }
-  store.updateNodeFeatures(props.id, features);
-}
 
 function updateReds(val: number | null | undefined) {
   const features = { ...(props.data.features || {}) };
@@ -793,7 +783,7 @@ function lockCore(core: string) {
         </div>
 
         <!-- Handle Editor Button -->
-        <div class="handle-editor-container pointer-events-auto -translate-x-3 translate-y-0.5" :class="Z_INDEX.CONTENT_HIGH">
+        <div class="handle-editor-container pointer-events-auto" :class="Z_INDEX.CONTENT_HIGH">
           <TooltipRoot>
             <TooltipTrigger asChild>
               <ZoneHandleEditorButton
@@ -837,8 +827,6 @@ function lockCore(core: string) {
               :map-shape="props.data.mapShape"
               :tier="props.data.tier"
               :proximity-to="props.data.proximityTo"
-              :slots="props.data.features?.slots"
-              :on-toggle-slots="toggleSlots"
             />
 
             <hr class="w-[85%] my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />

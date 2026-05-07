@@ -34,6 +34,11 @@ const isRoadsZone = computed(() => {
   const zone = ZONE_BY_ID.get(toZoneId.value);
   return zone?.type === 'roads';
 });
+const isHideoutZone = computed(() => {
+  if (!toZoneId.value) return false;
+  const zone = ZONE_BY_ID.get(toZoneId.value);
+  return !!(zone as any)?.isRoadsHideout;
+});
 watch([fromZoneId, toZoneId], () => {
   secondsRemaining.value = null;
 });
@@ -44,7 +49,10 @@ watch(toZoneId, (newId) => {
   }
   if (!newId) return;
   const zone = ZONE_BY_ID.get(newId);
-  slots.value = zone?.tier === 8 && zone?.type === 'roads' ? 20 : 7;
+  slots.value = 7;
+  if ((zone as any)?.isRoadsHideout) {
+    slots.value = 7;
+  }
 });
 const reportedBy = ref('');
 const submitting = ref(false);
@@ -361,9 +369,9 @@ defineExpose({
           </div>
           
           <!-- Time + Slots -->
-          <div class="grid grid-cols-2 gap-3" ref="timeInputContainer">
-            <div class="flex flex-col gap-1.5">
-              <label class="text-sm font-medium text-gray-400">Expires In</label>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="flex flex-col gap-1.5" ref="timeInputContainer">
+              <label class="text-sm font-medium text-gray-400 text-center">Expires In</label>
               <TutorialTooltip
                 v-if="isModalReady && !tutorialStore.completed && tutorialStore.step === 2 && timeInputContainer"
                 :target="timeInputContainer"
@@ -378,17 +386,17 @@ defineExpose({
               />
             </div>
             <div class="flex flex-col gap-1.5">
-              <label class="text-sm font-medium text-gray-400">Slots</label>
+              <label class="text-sm font-medium text-gray-400 text-center">Slots</label>
               <div class="flex gap-2">
                 <button
                   type="button"
-                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 7 ? 'bg-sky-900/60 border-gray-400 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600']"
+                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 7 ? 'bg-blue-600 border-gray-400 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600']"
                   @click="slots = 7"
                 >7</button>
                 <button
                   type="button"
-                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-yellow-800/60 border-gray-400 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600', !isRoadsZone && 'opacity-50 cursor-not-allowed']"
-                  :disabled="!isRoadsZone"
+                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-yellow-600 border-gray-300 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600', (!isRoadsZone || isHideoutZone) && 'opacity-50 cursor-not-allowed']"
+                  :disabled="!isRoadsZone || isHideoutZone"
                   @click="slots = 20"
                 >20</button>
               </div>
@@ -416,8 +424,8 @@ defineExpose({
           </div>
         </form>
 
-        <div class="mt-8 pt-4 border-t border-gray-800 text-[12px] text-gray-500 leading-relaxed">
-          <p><strong>Hint:</strong> Press <span class="bg-gray-800 text-gray-300 px-1.5 py-0.5 rounded border border-gray-700 font-mono text-[10px] uppercase">tab</span> to move between fields, <span class="bg-gray-800 text-gray-300 px-1.5 py-0.5 rounded border border-gray-700 font-mono text-[10px] uppercase">enter</span> to submit. Drag from node circles to quickly add connections.</p>
+        <div class="pt-4 text-[12px] text-gray-500 leading-relaxed">
+          <p><strong>Hint:</strong> Press <span class="key">tab</span> to move between fields, <span class="key">enter</span> to submit. This saves you time entering the data and reduces risk.</p>
         </div>
       </div>
     </div>
