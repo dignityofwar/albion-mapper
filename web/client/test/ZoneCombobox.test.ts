@@ -161,6 +161,39 @@ describe('ZoneCombobox filtering logic', () => {
 
     wrapper.unmount();
   });
+
+  it('only searches by name', async () => {
+    setActivePinia(createPinia());
+    const wrapper = mount(ZoneCombobox, {
+      props: { modelValue: '' },
+      global: { plugins: [createPinia()] },
+    });
+    
+    // Pick a zone that we know exists
+    const zone = ZONES[0];
+    
+    // Set query to its name
+    // @ts-ignore
+    wrapper.vm.query = zone.name;
+    
+    // @ts-ignore
+    let filteredZones = wrapper.vm.filteredZones;
+    expect(filteredZones.some((z: any) => z.id === zone.id)).toBe(true);
+
+    // Set query to something that would match its type but NOT its name
+    // @ts-ignore
+    wrapper.vm.query = zone.type;
+    
+    // @ts-ignore
+    filteredZones = wrapper.vm.filteredZones;
+    
+    // Should NOT contain the zone if we are only searching by name
+    if (!zone.name.toLowerCase().includes(zone.type.toLowerCase())) {
+        expect(filteredZones.some((z: any) => z.id === zone.id)).toBe(false);
+    }
+    
+    wrapper.unmount();
+  });
 });
 
 describe('ZoneCombobox component renders', () => {
