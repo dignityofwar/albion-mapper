@@ -793,7 +793,7 @@ function lockCore(core: string) {
         </div>
 
         <!-- Handle Editor Button -->
-        <div class="handle-editor-container pointer-events-auto">
+        <div class="handle-editor-container pointer-events-auto -translate-x-3 translate-y-0.5" :class="Z_INDEX.CONTENT_HIGH">
           <TooltipRoot>
             <TooltipTrigger asChild>
               <ZoneHandleEditorButton
@@ -837,16 +837,9 @@ function lockCore(core: string) {
               :map-shape="props.data.mapShape"
               :tier="props.data.tier"
               :proximity-to="props.data.proximityTo"
+              :slots="props.data.features?.slots"
+              :on-toggle-slots="toggleSlots"
             />
-            <div class="nodrag flex items-center gap-1 mt-1 pointer-events-auto">
-              <button
-                class="inline-flex items-center h-5 px-1.5 rounded bg-gray-700 hover:bg-gray-600 text-gray-300 font-semibold text-[10px] whitespace-nowrap leading-none border border-gray-600 transition-colors"
-                title="Toggle slots (7 or 20)"
-                @click.stop="toggleSlots"
-              >
-                {{ props.data.features?.slots !== undefined ? props.data.features.slots + 's' : '?s' }}
-              </button>
-            </div>
 
             <hr class="w-[85%] my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 

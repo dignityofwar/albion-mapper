@@ -29,6 +29,11 @@ const targetPosition = ref<{ x: number, y: number } | null>(null);
 const isLocked = computed(() => store.connections.length === 0);
 const secondsRemaining = ref<number | null>(null);
 const slots = ref<7 | 20>(7);
+const isRoadsZone = computed(() => {
+  if (!toZoneId.value) return false;
+  const zone = ZONE_BY_ID.get(toZoneId.value);
+  return zone?.type === 'roads';
+});
 watch([fromZoneId, toZoneId], () => {
   secondsRemaining.value = null;
 });
@@ -377,12 +382,13 @@ defineExpose({
               <div class="flex gap-2">
                 <button
                   type="button"
-                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 7 ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700']"
+                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 7 ? 'bg-sky-900/60 border-gray-400 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600']"
                   @click="slots = 7"
                 >7</button>
                 <button
                   type="button"
-                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-indigo-600 border-indigo-500 text-white' : 'bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700']"
+                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-yellow-800/60 border-gray-400 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600', !isRoadsZone && 'opacity-50 cursor-not-allowed']"
+                  :disabled="!isRoadsZone"
                   @click="slots = 20"
                 >20</button>
               </div>
