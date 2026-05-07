@@ -692,14 +692,6 @@ function lockCore(core: string) {
        </div>
     </div>
     <TooltipProvider :delay-duration="300">
-      <!-- Ping Button (top tip) -->
-      <button
-        class="absolute left-1/2 -translate-x-1/2 top-6 w-7 h-7 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
-        :class="Z_INDEX.CONTENT_HIGH"
-        title="Ping this zone"
-        @click.stop="handlePing"
-      >📍</button>
-
       <div 
         :key="pingKey"
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
@@ -712,6 +704,14 @@ function lockCore(core: string) {
         ]"
         @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow') isPinged = false; }"
       >
+      <!-- Ping Button (top tip) -->
+      <button
+        class="absolute left-1/2 -translate-x-1/2 top-6 w-7 h-7 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
+        :class="Z_INDEX.CONTENT_LOW"
+        title="Ping this zone"
+        @click.stop="handlePing"
+      >📍</button>
+
       <!-- Diamond Shape Background -->
       <div 
         class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"

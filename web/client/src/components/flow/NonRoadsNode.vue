@@ -181,14 +181,6 @@ const handles = computed(() => {
          </div>
        </div>
     </div>
-    <!-- Ping Button (top tip) -->
-    <button
-      class="absolute left-1/2 -translate-x-1/2 top-5 w-6 h-6 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
-      :class="Z_INDEX.CONTENT_HIGH"
-      title="Ping this zone"
-      @click.stop="handlePing"
-    >📍</button>
-
     <div
       :key="pingKey"
       class="text-white text-xs text-center w-full h-full relative transition-all duration-300"
@@ -201,6 +193,14 @@ const handles = computed(() => {
       ]"
       @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow') isPinged = false; }"
     >
+      <!-- Ping Button (top tip) -->
+      <button
+        class="absolute left-1/2 -translate-x-1/2 top-5 w-6 h-6 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
+        :class="Z_INDEX.CONTENT_LOW"
+        title="Ping this zone"
+        @click.stop="handlePing"
+      >📍</button>
+
       <!-- Smaller Diamond Shape Background -->
       <div 
         class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
