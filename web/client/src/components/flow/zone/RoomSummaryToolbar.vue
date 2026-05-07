@@ -162,7 +162,7 @@ function handleSelect(zoneId: string) {
             :disabled="totalCount.cores === 0"
             class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
             :class="[
-              activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.cores > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+              activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.cores > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
               !isExpanded ? 'px-2' : ''
             ]"
             title="Active Cores"
@@ -185,7 +185,7 @@ function handleSelect(zoneId: string) {
             :disabled="totalCount.crystals === 0"
             class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
             :class="[
-              activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.crystals > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+              activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.crystals > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
               !isExpanded ? 'px-2' : ''
             ]"
             title="Crystals"
@@ -202,7 +202,7 @@ function handleSelect(zoneId: string) {
             :disabled="totalCount.dungeons === 0"
             class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
             :class="[
-              activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.dungeons > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+              activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.dungeons > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
               !isExpanded ? 'px-2' : ''
             ]"
             title="Dungeons"
@@ -219,7 +219,7 @@ function handleSelect(zoneId: string) {
             :disabled="totalCount.chests === 0"
             class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all border disabled:opacity-40 disabled:cursor-not-allowed"
             :class="[
-              activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50' : (totalCount.chests > 0 ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-800/50 border-transparent enabled:hover:bg-gray-700/50'),
+              activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.chests > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
               !isExpanded ? 'px-2' : ''
             ]"
             title="Chests"
