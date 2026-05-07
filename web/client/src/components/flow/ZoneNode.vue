@@ -368,6 +368,19 @@ const MAX_TIMES = {
 };
 
 const showToast = inject<(msg: string, type?: 'info' | 'error') => void>('showToast');
+const showPingToast = inject<(zoneName: string, nodeId?: string) => void>('showPingToast');
+
+const isPinged = ref(false);
+const pingKey = ref(0);
+
+function handlePing() {
+  isPinged.value = false;
+  pingKey.value++;
+  requestAnimationFrame(() => {
+    isPinged.value = true;
+  });
+  showPingToast?.(props.data.zoneName || props.id, props.id);
+}
 
 
 function formatTimer(expiresAtMs: number | undefined | null): string {
@@ -679,15 +692,25 @@ function lockCore(core: string) {
        </div>
     </div>
     <TooltipProvider :delay-duration="300">
+      <!-- Ping Button (top tip) -->
+      <button
+        class="absolute left-1/2 -translate-x-1/2 top-6 w-7 h-7 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
+        :class="Z_INDEX.CONTENT_HIGH"
+        title="Ping this zone"
+        @click.stop="handlePing"
+      >📍</button>
+
       <div 
+        :key="pingKey"
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
         :class="[
           hasReds ? 'red-glow' : '',
           props.data.isHome ? 'home-glow' : '',
           props.data.highlighted ? 'goto-glow-animation' : '',
+          isPinged ? 'ping-animation' : '',
           props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
         ]"
-        @animationend="updateNodeData(props.id, { highlighted: false })"
+        @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow') isPinged = false; }"
       >
       <!-- Diamond Shape Background -->
       <div 

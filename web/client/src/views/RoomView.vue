@@ -16,6 +16,7 @@ import TipButton from '../components/TipButton.vue';
 import RoomSummaryToolbar from '../components/flow/zone/RoomSummaryToolbar.vue';
 import ResourceSummaryTray from '../components/flow/zone/ResourceSummaryTray.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
+import MegaToast from '../components/common/MegaToast.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
@@ -37,11 +38,23 @@ provide('goToNode', goToNode);
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
 const toastType = ref<'info' | 'error'>('info');
-const megaToast = ref('');
 const megaToastRegion = ref('');
+const megaToastNodeId = ref('');
+const megaToastVisible = ref(false);
+const megaToastFadingOut = ref(false);
 const megaToastBackgroundActive = ref(false);
 let megaToastTimeout: ReturnType<typeof setTimeout> | null = null;
 let megaToastBgTimeout: ReturnType<typeof setTimeout> | null = null;
+let megaToastFadeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+interface PingToast {
+  id: number;
+  zoneName: string;
+  nodeId: string;
+  fadingOut: boolean;
+}
+const pingToasts = ref<PingToast[]>([]);
+let pingToastCounter = 0;
 const lastUpdateFlash = ref(false);
 let flashTimeout: ReturnType<typeof setTimeout> | null = null;
 const initialUpdateCount = ref(0);
@@ -121,19 +134,41 @@ function showToast(msg: string, type: 'info' | 'error' = 'info') {
   toastTimeout = setTimeout(() => (toast.value = ''), 5000);
 }
 
-function showMegaToast(region: string) {
+function showMegaToast(region: string, nodeId?: string) {
   megaToastRegion.value = region;
-  megaToast.value = `Enemies sighted in ${region}!`;
+  megaToastNodeId.value = nodeId ?? '';
+  megaToastFadingOut.value = false;
+  megaToastVisible.value = true;
   megaToastBackgroundActive.value = true;
 
   if (megaToastTimeout) clearTimeout(megaToastTimeout);
   if (megaToastBgTimeout) clearTimeout(megaToastBgTimeout);
+  if (megaToastFadeTimeout) clearTimeout(megaToastFadeTimeout);
 
-  megaToastTimeout = setTimeout(() => (megaToast.value = ''), 8000);
+  megaToastTimeout = setTimeout(() => {
+    megaToastFadingOut.value = true;
+    megaToastFadeTimeout = setTimeout(() => { megaToastVisible.value = false; megaToastFadingOut.value = false; }, 400);
+  }, 8000);
   megaToastBgTimeout = setTimeout(() => (megaToastBackgroundActive.value = false), 2500);
 }
 
 provide('showToast', showToast);
+
+function showPingToast(zoneName: string, nodeId?: string) {
+  const id = ++pingToastCounter;
+  // Add new toast at the top, leave existing ones running
+  pingToasts.value.unshift({ id, zoneName, nodeId: nodeId ?? '', fadingOut: false });
+  // Auto-remove after 4s
+  setTimeout(() => {
+    const toast = pingToasts.value.find(t => t.id === id);
+    if (toast) toast.fadingOut = true;
+    setTimeout(() => {
+      pingToasts.value = pingToasts.value.filter(t => t.id !== id);
+    }, 400);
+  }, 4000);
+}
+
+provide('showPingToast', showPingToast);
 
 // ── Countdown ticker ─────────────────────────────────────────────────────────
 const now = ref(Date.now());
@@ -147,7 +182,9 @@ onUnmounted(() => {
   if (toastTimeout) clearTimeout(toastTimeout);
   if (megaToastTimeout) clearTimeout(megaToastTimeout);
   if (megaToastBgTimeout) clearTimeout(megaToastBgTimeout);
+  if (megaToastFadeTimeout) clearTimeout(megaToastFadeTimeout);
   if (flashTimeout) clearTimeout(flashTimeout);
+  pingToasts.value = [];
 });
 
 
@@ -219,7 +256,7 @@ watch(nodePositions, (newPositions) => {
       if (!activeRedsIds.value.has(np.zoneId)) {
         if (initialRedsHandled.value) {
           const zone = ZONE_BY_ID.get(np.zoneId);
-          showMegaToast(zone?.name || np.zoneId);
+          showMegaToast(zone?.name || np.zoneId, np.zoneId);
         }
       }
       currentActiveIds.add(np.zoneId);
@@ -972,16 +1009,35 @@ defineExpose({ flowNodes, onNodeDragStop });
         <Controls />
       </VueFlow>
 
+      <!-- Ping Toasts -->
+      <div class="absolute top-20 md:top-24 left-1/2 -translate-x-1/2 pointer-events-none w-full max-w-[95vw] flex flex-col items-center gap-2 px-4" :class="Z_INDEX.TOAST">
+        <TransitionGroup name="ping-toast">
+          <MegaToast
+            v-for="pt in pingToasts"
+            :key="pt.id"
+            :visible="true"
+            :fading-out="pt.fadingOut"
+            :fill-duration="4"
+            fill-color="rgba(96, 165, 250, 0.35)"
+            bg-class="bg-blue-600/30 backdrop-blur-md"
+            border-class="border-blue-300"
+            @click="pt.nodeId ? goToNode(pt.nodeId) : null"
+          >📍 Ping: {{ pt.zoneName }}</MegaToast>
+        </TransitionGroup>
+      </div>
+
       <!-- Mega Toast -->
-      <Transition name="mega-toast">
-        <div v-if="megaToast" class="absolute top-4 left-1/2 -translate-x-1/2 pointer-events-none w-full max-w-[95vw] flex justify-center px-4" :class="Z_INDEX.TOAST">
-           <div class="bg-red-700 text-white px-6 py-3 rounded-full shadow-2xl border-2 border-red-400">
-              <span class="text-lg md:text-2xl font-bold uppercase tracking-wider text-center block">
-                Enemies sighted in {{ megaToastRegion }}!
-              </span>
-           </div>
-        </div>
-      </Transition>
+      <div class="absolute top-20 md:top-24 left-1/2 -translate-x-1/2 pointer-events-none w-full max-w-[95vw] flex justify-center px-4" :class="Z_INDEX.TOAST">
+        <MegaToast
+          :visible="megaToastVisible"
+          :fading-out="megaToastFadingOut"
+          :fill-duration="8"
+          fill-color="rgba(252, 165, 165, 0.3)"
+          bg-class="bg-red-900/40"
+          border-class="border-red-500"
+          @click="megaToastNodeId ? goToNode(megaToastNodeId) : null"
+        >⚔️ Enemies sighted in {{ megaToastRegion }}!</MegaToast>
+      </div>
 
       <!-- Summary Toolbar (Desktop) -->
       <div class="absolute top-24 right-4 hidden md:flex pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
@@ -1170,13 +1226,21 @@ defineExpose({ flowNodes, onNodeDragStop });
   100% { opacity: 0; }
 }
 
-@keyframes mega-toast-in {
-  0% { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
-  100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+.ping-toast-enter-active {
+  animation: ping-toast-in 0.3s ease-out forwards;
+}
+.ping-toast-leave-active {
+  animation: ping-toast-out 0.4s ease-in forwards;
 }
 
-@keyframes mega-toast-out {
-  0% { transform: translate(-50%, 0) scale(1); opacity: 1; }
-  100% { transform: translate(-50%, -100%) scale(0.5); opacity: 0; }
+@keyframes ping-toast-in {
+  0% { transform: translateY(-20px) scale(0.8); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
 }
+
+@keyframes ping-toast-out {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(20px) scale(0.8); opacity: 0; }
+}
+
 </style>

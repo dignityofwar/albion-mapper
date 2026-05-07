@@ -6,7 +6,7 @@
 
 @layer components {
   .zone-button {
-    @apply rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 border border-gray-700 hover:border-gray-500 transition-colors;
+    @apply rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 border border-gray-700 hover:border-gray-500 transition-colors duration-500;
   }
   .frosted-background {
     @apply bg-gray-800/30 backdrop-blur-md;
@@ -15,7 +15,7 @@
     @apply bg-gray-800/60 backdrop-blur-md;
   }
   header .frosted-pill {
-    @apply backdrop-blur-none;
+    @apply backdrop-blur-none bg-transparent;
   }
   .frosted-status-connected {
     @apply bg-green-700/50 text-green-300 backdrop-blur-sm;
@@ -31,6 +31,9 @@
   }
   .frosted-button {
     @apply bg-gray-800/60 backdrop-blur-md border border-gray-600/60 hover:bg-gray-700/70;
+  }
+  .ping-button {
+    @apply rounded-full bg-gray-800/80 border border-gray-700 text-gray-400 hover:bg-blue-600 hover:border-blue-300 hover:text-white transition-colors duration-500;
   }
 }
 

@@ -29,6 +29,19 @@ const store = useRoomStore();
 const { isConnecting, connections } = storeToRefs(store);
 const { updateNodeData } = useVueFlow();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
+const showPingToast = inject<(zoneName: string, nodeId?: string) => void>('showPingToast');
+
+const isPinged = ref(false);
+const pingKey = ref(0);
+
+function handlePing() {
+  isPinged.value = false;
+  pingKey.value++;
+  requestAnimationFrame(() => {
+    isPinged.value = true;
+  });
+  showPingToast?.(props.data.zoneName || props.id, props.id);
+}
 const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
 const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);
@@ -168,15 +181,25 @@ const handles = computed(() => {
          </div>
        </div>
     </div>
-    <div 
+    <!-- Ping Button (top tip) -->
+    <button
+      class="absolute left-1/2 -translate-x-1/2 top-5 w-6 h-6 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
+      :class="Z_INDEX.CONTENT_HIGH"
+      title="Ping this zone"
+      @click.stop="handlePing"
+    >📍</button>
+
+    <div
+      :key="pingKey"
       class="text-white text-xs text-center w-full h-full relative transition-all duration-300"
       :class="[
         hasReds ? 'red-glow' : '',
         props.data.isHome ? 'home-glow' : '',
         props.data.highlighted ? 'goto-glow-animation' : '',
+        isPinged ? 'ping-animation' : '',
         props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
       ]"
-      @animationend="updateNodeData(props.id, { highlighted: false })"
+      @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow') isPinged = false; }"
     >
       <!-- Smaller Diamond Shape Background -->
       <div 
