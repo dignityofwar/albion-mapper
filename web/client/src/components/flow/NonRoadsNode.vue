@@ -11,6 +11,7 @@ import { useRoomStore } from '@/stores/useRoomStore';
 import { deleteConnection } from '@/utils/roomOperations';
 import { Z_INDEX } from '@/constants/Layers';
 import { storeToRefs } from 'pinia';
+import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 
 const props = defineProps<NodeProps<{ 
   isHome: boolean; 
@@ -181,6 +182,7 @@ const handles = computed(() => {
          </div>
        </div>
     </div>
+    <TooltipProvider :delay-duration="100">
     <div
       :key="pingKey"
       class="text-white text-xs text-center w-full h-full relative transition-all duration-300"
@@ -194,12 +196,21 @@ const handles = computed(() => {
       @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow') isPinged = false; }"
     >
       <!-- Ping Button (top tip) -->
-      <button
-        class="absolute left-1/2 -translate-x-1/2 top-5 w-6 h-6 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
-        :class="Z_INDEX.CONTENT_LOW"
-        title="Ping this zone"
-        @click.stop="handlePing"
-      >📍</button>
+      <TooltipRoot>
+        <TooltipTrigger asChild>
+          <button
+            class="absolute left-1/2 -translate-x-1/2 top-5 w-6 h-6 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
+            :class="Z_INDEX.CONTENT_LOW"
+            title="Ping this zone"
+            @click.stop="handlePing"
+          >📍</button>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
+            Ping this zone
+          </TooltipContent>
+        </TooltipPortal>
+      </TooltipRoot>
 
       <!-- Smaller Diamond Shape Background -->
       <div 
@@ -230,6 +241,7 @@ const handles = computed(() => {
       <div class="absolute inset-0 pointer-events-none">
       </div>
     </div>
+    </TooltipProvider>
   </div>
 </template>
 

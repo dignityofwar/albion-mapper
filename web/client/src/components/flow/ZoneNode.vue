@@ -4,7 +4,7 @@ import type { NodeProps } from '@vue-flow/core';
 import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, getHandleFacing, DEFAULT_INTERNAL_HANDLES } from 'shared';
 import { getBorderBgClass } from '@/utils/zoneStyles';
 import { connectionStyle } from '@/utils/connectionStyle';
-import { TooltipProvider } from 'reka-ui';
+import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import ZoneHeader from './zone/ZoneHeader.vue';
 import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
 import ZoneReds from './zone/ZoneReds.vue';
@@ -691,7 +691,7 @@ function lockCore(core: string) {
          </div>
        </div>
     </div>
-    <TooltipProvider :delay-duration="300">
+    <TooltipProvider :delay-duration="100">
       <div 
         :key="pingKey"
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
@@ -705,12 +705,21 @@ function lockCore(core: string) {
         @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow') isPinged = false; }"
       >
       <!-- Ping Button (top tip) -->
-      <button
-        class="absolute left-1/2 -translate-x-1/2 top-6 w-7 h-7 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
-        :class="Z_INDEX.CONTENT_LOW"
-        title="Ping this zone"
-        @click.stop="handlePing"
-      >📍</button>
+      <TooltipRoot>
+        <TooltipTrigger asChild>
+          <button
+            class="absolute left-1/2 -translate-x-1/2 top-6 w-7 h-7 flex items-center justify-center ping-button shadow-lg text-xs pointer-events-auto"
+            :class="Z_INDEX.CONTENT_LOW"
+            title="Ping this zone"
+            @click.stop="handlePing"
+          >📍</button>
+        </TooltipTrigger>
+        <TooltipPortal>
+          <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
+            Ping this zone
+          </TooltipContent>
+        </TooltipPortal>
+      </TooltipRoot>
 
       <!-- Diamond Shape Background -->
       <div 
@@ -773,12 +782,21 @@ function lockCore(core: string) {
 
         <!-- Handle Editor Button -->
         <div class="handle-editor-container pointer-events-auto">
-          <ZoneHandleEditorButton
-            ref="handleEditorButtonRef"
-            :map-shape="props.data.mapShape"
-            :type="props.data.type"
-            @click="openHandleEditor"
-          />
+          <TooltipRoot>
+            <TooltipTrigger asChild>
+              <ZoneHandleEditorButton
+                ref="handleEditorButtonRef"
+                :map-shape="props.data.mapShape"
+                :type="props.data.type"
+                @click="openHandleEditor"
+              />
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
+                Edit Portals
+              </TooltipContent>
+            </TooltipPortal>
+          </TooltipRoot>
         </div>
 
         <!-- Reds on North-East Edge -->
