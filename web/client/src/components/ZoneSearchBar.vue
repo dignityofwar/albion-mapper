@@ -109,10 +109,10 @@ function onKeydown(e: KeyboardEvent) {
         class="w-full flex items-center gap-2 px-3 py-2 text-sm text-white cursor-pointer hover:bg-gray-700 text-left"
         @mousedown.prevent="selectNode(node.id)"
       >
-        <TagTier :tier="node.data.tier" :type="node.data.type" />
+        <TagTier :tier="node.data.tier" :type="node.data.type as ZoneType" />
         <span class="truncate flex-1">{{ node.data.zoneName }}</span>
         <TagZone
-          :type="node.data.type"
+          :type="node.data.type as ZoneType"
           :category="node.data.category"
           :map-shape="node.data.mapShape"
           :zone-name="node.data.zoneName"
