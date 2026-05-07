@@ -8,7 +8,7 @@ import { computed, ref, inject, type Ref } from 'vue';
 import { connectionStyle } from '@/utils/connectionStyle';
 import type { NodeFeatures } from 'shared';
 import { useRoomStore } from '@/stores/useRoomStore';
-import { deleteConnection } from '@/utils/roomOperations';
+import { deleteConnection, deleteNode } from '@/utils/roomOperations';
 import { Z_INDEX } from '@/constants/Layers';
 import { storeToRefs } from 'pinia';
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
@@ -128,6 +128,7 @@ async function handleDelete() {
     for (const connId of toDeleteArray) {
       await deleteConnection(store.roomId, store.token, connId);
     }
+    await deleteNode(store.roomId, store.token, props.id);
   } catch (err) {
     console.error('Failed to delete node connections:', err);
   }

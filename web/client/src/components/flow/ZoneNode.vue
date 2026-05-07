@@ -175,6 +175,7 @@ async function handleDelete() {
       for (const connId of toDeleteArray) {
         await deleteConnection(store.roomId, store.token, connId);
       }
+      await deleteNode(store.roomId, store.token, props.id);
     }
   } catch (err) {
     console.error('Failed to delete node:', err);
