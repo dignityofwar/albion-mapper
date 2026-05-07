@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Position, useVueFlow, Handle } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, getHandleFacing, DEFAULT_INTERNAL_HANDLES } from 'shared';
+import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, getHandleFacing } from 'shared';
 import { getBorderBgClass } from '@/utils/zoneStyles';
 import { connectionStyle } from '@/utils/connectionStyle';
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
@@ -321,7 +321,7 @@ onConnectEnd(() => {
   store.isConnecting = false;
 });
 
-onClickOutside(mapFeaturesModalContainerRef, (e) => {
+onClickOutside(mapFeaturesModalContainerRef, (_) => {
   if (!isMapFeaturesModalOpen.value) return;
   if (isViewportMoving.value) return;
   isMapFeaturesModalOpen.value = false;

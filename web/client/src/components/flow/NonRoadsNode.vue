@@ -253,11 +253,4 @@ const handles = computed(() => {
   width: 200px;
   height: 200px;
 }
-
-.center-handle-snap {
-  width: 80px !important;
-  height: 80px !important;
-  background-color: transparent !important;
-  transform: translate(-50%, -50%) !important;
-}
 </style>

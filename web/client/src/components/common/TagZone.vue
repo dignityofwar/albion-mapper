@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { ZoneType } from 'shared';
-import { getZoneTypeDisplay } from '../../utils/zoneStyles';
-import { FACTION_MAP } from '../../utils/factions';
+import { getZoneTypeDisplay } from '@/utils/zoneStyles';
+import { FACTION_MAP } from '@/utils/factions';
 
 const props = defineProps<{
   type: ZoneType;
