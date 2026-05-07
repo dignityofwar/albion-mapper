@@ -255,7 +255,7 @@ function handleSelect(zoneId: string) {
     <!-- Active Detail Panel -->
     <Transition name="fade" mode="out-in">
       <div 
-        v-if="userExpanded && hasItems(activeView)"
+        v-if="hasItems(activeView)"
         :key="activeView"
         class="relative frosted-background border border-gray-700/50 rounded-xl p-3 shadow-2xl pointer-events-auto w-full md:w-64 flex flex-col"
       >
