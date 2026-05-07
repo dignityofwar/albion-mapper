@@ -21,6 +21,7 @@ function confirm() {
 </script>
 
 <template>
+  <Teleport to="body">
   <div
     v-if="modelValue"
     class="fixed inset-0 bg-black/60 flex items-center justify-center p-4"
@@ -28,7 +29,7 @@ function confirm() {
     @click.self="close"
   >
     <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md" @click.stop>
-      <h2 class="text-xl font-semibold mb-2">Are you sure you wish to wipe all data?</h2>
+      <h2 class="text-xl font-semibold mb-2 text-white">Are you sure you wish to wipe all data?</h2>
       <p class="text-sm text-gray-400 mb-6">This cannot be recovered and all the room's data will be reset. Zone Memory will persist however.</p>
       <div class="flex gap-3 justify-end">
         <button
@@ -46,4 +47,5 @@ function confirm() {
       </div>
     </div>
   </div>
+  </Teleport>
 </template>

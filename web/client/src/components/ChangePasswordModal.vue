@@ -78,6 +78,7 @@ async function savePassword() {
 </script>
 
 <template>
+  <Teleport to="body">
   <div
     v-if="modelValue"
     class="fixed inset-0 bg-black/60 flex items-center justify-center p-4"
@@ -85,7 +86,7 @@ async function savePassword() {
     @click.self="close"
   >
     <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-md" @click.stop>
-      <h2 class="text-xl font-semibold mb-4">Change Password</h2>
+      <h2 class="text-xl font-semibold mb-4 text-white">Change Password</h2>
       <div class="flex flex-col gap-4">
         <div>
           <label class="block text-sm text-gray-400 mb-1">New Password</label>
@@ -136,4 +137,5 @@ async function savePassword() {
       </div>
     </div>
   </div>
+  </Teleport>
 </template>
