@@ -14,6 +14,17 @@ const props = defineProps<{
 }>();
 
 const display = computed(() => {
+  if (props.zoneName === 'Brecillien') {
+    return {
+      label: 'Brecillien',
+      style: {
+        backgroundColor: '#a855f7',
+        borderColor: '#e9d5ff'
+      },
+      class: 'border-2'
+    };
+  }
+
   let labelToUse = props.proximityTo || props.category;
 
   if (labelToUse && FACTION_MAP[labelToUse]) {

@@ -7,6 +7,12 @@
     "category": "Martlock RC"
   },
   {
+    "mapID": "brecillien",
+    "mapName": "Brecillien",
+    "mapType": "other",
+    "tier": 1
+  },
+  {
     "mapID": "anklesnag-mire",
     "mapName": "Anklesnag Mire",
     "mapType": "royalRed",

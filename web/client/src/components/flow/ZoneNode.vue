@@ -736,7 +736,7 @@ function lockCore(core: string) {
       <!-- Diamond Shape Background -->
       <div 
         class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
-        :class="[hasReds ? 'bg-red-500/80' : getBorderBgClass(props.data.type) + '/80', Z_INDEX.NODE_BASE]"
+        :class="[hasReds ? 'bg-red-500/80' : (props.data.zoneName === 'Brecillien' ? 'bg-purple-500/80 border-purple-200/80' : getBorderBgClass(props.data.type) + '/80'), Z_INDEX.NODE_BASE]"
       ></div>
       <div 
         class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none"
