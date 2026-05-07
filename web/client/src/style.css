@@ -8,6 +8,27 @@
   .zone-button {
     @apply rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 border border-gray-700 hover:border-gray-500 transition-colors;
   }
+  .frosted-background {
+    @apply bg-gray-800/30 backdrop-blur-md;
+  }
+  .frosted-pill {
+    @apply bg-gray-800/60 backdrop-blur-md;
+  }
+  .frosted-status-connected {
+    @apply bg-green-700/50 text-green-300 backdrop-blur-sm;
+  }
+  .frosted-status-connecting {
+    @apply bg-yellow-900/80 text-yellow-300 backdrop-blur-sm;
+  }
+  .frosted-status-auth-failed {
+    @apply bg-orange-900/80 text-orange-300 backdrop-blur-sm;
+  }
+  .frosted-status-disconnected {
+    @apply bg-red-900/80 text-red-300 backdrop-blur-sm;
+  }
+  .frosted-button {
+    @apply bg-gray-800/60 backdrop-blur-md border border-gray-600/60 hover:bg-gray-700/70;
+  }
 }
 
 @tailwind utilities;

@@ -867,15 +867,15 @@ defineExpose({ flowNodes, onNodeDragStop });
 </script>
 
 <template>
-  <div class="h-screen flex flex-col bg-gray-950 text-white">
+  <div class="h-screen relative bg-gray-950 text-white">
     <!-- Header (Desktop) -->
-    <header class="shrink-0 bg-gray-900 border-b border-gray-700 h-14 hidden md:flex items-center px-4 relative" :class="Z_INDEX.UI_OVERLAY">
+    <header class="absolute top-0 left-0 right-0 frosted-background h-14 hidden md:flex items-center px-4" :class="Z_INDEX.UI_OVERLAY">
       <div class="flex items-center gap-4">
         <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block ml-2 cursor-pointer" alt="Site Logo" @click="logout" />
         <RoomSettings />
       </div>
       <div class="absolute left-1/2 -translate-x-1/2">
-        <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none" :title="roomTitle" data-testid="room-title">
+        <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none px-4 py-1 rounded-full frosted-pill" :title="roomTitle" data-testid="room-title">
           {{ roomTitle }}
         </h1>
       </div>
@@ -890,7 +890,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     />
 
     <!-- WS status bar (always visible) -->
-    <div class="shrink-0 px-3 py-1 text-xs flex items-center justify-center" :class="store.wsStatus === 'connected' ? 'bg-green-900 text-green-300' : store.wsStatus === 'connecting' ? 'bg-yellow-900 text-yellow-300' : store.wsStatus === 'auth_failed' ? 'bg-orange-900 text-orange-300' : 'bg-red-900 text-red-300'">
+    <div class="absolute left-0 right-0 md:top-14 top-0 px-3 py-1 text-xs flex items-center justify-center" :class="[Z_INDEX.UI_OVERLAY, store.wsStatus === 'connected' ? 'frosted-status-connected' : store.wsStatus === 'connecting' ? 'frosted-status-connecting' : store.wsStatus === 'auth_failed' ? 'frosted-status-auth-failed' : 'frosted-status-disconnected']">
       <span v-if="store.wsStatus === 'connected'">
         ● Connected – Last update
         <span
@@ -904,28 +904,28 @@ defineExpose({ flowNodes, onNodeDragStop });
     </div>
 
     <!-- Graph -->
-    <div class="flex-1 relative">
+    <div class="absolute inset-0">
       <!-- Desktop header (Desktop) -->
-      <div class="hidden md:flex absolute top-4 left-4 flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
+      <div class="hidden md:flex absolute top-24 left-4 flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
         <button
-          class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg transition-colors"
+          class="w-12 h-12 flex items-center justify-center rounded-full frosted-button text-xl shadow-lg transition-colors"
           title="Fit view"
           @click="fitView({ padding: 0.2, duration: 300 })"
         >🔄</button>
       </div>
       <!-- Mobile header (Mobile/Tablet) -->
-      <div class="md:hidden absolute top-4 left-4 flex flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
+      <div class="md:hidden absolute top-10 left-4 flex flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
         <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2 cursor-pointer" alt="Site Logo" @click="logout" />
         <RoomSettings :tray="true" />
         <button
-          class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg transition-colors"
+          class="w-12 h-12 flex items-center justify-center rounded-full frosted-button text-xl shadow-lg transition-colors"
           title="Fit view"
           @click="fitView({ padding: 0.2, duration: 300 })"
         >🔄</button>
       </div>
-      <div class="md:hidden absolute top-4 left-1/2 -translate-x-1/2 w-full px-16 text-center" :class="Z_INDEX.UI_OVERLAY">
-        <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none" :title="roomTitle" data-testid="room-title-mobile">
-          {{ roomTitle }}
+      <div class="md:hidden absolute top-8 left-1/2 -translate-x-1/2 flex justify-center px-16" :class="Z_INDEX.UI_OVERLAY">
+        <h1 v-if="roomTitle" class="text-lg font-bold text-gray-200 truncate leading-none px-4 py-2 rounded-full frosted-pill" :title="roomTitle" data-testid="room-title-mobile">
+          This is a really long title
         </h1>
       </div>
 
@@ -937,7 +937,7 @@ defineExpose({ flowNodes, onNodeDragStop });
         :fit-view-on-init="true"
         :min-zoom="0.1"
         :connection-mode="ConnectionMode.Loose"
-        class="transition-colors duration-1000"
+        class="transition-colors duration-1000 !absolute inset-0"
         :class="megaToastBackgroundActive ? 'bg-red-950' : 'bg-gray-950'"
         @node-drag-stop="onNodeDragStop"
         @edge-update="onEdgeUpdate"
@@ -964,7 +964,7 @@ defineExpose({ flowNodes, onNodeDragStop });
       </Transition>
 
       <!-- Summary Toolbar (Desktop) -->
-      <div class="absolute top-4 right-4 hidden md:flex pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
+      <div class="absolute top-24 right-4 hidden md:flex pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
         <RoomSummaryToolbar 
           :cores="activeCores"
           :crystals="activeCrystals"
@@ -980,13 +980,13 @@ defineExpose({ flowNodes, onNodeDragStop });
       <!-- Debug tray button -->
       <button
         v-if="isLocal || showDebugOverride"
-        class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 border border-gray-600 hover:bg-gray-700 text-xl shadow-lg"
+        class="w-12 h-12 flex items-center justify-center rounded-full frosted-button text-xl shadow-lg"
         title="Debug tray"
         @click="showDebug = true"
       >🐛</button>
       <!-- Active Cores button (mobile only) -->
       <button
-        class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600 border border-indigo-400 text-xl shadow-lg md:hidden"
+        class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600/70 backdrop-blur-md border border-indigo-400/60 text-xl shadow-lg md:hidden"
         title="Room Summary"
         @click="showMobileSummary = true"
       >

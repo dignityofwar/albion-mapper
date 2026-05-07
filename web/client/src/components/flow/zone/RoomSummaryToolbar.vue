@@ -144,7 +144,7 @@ function handleSelect(zoneId: string) {
 <template>
   <div class="flex flex-col md:flex-row-reverse items-stretch md:items-start gap-3 pointer-events-none w-full md:w-auto">
     <!-- Toolbar -->
-    <div class="flex flex-row md:flex-col gap-2 bg-gray-900/95 border border-gray-700 rounded-xl p-2 shadow-2xl backdrop-blur-md pointer-events-auto justify-center relative transition-all duration-300">
+    <div class="flex flex-row md:flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300">
       <!-- Toggle Button -->
       <button 
         v-if="!alwaysExpanded"
@@ -238,7 +238,7 @@ function handleSelect(zoneId: string) {
       <div 
         v-if="isExpanded && hasItems(activeView)"
         :key="activeView"
-        class="bg-gray-900/95 border border-gray-700 rounded-xl p-3 shadow-2xl backdrop-blur-md pointer-events-auto w-full md:w-64 flex flex-col"
+        class="frosted-background border border-gray-700/50 rounded-xl p-3 shadow-2xl pointer-events-auto w-full md:w-64 flex flex-col"
       >
         <div class="text-xs uppercase text-gray-400 font-bold mb-3 px-1 flex items-center justify-between">
           <span>{{ viewTitles[activeView] }}</span>
