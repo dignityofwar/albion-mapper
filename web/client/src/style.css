@@ -14,6 +14,9 @@
   .frosted-pill {
     @apply bg-gray-800/60 backdrop-blur-md;
   }
+  header .frosted-pill {
+    @apply backdrop-blur-none;
+  }
   .frosted-status-connected {
     @apply bg-green-700/50 text-green-300 backdrop-blur-sm;
   }

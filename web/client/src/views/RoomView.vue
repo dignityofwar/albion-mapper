@@ -14,6 +14,7 @@ import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import TipButton from '../components/TipButton.vue';
 import RoomSummaryToolbar from '../components/flow/zone/RoomSummaryToolbar.vue';
+import ResourceSummaryTray from '../components/flow/zone/ResourceSummaryTray.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
@@ -23,7 +24,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '@/utils/formatters';
 import { deleteConnection, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
-import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, wouldCreateCycle, getDefaultHandles, getHandleFacing } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, type ZoneType, wouldCreateCycle, getDefaultHandles, getHandleFacing } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -520,6 +521,32 @@ const activeChests = computed(() => {
   return result.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
 });
 
+const activeResources = computed(() => {
+  const result = {
+    fibre:   [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
+    leather: [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
+    ore:     [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
+    stone:   [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
+    wood:    [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
+  };
+  flowNodes.value.forEach(node => {
+    const f = node.data.features as NodeFeatures | undefined;
+    if (!f) return;
+    const z = { zoneId: node.id, zoneName: node.data.zoneName, tier: node.data.tier ?? 0, type: node.data.type as ZoneType };
+    if (f.resourceFibre)   result.fibre.push({ ...z, size: f.resourceFibreSize });
+    if (f.resourceLeather) result.leather.push({ ...z, size: f.resourceLeatherSize });
+    if (f.resourceOre)     result.ore.push({ ...z, size: f.resourceOreSize });
+    if (f.resourceStone)   result.stone.push({ ...z, size: f.resourceStoneSize });
+    if (f.resourceWood)    result.wood.push({ ...z, size: f.resourceWoodSize });
+  });
+  result.fibre.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
+  result.leather.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
+  result.ore.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
+  result.stone.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
+  result.wood.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
+  return result;
+});
+
 const hasAnySummaryItems = computed(() => {
   return activeCores.value.length > 0 || 
          activeCrystals.value.length > 0 || 
@@ -905,14 +932,7 @@ defineExpose({ flowNodes, onNodeDragStop });
 
     <!-- Graph -->
     <div class="absolute inset-0">
-      <!-- Desktop header (Desktop) -->
-      <div class="hidden md:flex absolute top-24 left-4 flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
-        <button
-          class="w-12 h-12 flex items-center justify-center rounded-full frosted-button text-xl shadow-lg transition-colors"
-          title="Fit view"
-          @click="fitView({ padding: 0.2, duration: 300 })"
-        >🔄</button>
-      </div>
+      <!-- Desktop header (Desktop) - refresh button is rendered below inside the Resource Tray column -->
       <!-- Mobile header (Mobile/Tablet) -->
       <div class="md:hidden absolute top-10 left-4 flex flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
         <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2 cursor-pointer" alt="Site Logo" @click="logout" />
@@ -973,6 +993,23 @@ defineExpose({ flowNodes, onNodeDragStop });
           @select="goToNode"
         />
       </div>
+
+      <!-- Resource Summary Tray (Desktop) -->
+      <div class="absolute top-24 left-4 hidden md:flex flex-col gap-2 pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
+        <ResourceSummaryTray
+          :fibre="activeResources.fibre"
+          :leather="activeResources.leather"
+          :ore="activeResources.ore"
+          :stone="activeResources.stone"
+          :wood="activeResources.wood"
+          @select="goToNode"
+        />
+        <button
+          class="w-12 h-12 flex items-center justify-center rounded-full frosted-button text-xl shadow-lg transition-colors pointer-events-auto  ml-1"
+          title="Fit view"
+          @click="fitView({ padding: 0.2, duration: 300 })"
+        >🔄</button>
+      </div>
     </div>
 
     <!-- Tray buttons -->
@@ -1001,12 +1038,21 @@ defineExpose({ flowNodes, onNodeDragStop });
             <h2 class="text-base font-bold uppercase text-gray-400">Room Summary</h2>
             <button class="text-gray-400 hover:text-white text-xl leading-none" @click="showMobileSummary = false">&times;</button>
           </div>
-          <div class="flex-1 overflow-y-auto p-4">
+          <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
              <RoomSummaryToolbar 
                 :cores="activeCores"
                 :crystals="activeCrystals"
                 :dungeons="activeDungeons"
                 :chests="activeChests"
+                always-expanded
+                @select="goToNode"
+              />
+              <ResourceSummaryTray
+                :fibre="activeResources.fibre"
+                :leather="activeResources.leather"
+                :ore="activeResources.ore"
+                :stone="activeResources.stone"
+                :wood="activeResources.wood"
                 always-expanded
                 @select="goToNode"
               />
