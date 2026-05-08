@@ -14,7 +14,7 @@ const emit = defineEmits<{
 
 <template>
   <!-- Fixed bottom-right: debug button + mobile summary button + landscape refresh -->
-  <div class="fixed bottom-4 right-4 flex flex-col gap-4" :class="Z_INDEX.UI_OVERLAY">
+  <div class="fixed bottom-10 right-4 flex flex-col gap-4" :class="Z_INDEX.UI_OVERLAY">
     <!-- Desktop-only debug button -->
     <button
       v-if="showDebug"
@@ -37,7 +37,7 @@ const emit = defineEmits<{
       @click="emit('fitView')"
     >🔄</button>
     <button
-      class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600/70 backdrop-blur-md border border-indigo-400/60 text-xl shadow-lg md:hidden"
+      class="summary-btn w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600/70 backdrop-blur-md border border-indigo-400/60 text-xl shadow-lg md:hidden"
       title="Room Summary"
       @click="emit('openMobileSummary')"
     >
@@ -69,6 +69,13 @@ const emit = defineEmits<{
 }
 @media (max-height: 500px) {
   .portrait-refresh {
+    display: none;
+  }
+}
+
+/* Hide room summary button on all mobile (sub-767px) */
+@media (max-width: 767px) {
+  .summary-btn {
     display: none;
   }
 }

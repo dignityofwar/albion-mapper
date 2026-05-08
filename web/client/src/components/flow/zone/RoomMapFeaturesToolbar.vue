@@ -172,18 +172,19 @@ function handleSelect(zoneId: string) {
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row-reverse items-stretch md:items-start gap-3 pointer-events-none w-full md:w-auto">
+  <div :class="alwaysExpanded ? 'flex flex-col items-stretch gap-3 pointer-events-none w-full' : 'flex flex-col md:flex-row-reverse items-stretch md:items-start gap-3 pointer-events-none w-full md:w-auto'">
     <!-- Toolbar -->
-    <div class="flex flex-row md:flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300">
+    <div :class="alwaysExpanded ? 'flex flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300' : 'flex flex-row md:flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300'">
       <div class="flex flex-col gap-2">
           <!-- Cores Button -->
           <button 
             @click="toggleView('cores')"
             :disabled="totalCount.cores === 0"
-            class="flex-1 md:flex-none flex flex-col gap-1 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
             :class="[
+              alwaysExpanded ? 'flex-none' : 'flex-1 md:flex-none',
+              'flex flex-col gap-1 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap',
               activeView === 'cores' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.cores > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
-              userExpanded ? 'px-4 py-2 md:px-4 md:py-2' : 'p-2',
+              userExpanded ? 'px-4 py-2' : 'p-2',
             ]"
             title="Active Cores"
           >
@@ -202,15 +203,16 @@ function handleSelect(zoneId: string) {
             </Transition>
           </button>
 
-          <div class="flex flex-row gap-2 md:flex-col">
+          <div :class="alwaysExpanded ? 'flex flex-col gap-2' : 'flex flex-row gap-2 md:flex-col'">
             <!-- Crystals Button -->
             <button 
               @click="toggleView('crystals')"
               :disabled="totalCount.crystals === 0"
-              class="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
               :class="[
+                alwaysExpanded ? 'flex-none' : 'flex-1 md:flex-none',
+                'flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap',
                 activeView === 'crystals' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.crystals > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
-                userExpanded ? 'px-4 py-2 md:p-2' : 'p-2',
+                userExpanded ? 'px-4 py-2' : 'p-2',
               ]"
               title="Crystals"
             >
@@ -223,10 +225,11 @@ function handleSelect(zoneId: string) {
             <button 
               @click="toggleView('dungeons')"
               :disabled="totalCount.dungeons === 0"
-              class="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
               :class="[
+                alwaysExpanded ? 'flex-none' : 'flex-1 md:flex-none',
+                'flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap',
                 activeView === 'dungeons' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.dungeons > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
-                userExpanded ? 'px-4 py-2 md:p-2' : 'p-2',
+                userExpanded ? 'px-4 py-2' : 'p-2',
               ]"
               title="Dungeons"
             >
@@ -239,10 +242,11 @@ function handleSelect(zoneId: string) {
             <button 
               @click="toggleView('chests')"
               :disabled="totalCount.chests === 0"
-              class="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
               :class="[
+                alwaysExpanded ? 'flex-none' : 'flex-1 md:flex-none',
+                'flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap',
                 activeView === 'chests' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.chests > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
-                userExpanded ? 'px-4 py-2 md:p-2' : 'p-2',
+                userExpanded ? 'px-4 py-2' : 'p-2',
               ]"
               title="Chests"
             >

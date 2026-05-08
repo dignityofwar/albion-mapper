@@ -19,6 +19,7 @@ const props = defineProps<{
   ore: ResourceZone[];
   stone: ResourceZone[];
   wood: ResourceZone[];
+  alwaysExpanded?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -70,17 +71,18 @@ const totalCount = computed(() => ({
 </script>
 
 <template>
-  <div class="flex flex-col md:flex-row items-stretch md:items-start gap-3 pointer-events-none w-full md:w-auto">
+  <div :class="alwaysExpanded ? 'flex flex-col items-stretch gap-3 pointer-events-none w-full' : 'flex flex-col md:flex-row items-stretch md:items-start gap-3 pointer-events-none w-full md:w-auto'">
     <!-- Toolbar -->
-    <div class="flex flex-row md:flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300">
-      <div class="flex flex-row md:flex-col gap-2">
+    <div :class="alwaysExpanded ? 'flex flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300' : 'flex flex-row md:flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300'">
+      <div :class="alwaysExpanded ? 'flex flex-col gap-2' : 'flex flex-row md:flex-col gap-2'">
         <button
           v-for="tab in tabs"
           :key="tab.type"
           @click="toggleTab(tab.type)"
           :disabled="totalCount[tab.type] === 0"
-          class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
           :class="[
+            alwaysExpanded ? 'flex-none' : 'flex-1 md:flex-none',
+            'flex items-center justify-center gap-2 p-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap',
             activeTab === tab.type
               ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60'
               : (totalCount[tab.type] > 0

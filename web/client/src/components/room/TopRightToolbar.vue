@@ -16,7 +16,7 @@ const emit = defineEmits<{
 
 <template>
   <!-- Map Features Summary Toolbar (Desktop only) -->
-  <div class="toolbar-wrap absolute top-20 md:top-8 right-4 pointer-events-none" :class="Z_INDEX.TRAY">
+  <div class="toolbar-wrap absolute top-4 right-4 pointer-events-none" :class="Z_INDEX.TRAY">
     <RoomMapFeaturesToolbar
       :cores="cores"
       :crystals="crystals"
@@ -28,17 +28,13 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
-/* Hidden on portrait mobile, visible on landscape (phone or desktop) */
+/* Hidden on mobile (sub-768px), visible on desktop only */
 .toolbar-wrap {
   display: none;
 }
-@media (max-height: 500px) {
-  .toolbar-wrap {
-    display: flex;
-  }
-}
 @media (min-width: 768px) {
   .toolbar-wrap {
+    @apply top-14;
     display: flex;
   }
 }

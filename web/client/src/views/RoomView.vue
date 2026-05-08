@@ -957,8 +957,8 @@ defineExpose({ flowNodes, onNodeDragStop });
       @update:to-zone-id="handleToZoneChange"
     />
 
-    <!-- WS status bar (always visible) -->
-    <div class="absolute left-0 right-0 top-0 px-3 py-1 text-xs flex items-center justify-center" :class="[Z_INDEX.HEADER, store.wsStatus === 'connected' ? 'frosted-status-connected' : store.wsStatus === 'connecting' ? 'frosted-status-connecting' : store.wsStatus === 'auth_failed' ? 'frosted-status-auth-failed' : 'frosted-status-disconnected']">
+    <!-- WS status bar (always visible, bottom of screen) -->
+    <div class="absolute left-0 right-0 bottom-0 px-3 py-1 text-xs flex items-center justify-center" :class="[Z_INDEX.HEADER, store.wsStatus === 'connected' ? 'frosted-status-connected' : store.wsStatus === 'connecting' ? 'frosted-status-connecting' : store.wsStatus === 'auth_failed' ? 'frosted-status-auth-failed' : 'frosted-status-disconnected']">
       <span v-if="store.wsStatus === 'connected'">
         ● Connected – Last update
         <span
