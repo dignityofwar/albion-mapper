@@ -411,8 +411,8 @@ defineExpose({
                 >7</button>
                 <button
                   type="button"
-                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-yellow-600 border-gray-300 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600', (!isRoadsZone || isHideoutZone) && 'opacity-50 cursor-not-allowed']"
-                  :disabled="!isRoadsZone || isHideoutZone"
+                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-yellow-600 border-gray-300 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600', !isHideoutZone && 'opacity-50 cursor-not-allowed']"
+                  :disabled="!isHideoutZone"
                   @click="slots = 20"
                 >20</button>
               </div>
