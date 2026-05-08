@@ -34,6 +34,14 @@ const angleMap: Record<string, number> = {
   [Position.Left]: (-3 * Math.PI) / 4,
 };
 
+function cubicBezierMidpoint(x0: number, y0: number, cx0: number, cy0: number, cx1: number, cy1: number, x1: number, y1: number): [number, number] {
+  const t = 0.5;
+  const mt = 1 - t;
+  const x = mt * mt * mt * x0 + 3 * mt * mt * t * cx0 + 3 * mt * t * t * cx1 + t * t * t * x1;
+  const y = mt * mt * mt * y0 + 3 * mt * mt * t * cy0 + 3 * mt * t * t * cy1 + t * t * t * y1;
+  return [x, y];
+}
+
 export function getConnectionPath(params: PathParams): [string, number, number, number, number] {
   const { sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, sourceHandleId, targetHandleId, forceStraight } = params;
 
@@ -124,10 +132,23 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
     // When the destination is a center handle, offset the pill towards the source
     // so it doesn't overlap the target node's center.
     const labelT = isCenter(targetHandleId) && !isCenter(sourceHandleId) ? 0.35 : 0.5;
+    const [lx, ly] = cubicBezierMidpoint(
+      sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY
+    );
+    // For offset label (t=0.35), interpolate linearly along the curve at that t
+    const labelPos = labelT === 0.5
+      ? [lx, ly]
+      : (() => {
+          const t2 = labelT, mt2 = 1 - t2;
+          return [
+            mt2*mt2*mt2*sourceX + 3*mt2*mt2*t2*c0x + 3*mt2*t2*t2*c1x + t2*t2*t2*targetX,
+            mt2*mt2*mt2*sourceY + 3*mt2*mt2*t2*c0y + 3*mt2*t2*t2*c1y + t2*t2*t2*targetY,
+          ];
+        })();
     return [
       path,
-      sourceX + (targetX - sourceX) * labelT,
-      sourceY + (targetY - sourceY) * labelT,
+      labelPos[0],
+      labelPos[1],
       0, 0
     ];
   }
@@ -153,11 +174,12 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
     const c1y = targetY + Math.sin(targetAngle) * curvature;
     
     const path = `M${sourceX},${sourceY} C${c0x},${c0y} ${c1x},${c1y} ${targetX},${targetY}`;
-    
+
+    const [mlx, mly] = cubicBezierMidpoint(sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY);
     return [
       path,
-      (sourceX + targetX) / 2,
-      (sourceY + targetY) / 2,
+      mlx,
+      mly,
       0, 0
     ];
   }

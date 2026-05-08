@@ -274,7 +274,7 @@ defineExpose({
       <!-- Countdown label -->
       <div
         data-trigger="true"
-        class="text-xs px-3 py-1 inline-flex flex-col items-center justify-center gap-0.5 rounded-full text-white cursor-pointer shadow-sm"
+        class="text-xs px-3 py-2 inline-flex flex-col items-center justify-center gap-0.5 rounded-full text-white cursor-pointer backdrop-blur-sm"
         :style="{ backgroundColor: style.color + 'b3', border: `1px solid ${style.stroke}` }"
         @click.stop="showPopover = !showPopover"
         @mousedown.stop
@@ -282,8 +282,8 @@ defineExpose({
         <span class="leading-none">{{ isIsolated ? 'Isolated' : (isDirectlyExpired ? 'Expired' : formatCountdown(remainingMs)) }}</span>
         <span
           v-if="props.data?.slots !== undefined && !isRestricted"
-          class="text-[10px] leading-none px-1.5 pt-0.5 pb-1 rounded-full font-bold text-white border"
-          :class="props.data.slots === 20 ? 'bg-yellow-800/50 border-yellow-500' : 'bg-blue-800/60 border-blue-300'"
+          class="text-[10px] leading-none mt-0.5 px-1.5 pt-0.5 pb-1 rounded-full font-bold text-white border"
+          :class="props.data.slots === 20 ? 'bg-yellow-600/50 border-yellow-500' : 'bg-blue-600/60 border-blue-300'"
         >{{ props.data.slots }} slots</span>
       </div>
 
