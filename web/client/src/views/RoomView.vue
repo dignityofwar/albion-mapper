@@ -42,11 +42,11 @@ const toastType = ref<'info' | 'error'>('info');
 const megaToastRegion = ref('');
 const megaToastNodeId = ref('');
 const megaToastVisible = ref(false);
-const megaToastFadingOut = ref(false);
 const megaToastBackgroundActive = ref(false);
+const pingToastBackgroundActive = ref(false);
 let megaToastTimeout: ReturnType<typeof setTimeout> | null = null;
 let megaToastBgTimeout: ReturnType<typeof setTimeout> | null = null;
-let megaToastFadeTimeout: ReturnType<typeof setTimeout> | null = null;
+let pingToastBgTimeout: ReturnType<typeof setTimeout> | null = null;
 
 interface PingToast {
   id: number;
@@ -138,17 +138,14 @@ function showToast(msg: string, type: 'info' | 'error' = 'info') {
 function showMegaToast(region: string, nodeId?: string) {
   megaToastRegion.value = region;
   megaToastNodeId.value = nodeId ?? '';
-  megaToastFadingOut.value = false;
   megaToastVisible.value = true;
   megaToastBackgroundActive.value = true;
 
   if (megaToastTimeout) clearTimeout(megaToastTimeout);
   if (megaToastBgTimeout) clearTimeout(megaToastBgTimeout);
-  if (megaToastFadeTimeout) clearTimeout(megaToastFadeTimeout);
 
   megaToastTimeout = setTimeout(() => {
-    megaToastFadingOut.value = true;
-    megaToastFadeTimeout = setTimeout(() => { megaToastVisible.value = false; megaToastFadingOut.value = false; }, 400);
+    megaToastVisible.value = false;
   }, 8000);
   megaToastBgTimeout = setTimeout(() => (megaToastBackgroundActive.value = false), 2500);
 }
@@ -156,6 +153,10 @@ function showMegaToast(region: string, nodeId?: string) {
 provide('showToast', showToast);
 
 function showPingToast(zoneName: string, nodeId?: string) {
+  pingToastBackgroundActive.value = true;
+  if (pingToastBgTimeout) clearTimeout(pingToastBgTimeout);
+  pingToastBgTimeout = setTimeout(() => (pingToastBackgroundActive.value = false), 1000);
+
   const id = ++pingToastCounter;
   // Add new toast at the top, leave existing ones running
   pingToasts.value.unshift({ id, zoneName, nodeId: nodeId ?? '', fadingOut: false });
@@ -183,7 +184,7 @@ onUnmounted(() => {
   if (toastTimeout) clearTimeout(toastTimeout);
   if (megaToastTimeout) clearTimeout(megaToastTimeout);
   if (megaToastBgTimeout) clearTimeout(megaToastBgTimeout);
-  if (megaToastFadeTimeout) clearTimeout(megaToastFadeTimeout);
+  if (pingToastBgTimeout) clearTimeout(pingToastBgTimeout);
   if (flashTimeout) clearTimeout(flashTimeout);
   pingToasts.value = [];
 });
@@ -1001,7 +1002,7 @@ defineExpose({ flowNodes, onNodeDragStop });
         :min-zoom="0.1"
         :connection-mode="ConnectionMode.Loose"
         class="transition-colors duration-1000 !absolute inset-0"
-        :class="megaToastBackgroundActive ? 'bg-red-950' : 'bg-gray-950'"
+        :class="megaToastBackgroundActive ? 'bg-red-950' : (pingToastBackgroundActive ? 'bg-blue-950' : 'bg-gray-950')"
         @node-drag-stop="onNodeDragStop"
         @edge-update="onEdgeUpdate"
         @connect="handleConnect"
@@ -1023,6 +1024,7 @@ defineExpose({ flowNodes, onNodeDragStop });
             :key="pt.id"
             :visible="true"
             :fading-out="pt.fadingOut"
+            :enable-internal-animation="false"
             :fill-duration="4"
             fill-color="rgba(96, 165, 250, 0.35)"
             bg-class="bg-blue-600/30 backdrop-blur-md"
@@ -1034,15 +1036,18 @@ defineExpose({ flowNodes, onNodeDragStop });
 
       <!-- Mega Toast -->
       <div class="absolute top-20 md:top-24 left-1/2 -translate-x-1/2 pointer-events-none w-full max-w-[95vw] flex justify-center px-4" :class="Z_INDEX.TOAST">
-        <MegaToast
-          :visible="megaToastVisible"
-          :fading-out="megaToastFadingOut"
-          :fill-duration="8"
-          fill-color="rgba(252, 165, 165, 0.3)"
-          bg-class="bg-red-900/40"
-          border-class="border-red-500"
-          @click="megaToastNodeId ? goToNode(megaToastNodeId) : null"
-        >⚔️ Enemies sighted in {{ megaToastRegion }}!</MegaToast>
+        <Transition name="ping-toast">
+          <MegaToast
+            v-if="megaToastVisible"
+            :visible="true"
+            :fading-out="false"
+            :fill-duration="8"
+            fill-color="rgba(252, 165, 165, 0.3)"
+            bg-class="bg-red-900/40"
+            border-class="border-red-500"
+            @click="megaToastNodeId ? goToNode(megaToastNodeId) : null"
+          >⚔️ Enemies sighted in {{ megaToastRegion }}!</MegaToast>
+        </Transition>
       </div>
 
       <!-- Summary Toolbar (Desktop) -->

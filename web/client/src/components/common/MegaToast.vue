@@ -6,6 +6,7 @@ defineProps<{
   fillColor: string;    // e.g. 'rgba(252,165,165,0.3)'
   borderClass: string;  // e.g. 'border-red-500'
   bgClass: string;      // e.g. 'bg-red-900/40'
+  enableInternalAnimation?: boolean;
 }>();
 
 defineEmits<{
@@ -17,13 +18,13 @@ defineEmits<{
   <div
     v-if="visible"
     class="relative overflow-hidden backdrop-blur-md text-white px-6 py-3 rounded-full shadow-2xl border cursor-pointer pointer-events-auto"
-    :class="[bgClass, borderClass, { 'mega-toast-fading': fadingOut }]"
+    :class="[bgClass, borderClass, { 'mega-toast-fading': fadingOut && (enableInternalAnimation ?? true) }]"
     @click="$emit('click')"
   >
     <div
       class="mega-toast-fill"
       :style="{ background: fillColor, animationDuration: `${fillDuration}s` }"
-      :class="{ 'mega-toast-fill-paused': fadingOut }"
+      :class="{ 'mega-toast-fill-paused': fadingOut && (enableInternalAnimation ?? true) }"
     ></div>
     <span class="relative text-lg md:text-2xl font-bold uppercase tracking-wider text-center block">
       <slot />
