@@ -16,13 +16,14 @@ describe('ReportForm - Connection Occupied', () => {
     store.connections = [
       {
         id: 'conn1',
+        roomId: 'room123',
         fromZoneId: 'zoneA',
         fromHandleId: 'nw',
         toZoneId: 'zoneB',
         toHandleId: 'se',
         isExpired: false,
-        secondsRemaining: 1000,
-        createdAt: '2026-05-08T00:00:00Z',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
       }
     ];
   });
@@ -63,13 +64,14 @@ describe('ReportForm - Connection Occupied', () => {
     store.connections = [
       {
         id: 'conn1',
+        roomId: 'room123',
         fromZoneId: 'zoneA',
         fromHandleId: 'center',
         toZoneId: 'zoneB',
         toHandleId: 'center',
         isExpired: false,
-        secondsRemaining: 1000,
-        createdAt: '2026-05-08T00:00:00Z',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
       }
     ];
 
