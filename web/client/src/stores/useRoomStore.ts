@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, nextTick } from 'vue';
 import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle } from 'shared';
 import { API_BASE_URL } from '@/utils/api';
 import { track } from '@vercel/analytics';
@@ -14,6 +14,7 @@ export const useRoomStore = defineStore('room', () => {
   const roomTitle = ref<string>('');
   const wsStatus = ref<WsStatus>('disconnected');
   const lastUpdate = ref<Date | null>(null);
+  const lastPing = ref<{zoneName: string, nodeId?: string} | null>(null);
   const token = ref<string>('');
   const roomId = ref<string>('');
   const isConnecting = ref(false);
@@ -60,6 +61,12 @@ export const useRoomStore = defineStore('room', () => {
   function setCredentials(id: string, jwt: string) {
     roomId.value = id;
     token.value = jwt;
+  }
+
+  function send(msg: any) {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(msg));
+    }
   }
 
   function applyMessage(msg: ServerMessage) {
@@ -125,6 +132,13 @@ export const useRoomStore = defineStore('room', () => {
         if (msg.updateLastUpdated) {
           lastUpdate.value = new Date();
         }
+        break;
+      
+      case 'ping':
+        lastPing.value = null;
+        nextTick(() => {
+          lastPing.value = { zoneName: msg.zoneName, nodeId: msg.nodeId };
+        });
         break;
     }
   }
@@ -297,6 +311,7 @@ export const useRoomStore = defineStore('room', () => {
     nodePositions,
     wsStatus,
     lastUpdate,
+    lastPing,
     token,
     roomId,
     isConnecting,
@@ -313,6 +328,7 @@ export const useRoomStore = defineStore('room', () => {
     isNodeRestricted,
     isEdgeIsolated,
     resetNodePositions,
+    send,
     connect,
     disconnect,
     logout,

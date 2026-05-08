@@ -54,6 +54,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
         }
 
         if (msg.type === 'ping') {
+          broadcast(roomId, { type: 'ping', zoneName: msg.zoneName, nodeId: msg.nodeId });
           return;
         }
 

@@ -1,5 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach } from 'vitest';
+import { nextTick } from 'vue';
 import { useRoomStore } from '../../src/stores/useRoomStore';
 
 describe('useRoomStore', () => {
@@ -47,6 +48,25 @@ describe('useRoomStore', () => {
 
     // Check at 3s (after expiry)
     expect(store.isNodeRestricted('a', now + 3000)).toBe(true);
+  });
+
+  it('sets lastPing when a ping message is received', async () => {
+    const store = useRoomStore();
+    expect(store.lastPing).toBeNull();
+
+    store.applyMessage({ type: 'ping', zoneName: 'Dusklight Fen', nodeId: 'dusklight-fen' });
+    await nextTick();
+
+    expect(store.lastPing).toEqual({ zoneName: 'Dusklight Fen', nodeId: 'dusklight-fen' });
+  });
+
+  it('sets lastPing with only zoneName when nodeId is omitted', async () => {
+    const store = useRoomStore();
+
+    store.applyMessage({ type: 'ping', zoneName: 'Dusklight Fen' });
+    await nextTick();
+
+    expect(store.lastPing).toEqual({ zoneName: 'Dusklight Fen', nodeId: undefined });
   });
 
   it('marks an edge as isolated when parent connection expires', () => {

@@ -4,7 +4,7 @@ import type { NodeProps } from '@vue-flow/core';
 import { getHandlePosition, getBorderBgClass } from '@/utils/zoneStyles';
 import { getHandleFacing } from 'shared';
 import ZoneHeader from './zone/ZoneHeader.vue';
-import { computed, ref, inject, type Ref } from 'vue';
+import { computed, ref, inject, type Ref, watch } from 'vue';
 import { connectionStyle } from '@/utils/connectionStyle';
 import type { NodeFeatures } from 'shared';
 import { useRoomStore } from '@/stores/useRoomStore';
@@ -36,13 +36,18 @@ const isPinged = ref(false);
 const pingKey = ref(0);
 
 function handlePing() {
-  isPinged.value = false;
-  pingKey.value++;
-  requestAnimationFrame(() => {
-    isPinged.value = true;
-  });
-  showPingToast?.(props.data.zoneName || props.id, props.id);
+  store.send({ type: 'ping', zoneName: props.data.zoneName || props.id, nodeId: props.id });
 }
+
+watch(() => store.lastPing, (ping) => {
+  if (ping && ping.nodeId === props.id) {
+    isPinged.value = false;
+    pingKey.value++;
+    requestAnimationFrame(() => {
+      isPinged.value = true;
+    });
+  }
+});
 const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
 const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);

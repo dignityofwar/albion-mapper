@@ -34,6 +34,12 @@ const tutorialStore = useTutorialStore();
 const { connections, homeZoneId, roomTitle, nodePositions, lastUpdate } = storeToRefs(store);
 const router = useRouter();
 
+watch(() => store.lastPing, (ping) => {
+  if (ping) {
+    showPingToast(ping.zoneName, ping.nodeId);
+  }
+});
+
 provide('goToNode', goToNode);
 
 // ── Toast ────────────────────────────────────────────────────────────────────

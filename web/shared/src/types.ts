@@ -294,9 +294,10 @@ export type ServerMessage =
   | { type: 'room_updated'; homeZoneId: string }
   | { type: 'room_reset' }
   | { type: 'node_positions_updated'; nodePositions: NodePosition[]; updateLastUpdated?: boolean }
+  | { type: 'ping'; zoneName: string; nodeId?: string }
   | { type: 'error'; message: string };
 
 export type ClientMessage =
   | { type: 'auth'; token: string }
-  | { type: 'ping' }
+  | { type: 'ping'; zoneName: string; nodeId?: string }
   | { type: 'update_node_positions'; nodePositions: NodePosition[]; updateLastUpdated?: boolean };

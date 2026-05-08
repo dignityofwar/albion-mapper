@@ -375,13 +375,18 @@ const isPinged = ref(false);
 const pingKey = ref(0);
 
 function handlePing() {
-  isPinged.value = false;
-  pingKey.value++;
-  requestAnimationFrame(() => {
-    isPinged.value = true;
-  });
-  showPingToast?.(props.data.zoneName || props.id, props.id);
+  store.send({ type: 'ping', zoneName: props.data.zoneName || props.id, nodeId: props.id });
 }
+
+watch(() => store.lastPing, (ping) => {
+  if (ping && ping.nodeId === props.id) {
+    isPinged.value = false;
+    pingKey.value++;
+    requestAnimationFrame(() => {
+      isPinged.value = true;
+    });
+  }
+});
 
 
 function formatTimer(expiresAtMs: number | undefined | null): string {
