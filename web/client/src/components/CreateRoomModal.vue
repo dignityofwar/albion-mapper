@@ -22,16 +22,10 @@ const createVanityUrl = ref('');
 const vanityUrlStatus = ref<'checking' | 'available' | 'taken' | 'idle'>('idle');
 let vanityDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 let vanityUrlFromTitle = false;
-const showTutorial = ref(!tutorialStore.completed);
 const createFormKey = ref(0);
 const creating = ref(false);
 const createError = ref('');
 
-watch(showTutorial, (val) => {
-  if (!val) {
-    tutorialStore.setCompleted(true);
-  }
-});
 
 async function checkSlugAvailability(s: string) {
   if (!s) { vanityUrlStatus.value = 'idle'; return; }
@@ -127,10 +121,6 @@ async function createRoom() {
     sessionStorage.setItem(`token:${id}`, token);
     sessionStorage.setItem(`shareUrl:${id}`, `${window.location.origin}/rooms/${id}`);
 
-    if (showTutorial.value) {
-      tutorialStore.setCompleted(false);
-      tutorialStore.setStep(0);
-    }
 
     track('create_room');
     resetForm();
@@ -210,10 +200,6 @@ async function createRoom() {
         <div>
           <label class="block text-sm text-gray-400 mb-1">Home Zone</label>
           <ZoneCombobox :key="createFormKey" v-model="createHomeZoneId" placeholder="Search home zone…" only-roads-hideout />
-        </div>
-        <div class="flex items-center gap-2">
-          <input type="checkbox" v-model="showTutorial" id="showTutorial" />
-          <label for="showTutorial" class="text-sm text-gray-300">Show Tutorial</label>
         </div>
         <p v-if="createError" class="text-red-400 text-sm">{{ createError }}</p>
         <button

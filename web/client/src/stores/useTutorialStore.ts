@@ -2,9 +2,9 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useTutorialStore = defineStore('tutorial', () => {
-  const completed = ref(localStorage.getItem('CompletedTutorial') === 'true');
-  const step = ref(parseInt(localStorage.getItem('TutorialStep') || '0', 10));
-  const lastAddedNodeId = ref(localStorage.getItem('LastAddedNodeId') || '');
+  const completed = ref(true);
+  const step = ref(0);
+  const lastAddedNodeId = ref('');
 
   function setCompleted(val: boolean) {
     completed.value = val;
