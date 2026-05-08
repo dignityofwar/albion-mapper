@@ -107,12 +107,15 @@ const containerStyle = computed(() => {
   const style: any = {
     width: targetWidth,
     '--target-width': targetWidth,
+    '--border-color': '#ef4444',
   };
 
   if (isActuallyActive.value || props.isOpen) {
     style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
     style.boxShadow = 'inset 0 0 0 1px #ef4444, 0 4px 10px -2px rgba(239, 68, 68, 0.5)';
     style['--hover-bg'] = 'rgba(239, 68, 68, 0.35)';
+  } else {
+    style['--hover-bg'] = '#4b5563';
   }
 
   return style;
@@ -222,8 +225,8 @@ const timerLabel = computed(() => {
 }
 
 .reds-container:hover {
-  background-color: rgb(153, 27, 27) !important; /* Darker red */
-  box-shadow: inset 0 0 0 1px rgb(239, 68, 68); /* Red border */
+  background-color: var(--hover-bg) !important;
+  box-shadow: inset 0 0 0 1px var(--border-color) !important;
 }
 
 .fade-slide-enter-active,
