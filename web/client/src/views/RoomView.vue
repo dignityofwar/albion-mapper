@@ -945,7 +945,7 @@ defineExpose({ flowNodes, onNodeDragStop });
 </script>
 
 <template>
-  <div class="h-screen relative bg-gray-950 text-white">
+  <div class="h-dvh relative bg-gray-950 text-white">
     <TitleSegment :room-title="roomTitle" :class="Z_INDEX.UI_OVERLAY" @logout="logout" @fit-view="fitView({ padding: 0.2, duration: 300 })" />
     <TopToolbar :nodes="flowNodes" :show-debug="isLocal || showDebugOverride" @select="goToNode" @fit-view="fitView({ padding: 0.2, duration: 300 })" @open-debug="showDebug = true" />
 

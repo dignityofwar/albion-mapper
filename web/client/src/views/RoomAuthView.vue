@@ -48,7 +48,7 @@ async function authenticate() {
 </script>
 
 <template>
-  <div class="h-screen flex items-center justify-center bg-gray-950 text-white p-6">
+  <div class="h-dvh flex items-center justify-center bg-gray-950 text-white p-6">
     <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 w-full max-w-sm">
       <h2 class="text-xl font-semibold mb-4">Enter Room Password</h2>
       <p class="text-gray-400 text-sm mb-4">Room: <code class="text-indigo-300">{{ id }}</code></p>
