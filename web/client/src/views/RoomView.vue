@@ -90,6 +90,8 @@ watch(
 onMounted(() => {
   initializeRoom();
   window.addEventListener('keydown', handleKeyDown);
+  // Nudge mobile browsers to retract their URL bar
+  window.scrollTo(0, 1);
 });
 
 watch(() => props.id, () => {
