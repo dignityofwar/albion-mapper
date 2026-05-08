@@ -988,7 +988,7 @@ defineExpose({ flowNodes, onNodeDragStop });
       </div>
       <div class="md:hidden absolute top-8 left-1/2 -translate-x-1/2 flex justify-center px-16" :class="Z_INDEX.UI_OVERLAY">
         <h1 v-if="roomTitle" class="text-lg font-bold text-gray-200 truncate leading-none px-4 py-2 rounded-full frosted-pill" :title="roomTitle" data-testid="room-title-mobile">
-          This is a really long title
+          {{ roomTitle }}
         </h1>
       </div>
 
