@@ -34,12 +34,36 @@ const angleMap: Record<string, number> = {
   [Position.Left]: (-3 * Math.PI) / 4,
 };
 
-function cubicBezierMidpoint(x0: number, y0: number, cx0: number, cy0: number, cx1: number, cy1: number, x1: number, y1: number): [number, number] {
-  const t = 0.5;
+/** Evaluate a cubic bezier at parameter t */
+function cubicBezierAt(x0: number, y0: number, cx0: number, cy0: number, cx1: number, cy1: number, x1: number, y1: number, t: number): [number, number] {
   const mt = 1 - t;
-  const x = mt * mt * mt * x0 + 3 * mt * mt * t * cx0 + 3 * mt * t * t * cx1 + t * t * t * x1;
-  const y = mt * mt * mt * y0 + 3 * mt * mt * t * cy0 + 3 * mt * t * t * cy1 + t * t * t * y1;
-  return [x, y];
+  return [
+    mt*mt*mt*x0 + 3*mt*mt*t*cx0 + 3*mt*t*t*cx1 + t*t*t*x1,
+    mt*mt*mt*y0 + 3*mt*mt*t*cy0 + 3*mt*t*t*cy1 + t*t*t*y1,
+  ];
+}
+
+/**
+ * Find the t value on a cubic bezier that is approximately `targetDist` pixels
+ * from the start (t=0). Uses a simple linear search with small steps.
+ */
+function tAtArcLength(
+  x0: number, y0: number, cx0: number, cy0: number,
+  cx1: number, cy1: number, x1: number, y1: number,
+  targetDist: number
+): number {
+  const steps = 100;
+  let accumulated = 0;
+  let prevX = x0, prevY = y0;
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    const [cx, cy] = cubicBezierAt(x0, y0, cx0, cy0, cx1, cy1, x1, y1, t);
+    const segLen = Math.sqrt((cx - prevX) ** 2 + (cy - prevY) ** 2);
+    accumulated += segLen;
+    if (accumulated >= targetDist) return t;
+    prevX = cx; prevY = cy;
+  }
+  return 1;
 }
 
 export function getConnectionPath(params: PathParams): [string, number, number, number, number] {
@@ -95,7 +119,7 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
     const dx = targetX - sourceX;
     const dy = targetY - sourceY;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    const curvature = Math.min(distance * 0.25, 50);
+    const curvature = 50;
 
     const sourceAngleForCenter = angleMap[sourceFacing];
 
@@ -129,22 +153,11 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
 
     const path = `M${sourceX},${sourceY} C${c0x},${c0y} ${c1x},${c1y} ${targetX},${targetY}`;
 
-    // When the destination is a center handle, offset the pill towards the source
-    // so it doesn't overlap the target node's center.
-    const labelT = isCenter(targetHandleId) && !isCenter(sourceHandleId) ? 0.35 : 0.5;
-    const [lx, ly] = cubicBezierMidpoint(
-      sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY
-    );
-    // For offset label (t=0.35), interpolate linearly along the curve at that t
-    const labelPos = labelT === 0.5
-      ? [lx, ly]
-      : (() => {
-          const t2 = labelT, mt2 = 1 - t2;
-          return [
-            mt2*mt2*mt2*sourceX + 3*mt2*mt2*t2*c0x + 3*mt2*t2*t2*c1x + t2*t2*t2*targetX,
-            mt2*mt2*mt2*sourceY + 3*mt2*mt2*t2*c0y + 3*mt2*t2*t2*c1y + t2*t2*t2*targetY,
-          ];
-        })();
+    // Place the pill at a fixed 60px offset from the source; if source is center or line is short, use midpoint.
+    const labelPos = (isCenter(sourceHandleId) || distance < 120)
+      ? cubicBezierAt(sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY, 0.5)
+      : cubicBezierAt(sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY,
+          tAtArcLength(sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY, 60));
     return [
       path,
       labelPos[0],
@@ -161,9 +174,8 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
     const dx = targetX - sourceX;
     const dy = targetY - sourceY;
 
-    // Curvature scales slightly with distance, but capped
     const distance = Math.sqrt(dx * dx + dy * dy);
-    const curvature = Math.min(distance * 0.25, 50);
+    const curvature = 50;
     
     const c0x = sourceX + Math.cos(sourceAngle) * curvature;
     const c0y = sourceY + Math.sin(sourceAngle) * curvature;
@@ -175,19 +187,32 @@ export function getConnectionPath(params: PathParams): [string, number, number, 
     
     const path = `M${sourceX},${sourceY} C${c0x},${c0y} ${c1x},${c1y} ${targetX},${targetY}`;
 
-    const [mlx, mly] = cubicBezierMidpoint(sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY);
+    // Place the pill at a fixed 40px offset from the source; if line is short, use midpoint.
+    const [slx, sly] = distance < 120
+      ? cubicBezierAt(sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY, 0.5)
+      : cubicBezierAt(sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY,
+          tAtArcLength(sourceX, sourceY, c0x, c0y, c1x, c1y, targetX, targetY, 60));
     return [
       path,
-      mlx,
-      mly,
+      slx,
+      sly,
       0, 0
     ];
   }
 
   // Fallback to default Bezier for center handle or other positions
-  return getBezierPath({
+  const fallbackDistance = Math.sqrt((targetX - sourceX) ** 2 + (targetY - sourceY) ** 2);
+  const [fallbackPath] = getBezierPath({
     ...params,
     sourcePosition: params.sourcePosition as Position,
     targetPosition: params.targetPosition as Position,
   });
+  // Place pill at a fixed 60px offset from source along the straight line; if source is center or line is short, use midpoint
+  const flt = (isCenter(sourceHandleId) || fallbackDistance < 120) ? 0.5 : Math.min(60 / fallbackDistance, 0.5);
+  return [
+    fallbackPath,
+    sourceX + (params.targetX - sourceX) * flt,
+    sourceY + (params.targetY - sourceY) * flt,
+    0, 0,
+  ];
 }
