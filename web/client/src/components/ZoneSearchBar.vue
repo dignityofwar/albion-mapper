@@ -89,7 +89,7 @@ function onKeydown(e: KeyboardEvent) {
         v-model="query"
         type="text"
         placeholder="Search active zones…"
-        class="flex-1 bg-transparent outline-none text-sm leading-none min-w-0 placeholder-gray-500"
+        class="search-input flex-1 bg-transparent outline-none text-sm leading-none min-w-0 placeholder-gray-500"
         @focus="onFocus"
         @blur="onBlur"
         @keydown="onKeydown"
@@ -127,3 +127,10 @@ function onKeydown(e: KeyboardEvent) {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Prevent iOS Safari from zooming in on input focus (requires min 16px font size) */
+.search-input {
+  font-size: 16px;
+}
+</style>
