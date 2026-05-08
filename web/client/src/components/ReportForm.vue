@@ -107,6 +107,17 @@ const connectedToFromZone = computed(() => {
     .map((c) => (c.fromZoneId === fromZoneId.value ? c.toZoneId : c.fromZoneId));
 });
 
+function isPortalOccupied(zoneId: string, handleId: string | null) {
+  const hId = handleId || 'center';
+  if (hId === 'center') return false;
+  return store.connections.some(c => 
+    !c.isExpired && (
+      (c.fromZoneId === zoneId && (c.fromHandleId || 'center') === hId) ||
+      (c.toZoneId === zoneId && (c.toHandleId || 'center') === hId)
+    )
+  );
+}
+
 const canSubmit = computed(
   () => fromZoneId.value && toZoneId.value && secondsRemaining.value !== null && !submitting.value,
 );
@@ -147,6 +158,11 @@ function getFallbackPosition(sourceZoneId: string, handleId: string | null): { x
 
 async function submitAndAddMore() {
   if (!canSubmit.value) return;
+
+  if (isPortalOccupied(fromZoneId.value, fromHandleId.value) || isPortalOccupied(toZoneId.value, toHandleId.value)) {
+    emit('error', 'It is not possible to connect already connected portals.');
+    return;
+  }
 
   submitting.value = true;
 
