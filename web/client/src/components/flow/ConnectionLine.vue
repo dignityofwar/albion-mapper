@@ -2,23 +2,31 @@
 import { computed } from 'vue';
 import type { ConnectionLineProps } from '@vue-flow/core';
 import { getConnectionPath } from '../../utils/connectionPath.js';
+import { getTrueHandleCenter, getHandleFacingFromId, isCenter } from '../../utils/handleCenter.js';
 
 const props = defineProps<ConnectionLineProps & { isOccupied?: boolean }>();
 
 const path = computed(() => {
-  const targetHandleId = props.targetHandle?.id || 'center';
-  const isStraight = props.sourceHandle?.id === 'center' || targetHandleId === 'center';
+  const srcHandleId = props.sourceHandle?.id;
+  const srcCenter = getTrueHandleCenter(props.sourceNode, srcHandleId);
+
+  const sourceX = srcCenter?.x ?? props.sourceX;
+  const sourceY = srcCenter?.y ?? props.sourceY;
+
+  const srcFacing = srcHandleId && !isCenter(srcHandleId)
+    ? (getHandleFacingFromId(srcHandleId, props.sourceNode) ?? props.sourcePosition)
+    : props.sourcePosition;
 
   const [d] = getConnectionPath({
-    sourceX: props.sourceX,
-    sourceY: props.sourceY,
+    sourceX,
+    sourceY,
     targetX: props.targetX,
     targetY: props.targetY,
-    sourcePosition: props.sourcePosition,
+    sourcePosition: srcFacing as any,
     targetPosition: props.targetPosition,
-    sourceHandleId: props.sourceHandle?.id,
-    targetHandleId: targetHandleId,
-    forceStraight: isStraight,
+    sourceHandleId: srcHandleId,
+    targetHandleId: 'center',
+    forceStraight: false,
   });
   return d;
 });
