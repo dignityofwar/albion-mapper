@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import ActiveCoreSummary from './ActiveCoreSummary.vue';
 
@@ -31,10 +31,19 @@ const emit = defineEmits<{
 }>();
 
 type ViewType = 'cores' | 'crystals' | 'dungeons' | 'chests';
+const STORAGE_KEY = 'mapFeaturesTray_closed';
+
 const userClosedCores = ref(false);
 const activeView = ref<ViewType | null>(null);
 const userExpanded = ref(true);
 const contentVisible = ref(true);
+
+onMounted(() => {
+  if (localStorage.getItem(STORAGE_KEY) === 'true') {
+    userExpanded.value = false;
+    contentVisible.value = false;
+  }
+});
 const isExpanded = computed(() => props.alwaysExpanded || userExpanded.value);
 
 watch(() => props.alwaysExpanded, (newVal) => {
@@ -53,11 +62,13 @@ async function toggleExpanded() {
     activeView.value = null;
     await new Promise(r => setTimeout(r, 200));
     userExpanded.value = false;
+    localStorage.setItem(STORAGE_KEY, 'true');
   } else {
     // Opening: show buttons, then fade in content
     userExpanded.value = true;
     await new Promise(r => setTimeout(r, 50));
     contentVisible.value = true;
+    localStorage.removeItem(STORAGE_KEY);
   }
 }
 

@@ -6,7 +6,6 @@ import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { Z_INDEX } from '@/constants/Layers';
 import ReportForm from '../components/ReportForm.vue';
-import RoomSettings from '../components/RoomSettings.vue';
 import DebugTray from '../components/DebugTray.vue';
 import ZoneNode from '../components/flow/ZoneNode.vue';
 import NonRoadsNode from '../components/flow/NonRoadsNode.vue';
@@ -15,9 +14,13 @@ import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import TipButton from '../components/TipButton.vue';
 import RoomMapFeaturesToolbar from '../components/flow/zone/RoomMapFeaturesToolbar.vue';
 import RoomResourcesToolbar from '../components/flow/zone/RoomResourcesToolbar.vue';
-import ZoneSearchBar from '../components/ZoneSearchBar.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import MegaToast from '../components/common/MegaToast.vue';
+import TitleSegment from '../components/room/TitleSegment.vue';
+import TopToolbar from '../components/room/TopToolbar.vue';
+import TopLeftToolbar from '../components/room/TopLeftToolbar.vue';
+import TopRightToolbar from '../components/room/TopRightToolbar.vue';
+import BottomRightPins from '../components/room/BottomRightPins.vue';
 import { VueFlow, useVueFlow, ConnectionMode, type Node, type Edge, type OnConnectStartParams } from '@vue-flow/core';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
@@ -941,22 +944,8 @@ defineExpose({ flowNodes, onNodeDragStop });
 
 <template>
   <div class="h-screen relative bg-gray-950 text-white">
-    <!-- Header (Desktop) -->
-    <header class="absolute top-0 left-0 right-0 frosted-background h-14 hidden md:flex items-center px-4" :class="Z_INDEX.UI_OVERLAY">
-      <div class="flex items-center gap-4">
-        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block ml-2 cursor-pointer" alt="Site Logo" @click="logout" />
-        <RoomSettings />
-      </div>
-      <div class="absolute left-1/2 -translate-x-1/2">
-        <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none px-4 py-1 rounded-full frosted-pill" :title="roomTitle" data-testid="room-title">
-          {{ roomTitle }}
-        </h1>
-      </div>
-    </header>
-
-    <div class="absolute top-20 md:top-24 left-1/2 -translate-x-1/2 z-[50]">
-      <ZoneSearchBar :nodes="flowNodes" @select="goToNode" />
-    </div>
+    <TitleSegment :room-title="roomTitle" :class="Z_INDEX.UI_OVERLAY" @logout="logout" @fit-view="fitView({ padding: 0.2, duration: 300 })" />
+    <TopToolbar :nodes="flowNodes" :show-debug="isLocal || showDebugOverride" @select="goToNode" @fit-view="fitView({ padding: 0.2, duration: 300 })" @open-debug="showDebug = true" />
 
     <ReportForm
       ref="reportForm"
@@ -967,7 +956,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     />
 
     <!-- WS status bar (always visible) -->
-    <div class="absolute left-0 right-0 md:top-14 top-0 px-3 py-1 text-xs flex items-center justify-center" :class="[Z_INDEX.HEADER, store.wsStatus === 'connected' ? 'frosted-status-connected' : store.wsStatus === 'connecting' ? 'frosted-status-connecting' : store.wsStatus === 'auth_failed' ? 'frosted-status-auth-failed' : 'frosted-status-disconnected']">
+    <div class="absolute left-0 right-0 top-0 px-3 py-1 text-xs flex items-center justify-center" :class="[Z_INDEX.HEADER, store.wsStatus === 'connected' ? 'frosted-status-connected' : store.wsStatus === 'connecting' ? 'frosted-status-connecting' : store.wsStatus === 'auth_failed' ? 'frosted-status-auth-failed' : 'frosted-status-disconnected']">
       <span v-if="store.wsStatus === 'connected'">
         ● Connected – Last update
         <span
@@ -982,22 +971,6 @@ defineExpose({ flowNodes, onNodeDragStop });
 
     <!-- Graph -->
     <div class="absolute inset-0">
-      <!-- Desktop header (Desktop) - refresh button is rendered below inside the Resource Tray column -->
-      <!-- Mobile header (Mobile/Tablet) -->
-      <div class="md:hidden absolute top-10 left-4 flex flex-col gap-2" :class="Z_INDEX.UI_OVERLAY">
-        <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2 cursor-pointer" alt="Site Logo" @click="logout" />
-        <RoomSettings :tray="true" />
-        <button
-          class="w-12 h-12 flex items-center justify-center rounded-full frosted-button text-xl shadow-lg transition-colors"
-          title="Fit view"
-          @click="fitView({ padding: 0.2, duration: 300 })"
-        >🔄</button>
-      </div>
-      <div class="md:hidden absolute top-8 left-1/2 -translate-x-1/2 flex justify-center px-16" :class="Z_INDEX.UI_OVERLAY">
-        <h1 v-if="roomTitle" class="text-lg font-bold text-gray-200 truncate leading-none px-4 py-2 rounded-full frosted-pill" :title="roomTitle" data-testid="room-title-mobile">
-          {{ roomTitle }}
-        </h1>
-      </div>
 
       <VueFlow
         v-model:nodes="flowNodes"
@@ -1056,53 +1029,29 @@ defineExpose({ flowNodes, onNodeDragStop });
         </Transition>
       </div>
 
-      <!-- Summary Toolbar (Desktop) -->
-      <div class="absolute top-24 right-4 hidden md:flex pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
-        <RoomMapFeaturesToolbar 
-          :cores="activeCores"
-          :crystals="activeCrystals"
-          :dungeons="activeDungeons"
-          :chests="activeChests"
-          @select="goToNode"
-        />
-      </div>
-
-      <!-- Resource Summary Tray (Desktop) -->
-      <div class="absolute top-24 left-4 hidden md:flex flex-col gap-2 pointer-events-none" :class="Z_INDEX.TOOLTIP_BASE">
-        <RoomResourcesToolbar
-          :fibre="activeResources.fibre"
-          :leather="activeResources.leather"
-          :ore="activeResources.ore"
-          :stone="activeResources.stone"
-          :wood="activeResources.wood"
-          @select="goToNode"
-        />
-        <button
-          class="w-12 h-12 flex items-center justify-center rounded-full frosted-button text-xl shadow-lg transition-colors pointer-events-auto  ml-1"
-          title="Fit view"
-          @click="fitView({ padding: 0.2, duration: 300 })"
-        >🔄</button>
-      </div>
+      <TopLeftToolbar
+        :fibre="activeResources.fibre"
+        :leather="activeResources.leather"
+        :ore="activeResources.ore"
+        :stone="activeResources.stone"
+        :wood="activeResources.wood"
+        @select="goToNode"
+      />
+      <TopRightToolbar
+        :cores="activeCores"
+        :crystals="activeCrystals"
+        :dungeons="activeDungeons"
+        :chests="activeChests"
+        @select="goToNode"
+      />
     </div>
 
-    <!-- Tray buttons -->
-    <div class="fixed bottom-4 right-4 flex flex-col gap-4" :class="Z_INDEX.UI_OVERLAY">
-      <!-- Debug tray button -->
-      <button
-        v-if="isLocal || showDebugOverride"
-        class="w-12 h-12 flex items-center justify-center rounded-full frosted-button text-xl shadow-lg"
-        title="Debug tray"
-        @click="showDebug = true"
-      >🐛</button>
-      <!-- Active Cores button (mobile only) -->
-      <button
-        class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600/70 backdrop-blur-md border border-indigo-400/60 text-xl shadow-lg md:hidden"
-        title="Room Summary"
-        @click="showMobileSummary = true"
-      >
-        <img src="/images/core-green.png" class="w-8 h-8 p-[2px]" alt="Green Core" />
-      </button>
-    </div>
+    <BottomRightPins
+      :show-debug="isLocal || showDebugOverride"
+      @open-debug="showDebug = true"
+      @open-mobile-summary="showMobileSummary = true"
+      @fit-view="fitView({ padding: 0.2, duration: 300 })"
+    />
 
     <Transition name="toast">
       <div v-if="showMobileSummary" class="fixed inset-0 flex items-center justify-center p-4 bg-black/60 md:hidden" @click.self="showMobileSummary = false" :class="Z_INDEX.MOBILE_SUMMARY">

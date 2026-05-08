@@ -19,7 +19,6 @@ const props = defineProps<{
   ore: ResourceZone[];
   stone: ResourceZone[];
   wood: ResourceZone[];
-  alwaysExpanded?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -27,8 +26,6 @@ const emit = defineEmits<{
 }>();
 
 const activeTab = ref<ResourceType | null>(null);
-const userExpanded = ref(true);
-const contentVisible = ref(true);
 
 // Flash state per button (counter increments to force animation restart)
 const flash = ref<Record<string, number>>({
@@ -44,24 +41,6 @@ watch(() => props.leather.length, (n, o) => { if (o !== undefined && n !== o) tr
 watch(() => props.ore.length,     (n, o) => { if (o !== undefined && n !== o) triggerFlash('ore'); });
 watch(() => props.stone.length,   (n, o) => { if (o !== undefined && n !== o) triggerFlash('stone'); });
 watch(() => props.wood.length,    (n, o) => { if (o !== undefined && n !== o) triggerFlash('wood'); });
-const isExpanded = computed(() => props.alwaysExpanded || userExpanded.value);
-
-async function toggleExpanded() {
-  if (props.alwaysExpanded) return;
-  if (userExpanded.value) {
-    // Closing: fade out content, then collapse to icons only
-    contentVisible.value = false;
-    activeTab.value = null;
-    await new Promise(r => setTimeout(r, 200));
-    userExpanded.value = false;
-  } else {
-    // Opening: show buttons, then fade in content
-    userExpanded.value = true;
-    await new Promise(r => setTimeout(r, 50));
-    contentVisible.value = true;
-  }
-}
-
 function toggleTab(tab: ResourceType) {
   activeTab.value = activeTab.value === tab ? null : tab;
 }
@@ -95,35 +74,34 @@ const totalCount = computed(() => ({
     <!-- Toolbar -->
     <div class="flex flex-row md:flex-col gap-2 frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl pointer-events-auto justify-center relative transition-all duration-300">
       <div class="flex flex-row md:flex-col gap-2">
-          <button
-            v-for="tab in tabs"
-            :key="tab.type"
-            @click="toggleTab(tab.type)"
-            :disabled="totalCount[tab.type] === 0"
-            class="flex-1 md:flex-none flex items-center justify-center gap-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
-            :class="[
-              activeTab === tab.type
-                ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60'
-                : (totalCount[tab.type] > 0
-                    ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500'
-                    : 'bg-gray-800/50 border-transparent'),
-              userExpanded ? 'px-4 py-2 md:p-2' : 'p-2',
-            ]"
-            :title="tab.label"
-          >
-            <span v-if="flash[tab.type] > 0" :key="flash[tab.type]" class="btn-flash-overlay" />
-            <img :src="tab.icon" class="w-6 h-6 object-contain" :alt="tab.label" />
-            <span class="text-lg font-bold text-gray-300 min-w-[12px] text-center">
-              {{ totalCount[tab.type] }}
-            </span>
-          </button>
-        </div>
+        <button
+          v-for="tab in tabs"
+          :key="tab.type"
+          @click="toggleTab(tab.type)"
+          :disabled="totalCount[tab.type] === 0"
+          class="flex-1 md:flex-none flex items-center justify-center gap-2 p-2 rounded-lg transition-all duration-200 border disabled:opacity-40 disabled:cursor-not-allowed overflow-hidden btn-flash-wrap"
+          :class="[
+            activeTab === tab.type
+              ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60'
+              : (totalCount[tab.type] > 0
+                  ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500'
+                  : 'bg-gray-800/50 border-transparent'),
+          ]"
+          :title="tab.label"
+        >
+          <span v-if="flash[tab.type] > 0" :key="flash[tab.type]" class="btn-flash-overlay" />
+          <img :src="tab.icon" class="w-6 h-6 object-contain" :alt="tab.label" />
+          <span class="text-lg font-bold text-gray-300 min-w-[12px] text-center">
+            {{ totalCount[tab.type] }}
+          </span>
+        </button>
+      </div>
     </div>
 
     <!-- Detail Panel -->
     <Transition name="fade" mode="out-in">
       <div 
-        v-if="userExpanded && activeTab !== null && activeZones.length > 0"
+        v-if="activeTab !== null && activeZones.length > 0"
         :key="activeTab"
         class="relative frosted-background border border-gray-700/50 rounded-xl p-3 shadow-2xl pointer-events-auto w-full md:w-64 flex flex-col"
       >

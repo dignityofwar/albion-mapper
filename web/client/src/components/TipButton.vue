@@ -34,7 +34,7 @@ function handleKoFiClick() {
 
 <template>
   <div
-    class="fixed bottom-4 left-4 cursor-pointer"
+    class="tip-button fixed bottom-4 cursor-pointer"
     :class="[Z_INDEX.UI_OVERLAY, { 'jiggle': isJiggling }]"
     @click="handleKoFiClick"
   >
@@ -70,5 +70,18 @@ function handleKoFiClick() {
 .kofi-button:hover, .kofi-button:hover :deep(*) {
   background-color: #126f9c !important;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out !important;
+}
+
+.tip-button {
+  left: 1rem;
+  right: auto;
+}
+
+/* Landscape phone: move tip button to bottom-right */
+@media (max-height: 500px) {
+  .tip-button {
+    left: auto;
+    right: 1rem;
+  }
 }
 </style>

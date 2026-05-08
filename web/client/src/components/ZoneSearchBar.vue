@@ -12,6 +12,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   select: [nodeId: string];
+  searchActive: [active: boolean];
 }>();
 
 const query = ref('');
@@ -50,12 +51,14 @@ const filteredNodes = computed(() => {
 
 function onFocus() {
   isOpen.value = true;
+  emit('searchActive', true);
 }
 
 function onBlur() {
   // Delay to allow click on item
   setTimeout(() => {
     isOpen.value = false;
+    emit('searchActive', false);
   }, 150);
 }
 
@@ -63,6 +66,7 @@ function selectNode(nodeId: string) {
   emit('select', nodeId);
   query.value = '';
   isOpen.value = false;
+  emit('searchActive', false);
   inputRef.value?.blur();
 }
 
@@ -70,6 +74,7 @@ function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') {
     query.value = '';
     isOpen.value = false;
+    emit('searchActive', false);
     inputRef.value?.blur();
   }
 }

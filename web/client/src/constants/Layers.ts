@@ -9,6 +9,8 @@ export const Z_INDEX = {
   CONTENT_HIGH: 'z-[30]',
   TOOLTIP_BASE: 'z-[40]',
   UI_OVERLAY: 'z-[50]',
+  TRAY: 'z-[55]',
+  SEARCH_ACTIVE: 'z-[65]',
   MOBILE_SUMMARY: 'z-[60]',
   HANDLE: 'z-[98]',
   RESTRICTED_NODE: 'z-[100]',
