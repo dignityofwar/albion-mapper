@@ -90,17 +90,6 @@ watch(
 onMounted(() => {
   initializeRoom();
   window.addEventListener('keydown', handleKeyDown);
-  // Trick mobile browsers (e.g. Chrome on Android) into hiding the address bar
-  // by briefly making the document taller than the viewport, scrolling down 1px,
-  // then restoring the original height. A short delay ensures the page has painted.
-  setTimeout(() => {
-    const originalHeight = document.documentElement.style.height;
-    document.documentElement.style.height = `calc(100vh + 2px)`;
-    window.scrollTo({ top: 1, behavior: 'instant' });
-    setTimeout(() => {
-      document.documentElement.style.height = originalHeight;
-    }, 500);
-  }, 300);
 });
 
 watch(() => props.id, () => {
