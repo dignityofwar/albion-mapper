@@ -442,6 +442,12 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           onUpdate: async (id: string, secondsRemaining: number) => {
             await updateConnection(props.id, store.token!, id, { secondsRemaining: Number(secondsRemaining) });
           },
+          onUpdateSlots: (connId: string, slots: 7 | 20) => {
+            const targetNodePos = store.nodePositions.find(n => n.zoneId === conn.toZoneId);
+            if (targetNodePos) {
+              store.updateNodeFeatures(conn.toZoneId, { ...(targetNodePos.features || {}), slots });
+            }
+          },
           hasChildren: connections.value.some(c => c.fromZoneId === conn.toZoneId),
           slots: (targetNode?.data?.features as any)?.slots as (7 | 20 | undefined),
         },

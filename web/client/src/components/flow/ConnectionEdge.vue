@@ -20,6 +20,7 @@ type EdgeData = {
   onDelete?: (id: string) => void;
   onDeleteRecursive?: (id: string) => void;
   onUpdate?: (id: string, secondsRemaining: number) => void;
+  onUpdateSlots?: (id: string, slots: 7 | 20) => void;
   isGhost?: boolean;
   sourceFacing?: string;
   targetFacing?: string;
@@ -291,7 +292,7 @@ defineExpose({
       <div
         v-if="showPopover"
         ref="popoverRef"
-        class="absolute top-9 left-1/2 -translate-x-1/2 w-64 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
+        class="absolute top-[51px] left-1/2 -translate-x-1/2 w-64 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
         @click.stop
         @mousedown.stop
       >
@@ -335,7 +336,23 @@ defineExpose({
             </button>
           </div>
         </div>
-        <div class="flex flex-col gap-2 mt-3">
+        <div class="mb-3">
+          <div class="text-xs text-gray-400 mb-1">Slots</div>
+          <div class="flex gap-2">
+            <button
+              class="flex-1 px-2 py-1.5 rounded text-xs font-medium transition-colors"
+              :class="props.data?.slots === 7 ? 'bg-blue-600 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-200'"
+              @click.stop="data?.onUpdateSlots?.(id, 7)"
+            >7</button>
+            <button
+              class="flex-1 px-2 py-1.5 rounded text-xs font-medium transition-colors"
+              :class="props.data?.slots === 20 ? 'bg-yellow-600 text-white' : 'bg-gray-700 hover:bg-gray-600 text-gray-200'"
+              @click.stop="data?.onUpdateSlots?.(id, 20)"
+            >20</button>
+          </div>
+          <hr class="border-gray-600 mt-3" />
+        </div>
+        <div class="flex flex-col gap-2">
           <template v-if="data?.hasChildren">
             <div class="flex gap-2">
               <button

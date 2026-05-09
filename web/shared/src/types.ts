@@ -204,6 +204,9 @@ export const CreateConnectionBodySchema = z.object({
   fromHandleId: z.string().nullable().optional(),
   toHandleId: z.string().nullable().optional(),
   secondsRemaining: z.number().int().min(1).max(86400),
+  slots: z.union([z.literal(7), z.literal(20)], {
+    errorMap: () => ({ message: 'slots is required and must be 7 or 20' }),
+  }),
   reportedBy: z.string().optional(),
   targetPosition: z.object({ x: z.number(), y: z.number() }).optional(),
 });

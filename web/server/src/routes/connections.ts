@@ -80,7 +80,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: parsed.error.issues[0]?.message ?? 'Invalid body' });
     }
 
-    const { fromZoneId, toZoneId, fromHandleId, toHandleId, secondsRemaining, reportedBy, targetPosition } = parsed.data;
+    const { fromZoneId, toZoneId, fromHandleId, toHandleId, secondsRemaining, slots, reportedBy, targetPosition } = parsed.data;
 
     if (fromZoneId === toZoneId) {
       return reply.status(400).send({ error: 'fromZoneId and toZoneId must be different' });
@@ -105,11 +105,12 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
 
     // If target position is provided, save it
     if (targetPosition) {
+      const initialFeatures = { ...getInitialFeatures(toZoneId), slots };
       await app.db.query(`
         INSERT INTO room_node_positions (room_id, zone_id, x, y, features)
         VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y
-      `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(getInitialFeatures(toZoneId))]);
+        ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features
+      `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(initialFeatures)]);
 
       const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
         'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',

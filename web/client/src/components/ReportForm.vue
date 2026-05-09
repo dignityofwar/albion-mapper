@@ -179,6 +179,7 @@ async function submitAndAddMore() {
       fromZoneId.value,
       toZoneId.value,
       Number(secondsRemaining.value!),
+      slots.value,
       fromHandleId.value || 'center',
       toHandleId.value || 'center',
       reportedBy.value || undefined,
@@ -186,12 +187,6 @@ async function submitAndAddMore() {
     );
 
     emit('success', 'Connection added!');
-
-    // Persist slots on the destination node
-    const toNodePos = store.nodePositions.find(n => n.zoneId === toZoneId.value);
-    if (toNodePos) {
-      store.updateNodeFeatures(toZoneId.value, { ...(toNodePos.features || {}), slots: slots.value });
-    }
 
     if (!tutorialStore.completed && tutorialStore.step === 2) {
       if (toZoneId.value) {

@@ -45,7 +45,7 @@ async function addDemo() {
   ];
 
   for (const conn of demoData) {
-    await addConnection(store.roomId, store.token, conn.from, conn.to, conn.minutes);
+    await addConnection(store.roomId, store.token, conn.from, conn.to, conn.minutes, 7);
   }
 }
 

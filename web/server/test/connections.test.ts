@@ -42,7 +42,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7 },
     });
     expect(res.statusCode).toBe(201);
     const conn = res.json<Connection>();
@@ -61,7 +61,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_A, secondsRemaining: 1800 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_A, secondsRemaining: 1800, slots: 7 },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/different/i);
@@ -74,7 +74,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: UNKNOWN_ZONE, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
+      payload: { fromZoneId: UNKNOWN_ZONE, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7 },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/zone catalogue/i);
@@ -87,7 +87,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: UNKNOWN_ZONE, secondsRemaining: 1800 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: UNKNOWN_ZONE, secondsRemaining: 1800, slots: 7 },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/zone catalogue/i);
@@ -100,7 +100,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 0 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 0, slots: 7 },
     });
     expect(res.statusCode).toBe(400);
   });
@@ -112,7 +112,7 @@ describe('POST /api/rooms/:id/connections', () => {
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
       headers: { authorization: `Bearer ${token}` },
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 86401 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 86401, slots: 7 },
     });
     expect(res.statusCode).toBe(400);
   });
@@ -138,7 +138,7 @@ describe('POST /api/rooms/:id/connections', () => {
       headers: { authorization: `Bearer ${token}` },
       // Try to create: VALID_ZONE_A -> VALID_ZONE_B
       // Cycle: A -> B -> A
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7 },
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/cycle/i);
@@ -148,9 +148,82 @@ describe('POST /api/rooms/:id/connections', () => {
     const res = await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
-      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7 },
     });
     expect(res.statusCode).toBe(401);
+  });
+
+  it('rejects when slots is missing', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800 },
+    });
+    expect(res.statusCode).toBe(400);
+    expect(res.json<{ error: string }>().error).toMatch(/slots/i);
+  });
+
+  it('rejects when slots is an invalid value', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 5 },
+    });
+    expect(res.statusCode).toBe(400);
+    expect(res.json<{ error: string }>().error).toMatch(/slots/i);
+  });
+
+  it('creates a connection with slots=7 and stores it in node features', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_B, x: 100, y: 200, features: { slots: 7 }, custom_handles: null }] }); // SELECT positions
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7, targetPosition: { x: 100, y: 200 } },
+    });
+    expect(res.statusCode).toBe(201);
+
+    // Verify the INSERT node position query included slots in features
+    const insertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_positions')
+    );
+    expect(insertCall).toBeDefined();
+    const featuresArg = JSON.parse(insertCall[1][4]);
+    expect(featuresArg.slots).toBe(7);
+  });
+
+  it('creates a connection with slots=20 and stores it in node features', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_B, x: 100, y: 200, features: { slots: 20 }, custom_handles: null }] }); // SELECT positions
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 20, targetPosition: { x: 100, y: 200 } },
+    });
+    expect(res.statusCode).toBe(201);
+
+    const insertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_positions')
+    );
+    expect(insertCall).toBeDefined();
+    const featuresArg = JSON.parse(insertCall[1][4]);
+    expect(featuresArg.slots).toBe(20);
   });
 
   it('updates a connection', async () => {

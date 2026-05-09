@@ -82,6 +82,7 @@ describe('Auto-pre-population in routes', () => {
         fromZoneId: 'qiient-al-nusom',
         toZoneId: 'qiient-et-qinsum',
         secondsRemaining: 3600,
+        slots: 7,
         targetPosition: { x: 100, y: 100 }
       },
     });
@@ -93,7 +94,7 @@ describe('Auto-pre-population in routes', () => {
         'qiient-et-qinsum',
         100,
         100,
-        JSON.stringify({ resourceWood: true })
+        JSON.stringify({ resourceWood: true, slots: 7 })
       ])
     );
   });
