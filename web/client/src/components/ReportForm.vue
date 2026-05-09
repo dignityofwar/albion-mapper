@@ -174,9 +174,13 @@ async function submitAndAddMore() {
 
   submitting.value = true;
 
-  const resolvedPosition = (targetPosition.value?.x != null && targetPosition.value?.y != null)
-    ? targetPosition.value
-    : getFallbackPosition(fromZoneId.value, fromHandleId.value);
+  // If connecting two existing zones, do NOT send a position — the target node already exists
+  // and sending a position would overwrite it (moving the node).
+  const resolvedPosition = isConnectionMode.value
+    ? undefined
+    : (targetPosition.value?.x != null && targetPosition.value?.y != null)
+      ? targetPosition.value
+      : getFallbackPosition(fromZoneId.value, fromHandleId.value);
 
   console.log('[ReportForm] resolvedPosition for submission:', resolvedPosition);
 

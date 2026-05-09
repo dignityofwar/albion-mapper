@@ -658,7 +658,7 @@ function handleToZoneChange(id: string) {
       tier: zone?.tier ?? 0,
       mapShape: zone?.mapShape,
     },
-  };
+  } as any;
   ghostNode.value = updatedNode;
   flowNodes.value = flowNodes.value.map(n => n.id === updatedNode.id ? updatedNode : n);
 }
