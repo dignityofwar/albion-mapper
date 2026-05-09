@@ -648,14 +648,19 @@ function handleToZoneChange(id: string) {
     reportForm.value?.setTargetPosition({ x: ghostNode.value.position.x, y: ghostNode.value.position.y });
   }
   
-  ghostNode.value.type = newType;
-  ghostNode.value.data = {
-    ...ghostNode.value.data,
-    zoneName: zone?.name ?? (id || 'Pending...'),
-    type: zone?.type ?? (id ? 'other' : 'roadsHideout'),
-    tier: zone?.tier ?? 0,
-    mapShape: zone?.mapShape,
+  const updatedNode = {
+    ...ghostNode.value,
+    type: newType,
+    data: {
+      ...ghostNode.value.data,
+      zoneName: zone?.name ?? (id || 'Pending...'),
+      type: zone?.type ?? (id ? 'other' : 'roadsHideout'),
+      tier: zone?.tier ?? 0,
+      mapShape: zone?.mapShape,
+    },
   };
+  ghostNode.value = updatedNode;
+  flowNodes.value = flowNodes.value.map(n => n.id === updatedNode.id ? updatedNode : n);
 }
 
 function handleSuccess(msg: string) {
