@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { Z_INDEX } from '@/constants/Layers';
 import { useRouter } from 'vue-router';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
@@ -100,7 +101,7 @@ function logout() {
 
 <template>
   <div class="contents">
-    <div ref="popupEl" class="relative shrink-0" style="z-index:200">
+    <div ref="popupEl" :class="['relative shrink-0', open ? Z_INDEX.OVERLAY : '']">
       <!-- Cog button -->
       <button
         ref="cogRef"
@@ -133,9 +134,9 @@ function logout() {
         v-if="open"
         :class="[
           'absolute w-56 bg-gray-900 border border-gray-600 rounded shadow-xl',
-          tray ? 'right-0 bottom-full mb-2' : 'left-0 top-full mt-1'
+          tray ? 'left-0 top-full mt-2' : 'left-0 top-full mt-1',
+          Z_INDEX.OVERLAY
         ]"
-        style="z-index:9999"
         data-testid="settings-popup"
       >
         <!-- Change password -->

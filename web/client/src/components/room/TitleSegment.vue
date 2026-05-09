@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RoomSettings from '../RoomSettings.vue';
+import { Z_INDEX } from '@/constants/Layers';
 
 defineProps<{
   roomTitle?: string;
@@ -13,7 +14,7 @@ const emit = defineEmits<{
 
 <template>
   <!-- Desktop: logo + settings cog + room title, below status bar -->
-  <div class="absolute top-2 left-6 hidden md:flex items-center gap-3 z-[50]">
+  <div :class="['absolute top-2 left-6 hidden md:flex items-center gap-3', Z_INDEX.OVERLAY]">
     <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 inline-block cursor-pointer" alt="Site Logo" @click="emit('logout')" />
     <RoomSettings />
     <h1 v-if="roomTitle" class="text-xl font-bold text-gray-200 truncate leading-none px-4 py-2 rounded-full frosted-pill" :title="roomTitle" data-testid="room-title">
@@ -22,13 +23,13 @@ const emit = defineEmits<{
   </div>
 
   <!-- Mobile: logo + settings (left column) -->
-  <div class="md:hidden absolute top-2 left-4 flex flex-col gap-2 z-[50]">
+  <div :class="['md:hidden absolute top-2 left-4 flex flex-col gap-2', Z_INDEX.OVERLAY]">
     <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2 cursor-pointer" alt="Site Logo" @click="emit('logout')" />
     <RoomSettings :tray="true" />
   </div>
 
   <!-- Mobile: room title (centred on portrait, left-aligned on landscape) -->
-  <div class="md:hidden absolute top-2 z-[50] title-mobile-wrap">
+  <div :class="['md:hidden absolute top-2 title-mobile-wrap', Z_INDEX.OVERLAY]">
     <h1 v-if="roomTitle" class="text-lg font-bold text-gray-200 truncate leading-none px-4 py-2 rounded-full frosted-pill" :title="roomTitle" data-testid="room-title-mobile">
       {{ roomTitle }}
     </h1>
