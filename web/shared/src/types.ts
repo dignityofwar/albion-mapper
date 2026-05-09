@@ -286,7 +286,7 @@ export const ImportRoomBodySchema = z.object({
 
 export type ServerMessage =
   | { type: 'auth_ok' }
-  | { type: 'sync'; connections: Connection[]; homeZoneId: string; title?: string; nodePositions: NodePosition[]; lastUpdatedAt: string }
+  | { type: 'sync'; connections: Connection[]; homeZoneId: string; title?: string; nodePositions: NodePosition[]; lastUpdatedAt: string; watching: number; totalConnected: number }
   | { type: 'connection_added'; connection: Connection }
   | { type: 'connection_updated'; connection: Connection }
   | { type: 'connection_removed'; connectionId: string }
@@ -295,9 +295,12 @@ export type ServerMessage =
   | { type: 'room_reset' }
   | { type: 'node_positions_updated'; nodePositions: NodePosition[]; updateLastUpdated?: boolean }
   | { type: 'ping'; zoneName: string; nodeId?: string }
+  | { type: 'marco' }
+  | { type: 'watching'; roomId: string; count: number; totalConnected: number }
   | { type: 'error'; message: string };
 
 export type ClientMessage =
   | { type: 'auth'; token: string }
   | { type: 'ping'; zoneName: string; nodeId?: string }
+  | { type: 'polo' }
   | { type: 'update_node_positions'; nodePositions: NodePosition[]; updateLastUpdated?: boolean };

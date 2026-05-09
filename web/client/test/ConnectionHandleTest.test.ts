@@ -46,7 +46,8 @@ describe('RoomView Connection Handle', () => {
             { zoneId: 'zone-a', x: 0, y: 0 },
             { zoneId: 'zone-b', x: 100, y: 100 }
         ],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
     
     const wrapper = mount(RoomView, {
@@ -124,7 +125,8 @@ describe('RoomView Connection Handle', () => {
             { zoneId: 'zone-a', x: 0, y: 0 },
             { zoneId: 'zone-b', x: 100, y: 100 }
         ],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
     
     const wrapper = mount(RoomView, {

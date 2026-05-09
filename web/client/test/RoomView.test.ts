@@ -48,7 +48,8 @@ describe('RoomView', () => {
         connections: [], 
         homeZoneId: 'zone-a',
         nodePositions: [],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -123,7 +124,8 @@ describe('RoomView', () => {
             { zoneId: 'zone-a', x: 0, y: 0 },
             { zoneId: 'zone-b', x: 100, y: 100 }
         ],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     await nextTick();
@@ -193,7 +195,8 @@ describe('RoomView', () => {
             { zoneId: 'zone-a', x: 0, y: 0 },
             { zoneId: 'zone-b', x: 100, y: 100, customHandles, features }
         ],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -254,7 +257,8 @@ describe('RoomView', () => {
             { zoneId: 'zone-a', x: 0, y: 0 },
             { zoneId: 'zone-b', x: 10, y: 10 }
         ],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -332,7 +336,8 @@ describe('RoomView', () => {
         connections: [], 
         homeZoneId: 'zone-a',
         nodePositions: [],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     // Wait for the watcher to potentially run
@@ -380,7 +385,8 @@ describe('RoomView', () => {
         connections: [], 
         homeZoneId: 'zone-a',
         nodePositions: [],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
     await new Promise(resolve => setTimeout(resolve, 100));
     expect(vm.lastUpdateFlash).toBe(false);
@@ -440,7 +446,8 @@ describe('RoomView', () => {
         }], 
         homeZoneId: 'zone-a',
         nodePositions: [],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -514,7 +521,8 @@ describe('RoomView', () => {
         }], 
         homeZoneId: 'zone-a',
         nodePositions: [],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -582,7 +590,8 @@ describe('RoomView', () => {
         }], 
         homeZoneId: 'zone-a',
         nodePositions: [],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -641,7 +650,8 @@ describe('RoomView', () => {
         connections: [], 
         homeZoneId: 'zone-a',
         nodePositions: [{ zoneId: 'zone-a', x: 0, y: 0 }],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -698,7 +708,8 @@ describe('RoomView Home Zone Protection', () => {
             { zoneId: 'home-zone', x: 0, y: 0 },
             { zoneId: 'other-zone', x: 100, y: 100 }
         ],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -726,7 +737,8 @@ describe('RoomView Home Zone Protection', () => {
         connections: [], 
         homeZoneId: 'zone-a',
         nodePositions: [{ zoneId: 'zone-a', x: 0, y: 0 }],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {

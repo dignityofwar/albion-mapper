@@ -15,6 +15,8 @@ export const useRoomStore = defineStore('room', () => {
   const wsStatus = ref<WsStatus>('disconnected');
   const lastUpdate = ref<Date | null>(null);
   const lastPing = ref<{zoneName: string, nodeId?: string} | null>(null);
+  const watchingCount = ref<number | null>(null);
+  const totalConnected = ref<number | null>(null);
   const token = ref<string>('');
   const roomId = ref<string>('');
   const isConnecting = ref(false);
@@ -77,6 +79,8 @@ export const useRoomStore = defineStore('room', () => {
         roomTitle.value = msg.title || '';
         nodePositions.value = msg.nodePositions;
         lastUpdate.value = new Date(msg.lastUpdatedAt);
+        watchingCount.value = msg.watching;
+        totalConnected.value = msg.totalConnected;
         addToRecentRooms(roomId.value, roomId.value, roomTitle.value);
         break;
 
@@ -139,6 +143,15 @@ export const useRoomStore = defineStore('room', () => {
         nextTick(() => {
           lastPing.value = { zoneName: msg.zoneName, nodeId: msg.nodeId };
         });
+        break;
+
+      case 'marco':
+        send({ type: 'polo' });
+        break;
+
+      case 'watching':
+        watchingCount.value = msg.count;
+        totalConnected.value = msg.totalConnected;
         break;
     }
   }
@@ -204,6 +217,8 @@ export const useRoomStore = defineStore('room', () => {
     nodePositions.value = [];
     roomId.value = '';
     token.value = '';
+    watchingCount.value = null;
+    totalConnected.value = null;
   }
 
   function logout() {
@@ -312,6 +327,8 @@ export const useRoomStore = defineStore('room', () => {
     wsStatus,
     lastUpdate,
     lastPing,
+    watchingCount,
+    totalConnected,
     token,
     roomId,
     isConnecting,

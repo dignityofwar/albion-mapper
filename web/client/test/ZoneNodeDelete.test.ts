@@ -109,6 +109,7 @@ describe('ZoneNode Delete Overlay', () => {
           { zoneId: 'zone-b', x: 100, y: 0 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       expect(store.isNodeExpired('zone-b', now)).toBe(true);
@@ -168,6 +169,7 @@ describe('ZoneNode Delete Overlay', () => {
           { zoneId: 'zone-c', x: 200, y: 0 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       expect(store.isNodeExpired('zone-b', now)).toBe(true);
@@ -215,6 +217,7 @@ describe('ZoneNode Delete Overlay', () => {
           { zoneId: 'zone-orphan', x: 100, y: 0 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       expect(store.isNodeIsolated('zone-orphan', now)).toBe(true);
@@ -250,6 +253,7 @@ describe('ZoneNode Delete Overlay', () => {
           { zoneId: 'zone-orphan', x: 100, y: 0 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       const wrapper = mountZoneNode('zone-orphan', false, now);
@@ -323,6 +327,7 @@ describe('ZoneNode Delete Overlay', () => {
           { zoneId: 'cebos-avemlum', x: 520, y: -937 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       expect(store.isNodeExpired('cebitos-aeaylum', now)).toBe(true);
@@ -392,6 +397,7 @@ describe('ZoneNode Delete Overlay', () => {
           { zoneId: 'cebos-avemlum', x: 520, y: -937 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       expect(store.isNodeExpired('cebitos-aeaylum', now)).toBe(true);
@@ -452,6 +458,7 @@ describe('ZoneNode Delete Overlay', () => {
           { zoneId: 'zone-b', x: 200, y: 0 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       expect(store.isNodeIsolated('zone-b', now)).toBe(true);
@@ -507,6 +514,7 @@ describe('ZoneNode Delete Overlay', () => {
           { zoneId: 'zone-c', x: 300, y: 0 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       expect(store.isNodeIsolated('zone-b', now)).toBe(true);

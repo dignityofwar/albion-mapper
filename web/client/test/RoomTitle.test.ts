@@ -39,7 +39,8 @@ describe('RoomTitleVisibility', () => {
       homeZoneId: 'zone-a',
       title: title,
       nodePositions: [],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -67,7 +68,8 @@ describe('RoomTitleVisibility', () => {
       homeZoneId: 'zone-a',
       title: title,
       nodePositions: [],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -94,7 +96,8 @@ describe('RoomTitleVisibility', () => {
       homeZoneId: 'zone-a',
       title: '',
       nodePositions: [],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {

@@ -27,7 +27,8 @@ describe('useRoomStore', () => {
       connections: [conn], 
       homeZoneId: 'zone-a',
       nodePositions: [],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     expect(store.connections).toHaveLength(1);
@@ -87,7 +88,8 @@ describe('useRoomStore', () => {
       connections: [], 
       homeZoneId: 'zone-a',
       nodePositions: [],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
     store.applyMessage({ type: 'room_updated', homeZoneId: 'zone-b' });
 

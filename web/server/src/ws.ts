@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
-import { getConnectionStatus } from 'shared';
 import type { Connection, ClientMessage, ServerMessage, NodePosition } from 'shared';
-import { addSocket, removeSocket, broadcast } from './broadcast.js';
+import { addSocket, removeSocket, broadcast, getTotalSocketCount } from './broadcast.js';
+import { recordPolo, getWatchingCount } from './marcopolo.js';
 
 interface DbConnection {
   id: string;
@@ -55,6 +55,11 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
 
         if (msg.type === 'ping') {
           broadcast(roomId, { type: 'ping', zoneName: msg.zoneName, nodeId: msg.nodeId });
+          return;
+        }
+
+        if (msg.type === 'polo') {
+          if (authenticated) recordPolo(socket);
           return;
         }
 
@@ -123,7 +128,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               customHandles: row.custom_handles,
             }));
 
-            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, title: room.title || undefined, nodePositions, lastUpdatedAt });
+            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, title: room.title || undefined, nodePositions, lastUpdatedAt, watching: getWatchingCount(roomId), totalConnected: getTotalSocketCount() });
           } catch {
             socket.close(4401, 'Invalid token');
           }

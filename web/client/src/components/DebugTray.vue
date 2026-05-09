@@ -80,6 +80,7 @@ async function exportNodes() {
             <button @click="exportNodes" class="bg-green-600 hover:bg-green-700 text-white px-2 py-1 rounded text-xs">Export</button>
             <button @click="showImportModal = true" class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs">Import</button>
             <button @click="showShapeEditor = true" class="bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded text-xs">Shape Editor</button>
+            <span class="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs font-mono">Total Conns: {{ store.totalConnected !== null ? store.totalConnected : '…' }}</span>
           </div>
           <button class="text-gray-400 hover:text-white text-xl leading-none" @click="emit('close')">&times;</button>
         </div>

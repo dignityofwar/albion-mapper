@@ -20,7 +20,8 @@ describe('useRoomStore', () => {
       connections: [{ id: 'c1', roomId: 'r1', fromZoneId: 'a', toZoneId: 'b', expiresAt: new Date().toISOString(), reportedAt: new Date().toISOString() }],
       homeZoneId: 'home',
       nodePositions: [{ zoneId: 'home', x: 0, y: 0 }, { zoneId: 'b', x: 10, y: 10 }],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     store.applyMessage({ type: 'room_reset' });
@@ -40,7 +41,8 @@ describe('useRoomStore', () => {
       connections: [{ id: 'c1', roomId: 'r1', fromZoneId: 'home', toZoneId: 'a', expiresAt, reportedAt: new Date().toISOString() }],
       homeZoneId: 'home',
       nodePositions: [{ zoneId: 'home', x: 0, y: 0 }, { zoneId: 'a', x: 10, y: 10 }],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     // Check at 1s (before expiry)
@@ -86,7 +88,8 @@ describe('useRoomStore', () => {
       ],
       homeZoneId: 'home',
       nodePositions: [{ zoneId: 'home', x: 0, y: 0 }, { zoneId: 'a', x: 10, y: 10 }, { zoneId: 'b', x: 20, y: 20 }],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     // Check at 1s (before expiry)

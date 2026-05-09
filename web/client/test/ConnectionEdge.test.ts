@@ -50,7 +50,8 @@ describe('ConnectionEdge', () => {
       ],
       homeZoneId: 'home',
       nodePositions: [{ zoneId: 'home', x: 0, y: 0 }, { zoneId: 'a', x: 10, y: 10 }, { zoneId: 'b', x: 20, y: 20 }],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     // Advance time to 3s

@@ -36,7 +36,8 @@ describe('SettingsCogPlacement', () => {
       homeZoneId: 'zone-a',
       title: 'Test Room',
       nodePositions: [],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {
@@ -77,7 +78,8 @@ describe('SettingsCogPlacement', () => {
       homeZoneId: 'zone-a',
       title: '', // NO TITLE
       nodePositions: [],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {

@@ -18,7 +18,8 @@ describe('Hideout Draggable', () => {
         nodePositions: [
             { zoneId: 'qiient-al-nusom', x: 0, y: 0 }
         ],
-        lastUpdatedAt: new Date().toISOString()
+        lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {

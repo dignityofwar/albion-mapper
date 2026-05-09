@@ -70,7 +70,8 @@ describe('Recursive Delete', () => {
         { zoneId: 'zone-b', x: 100, y: 0 },
         { zoneId: 'zone-c', x: 200, y: 0 },
       ],
-      lastUpdatedAt: new Date().toISOString()
+      lastUpdatedAt: new Date().toISOString(),
+      watching: 0, totalConnected: 0
     });
 
     const wrapper = mount(RoomView, {

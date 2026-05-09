@@ -100,6 +100,7 @@ describe('ZoneNode Features and Styling', () => {
           { zoneId: 'zone-b', x: 100, y: 0 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       const wrapper = mount(ZoneNode as any, {
@@ -164,6 +165,7 @@ describe('ZoneNode Features and Styling', () => {
           { zoneId: 'zone-b', x: 200, y: 0 },
         ],
         lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
       });
 
       // zone-a is isolated because its only connection is time-expired
