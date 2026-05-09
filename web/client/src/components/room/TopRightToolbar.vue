@@ -32,7 +32,7 @@ const emit = defineEmits<{
 .toolbar-wrap {
   display: none;
 }
-@media (min-width: 768px) {
+@media (min-width: 768px) and (min-height: 501px) {
   .toolbar-wrap {
     @apply top-14;
     display: flex;

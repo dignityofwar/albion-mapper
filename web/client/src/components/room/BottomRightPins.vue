@@ -37,7 +37,7 @@ const emit = defineEmits<{
       @click="emit('fitView')"
     >🔄</button>
     <button
-      class="summary-btn w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600/70 backdrop-blur-md border border-indigo-400/60 text-xl shadow-lg md:hidden"
+      class="summary-btn w-12 h-12 flex items-center justify-center rounded-full bg-indigo-600/70 backdrop-blur-md border border-indigo-400/60 text-xl shadow-lg"
       title="Room Summary"
       @click="emit('openMobileSummary')"
     >
@@ -54,8 +54,8 @@ const emit = defineEmits<{
   }
 }
 
-/* Show landscape refresh row only on landscape phones */
-@media (max-width: 767px) and (max-height: 500px) {
+/* Show landscape refresh row on any short screen (height ≤ 500px) */
+@media (max-height: 500px) {
   .landscape-refresh {
     display: block;
   }
@@ -73,13 +73,8 @@ const emit = defineEmits<{
   }
 }
 
-/* Hide room summary button on desktop (md+) and landscape phones */
-@media (min-width: 768px) {
-  .summary-btn {
-    display: none;
-  }
-}
-@media (max-height: 500px) {
+/* Show summary button on portrait mobile OR short screens (trays hidden); hide on tall desktop */
+@media (min-width: 768px) and (min-height: 501px) {
   .summary-btn {
     display: none;
   }
