@@ -103,7 +103,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'This connection would create a direct cycle' });
     }
 
-    // If target position is provided, save it
+    // If target position is provided, save it (new node); otherwise just update slots on existing node
     if (targetPosition) {
       const initialFeatures = { ...getInitialFeatures(toZoneId), slots };
       await app.db.query(`
@@ -124,6 +124,27 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
         customHandles: p.custom_handles 
       }));
       
+      broadcast(id, { type: 'node_positions_updated', nodePositions });
+    } else {
+      // No target position provided (connecting two existing nodes) — update slots on the target node only
+      await app.db.query(`
+        UPDATE room_node_positions
+        SET features = jsonb_set(COALESCE(features, '{}'), '{slots}', $1::jsonb)
+        WHERE room_id = $2 AND zone_id = $3
+      `, [JSON.stringify(slots), id, toZoneId]);
+
+      const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
+        'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
+        [id]
+      );
+      const nodePositions = positions.map(p => ({
+        zoneId: p.zone_id,
+        x: p.x,
+        y: p.y,
+        features: p.features,
+        customHandles: p.custom_handles
+      }));
+
       broadcast(id, { type: 'node_positions_updated', nodePositions });
     }
 

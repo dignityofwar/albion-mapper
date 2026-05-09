@@ -413,7 +413,12 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           onDeleteRecursive: async (id: string) => {
             try {
               const toDelete = new Set<string>();
+              const visitedZones = new Set<string>();
               const queue = [id];
+
+              // Seed visited zones with the source zone so we don't loop back to it
+              const startConn = connections.value.find(c => c.id === id);
+              if (startConn) visitedZones.add(startConn.fromZoneId);
               
               while (queue.length > 0) {
                 const currentId = queue.shift()!;
@@ -422,6 +427,8 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
                 
                 const conn = connections.value.find(c => c.id === currentId);
                 if (conn) {
+                  if (visitedZones.has(conn.toZoneId)) continue;
+                  visitedZones.add(conn.toZoneId);
                   const children = connections.value.filter(c => c.fromZoneId === conn.toZoneId);
                   for (const child of children) {
                     queue.push(child.id);
@@ -448,7 +455,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
               store.updateNodeFeatures(conn.toZoneId, { ...(targetNodePos.features || {}), slots });
             }
           },
-          hasChildren: connections.value.some(c => c.fromZoneId === conn.toZoneId),
+          hasChildren: conn.toZoneId !== homeZoneId.value && connections.value.some(c => c.fromZoneId === conn.toZoneId),
           slots: (targetNode?.data?.features as any)?.slots as (7 | 20 | undefined),
         },
       };

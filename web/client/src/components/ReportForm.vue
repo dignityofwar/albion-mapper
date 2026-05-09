@@ -167,7 +167,7 @@ function getFallbackPosition(sourceZoneId: string, handleId: string | null): { x
 async function submitAndAddMore() {
   if (!canSubmit.value) return;
 
-  if (isPortalOccupied(fromZoneId.value, fromHandleId.value) || isPortalOccupied(toZoneId.value, toHandleId.value)) {
+  if (!isConnectionMode.value && (isPortalOccupied(fromZoneId.value, fromHandleId.value) || isPortalOccupied(toZoneId.value, toHandleId.value))) {
     emit('error', 'It is not possible to connect already connected portals.');
     return;
   }
