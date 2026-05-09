@@ -73,8 +73,13 @@ const emit = defineEmits<{
   }
 }
 
-/* Hide room summary button on all mobile (sub-767px) */
-@media (max-width: 767px) {
+/* Hide room summary button on desktop (md+) and landscape phones */
+@media (min-width: 768px) {
+  .summary-btn {
+    display: none;
+  }
+}
+@media (max-height: 500px) {
   .summary-btn {
     display: none;
   }

@@ -501,6 +501,15 @@ function handleKeyDown(e: KeyboardEvent) {
   }
 }
 const showMobileSummary = ref(false);
+const mobileActiveResourceTab = ref<'fibre' | 'leather' | 'ore' | 'stone' | 'wood' | null>(null);
+const mobileActiveFeatureTab = ref<'cores' | 'crystals' | 'dungeons' | 'chests' | null>(null);
+
+function toggleMobileResourceTab(tab: 'fibre' | 'leather' | 'ore' | 'stone' | 'wood') {
+  mobileActiveResourceTab.value = mobileActiveResourceTab.value === tab ? null : tab;
+}
+function toggleMobileFeatureTab(tab: 'cores' | 'crystals' | 'dungeons' | 'chests') {
+  mobileActiveFeatureTab.value = mobileActiveFeatureTab.value === tab ? null : tab;
+}
 
 // ── Actions ──────────────────────────────────────────────────────────────────
 function onNodeDragStop() {
@@ -1061,23 +1070,176 @@ defineExpose({ flowNodes, onNodeDragStop });
             <button class="text-gray-400 hover:text-white text-xl leading-none" @click="showMobileSummary = false">&times;</button>
           </div>
           <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-4">
-             <RoomMapFeaturesToolbar 
-                :cores="activeCores"
-                :crystals="activeCrystals"
-                :dungeons="activeDungeons"
-                :chests="activeChests"
-                always-expanded
-                @select="goToNode"
-              />
-              <RoomResourcesToolbar
-                :fibre="activeResources.fibre"
-                :leather="activeResources.leather"
-                :ore="activeResources.ore"
-                :stone="activeResources.stone"
-                :wood="activeResources.wood"
-                always-expanded
-                @select="goToNode"
-              />
+
+            <!-- Resources section -->
+            <div class="frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl">
+              <p class="text-xs uppercase text-gray-500 font-bold mb-2 px-1">Resources</p>
+              <div class="flex flex-row gap-2 justify-around">
+                <button
+                  v-for="tab in ([
+                    { type: 'fibre'   as const, label: 'Cotton',  icon: '/images/resource-fibre.png'   },
+                    { type: 'leather' as const, label: 'Leather', icon: '/images/resource-leather.png' },
+                    { type: 'ore'     as const, label: 'Ore',     icon: '/images/resource-ore.png'     },
+                    { type: 'stone'   as const, label: 'Stone',   icon: '/images/resource-stone.png'   },
+                    { type: 'wood'    as const, label: 'Wood',    icon: '/images/resource-wood.png'    },
+                  ])"
+                  :key="tab.type"
+                  :disabled="activeResources[tab.type].length === 0"
+                  :class="[
+                    'flex-1 flex items-center justify-center gap-1 p-2 rounded-lg border disabled:opacity-40 disabled:cursor-not-allowed transition-colors',
+                    mobileActiveResourceTab === tab.type
+                      ? 'bg-indigo-600/20 border-indigo-500/50'
+                      : 'bg-gray-700/50 border-gray-600'
+                  ]"
+                  :title="tab.label"
+                  @click="toggleMobileResourceTab(tab.type)"
+                >
+                  <img :src="tab.icon" class="w-6 h-6 object-contain" :alt="tab.label" />
+                  <span class="text-sm font-bold text-gray-300">{{ activeResources[tab.type].length }}</span>
+                </button>
+              </div>
+              <!-- Zone list for selected resource -->
+              <Transition name="fade">
+                <div v-if="mobileActiveResourceTab !== null && activeResources[mobileActiveResourceTab].length > 0" class="mt-2 flex flex-col gap-1">
+                  <button
+                    v-for="zone in activeResources[mobileActiveResourceTab!]"
+                    :key="zone.zoneId"
+                    @click="goToNode(zone.zoneId); showMobileSummary = false"
+                    class="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-white bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left rounded border border-gray-700"
+                  >
+                    <span class="truncate flex-1 font-medium">{{ zone.zoneName }}</span>
+                    <span class="shrink-0 text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">{{ zone.size ?? '?' }}</span>
+                  </button>
+                </div>
+              </Transition>
+            </div>
+
+            <!-- Features section (cores + crystals/dungeons/chests) -->
+            <div class="frosted-background border border-gray-700/50 rounded-xl p-2 shadow-2xl">
+              <p class="text-xs uppercase text-gray-500 font-bold mb-2 px-1">Features</p>
+
+              <!-- Cores button -->
+              <button
+                :disabled="activeCores.length === 0"
+                :class="[
+                  'w-full flex items-center gap-3 px-3 py-2 rounded-lg border mb-2 disabled:opacity-40 disabled:cursor-not-allowed transition-colors',
+                  mobileActiveFeatureTab === 'cores'
+                    ? 'bg-indigo-600/20 border-indigo-500/50'
+                    : 'bg-gray-700/50 border-gray-600'
+                ]"
+                title="Cores"
+                @click="toggleMobileFeatureTab('cores')"
+              >
+                <img src="/images/core-green.png" class="w-6 h-6 object-contain" alt="Core" />
+                <span class="text-sm font-bold text-gray-200">{{ activeCores.length }}</span>
+                <span class="ml-1 text-sm font-bold">
+                  <span class="text-green-500">{{ activeCores.filter(c => c.coreType === 'green').length }}</span><span class="text-gray-500">-</span><span class="text-blue-500">{{ activeCores.filter(c => c.coreType === 'blue').length }}</span><span class="text-gray-500">-</span><span class="text-purple-500">{{ activeCores.filter(c => c.coreType === 'purple').length }}</span><span class="text-gray-500">-</span><span class="text-yellow-500">{{ activeCores.filter(c => c.coreType === 'yellow').length }}</span>
+                </span>
+              </button>
+              <!-- Core zone list -->
+              <Transition name="fade">
+                <div v-if="mobileActiveFeatureTab === 'cores' && activeCores.length > 0" class="mb-2 flex flex-col gap-1">
+                  <button
+                    v-for="core in activeCores"
+                    :key="`${core.zoneId}-${core.coreType}`"
+                    @click="goToNode(core.zoneId); showMobileSummary = false"
+                    :class="[
+                      'w-full flex items-center gap-2 px-2.5 py-2 text-sm text-white transition-colors text-left rounded border',
+                      core.coreType === 'green' ? 'border-green-500 bg-gray-800/50 hover:bg-gray-700/50' :
+                      core.coreType === 'blue'  ? 'border-blue-500 bg-gray-800/50 hover:bg-gray-700/50' :
+                      core.coreType === 'purple'? 'border-purple-500 bg-gray-800/50 hover:bg-gray-700/50' :
+                                                  'border-yellow-500 bg-gray-800/50 hover:bg-gray-700/50'
+                    ]"
+                  >
+                    <img :src="`/images/core-${core.coreType}.png`" class="w-5 h-5 object-contain" :alt="core.coreType" />
+                    <span class="truncate flex-1 font-medium">{{ core.zoneName }}</span>
+                  </button>
+                </div>
+              </Transition>
+
+              <!-- Crystals / Dungeons / Chests buttons -->
+              <div class="flex flex-row gap-2 justify-around">
+                <button
+                  :disabled="activeCrystals.length === 0"
+                  :class="[
+                    'flex-1 flex items-center justify-center gap-1 p-2 rounded-lg border disabled:opacity-40 disabled:cursor-not-allowed transition-colors',
+                    mobileActiveFeatureTab === 'crystals'
+                      ? 'bg-indigo-600/20 border-indigo-500/50'
+                      : 'bg-gray-700/50 border-gray-600'
+                  ]"
+                  title="Crystals"
+                  @click="toggleMobileFeatureTab('crystals')"
+                >
+                  <img src="/images/crystal.png" class="w-6 h-6 object-contain" alt="Crystal" />
+                  <span class="text-sm font-bold text-gray-300">{{ activeCrystals.length }}</span>
+                </button>
+                <button
+                  :disabled="activeDungeons.length === 0"
+                  :class="[
+                    'flex-1 flex items-center justify-center gap-1 p-2 rounded-lg border disabled:opacity-40 disabled:cursor-not-allowed transition-colors',
+                    mobileActiveFeatureTab === 'dungeons'
+                      ? 'bg-indigo-600/20 border-indigo-500/50'
+                      : 'bg-gray-700/50 border-gray-600'
+                  ]"
+                  title="Dungeons"
+                  @click="toggleMobileFeatureTab('dungeons')"
+                >
+                  <img src="/images/dungeon-group.png" class="w-6 h-6 object-contain" alt="Dungeon" />
+                  <span class="text-sm font-bold text-gray-300">{{ activeDungeons.length }}</span>
+                </button>
+                <button
+                  :disabled="activeChests.length === 0"
+                  :class="[
+                    'flex-1 flex items-center justify-center gap-1 p-2 rounded-lg border disabled:opacity-40 disabled:cursor-not-allowed transition-colors',
+                    mobileActiveFeatureTab === 'chests'
+                      ? 'bg-indigo-600/20 border-indigo-500/50'
+                      : 'bg-gray-700/50 border-gray-600'
+                  ]"
+                  title="Chests"
+                  @click="toggleMobileFeatureTab('chests')"
+                >
+                  <img src="/images/treasures-green.png" class="w-6 h-6 object-contain" alt="Chest" />
+                  <span class="text-sm font-bold text-gray-300">{{ activeChests.length }}</span>
+                </button>
+              </div>
+              <!-- Zone list for crystals/dungeons/chests -->
+              <Transition name="fade">
+                <div v-if="mobileActiveFeatureTab === 'crystals' && activeCrystals.length > 0" class="mt-2 flex flex-col gap-1">
+                  <button
+                    v-for="item in activeCrystals"
+                    :key="item.zoneId"
+                    @click="goToNode(item.zoneId); showMobileSummary = false"
+                    class="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-white bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left rounded border border-gray-700"
+                  >
+                    <img src="/images/crystal.png" class="w-5 h-5 object-contain" alt="Crystal" />
+                    <span class="truncate flex-1 font-medium">{{ item.zoneName }}</span>
+                  </button>
+                </div>
+                <div v-else-if="mobileActiveFeatureTab === 'dungeons' && activeDungeons.length > 0" class="mt-2 flex flex-col gap-1">
+                  <button
+                    v-for="item in activeDungeons"
+                    :key="item.zoneId"
+                    @click="goToNode(item.zoneId); showMobileSummary = false"
+                    class="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-white bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left rounded border border-gray-700"
+                  >
+                    <img :src="item.type === 'static' ? '/images/dungeon-static.png' : '/images/dungeon-group.png'" class="w-5 h-5 object-contain" alt="Dungeon" />
+                    <span class="truncate flex-1 font-medium">{{ item.zoneName }}</span>
+                  </button>
+                </div>
+                <div v-else-if="mobileActiveFeatureTab === 'chests' && activeChests.length > 0" class="mt-2 flex flex-col gap-1">
+                  <button
+                    v-for="item in activeChests"
+                    :key="item.zoneId"
+                    @click="goToNode(item.zoneId); showMobileSummary = false"
+                    class="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-white bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left rounded border border-gray-700"
+                  >
+                    <img :src="item.type === 'blue' ? '/images/treasures-blue.png' : item.type === 'yellow' ? '/images/treasures-yellow.png' : item.type === 'chest' ? '/images/chest.png' : '/images/treasures-green.png'" class="w-5 h-5 object-contain" alt="Chest" />
+                    <span class="truncate flex-1 font-medium">{{ item.zoneName }}</span>
+                  </button>
+                </div>
+              </Transition>
+            </div>
+
           </div>
         </div>
       </div>
