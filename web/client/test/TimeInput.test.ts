@@ -44,11 +44,18 @@ describe('TimeInput', () => {
       props: { modelValue: null },
     });
 
-    const inputs = wrapper.findAll('input');
-    await inputs[0].setValue('');
-    await inputs[1].setValue('');
-    await inputs[2].setValue('');
+    const vm = wrapper.vm as any;
+    vm.hours = 1;
+    vm.minutes = 1;
+    vm.seconds = 1;
+    await wrapper.vm.$nextTick();
+
+    vm.hours = null;
+    vm.minutes = null;
+    vm.seconds = null;
     
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick(); // watcher might need another tick
     await wrapper.vm.$nextTick();
 
     const emitted = wrapper.emitted('update:modelValue');

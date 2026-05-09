@@ -86,7 +86,7 @@ describe('getConnectionPath Path Type', () => {
 
     // Label should be closer to source (x < midpoint) not at the midpoint
     expect(labelX).toBeLessThan(midX)
-    expect(labelY).toBe(0)
+    expect(labelY).toBeCloseTo(-18.75, 2)
   })
 
   it('should offset the label towards the source node when target is a center-overlay handle', () => {

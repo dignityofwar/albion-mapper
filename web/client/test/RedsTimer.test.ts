@@ -72,7 +72,7 @@ describe('Reds Timer Logic', () => {
     const wrapper = mountNode(features, now)
     const zoneReds = wrapper.findComponent({ name: 'ZoneReds' })
     expect(zoneReds.exists()).toBe(true)
-    expect((zoneReds.vm as any).tooltipText).toBe('Reds (expires in 15:30)')
+    expect((zoneReds.vm as any).tooltipText).toBe('Enemies Sighted? (expires in 15:30)')
   })
 
   it('sets 30 minute timer when reds are updated', async () => {

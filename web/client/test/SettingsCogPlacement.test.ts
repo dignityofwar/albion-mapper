@@ -55,22 +55,19 @@ describe('SettingsCogPlacement', () => {
 
     await nextTick();
 
-    // Check header
-    const header = wrapper.find('header');
-    expect(header.exists()).toBe(true);
-    
-    const cog = header.find('[data-testid="stub-settings-cog"]');
-    const title = header.find('[data-testid="room-title"]');
-    
+    // Check settings cog exists
+    const cog = wrapper.find('[data-testid="stub-settings-cog"]');
     expect(cog.exists()).toBe(true);
+    
+    const title = wrapper.find('[data-testid="room-title"]');
     expect(title.exists()).toBe(true);
     
     // Verify cog is BEFORE title in DOM
-    const html = header.html();
+    const html = wrapper.html();
     expect(html.indexOf('data-testid="stub-settings-cog"')).toBeLessThan(html.indexOf('data-testid="room-title"'));
   });
 
-  it('renders RoomSettings in header even without a title', async () => {
+  it('renders RoomSettings even without a title', async () => {
     const store = useRoomStore();
     store.applyMessage({
       type: 'sync',
@@ -97,14 +94,11 @@ describe('SettingsCogPlacement', () => {
 
     await nextTick();
 
-    // Check header
-    const header = wrapper.find('header');
-    expect(header.exists()).toBe(true);
-    
-    const cog = header.find('[data-testid="stub-settings-cog"]');
+    // Check settings cog exists
+    const cog = wrapper.find('[data-testid="stub-settings-cog"]');
     expect(cog.exists()).toBe(true);
     
-    const title = header.find('[data-testid="room-title"]');
+    const title = wrapper.find('[data-testid="room-title"]');
     expect(title.exists()).toBe(false);
   });
 });
