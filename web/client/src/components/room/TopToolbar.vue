@@ -68,17 +68,11 @@ const searchActive = ref(false);
 .fit-view-btn {
   display: none;
 }
-@media (min-width: 768px) {
+@media (min-width: 768px) and (min-height: 501px) {
   .fit-view-btn {
     display: flex;
   }
 }
-@media (max-width: 767px) and (max-height: 500px) {
-  .fit-view-btn {
-    display: flex;
-  }
-}
-
 /* Landscape debug button: hidden by default, shown on landscape phones */
 .landscape-debug {
   display: none;
