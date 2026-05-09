@@ -1,31 +1,18 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { buildApp } from '../src/app.js';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setupTestApp } from './testApp.js';
 import type { FastifyInstance } from 'fastify';
 
 const VALID_ZONE_A = 'adrens-hill';
 const VALID_ZONE_B = 'anklesnag-mire';
 
+const testApp = setupTestApp();
+const { roomId } = testApp;
 let app: FastifyInstance;
-let roomId = 'test-room-id';
-let token: string;
 let mockDb: any;
+let token: string;
 
-beforeEach(async () => {
-  mockDb = {
-    query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
-    connect: vi.fn().mockResolvedValue({
-      query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
-      release: vi.fn(),
-    }),
-  };
-  app = await buildApp({ db: mockDb, disableRateLimit: true, jwtSecret: 'test-secret' });
-  await app.ready();
-
-  token = app.jwt.sign({ roomId });
-});
-
-afterEach(async () => {
-  await app.close();
+beforeEach(() => {
+  ({ app, mockDb, token } = testApp);
 });
 
 function waitForMessage(ws: Awaited<ReturnType<typeof connectWs>>): Promise<unknown> {

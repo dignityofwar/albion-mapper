@@ -1,35 +1,20 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { buildApp } from '../src/app.js';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setupTestApp } from './testApp.js';
 import type { FastifyInstance } from 'fastify';
 import type { Connection } from 'shared';
-import bcrypt from 'bcrypt';
 
 const VALID_ZONE_A = 'qiient-al-nusom';
 const VALID_ZONE_B = 'qiient-al-odesum';
 const UNKNOWN_ZONE = 'totally-unknown-zone-xyz';
 
+const testApp = setupTestApp();
+const { roomId } = testApp;
 let app: FastifyInstance;
-let roomId = 'test-room-id';
-let token: string;
 let mockDb: any;
+let token: string;
 
-beforeEach(async () => {
-  mockDb = {
-    query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
-    connect: vi.fn().mockResolvedValue({
-      query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
-      release: vi.fn(),
-    }),
-  };
-  app = await buildApp({ db: mockDb, disableRateLimit: true, jwtSecret: 'test-secret' });
-  await app.ready();
-
-  // Mock successful auth
-  token = app.jwt.sign({ roomId });
-});
-
-afterEach(async () => {
-  await app.close();
+beforeEach(() => {
+  ({ app, mockDb, token } = testApp);
 });
 
 describe('POST /api/rooms/:id/connections', () => {

@@ -1,35 +1,24 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { buildApp } from '../src/app.js';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { setupTestApp } from './testApp.js';
 import type { FastifyInstance } from 'fastify';
 
 const VALID_ZONE_A = 'adrens-hill';
 const VALID_ZONE_B = 'anklesnag-mire';
 
+const testApp = setupTestApp();
+const { roomId } = testApp;
 let app: FastifyInstance;
-let roomId = 'test-room-id';
-let token: string;
 let mockDb: any;
+let token: string;
 
-beforeEach(async () => {
-  mockDb = {
-    query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
-    connect: vi.fn().mockResolvedValue({
-      query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
-      release: vi.fn(),
-    }),
-  };
-  app = await buildApp({ db: mockDb, disableRateLimit: true, jwtSecret: 'test-secret' });
-  await app.ready();
-
-  token = app.jwt.sign({ roomId });
-});
-
-afterEach(async () => {
-  await app.close();
+beforeEach(() => {
+  ({ app, mockDb, token } = testApp);
 });
 
 async function connectWs(roomIdParam: string): Promise<{ socket: import('ws').WebSocket; close: () => void }> {
-  const address = app.server.address();
+  // We need to cast app as any or define types properly because app might be undefined
+  const appInstance = testApp.app as any;
+  const address = appInstance.server.address();
   const port = typeof address === 'object' && address ? address.port : 3001;
   const { WebSocket } = await import('ws');
   const socket = new WebSocket(`ws://127.0.0.1:${port}/ws/rooms/${roomIdParam}`);
@@ -42,7 +31,8 @@ async function connectWs(roomIdParam: string): Promise<{ socket: import('ws').We
 
 describe('Node features persistence', () => {
   it('saves and loads node features including all powercore types', async () => {
-    await app.listen({ port: 0 });
+    const { app, mockDb, token } = testApp;
+    await app!.listen({ port: 0 });
 
     const { socket } = await connectWs(roomId);
     
@@ -121,6 +111,7 @@ describe('Node features persistence', () => {
   });
 
   it('sends features back in sync message', async () => {
+    const { app, mockDb, token } = testApp;
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId, home_zone_id: VALID_ZONE_A, created_at: new Date().toISOString() }] }); // room
     mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections
     mockDb.query.mockResolvedValueOnce({ rows: [
@@ -132,7 +123,7 @@ describe('Node features persistence', () => {
         }
     ] }); // node positions
 
-    await app.listen({ port: 0 });
+    await app!.listen({ port: 0 });
 
     const { socket } = await connectWs(roomId);
     
@@ -151,7 +142,8 @@ describe('Node features persistence', () => {
   });
 
   it('saves node features even for a single node (home zone)', async () => {
-    await app.listen({ port: 0 });
+    const { app, mockDb, token } = testApp;
+    await app!.listen({ port: 0 });
 
     const { socket } = await connectWs(roomId);
     

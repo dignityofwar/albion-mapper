@@ -24,7 +24,8 @@ describe('zones adapter', () => {
 
   it('renames mapType → type', () => {
     ZONES.forEach((zone, i) => {
-      expect(zone.type).toBe(maps[i].mapType);
+      const expectedType = maps[i].isRoadsHideout ? 'roadsHideout' : maps[i].mapType;
+      expect(zone.type).toBe(expectedType);
     });
   });
 

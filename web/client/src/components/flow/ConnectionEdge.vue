@@ -292,7 +292,7 @@ defineExpose({
       <div
         v-if="showPopover"
         ref="popoverRef"
-        class="absolute top-[51px] left-1/2 -translate-x-1/2 w-64 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
+        class="absolute top-[58px] left-1/2 -translate-x-1/2 w-64 bg-gray-900 border border-gray-600 rounded shadow-lg p-3 text-xs text-white"
         @click.stop
         @mousedown.stop
       >
@@ -317,14 +317,17 @@ defineExpose({
         <div v-if="data?.connection?.reportedBy" class="mb-1">
           <span class="text-gray-400">By:</span> {{ data.connection.reportedBy }}
         </div>
-        <div v-if="data?.connection" class="mb-1">
-          <span class="text-gray-400">Created:</span>
-          {{ new Date(data.connection.reportedAt).toLocaleTimeString() }}
-        </div>
         <div v-if="data?.connection" class="mb-2">
-          <span class="text-gray-400">Expires:</span>
-          {{ new Date(data.connection.expiresAt).toLocaleTimeString() }}
-          <div class="mt-2 flex items-stretch gap-1">
+          <div class="flex gap-2 text-center">
+            <div class="text-xs text-gray-400 flex-1">Created</div>
+            <div class="text-xs text-gray-400 flex-1">Expires</div>
+          </div>
+          <div class="flex gap-2 text-center">
+            <div class="text-xs flex-1">{{ new Date(data.connection.reportedAt).toLocaleTimeString() }}</div>
+            <div class="text-xs flex-1">{{ new Date(data.connection.expiresAt).toLocaleTimeString() }}</div>
+          </div>
+          <div class="text-xs text-gray-400 mt-2 mb-1 text-center">Time Remaining</div>
+          <div class="flex items-stretch gap-1">
             <TimeInput v-model="newSecondsRemaining" compact class="flex-1" @enter="newSecondsRemaining !== null && data?.onUpdate?.(id, newSecondsRemaining!) && (showPopover = false)" />
             <button
               :disabled="newSecondsRemaining === null"
@@ -337,7 +340,7 @@ defineExpose({
           </div>
         </div>
         <div class="mb-3">
-          <div class="text-xs text-gray-400 mb-1">Slots</div>
+          <div class="text-xs text-gray-400 mb-1 text-center">Slots</div>
           <div class="flex gap-2">
             <button
               class="flex-1 px-2 py-1.5 rounded text-xs font-medium transition-colors"
