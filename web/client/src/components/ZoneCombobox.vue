@@ -217,10 +217,10 @@ function onWrapperKeydown(e: KeyboardEvent) {
             class="flex items-center gap-2 px-3 py-2 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
           >
             <span class="truncate flex-1">{{ zone.name }}</span>
-            <span v-if="mappedZoneIds.has(zone.id)" class="shrink-0 text-green-400">✓</span>
             <span v-if="zone.id === store.homeZoneId" class="shrink-0 text-yellow-400" title="Room home zone">🏠</span>
             <TagTier :tier="zone.tier" :type="zone.type" />
             <TagZone :type="zone.type" :category="zone.category" :map-shape="zone.mapShape" :zone-name="zone.name" :proximity-to="zone.proximityTo" />
+            <span v-if="mappedZoneIds.has(zone.id) && zone.id !== modelValue" class="shrink-0 text-green-400 text-xs">●</span>
             <ComboboxItemIndicator class="shrink-0 text-green-400">✓</ComboboxItemIndicator>
           </ComboboxItem>
         </ComboboxViewport>

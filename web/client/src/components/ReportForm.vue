@@ -27,6 +27,8 @@ const toZoneId = ref('');
 const toHandleId = ref<string | null>(null);
 const targetPosition = ref<{ x: number, y: number } | null>(null);
 const isLocked = computed(() => store.connections.length === 0);
+const isConnectionMode = ref(false);
+const showLoopWarning = ref(false);
 const secondsRemaining = ref<number | null>(null);
 const slots = ref<7 | 20>(7);
 const isRoadsZone = computed(() => {
@@ -61,10 +63,16 @@ watch(isOpen, (newVal) => {
   if (newVal) {
     nextTick(() => {
       isModalReady.value = true;
-      focusToCombobox();
+      if (isConnectionMode.value) {
+        focusTimeInput();
+      } else {
+        focusToCombobox();
+      }
     });
   } else {
     isModalReady.value = false;
+    isConnectionMode.value = false;
+    showLoopWarning.value = false;
   }
 });
 
@@ -266,12 +274,14 @@ defineExpose({
     console.log('[ReportForm] targetPosition from drag event:', pos ?? null);
     open();
   }, 
-  setConnection: (fromId: string, fHandleId: string | null, toId: string, tHandleId: string | null) => {
+  setConnection: (fromId: string, fHandleId: string | null, toId: string, tHandleId: string | null, loopWarning = false) => {
     fromZoneId.value = fromId;
     fromHandleId.value = fHandleId;
     toZoneId.value = toId;
     toHandleId.value = tHandleId;
     targetPosition.value = null;
+    isConnectionMode.value = true;
+    showLoopWarning.value = loopWarning;
     open();
   },
   focusTimeInput,
@@ -296,6 +306,10 @@ defineExpose({
           <button @click="close" class="text-gray-400 hover:text-white transition-colors p-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
+        </div>
+
+        <div v-if="showLoopWarning" class="mb-4 rounded-lg bg-yellow-900/50 border border-yellow-600 px-4 py-3 text-yellow-300 text-sm">
+          ⚠️ Adding this connection will create a loop — double check this is correct.
         </div>
 
         <form

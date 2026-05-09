@@ -10,7 +10,10 @@ vi.mock('@vue-flow/core', () => ({
   useVueFlow: () => ({
     fitView: vi.fn(),
     updateNode: vi.fn(),
+    setCenter: vi.fn(),
+    updateNodeInternals: vi.fn(),
     screenToFlowCoordinate: vi.fn((pos) => pos),
+    getNode: { value: vi.fn(() => undefined) },
   }),
   VueFlow: { template: '<div></div>' },
   ConnectionMode: { Loose: 'loose' },
@@ -690,6 +693,113 @@ describe('RoomView', () => {
     // Check that ghostNode is still null
     expect(vm.ghostNode).toBeNull();
     
+    wrapper.unmount();
+  });
+
+  it('connects secent-al-duosom (n) to qiient-in-odetum (n) completing a 3-zone loop: shows warning toast, calls setConnection, no ghost node', async () => {
+    sessionStorage.setItem('token:room1', 'some-token');
+    const store = useRoomStore();
+    store.setCredentials('room1', 'some-token');
+
+    const expiry = new Date(Date.now() + 3600000).toISOString();
+    const now = new Date().toISOString();
+
+    // Set up the 3-zone scenario: odetum→agoitum→duosom already connected
+    store.applyMessage({
+      type: 'sync',
+      connections: [
+        {
+          id: 'c1',
+          roomId: 'room1',
+          fromZoneId: 'qiient-in-odetum',
+          toZoneId: 'hasos-agoitum',
+          fromHandleId: 'w',
+          toHandleId: 'h-p2',
+          expiresAt: expiry,
+          reportedAt: now,
+        },
+        {
+          id: 'c2',
+          roomId: 'room1',
+          fromZoneId: 'hasos-agoitum',
+          toZoneId: 'secent-al-duosom',
+          fromHandleId: 'h-p3',
+          toHandleId: 'w',
+          expiresAt: expiry,
+          reportedAt: now,
+        },
+      ],
+      homeZoneId: 'qiient-in-odetum',
+      nodePositions: [
+        { zoneId: 'qiient-in-odetum', x: 385, y: 407, features: {}, customHandles: [
+          { id: 'n', top: '17.28%', left: '67.28%' },
+          { id: 'w', top: '31.72%', left: '18.28%' },
+        ]},
+        { zoneId: 'hasos-agoitum', x: 184, y: 5, features: {}, customHandles: [
+          { id: 'h-p2', top: '65.82%', left: '15.82%' },
+          { id: 'h-p3', top: '25.20%', left: '24.80%' },
+        ]},
+        { zoneId: 'secent-al-duosom', x: -257, y: 678, features: {}, customHandles: [
+          { id: 'n', top: '21.56%', left: '71.56%' },
+          { id: 'w', top: '33.60%', left: '16.40%' },
+        ]},
+      ],
+      lastUpdatedAt: now,
+      watching: 0,
+      totalConnected: 0,
+    });
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'room1' },
+      global: {
+        stubs: {
+          ReportForm: {
+            template: '<div id="report-form-stub"></div>',
+            setup(props, { expose }) {
+              const setConnection = vi.fn();
+              const focusTimeInput = vi.fn();
+              const setFromZoneId = vi.fn();
+              const open = vi.fn();
+              const setTargetPosition = vi.fn();
+              expose({ setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition });
+              return { setConnection, focusTimeInput, setFromZoneId, open, setTargetPosition };
+            }
+          },
+          DebugTray: true,
+          RoomSettings: true,
+          VueFlow: true,
+          Background: true,
+          Controls: true
+        }
+      }
+    });
+
+    await nextTick();
+    await nextTick();
+
+    const vm = wrapper.vm as any;
+
+    // Trigger the connection: duosom (n) → odetum (n) — completes the 3-zone loop (odetum→agoitum→duosom→odetum)
+    await vm.handleConnect({
+      source: 'secent-al-duosom',
+      sourceHandle: 'n',
+      target: 'qiient-in-odetum',
+      targetHandle: 'n',
+    });
+
+    // Should NOT have created a ghost node (connecting two existing zones)
+    expect(vm.ghostNode).toBeNull();
+
+    // ReportForm.setConnection should have been called with loopWarning=true
+    const rf = vm.reportForm;
+    expect(rf.setConnection).toHaveBeenCalledWith(
+      'secent-al-duosom',
+      'n',
+      'qiient-in-odetum',
+      'n',
+      true
+    );
+
     wrapper.unmount();
   });
 });

@@ -100,7 +100,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
     );
     const connections = dbConnections.map(dbRowToConnection);
     if (Shared.wouldCreateCycle(connections, fromZoneId, toZoneId)) {
-      return reply.status(400).send({ error: 'This connection would create a cycle' });
+      return reply.status(400).send({ error: 'This connection would create a direct cycle' });
     }
 
     // If target position is provided, save it

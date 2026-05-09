@@ -5,21 +5,34 @@ export function wouldCreateCycle(
   fromZoneId: string,
   toZoneId: string
 ): boolean {
-    const queue = [toZoneId];
-    const visited = new Set<string>();
+    // Only block direct 2-zone cycles (A→B when B→A already exists)
+    return connections.some(c => c.fromZoneId === toZoneId && c.toZoneId === fromZoneId);
+}
 
-    while (queue.length > 0) {
-      const currentZoneId = queue.shift()!;
-      if (currentZoneId === fromZoneId) return true;
+export function wouldCreateLongerLoop(
+  connections: Connection[],
+  fromZoneId: string,
+  toZoneId: string
+): boolean {
+    // Detect 3+ zone loops (e.g. A→B→C→A), treating connections as bidirectional
+    function canReach(startId: string, targetId: string): boolean {
+      const queue = [startId];
+      const visited = new Set<string>();
 
-      if (visited.has(currentZoneId)) continue;
-      visited.add(currentZoneId);
+      while (queue.length > 0) {
+        const current = queue.shift()!;
+        if (current === targetId) return true;
+        if (visited.has(current)) continue;
+        visited.add(current);
 
-      const nextConnections = connections.filter(c => c.fromZoneId === currentZoneId);
-      for (const c of nextConnections) {
-        queue.push(c.toZoneId);
+        for (const c of connections) {
+          if (c.fromZoneId === current) queue.push(c.toZoneId);
+          else if (c.toZoneId === current) queue.push(c.fromZoneId);
+        }
       }
+      return false;
     }
 
-    return false;
+    // A loop exists if toZoneId can already reach fromZoneId (adding this edge closes the loop)
+    return canReach(toZoneId, fromZoneId);
 }

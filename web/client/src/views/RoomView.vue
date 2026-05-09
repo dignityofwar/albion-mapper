@@ -30,7 +30,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '@/utils/formatters';
 import { deleteConnection, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
-import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, type ZoneType, wouldCreateCycle, getDefaultHandles, getHandleFacing } from 'shared';
+import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, type ZoneType, wouldCreateCycle, wouldCreateLongerLoop, getDefaultHandles, getHandleFacing } from 'shared';
 
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
@@ -745,6 +745,8 @@ async function handleConnect(params: any) {
     return;
   }
 
+  const isLoop = wouldCreateLongerLoop(store.connections, params.source, params.target);
+
   const sourceNode = getNode.value(params.source);
   const targetNode = getNode.value(params.target);
 
@@ -758,9 +760,9 @@ async function handleConnect(params: any) {
     params.source,
     params.sourceHandle,
     params.target,
-    params.targetHandle
+    params.targetHandle,
+    isLoop
   );
-  reportForm.value?.focusTimeInput();
 }
 
 async function updateNodeHandlePosition(nodeId: string, handleId: string, position: 'top' | 'right' | 'bottom' | 'left') {
@@ -819,6 +821,22 @@ function handleConnectEnd(event?: MouseEvent) {
      // Check if we dropped on a node but NOT a handle
      const nodeElement = target?.closest?.('.vue-flow__node');
      const handleElement = target?.closest?.('.vue-flow__handle');
+
+     if (handleElement && nodeElement) {
+       const targetNodeId = nodeElement.getAttribute('data-id');
+       const targetHandleId = handleElement.getAttribute('data-handleid');
+       if (targetNodeId && targetNodeId !== fromNodeId && targetHandleId) {
+         handleConnect({
+           source: fromNodeId,
+           sourceHandle: fromHandleId,
+           target: targetNodeId,
+           targetHandle: targetHandleId
+         });
+         draggingFromNodeId = null;
+         draggingFromHandleId = null;
+         return;
+       }
+     }
      
      if (nodeElement && !handleElement) {
        const targetNodeId = nodeElement.getAttribute('data-id');
