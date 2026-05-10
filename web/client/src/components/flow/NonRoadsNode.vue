@@ -199,7 +199,7 @@ const handles = computed(() => {
         isPinged ? 'ping-animation' : '',
         props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
       ]"
-      @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow') isPinged = false; }"
+      @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow' || e.animationName === 'ping-glow-home') isPinged = false; }"
     >
       <!-- Ping Button (top tip) -->
       <TooltipRoot>

@@ -34,8 +34,18 @@
   animation: ping-glow 6s ease-out forwards;
 }
 
+.ping-animation.home-glow {
+  animation: ping-glow-home 6s ease-out forwards;
+}
+
 @keyframes ping-glow {
   0% { filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); }
   50% { filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.9)); }
   100% { filter: drop-shadow(0 0 0px rgba(59, 130, 246, 0)); }
+}
+
+@keyframes ping-glow-home {
+  0% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); }
+  50% { filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.9)); }
+  100% { filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5)); }
 }
