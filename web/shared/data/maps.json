@@ -9185,7 +9185,7 @@
     "mapID": "xurites-ataglos",
     "mapName": "Xurites-Ataglos",
     "mapType": "roads",
-    "tier": 4,
+    "tier": 6,
     "knownResources": [
       "LOGS"
     ],
