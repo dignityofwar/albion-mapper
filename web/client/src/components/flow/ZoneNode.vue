@@ -33,6 +33,7 @@ const props = defineProps<NodeProps<{
   mapShape?: string;
   customHandles?: CustomHandle[];
   isGhost?: boolean;
+  explored?: boolean;
 }>>();
 
 const store = useRoomStore();
@@ -44,6 +45,7 @@ const now = inject<Ref<number>>('globalNow', ref(Date.now()));
 const isIsolated = computed(() => store.isNodeIsolated(props.id, now.value));
 const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);
+const isUnexplored = computed(() => !props.data.isHome && !props.data.isGhost && !props.data.explored);
 
 const isMapFeaturesModalOpen = ref(false);
 const isHandleEditorOpen = ref(false);
@@ -101,25 +103,10 @@ async function saveCustomHandles(newHandles: CustomHandle[]) {
       return affected;
     });
 
-    // For each connection, do a recursive delete (same as "Delete this and children")
+    // Delete only the directly affected connections (no cascade into downstream nodes)
     for (const conn of connectionsToDelete) {
       try {
-        const toDelete = new Set<string>();
-        const queue = [conn.id];
-        while (queue.length > 0) {
-          const currentId = queue.shift()!;
-          if (toDelete.has(currentId)) continue;
-          toDelete.add(currentId);
-          const c = store.connections.find(x => x.id === currentId);
-          if (c) {
-            const children = store.connections.filter(x => x.fromZoneId === c.toZoneId);
-            for (const child of children) queue.push(child.id);
-          }
-        }
-        const toDeleteArray = Array.from(toDelete).reverse();
-        for (const connId of toDeleteArray) {
-          await deleteConnection(store.roomId, store.token, connId);
-        }
+        await deleteConnection(store.roomId, store.token, conn.id);
       } catch (err) {
         console.error('Failed to delete connection for handle:', err);
       }
@@ -697,6 +684,11 @@ function lockCore(core: string) {
            <button @click.stop="showDeleteOverlay = false" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">Cancel</button>
          </div>
        </div>
+    </div>
+
+    <div v-if="isUnexplored && !isRestricted" class="absolute inset-0 pointer-events-none flex items-center justify-center" :class="Z_INDEX.RESTRICTED_NODE">
+      <div class="absolute inset-0 bg-gray-900/70 diamond-shape"></div>
+      <span class="relative text-[24px] font-semibold tracking-widest uppercase text-gray-400/70 select-none mt-48">Unexplored</span>
     </div>
     <TooltipProvider :delay-duration="100">
       <div 

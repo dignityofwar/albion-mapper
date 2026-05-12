@@ -71,6 +71,7 @@ export interface NodePosition {
   features?: NodeFeatures;
   customHandles?: CustomHandle[];
   proximityTo?: string;
+  explored?: boolean;
 }
 
 export interface CustomHandle {
@@ -267,6 +268,7 @@ export const NodePositionSchema = z.object({
   virtualGridPos: z.object({ x: z.number(), y: z.number() }).optional(),
   features: NodeFeaturesSchema.optional(),
   customHandles: z.array(CustomHandleSchema).nullable().optional(),
+  explored: z.boolean().optional(),
 });
 
 export const ImportRoomBodySchema = z.object({

@@ -89,6 +89,13 @@ export const useRoomStore = defineStore('room', () => {
           connections.value = [...connections.value, msg.connection];
         }
         lastUpdate.value = new Date(msg.connection.reportedAt);
+        // Mark the destination zone as explored when a non-center handle is used
+        if (msg.connection.toHandleId && msg.connection.toHandleId !== 'center') {
+          markNodeExplored(msg.connection.toZoneId);
+        }
+        if (msg.connection.fromHandleId && msg.connection.fromHandleId !== 'center') {
+          markNodeExplored(msg.connection.fromZoneId);
+        }
         break;
 
       case 'connection_updated':
@@ -98,6 +105,13 @@ export const useRoomStore = defineStore('room', () => {
             const newConnections = [...connections.value];
             newConnections[index] = msg.connection;
             connections.value = newConnections;
+          }
+          // Mark zones as explored when a non-center handle is assigned
+          if (msg.connection.toHandleId && msg.connection.toHandleId !== 'center') {
+            markNodeExplored(msg.connection.toZoneId);
+          }
+          if (msg.connection.fromHandleId && msg.connection.fromHandleId !== 'center') {
+            markNodeExplored(msg.connection.fromZoneId);
           }
         }
         lastUpdate.value = new Date();
@@ -245,11 +259,24 @@ export const useRoomStore = defineStore('room', () => {
     }
   }
 
+  function markNodeExplored(zoneId: string) {
+    const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
+    if (index === -1) return;
+    if (nodePositions.value[index].explored) return;
+    const newNodePositions = [...nodePositions.value];
+    newNodePositions[index] = { ...newNodePositions[index], explored: true };
+    nodePositions.value = newNodePositions;
+    lastUpdate.value = new Date();
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value, updateLastUpdated: true }));
+    }
+  }
+
   function updateNodeFeatures(zoneId: string, features: NodeFeatures) {
     const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
     if (index === -1) return;
     const newNodePositions = [...nodePositions.value];
-    newNodePositions[index] = { ...newNodePositions[index], features };
+    newNodePositions[index] = { ...newNodePositions[index], features, explored: true };
     nodePositions.value = newNodePositions;
     lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {
@@ -262,7 +289,7 @@ export const useRoomStore = defineStore('room', () => {
     const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
     if (index === -1) return;
     const newNodePositions = [...nodePositions.value];
-    newNodePositions[index] = { ...newNodePositions[index], customHandles };
+    newNodePositions[index] = { ...newNodePositions[index], customHandles, explored: true };
     nodePositions.value = newNodePositions;
     lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {
@@ -338,6 +365,7 @@ export const useRoomStore = defineStore('room', () => {
     setCredentials,
     applyMessage,
     updateNodePositionsInStore,
+    markNodeExplored,
     updateNodeFeatures,
     updateNodeCustomHandles,
     isNodeIsolated,

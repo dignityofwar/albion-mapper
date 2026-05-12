@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { useRoomStore } from '../stores/useRoomStore';
+import { useRoomStore } from '@/stores/useRoomStore';
 
 const router = useRouter();
 const store = useRoomStore();
 </script>
 
 <template>
-  <div v-if="store.recentlyViewedRooms.length > 0" class="w-full max-w-md bg-gray-900/50 border border-gray-800 rounded-xl p-6">
+  <div v-if="store.recentlyViewedRooms.length > 0" class="w-full max-w-md bg-gray-900/50 border border-gray-800 rounded-xl p-6 mt-6">
     <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Recently Viewed</h2>
     <div class="flex flex-col gap-2">
       <div

@@ -429,6 +429,97 @@ describe('ZoneNode Delete Overlay', () => {
     });
   });
 
+  // ─── Handle editor / shaped road rotation ────────────────────────────────────
+
+  describe('saveCustomHandles', () => {
+    it('does not cascade-delete downstream connections when a handle is disabled', async () => {
+      const now = Date.now();
+      const store = useRoomStore();
+      store.setCredentials('room1', 'token1');
+      simulateServerDelete(store);
+
+      // shaped-road has handle 'c-p1' connected to zone-b (conn-ab).
+      // zone-b also has an outgoing connection to zone-c (conn-bc).
+      // Disabling 'c-p1' should only delete conn-ab, NOT conn-bc.
+      store.applyMessage({
+        type: 'sync',
+        connections: [
+          {
+            id: 'conn-ab',
+            roomId: 'room1',
+            fromZoneId: 'shaped-road',
+            toZoneId: 'zone-b',
+            fromHandleId: 'c-p1',
+            expiresAt: new Date(now + 3600000).toISOString(),
+            reportedAt: new Date().toISOString(),
+          },
+          {
+            id: 'conn-bc',
+            roomId: 'room1',
+            fromZoneId: 'zone-b',
+            toZoneId: 'zone-c',
+            fromHandleId: 'e',
+            expiresAt: new Date(now + 3600000).toISOString(),
+            reportedAt: new Date().toISOString(),
+          },
+        ],
+        homeZoneId: 'home',
+        nodePositions: [
+          { zoneId: 'home', x: 0, y: 0 },
+          { zoneId: 'shaped-road', x: 100, y: 0 },
+          { zoneId: 'zone-b', x: 200, y: 0 },
+          { zoneId: 'zone-c', x: 300, y: 0 },
+        ],
+        lastUpdatedAt: new Date().toISOString(),
+        watching: 0, totalConnected: 0,
+      });
+
+      const wrapper = mount(ZoneNode as any, {
+        props: {
+          ...BASE_PROPS,
+          id: 'shaped-road',
+          data: {
+            type: 'roads',
+            isHome: false,
+            tier: 5,
+            zoneName: 'Shaped Road',
+            mapShape: 'c',
+            customHandles: [
+              { id: 'c-p1', left: '33.79%', top: '16.21%' },
+              { id: 'c-p2', left: '7.62%', top: '42.38%' },
+            ],
+          },
+        },
+        global: {
+          provide: {
+            globalNow: ref(now),
+            showToast: vi.fn(),
+          },
+          stubs: {
+            Handle: true,
+            TagTier: true,
+            TagZone: true,
+          },
+        },
+      });
+
+      // Directly call saveCustomHandles with c-p1 disabled
+      await (wrapper.vm as any).saveCustomHandles([
+        { id: 'c-p1', left: '33.79%', top: '16.21%', disabled: true },
+        { id: 'c-p2', left: '7.62%', top: '42.38%' },
+      ]);
+
+      // Only conn-ab (the connection on the disabled handle) should be deleted
+      expect(deleteConnection).toHaveBeenCalledWith('room1', 'token1', 'conn-ab');
+      expect(vi.mocked(deleteConnection).mock.calls.length).toBe(1);
+
+      // zone-b and zone-c must still exist in nodePositions
+      await nextTick();
+      expect(store.nodePositions.find(p => p.zoneId === 'zone-b')).toBeDefined();
+      expect(store.nodePositions.find(p => p.zoneId === 'zone-c')).toBeDefined();
+    });
+  });
+
   // ─── Isolated node ───────────────────────────────────────────────────────────
 
   describe('isolated node', () => {

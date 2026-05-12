@@ -344,6 +344,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           mapShape: zone?.mapShape,
           customHandles: pos.customHandles,
           proximityTo: zone?.proximityTo,
+          explored: pos.explored,
           isIsolated: store.isNodeIsolated(pos.zoneId, now.value),
         },
       };
@@ -525,6 +526,7 @@ function onNodeDragStop() {
     features: n.data.features,
     customHandles: n.data.customHandles,
     virtualGridPos: n.data.virtualGridPos,
+    explored: n.data.explored,
   }));
   store.updateNodePositionsInStore(positions);
 }
