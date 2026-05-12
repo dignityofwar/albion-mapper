@@ -103,52 +103,50 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'This connection would create a direct cycle' });
     }
 
+    const now = new Date();
+    const lastUpdateMs = now.getTime();
+
     // If target position is provided, save it (new node); otherwise just update slots on existing node
     if (targetPosition) {
-      const initialFeatures = { ...getInitialFeatures(toZoneId), slots };
+      const initialFeatures = { ...getInitialFeatures(toZoneId), slots, lastUpdatedAt: lastUpdateMs };
       await app.db.query(`
         INSERT INTO room_node_positions (room_id, zone_id, x, y, features)
         VALUES ($1, $2, $3, $4, $5)
         ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features
       `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(initialFeatures)]);
-
-      const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
-        'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
-        [id]
-      );
-      const nodePositions = positions.map(p => ({ 
-        zoneId: p.zone_id, 
-        x: p.x, 
-        y: p.y,
-        features: p.features,
-        customHandles: p.custom_handles 
-      }));
-      
-      broadcast(id, { type: 'node_positions_updated', nodePositions });
     } else {
-      // No target position provided (connecting two existing nodes) — update slots on the target node only
+      // No target position provided (connecting two existing nodes) — update slots and lastUpdatedAt on the target node
       await app.db.query(`
         UPDATE room_node_positions
-        SET features = jsonb_set(COALESCE(features, '{}'), '{slots}', $1::jsonb)
-        WHERE room_id = $2 AND zone_id = $3
-      `, [JSON.stringify(slots), id, toZoneId]);
-
-      const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
-        'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
-        [id]
-      );
-      const nodePositions = positions.map(p => ({
-        zoneId: p.zone_id,
-        x: p.x,
-        y: p.y,
-        features: p.features,
-        customHandles: p.custom_handles
-      }));
-
-      broadcast(id, { type: 'node_positions_updated', nodePositions });
+        SET features = jsonb_set(
+          jsonb_set(COALESCE(features, '{}'), '{slots}', $1::jsonb),
+          '{lastUpdatedAt}', $2::jsonb
+        )
+        WHERE room_id = $3 AND zone_id = $4
+      `, [JSON.stringify(slots), JSON.stringify(lastUpdateMs), id, toZoneId]);
     }
 
-    const now = new Date();
+    // Update lastUpdatedAt for the source zone (fromZoneId)
+    await app.db.query(`
+      UPDATE room_node_positions
+      SET features = jsonb_set(COALESCE(features, '{}'), '{lastUpdatedAt}', $1::jsonb)
+      WHERE room_id = $2 AND zone_id = $3
+    `, [JSON.stringify(lastUpdateMs), id, fromZoneId]);
+
+    const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
+      'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
+      [id]
+    );
+    const nodePositions = positions.map(p => ({ 
+      zoneId: p.zone_id, 
+      x: p.x, 
+      y: p.y,
+      features: p.features,
+      customHandles: p.custom_handles 
+    }));
+    
+    broadcast(id, { type: 'node_positions_updated', nodePositions });
+
     const connId = randomUUID();
     const reportedAt = now.toISOString();
     const expiresAt = new Date(now.getTime() + secondsRemaining * 1000).toISOString();
@@ -328,8 +326,8 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
 
       const { secondsRemaining, fromHandleId, toHandleId } = parsed.data;
 
-      const { rows } = await app.db.query<{ id: string }>(
-        'SELECT id FROM connections WHERE id = $1 AND room_id = $2',
+      const { rows } = await app.db.query<{ id: string; from_zone_id: string; to_zone_id: string }>(
+        'SELECT id, from_zone_id, to_zone_id FROM connections WHERE id = $1 AND room_id = $2',
         [connId, actualId]
       );
       const conn = rows[0];
@@ -339,6 +337,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       }
 
       const now = new Date();
+      const lastUpdateMs = now.getTime();
       
       const updates: string[] = [];
       const values: any[] = [];
@@ -366,6 +365,27 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
           `UPDATE connections SET ${updates.join(', ')} WHERE id = $${idx++} AND room_id = $${idx++}`,
           values
         );
+
+        // Update lastUpdatedAt for both zones involved in the connection
+        await app.db.query(`
+          UPDATE room_node_positions
+          SET features = jsonb_set(COALESCE(features, '{}'), '{lastUpdatedAt}', $1::jsonb)
+          WHERE room_id = $2 AND zone_id IN ($3, $4)
+        `, [JSON.stringify(lastUpdateMs), actualId, conn.from_zone_id, conn.to_zone_id]);
+
+        const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
+          'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
+          [actualId]
+        );
+        const nodePositions = positions.map(p => ({
+          zoneId: p.zone_id,
+          x: p.x,
+          y: p.y,
+          features: p.features,
+          customHandles: p.custom_handles,
+        }));
+
+        broadcast(actualId, { type: 'node_positions_updated', nodePositions });
       }
 
       const { rows: updatedConns } = await app.db.query<DbConnection>(

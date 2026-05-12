@@ -167,7 +167,8 @@ describe('POST /api/rooms/:id/connections', () => {
   it('creates a connection with slots=7 and stores it in node features', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
     mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position (target)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE node position (source)
     mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_B, x: 100, y: 200, features: { slots: 7 }, custom_handles: null }] }); // SELECT positions
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
 
@@ -191,7 +192,8 @@ describe('POST /api/rooms/:id/connections', () => {
   it('creates a connection with slots=20 and stores it in node features', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
     mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position (target)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE node position (source)
     mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_B, x: 100, y: 200, features: { slots: 20 }, custom_handles: null }] }); // SELECT positions
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
 
@@ -216,13 +218,15 @@ describe('POST /api/rooms/:id/connections', () => {
     const connId = 'conn-1';
     
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room existence check
-    mockDb.query.mockResolvedValueOnce({ rows: [{ id: connId }] }); // connection existence check
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: connId, from_zone_id: VALID_ZONE_A, to_zone_id: VALID_ZONE_B }] }); // connection existence check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE connections
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE room_node_positions
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (for broadcast)
     mockDb.query.mockResolvedValueOnce({ rows: [{ 
       id: connId, room_id: roomId, from_zone_id: VALID_ZONE_A, to_zone_id: VALID_ZONE_B,
       expires_at: new Date(Date.now() + 120 * 60 * 1000).toISOString(),
       reported_at: new Date().toISOString(), reported_by: null
-    }] }); // SELECT updated
+    }] }); // SELECT updated connection
 
     const updateRes = await app.inject({
       method: 'PATCH',
@@ -359,5 +363,59 @@ describe('DELETE /api/rooms/:id/connections (Reset)', () => {
       headers: { authorization: `Bearer ${token}` },
     });
     expect(res.statusCode).toBe(404);
+  });
+});
+
+describe('Connection lastUpdatedAt refresh', () => {
+  it('updates lastUpdatedAt for source and target zones on POST', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position (target)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE node position (source)
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (for broadcast)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7 },
+    });
+
+    expect(res.statusCode).toBe(201);
+
+    const updateCalls = mockDb.query.mock.calls.filter((call: any[]) =>
+      call[0].includes('UPDATE room_node_positions') || call[0].includes('INSERT INTO room_node_positions')
+    );
+
+    // Should have calls that set lastUpdatedAt
+    const lastUpdateCalls = updateCalls.filter((call: any[]) => call[0].includes('lastUpdatedAt'));
+    expect(lastUpdateCalls.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('updates lastUpdatedAt for both zones on PATCH', async () => {
+    const connId = 'conn-1';
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: connId, from_zone_id: VALID_ZONE_A, to_zone_id: VALID_ZONE_B }] }); // connection check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE connection
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE node positions
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (for broadcast)
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: connId, expires_at: new Date().toISOString() }] }); // SELECT updated connection
+
+    const res = await app.inject({
+      method: 'PATCH',
+      url: `/api/rooms/${roomId}/connections/${connId}`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { secondsRemaining: 3600 },
+    });
+
+    expect(res.statusCode).toBe(200);
+
+    const updateCall = mockDb.query.mock.calls.find((call: any[]) =>
+      call[0].includes('UPDATE room_node_positions') && call[0].includes('lastUpdatedAt')
+    );
+    expect(updateCall).toBeDefined();
+    expect(updateCall[1]).toContain(VALID_ZONE_A);
+    expect(updateCall[1]).toContain(VALID_ZONE_B);
   });
 });

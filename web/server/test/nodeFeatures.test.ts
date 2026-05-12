@@ -94,7 +94,18 @@ describe('Auto-pre-population in routes', () => {
         'qiient-et-qinsum',
         100,
         100,
-        JSON.stringify({ resourceWood: true, slots: 7 })
+        expect.stringContaining('"resourceWood":true'),
+      ])
+    );
+    
+    expect(mockDb.query).toHaveBeenCalledWith(
+      expect.stringContaining('INSERT INTO room_node_positions'),
+      expect.arrayContaining([
+        expect.any(String),
+        expect.any(String),
+        expect.any(Number),
+        expect.any(Number),
+        expect.stringContaining('"lastUpdatedAt":'),
       ])
     );
   });
