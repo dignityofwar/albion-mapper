@@ -56,8 +56,8 @@ describe('useRoomStore', () => {
     const features = { reds: 5, powercoreGreen: true };
     store.updateNodeFeatures('z1', features);
 
-    // Verify local state update (optimistic)
-    expect(store.nodePositions[0].features).toEqual(features);
+    // Verify local state update (optimistic) — store also injects lastUpdatedAt
+    expect(store.nodePositions[0].features).toEqual(expect.objectContaining(features));
   });
 
   it('should NOT update lastUpdate when node positions are updated (default reason)', () => {
@@ -151,6 +151,35 @@ describe('useRoomStore', () => {
     
     // Verify home zone is not restricted
     expect(store.isNodeRestricted('home-zone', Date.now())).toBe(false);
+  });
+
+  it('existing explored node remains explored after another node is added via node_positions_updated', async () => {
+    const store = useRoomStore();
+
+    // Start with two nodes; z1 is explored (e.g. has a non-center handle connection)
+    store.nodePositions = [
+      { zoneId: 'z1', x: 0, y: 0, explored: true },
+      { zoneId: 'z2', x: 10, y: 10, explored: false },
+    ];
+
+    // Simulate another client adding a new node (z3) — the broadcast contains ALL positions
+    // including the new one, but z1's explored flag must be preserved
+    store.applyMessage({
+      type: 'node_positions_updated',
+      nodePositions: [
+        { zoneId: 'z1', x: 0, y: 0, explored: false }, // server sends false, but local is true
+        { zoneId: 'z2', x: 10, y: 10, explored: false },
+        { zoneId: 'z3', x: 20, y: 20, explored: false }, // newly added node
+      ],
+    });
+
+    // Wait a tick for any async logic
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    const z1 = store.nodePositions.find(n => n.zoneId === 'z1');
+    expect(z1).toBeDefined();
+    expect(z1!.explored).toBe(true); // must remain explored
+    expect(store.nodePositions).toHaveLength(3); // all three nodes present
   });
 
   it('should not expire parent node if child connection is expired but path to hideout still exists', () => {

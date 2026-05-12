@@ -184,7 +184,20 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
             client.release();
           }
 
-          broadcast(roomId, { type: 'node_positions_updated', nodePositions: deduplicated, updateLastUpdated: msg.updateLastUpdated }, socket);
+          // Re-read from DB so the broadcast contains authoritative values (e.g. explored flag)
+          const { rows: updatedRows } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any; explored: boolean }>(
+            'SELECT zone_id, x, y, features, custom_handles, explored FROM room_node_positions WHERE room_id = $1',
+            [roomId]
+          );
+          const broadcastPositions: NodePosition[] = updatedRows.map((row) => ({
+            zoneId: row.zone_id,
+            x: row.x,
+            y: row.y,
+            features: row.features,
+            customHandles: row.custom_handles,
+            explored: row.explored ?? false,
+          }));
+          broadcast(roomId, { type: 'node_positions_updated', nodePositions: broadcastPositions, updateLastUpdated: msg.updateLastUpdated }, socket);
           return;
         }
 

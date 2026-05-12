@@ -317,7 +317,8 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
             features: p.features,
             customHandles: p.customHandles,
             virtualGridPos: p.virtualGridPos,
-            proximityTo: p.proximityTo || ZONE_BY_ID.get(p.zoneId)?.proximityTo
+            proximityTo: p.proximityTo || ZONE_BY_ID.get(p.zoneId)?.proximityTo,
+            explored: p.explored ?? false
         }));
         store.updateNodePositionsInStore(updatedPositions);
     }

@@ -146,7 +146,23 @@ export const useRoomStore = defineStore('room', () => {
         break;
       
       case 'node_positions_updated':
-        nodePositions.value = msg.nodePositions;
+        {
+          const merged = msg.nodePositions.map((p: NodePosition) => {
+            const existing = nodePositions.value.find(n => n.zoneId === p.zoneId);
+            if (!existing) return p;
+            return {
+              ...existing,
+              x: p.x,
+              y: p.y,
+              virtualGridPos: p.virtualGridPos ?? existing.virtualGridPos,
+              proximityTo: p.proximityTo ?? existing.proximityTo,
+              features: p.features ?? existing.features,
+              customHandles: p.customHandles ?? existing.customHandles,
+              explored: p.explored || existing.explored,
+            };
+          });
+          nodePositions.value = merged;
+        }
         if (msg.updateLastUpdated) {
           lastUpdate.value = new Date();
         }
@@ -243,9 +259,25 @@ export const useRoomStore = defineStore('room', () => {
 
   function updateNodePositionsInStore(positions: NodePosition[]) {
     if (!positions) return;
+    // Merge incoming positions with existing ones, preserving explored/features/customHandles
+    // for nodes that already exist unless the incoming data explicitly provides them
+    const merged = positions.map(p => {
+      const existing = nodePositions.value.find(n => n.zoneId === p.zoneId);
+      if (!existing) return p;
+      return {
+        ...existing,
+        x: p.x,
+        y: p.y,
+        virtualGridPos: p.virtualGridPos ?? existing.virtualGridPos,
+        proximityTo: p.proximityTo ?? existing.proximityTo,
+        features: p.features ?? existing.features,
+        customHandles: p.customHandles ?? existing.customHandles,
+        explored: p.explored || existing.explored,
+      };
+    });
     if (ws && ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: positions }));
-      nodePositions.value = positions; // Optimistic update
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: merged }));
+      nodePositions.value = merged; // Optimistic update
       track('move_node');
     }
   }
