@@ -41,6 +41,12 @@ const isHideoutZone = computed(() => {
   const zone = ZONE_BY_ID.get(toZoneId.value);
   return !!(zone as any)?.isRoadsHideout;
 });
+const isRoyalOrOutlands = computed(() => {
+  if (!toZoneId.value) return false;
+  const zone = ZONE_BY_ID.get(toZoneId.value);
+  if (!zone) return false;
+  return zone.type.startsWith('royal') || zone.type === 'outlands';
+});
 watch([fromZoneId, toZoneId], () => {
   secondsRemaining.value = null;
 });
@@ -51,8 +57,7 @@ watch(toZoneId, (newId) => {
   }
   if (!newId) return;
   const zone = ZONE_BY_ID.get(newId);
-  slots.value = 7;
-  if ((zone as any)?.isRoadsHideout) {
+  if (!zone || zone.type.startsWith('royal') || zone.type === 'outlands') {
     slots.value = 7;
   }
 });
@@ -424,8 +429,8 @@ defineExpose({
                 >7</button>
                 <button
                   type="button"
-                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-yellow-600 border-gray-300 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600', !isHideoutZone && 'opacity-50 cursor-not-allowed']"
-                  :disabled="!isHideoutZone"
+                  :class="['flex-1 px-3 py-2 rounded border text-sm font-semibold transition-colors', slots === 20 ? 'bg-yellow-600 border-gray-300 text-white' : 'bg-gray-800 border-gray-400 text-gray-300 hover:bg-gray-600', isRoyalOrOutlands && 'opacity-50 cursor-not-allowed']"
+                  :disabled="isRoyalOrOutlands"
                   @click="slots = 20"
                 >20</button>
               </div>
