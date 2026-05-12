@@ -6,7 +6,7 @@
 
 @layer components {
   .zone-button {
-    @apply rounded bg-gray-700 hover:bg-gray-600 border border-gray-600 hover:border-gray-400 text-gray-400 transition-colors duration-500;
+    @apply rounded bg-gray-700 hover:bg-gray-600 border border-gray-500 hover:border-gray-400 text-gray-400 transition-colors duration-500;
   }
   .zone-button-reds {
     @apply bg-red-900/70 hover:bg-red-700/80 border-red-800 hover:border-red-600 transition-colors duration-500;
