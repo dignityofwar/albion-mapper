@@ -98,6 +98,8 @@ export interface NodeFeatures {
   dungeonStatic?: boolean;
   dungeonGroup?: boolean;
   chest?: boolean;
+  chestSize?: 'S' | 'M' | 'L';
+  chestTimer?: number; // Expiration timestamp in ms
   treasuresGreen?: boolean;
   treasuresBlue?: boolean;
   treasuresYellow?: boolean;
@@ -240,6 +242,8 @@ export const NodeFeaturesSchema = z.object({
   dungeonStatic: z.boolean().optional(),
   dungeonGroup: z.boolean().optional(),
   chest: z.boolean().optional(),
+  chestSize: z.enum(['S', 'M', 'L']).optional(),
+  chestTimer: z.number().optional(),
   treasuresGreen: z.boolean().optional(),
   treasuresBlue: z.boolean().optional(),
   treasuresYellow: z.boolean().optional(),
