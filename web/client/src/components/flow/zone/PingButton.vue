@@ -16,7 +16,7 @@ defineEmits<{
       <button
         :class="['w-9 h-9 flex items-center justify-center zone-button round-button ping-button shadow-lg text-lg pointer-events-auto', hasReds ? 'zone-button-reds' : '']"
         @click.stop="$emit('ping')"
-      >📍</button>
+      >🔔</button>
     </TooltipTrigger>
     <TooltipPortal>
       <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">

@@ -1050,7 +1050,7 @@ defineExpose({ flowNodes, onNodeDragStop });
             bg-class="bg-blue-600/30 backdrop-blur-md"
             border-class="border-blue-300"
             @click="pt.nodeId ? goToNode(pt.nodeId) : null"
-          >📍 Ping: {{ pt.zoneName }}</MegaToast>
+          >🔔 Ping: {{ pt.zoneName }}</MegaToast>
         </TransitionGroup>
       </div>
 

@@ -17,13 +17,13 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center">
+  <div class="flex flex-col items-center justify-center relative">
+    <img v-if="isHome" src="/images/hideout.png" class="absolute -top-12 w-8 h-10" />
     <div 
       class="font-bold flex items-center leading-tight mb-1"
       :class="compact ? 'text-base' : 'text-sm'"
     >
       {{ zoneName || id }}
-      <span v-if="isHome" class="ml-1">🏠</span>
     </div>
     <div class="flex items-center gap-1.5" :class="{ 'scale-75 origin-top': compact }">
       <TagTier v-if="tier" :tier="tier" :type="type" />
