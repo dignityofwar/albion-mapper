@@ -138,11 +138,11 @@ async function copyShareUrl() {
   showToast('Copied to clipboard!');
 }
 
-function showToast(msg: string, type: 'info' | 'error' = 'info') {
+function showToast(msg: string, type: 'info' | 'error' = 'info', duration = 5000) {
   toast.value = msg;
   toastType.value = type;
   if (toastTimeout) clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => (toast.value = ''), 5000);
+  toastTimeout = setTimeout(() => (toast.value = ''), duration);
 }
 
 function showMegaToast(region: string, nodeId?: string) {
@@ -1112,7 +1112,7 @@ defineExpose({ flowNodes, onNodeDragStop });
     <Transition name="toast">
       <div
         v-if="toast"
-        class="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
+        class="fixed top-16 left-1/2 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
         :class="[
           Z_INDEX.UI_OVERLAY,
           toastType === 'error' ? 'bg-red-900 border border-red-500' : 'bg-gray-800 border border-gray-600'

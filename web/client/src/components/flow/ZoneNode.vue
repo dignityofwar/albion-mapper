@@ -118,8 +118,7 @@ async function saveCustomHandles(newHandles: CustomHandle[]) {
   if (tutorialStore.step === 5) {
     tutorialStore.setStep(6);
   }
-  // @ts-ignore
-  if (typeof showToast !== 'undefined') showToast('Handle positions updated');
+  if (typeof showToast !== 'undefined') showToast('Handle positions updated', 'info', 8000);
 }
 
 const handleCloseTray = () => {
@@ -355,7 +354,7 @@ const MAX_TIMES = {
   powercoreYellow: 20 * 60,
 };
 
-const showToast = inject<(msg: string, type?: 'info' | 'error') => void>('showToast');
+const showToast = inject<(msg: string, type?: 'info' | 'error', duration?: number) => void>('showToast');
 const showPingToast = inject<(zoneName: string, nodeId?: string) => void>('showPingToast');
 
 const isPinged = ref(false);
