@@ -38,9 +38,7 @@ onMounted(() => {
       Collaborate with your guild or friends in real-time to track Roads of Avalon portal connections. Track connections between your hideout, send alerts to your guild when enemies are near your hideout, easily find connections to the Royal Continent and Outlands.
     </p>
 
-    <RecentlyViewedRooms />
-
-    <div class="flex gap-4">
+     <div class="flex gap-4">
       <button
         class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
         @click="openCreateRoom()"
@@ -54,6 +52,7 @@ onMounted(() => {
         Join Room
       </button>
     </div>
+    <RecentlyViewedRooms />
   </div>
 
     <CreateRoomModal v-if="showCreate" @close="showCreate = false" />
