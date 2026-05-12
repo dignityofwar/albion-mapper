@@ -365,6 +365,33 @@ function handlePing() {
   store.send({ type: 'ping', zoneName: props.data.zoneName || props.id, nodeId: props.id });
 }
 
+function handleMarkAsCorrect() {
+  const currentFeatures = props.data.features || {};
+  store.updateNodeFeatures(props.id, { ...currentFeatures });
+}
+
+const lastUpdatedText = computed(() => {
+  const ts = props.data.features?.lastUpdatedAt;
+  if (!ts) return '';
+  const diffMs = now.value - ts;
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return 'just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  return `${Math.floor(diffHours / 24)}d ago`;
+});
+
+const lastUpdatedColor = computed(() => {
+  const ts = props.data.features?.lastUpdatedAt;
+  if (!ts) return '';
+  const diffMs = now.value - ts;
+  const diffHours = diffMs / 3600000;
+  if (diffHours < 1) return 'text-green-400';
+  if (diffHours < 2) return 'text-orange-400';
+  return 'text-red-400';
+});
+
 watch(() => store.lastPing, (ping) => {
   if (ping && ping.nodeId === props.id) {
     isPinged.value = false;
@@ -704,21 +731,39 @@ function lockCore(core: string) {
         @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow' || e.animationName === 'ping-glow-home') isPinged = false; }"
       >
       <!-- Ping Button (top tip) -->
-      <TooltipRoot>
-        <TooltipTrigger asChild>
-          <button
-            class="absolute left-1/2 -translate-x-1/2 top-7 w-9 h-9 flex items-center justify-center ping-button shadow-lg text-lg pointer-events-auto"
-            :class="Z_INDEX.CONTENT_LOW"
-            title="Ping this zone"
-            @click.stop="handlePing"
-          >📍</button>
-        </TooltipTrigger>
-        <TooltipPortal>
-          <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
-            Ping this zone
-          </TooltipContent>
-        </TooltipPortal>
-      </TooltipRoot>
+      <div class="absolute left-1/2 -translate-x-1/2 top-8 flex flex-col items-center gap-0.5" :class="Z_INDEX.CONTENT_LOW">
+        <div class="flex items-center gap-1">
+          <TooltipRoot>
+            <TooltipTrigger asChild>
+              <button
+                class="w-9 h-9 flex items-center justify-center ping-button shadow-lg text-lg pointer-events-auto"
+                @click.stop="handlePing"
+              >📍</button>
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
+                Ping this zone
+              </TooltipContent>
+            </TooltipPortal>
+          </TooltipRoot>
+          <TooltipRoot>
+            <TooltipTrigger asChild>
+              <button
+                class="w-9 h-9 flex items-center justify-center ping-button shadow-lg text-lg pointer-events-auto"
+                @click.stop="handleMarkAsCorrect"
+              >✅</button>
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
+                Mark as correct
+              </TooltipContent>
+            </TooltipPortal>
+          </TooltipRoot>
+        </div>
+        <span v-if="props.data.features?.lastUpdatedAt" class="text-[10px] font-semibold pointer-events-none select-none" :class="lastUpdatedColor">
+          Updated: {{ lastUpdatedText }}
+        </span>
+      </div>
 
       <!-- Diamond Shape Background -->
       <div 
@@ -812,7 +857,7 @@ function lockCore(core: string) {
       </div>
 
       <!-- Central Content Block -->
-      <div class="absolute inset-x-0 top-[37.5%] pointer-events-none flex flex-col items-center" :class="Z_INDEX.CONTENT_LOW">
+      <div class="absolute inset-x-0 top-[42%] pointer-events-none flex flex-col items-center" :class="Z_INDEX.CONTENT_LOW">
         <div class="w-full flex flex-col items-center pointer-events-none">
           <!-- Zone Header -->
             <ZoneHeader
@@ -826,10 +871,8 @@ function lockCore(core: string) {
               :proximity-to="props.data.proximityTo"
             />
 
-            <hr class="w-[85%] my-2 transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
-
           <!-- Map Features -->
-          <div class="nodrag flex flex-col items-center pointer-events-auto" ref="featuresContainerRef">
+          <div class="nodrag flex flex-col items-center pointer-events-auto mt-1" ref="featuresContainerRef">
             <div class="flex items-center justify-center gap-1 mb-1 relative">
               <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Map Features</span>
               <button 
@@ -893,14 +936,14 @@ function lockCore(core: string) {
 
 .cores-nw-container {
   position: absolute;
-  top: 76px;
-  left: 94px;
+  top: 85px;
+  left: 85px;
 }
 
 .cores-ne-container {
   position: absolute;
-  top: 76px;
-  right: 94px;
+  top: 85px;
+  right: 85px;
 }
 
 .reds-ne-container {
@@ -911,8 +954,8 @@ function lockCore(core: string) {
 
 .handle-editor-container {
   position: absolute;
-  top: 165px;
-  left: 60px;
+  top: 180px;
+  left: 50px;
 }
 
 </style>

@@ -276,7 +276,8 @@ export const useRoomStore = defineStore('room', () => {
     const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
     if (index === -1) return;
     const newNodePositions = [...nodePositions.value];
-    newNodePositions[index] = { ...newNodePositions[index], features, explored: true };
+    const featuresWithTimestamp = { ...features, lastUpdatedAt: Date.now() };
+    newNodePositions[index] = { ...newNodePositions[index], features: featuresWithTimestamp, explored: true };
     nodePositions.value = newNodePositions;
     lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {

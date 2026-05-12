@@ -111,6 +111,7 @@ export interface NodeFeatures {
   resourceOreSize?: 'S' | 'L';
   resourceStoneSize?: 'S' | 'L';
   resourceWoodSize?: 'S' | 'L';
+  lastUpdatedAt?: number; // Timestamp in ms
 }
 
 export type ConnectionStatus = 'active' | 'expired';
