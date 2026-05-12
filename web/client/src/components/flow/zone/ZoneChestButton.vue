@@ -77,7 +77,7 @@ const tooltipText = computed(() => {
     <TooltipTrigger as-child>
       <div
         @click.stop="emit('click')"
-        class="chest-container relative group cursor-pointer overflow-visible shrink-0"
+        class="chest-container relative group cursor-pointer overflow-visible shrink-0 rounded-tr-md rounded-br-md"
         :class="[
           { 'active': isActive },
           Z_INDEX.CONTENT_HIGH

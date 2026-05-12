@@ -6,7 +6,10 @@
 
 @layer components {
   .zone-button {
-    @apply rounded bg-gray-800/80 hover:bg-gray-700/80 text-gray-400 border border-gray-700 hover:border-gray-500 transition-colors duration-500;
+    @apply rounded bg-gray-700 hover:bg-gray-600 border border-gray-600 hover:border-gray-500 text-gray-400 transition-colors duration-500;
+  }
+  .zone-button-reds {
+    @apply bg-red-900/70 hover:bg-red-700/80 border-red-800 hover:border-red-600 transition-colors duration-500;
   }
   .frosted-background {
     @apply bg-gray-800/30 backdrop-blur-md;
@@ -32,8 +35,14 @@
   .frosted-button {
     @apply bg-gray-800/60 backdrop-blur-md border border-gray-600/60 hover:bg-gray-700/70;
   }
+  .round-button {
+    @apply rounded-full;
+  }
   .ping-button {
-    @apply rounded-full bg-gray-800/80 border border-gray-700 text-gray-400 hover:bg-blue-600 hover:border-blue-300 hover:text-white transition-colors duration-500;
+    @apply hover:bg-blue-500/80 hover:border-blue-400/80;
+  }
+  .check-button {
+    @apply hover:bg-green-600/80 hover:border-green-400/80;
   }
   .key {
     @apply bg-gray-800 text-gray-300 px-1.5 py-0.5 rounded border border-gray-700 font-mono text-[10px] uppercase;

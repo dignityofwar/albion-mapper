@@ -52,8 +52,8 @@ const getImageSrc = (type: string) => {
       >
         <img :src="getImageSrc(type)" class="w-14 h-14 object-cover p-1" :alt="title" />
         <div v-if="isResource" class="flex flex-col h-16">
-          <button @click.stop="$emit('size', type, 'S')" class="px-1.5 rounded-t hover:bg-black/50 flex-1 flex items-center justify-center text-[10px] border-b border-white/10" :class="size === 'S' ? 'bg-gray-500' : 'bg-black/30'">S</button>
-          <button @click.stop="$emit('size', type, 'L')" class="px-1.5 rounded-b hover:bg-black/50 flex-1 flex items-center justify-center text-[10px]" :class="size === 'L' ? 'bg-gray-500' : 'bg-black/30'">L</button>
+          <button @click.stop="$emit('size', type, 'S')" class="px-1.5 rounded-t hover:bg-black/50 flex-1 flex items-center justify-center text-[10px] border-b border-white/10" :class="size === 'S' ? (hasReds ? 'bg-red-700/70' : 'bg-gray-500') : (hasReds ? 'bg-red-900/40' : 'bg-black/30')">S</button>
+          <button @click.stop="$emit('size', type, 'L')" class="px-1.5 rounded-b hover:bg-black/50 flex-1 flex items-center justify-center text-[10px]" :class="size === 'L' ? (hasReds ? 'bg-red-700/70' : 'bg-gray-500') : (hasReds ? 'bg-red-900/40' : 'bg-black/30')">L</button>
         </div>
       </button>
     </TooltipTrigger>

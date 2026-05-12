@@ -41,13 +41,12 @@ const emit = defineEmits<{
 
       <hr class="transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 
-      <!-- Chests -->
+      <!-- Treasures -->
       <div>
-        <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Chests">Chests</div>
+        <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Treasures">Avalonian Treasures</div>
         <div class="flex flex-wrap gap-1.5 justify-start">
           <ZoneFeatureToggle 
             v-for="f in [
-              { type: 'chest', title: 'Chests' },
               { type: 'treasuresGreen', title: 'Green Treasures' },
               { type: 'treasuresBlue', title: 'Blue Treasures' },
               { type: 'treasuresYellow', title: 'Yellow Treasures' }

@@ -5,6 +5,7 @@ import { Z_INDEX } from '@/constants/Layers';
 defineProps<{
   mapShape?: string;
   type?: string;
+  hasReds?: boolean;
 }>();
 
 defineEmits<{
@@ -22,7 +23,7 @@ defineExpose({
   <button 
     v-if="mapShape && (type === 'roads' || type === 'roadsHideout')"
     ref="buttonRef"
-    :class="['zone-button px-3 py-1.5 flex items-center gap-1.5 shadow-lg pointer-events-auto', Z_INDEX.CONTENT_LOW]"
+    :class="['zone-button px-3 py-1.5 flex items-center gap-1.5 shadow-lg pointer-events-auto', hasReds ? 'zone-button-reds' : '', Z_INDEX.CONTENT_LOW]"
     @click.stop="$emit('click')"
   >
     <div class="mini-handle pointer-events-none"></div>

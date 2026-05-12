@@ -10,8 +10,11 @@ import ZoneCoresAndReds from './zone/ZoneCoresAndReds.vue';
 import ZoneReds from './zone/ZoneReds.vue';
 import ZoneFeatures from './zone/ZoneFeatures.vue';
 import ZoneMapFeaturesModal from './zone/ZoneMapFeaturesModal.vue';
+import ZoneChestButton from './zone/ZoneChestButton.vue';
+import ZoneChestModal from './zone/ZoneChestModal.vue';
 import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import ZoneHandleEditorButton from './zone/ZoneHandleEditorButton.vue';
+import PingButton from './zone/PingButton.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
@@ -321,6 +324,35 @@ const timerContainerRefNW = ref<HTMLElement | null>(null);
 const timerContainerRefNE = ref<HTMLElement | null>(null);
 
 const isRedsOpen = ref(false);
+const isChestModalOpen = ref(false);
+const chestModalContainerRef = ref<HTMLElement | null>(null);
+
+onClickOutside(chestModalContainerRef, () => {
+  if (isChestModalOpen.value) isChestModalOpen.value = false;
+});
+
+function saveChest(size: 'S' | 'M' | 'L', timerValue: string) {
+  const match = timerValue.match(/^(\d{1,2}):(\d{2})$/);
+  if (!match) return;
+  const m = parseInt(match[1], 10);
+  const s = parseInt(match[2], 10);
+  const totalSeconds = m * 60 + s;
+  const currentFeatures = props.data.features || {};
+  store.updateNodeFeatures(props.id, {
+    ...currentFeatures,
+    chest: true,
+    chestSize: size,
+    chestTimer: now.value + totalSeconds * 1000,
+  });
+}
+
+function clearChest() {
+  const currentFeatures = { ...(props.data.features || {}) };
+  delete currentFeatures.chest;
+  delete currentFeatures.chestSize;
+  delete currentFeatures.chestTimer;
+  store.updateNodeFeatures(props.id, currentFeatures);
+}
 
 
 const showPrompt = computed(() => {
@@ -377,7 +409,10 @@ const lastUpdatedText = computed(() => {
   if (diffMins < 1) return 'just now';
   if (diffMins < 60) return `${diffMins}m ago`;
   const diffHours = Math.floor(diffMins / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffHours < 24) {
+    const remainingMins = diffMins % 60;
+    return remainingMins > 0 ? `${diffHours}h ${remainingMins}m ago` : `${diffHours}h ago`;
+  }
   return `${Math.floor(diffHours / 24)}d ago`;
 });
 
@@ -477,7 +512,6 @@ const activeFeatures = computed(() => {
   const list: { type: string; title: string; icon: string; size?: 'S' | 'L'; isResource: boolean }[] = [];
   
   const allFeatures = [
-    { key: 'chest', title: 'Chests', icon: '/images/chest.png' },
     { key: 'treasuresGreen', title: 'Green Treasures', icon: '/images/treasures-green.png' },
     { key: 'treasuresBlue', title: 'Blue Treasures', icon: '/images/treasures-blue.png' },
     { key: 'treasuresYellow', title: 'Yellow Treasures', icon: '/images/treasures-yellow.png' },
@@ -508,7 +542,7 @@ const hasReds = computed(() => {
   return reds !== undefined && reds !== 0;
 });
 
-function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'powercoreYellow' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup' | 'chest' | 'treasuresGreen' | 'treasuresBlue' | 'treasuresYellow' | 'resourceFibre' | 'resourceLeather' | 'resourceOre' | 'resourceStone' | 'resourceWood') {
+function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'powercoreYellow' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup' | 'treasuresGreen' | 'treasuresBlue' | 'treasuresYellow' | 'resourceFibre' | 'resourceLeather' | 'resourceOre' | 'resourceStone' | 'resourceWood') {
   const currentFeatures = props.data.features || {};
   const features = { ...currentFeatures };
   
@@ -679,7 +713,7 @@ function lockCore(core: string) {
 <template>
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
     <div :class="[isConnecting ? 'connecting-mode' : '']">
-        <template v-if="!isHandleEditorOpen && !isMapFeaturesModalOpen" v-for="handle in handles" :key="handle.id">
+        <template v-if="!isHandleEditorOpen && !isMapFeaturesModalOpen && !isChestModalOpen" v-for="handle in handles" :key="handle.id">
           <Handle
             type="source"
             :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
@@ -730,25 +764,13 @@ function lockCore(core: string) {
         @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow' || e.animationName === 'ping-glow-home') isPinged = false; }"
       >
       <!-- Ping Button (top tip) -->
-      <div class="absolute left-1/2 -translate-x-1/2 top-8 flex flex-col items-center gap-0.5" :class="Z_INDEX.CONTENT_LOW">
+      <div class="absolute left-1/2 -translate-x-1/2 top-9 flex flex-col items-center gap-0.5" :class="Z_INDEX.CONTENT_LOW">
         <div class="flex items-center gap-1">
+          <PingButton :has-reds="hasReds" @ping="handlePing" />
           <TooltipRoot>
             <TooltipTrigger asChild>
               <button
-                class="w-9 h-9 flex items-center justify-center ping-button shadow-lg text-lg pointer-events-auto"
-                @click.stop="handlePing"
-              >📍</button>
-            </TooltipTrigger>
-            <TooltipPortal>
-              <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
-                Ping this zone
-              </TooltipContent>
-            </TooltipPortal>
-          </TooltipRoot>
-          <TooltipRoot>
-            <TooltipTrigger asChild>
-              <button
-                class="w-9 h-9 flex items-center justify-center ping-button shadow-lg text-lg pointer-events-auto"
+                :class="['w-9 h-9 flex items-center justify-center zone-button round-button check-button shadow-lg text-lg pointer-events-auto', hasReds ? 'zone-button-reds' : '']"
                 @click.stop="handleMarkAsCorrect"
               >✅</button>
             </TooltipTrigger>
@@ -831,6 +853,7 @@ function lockCore(core: string) {
                 ref="handleEditorButtonRef"
                 :map-shape="props.data.mapShape"
                 :type="props.data.type"
+                :has-reds="hasReds"
                 @click="openHandleEditor"
               />
             </TooltipTrigger>
@@ -853,6 +876,17 @@ function lockCore(core: string) {
           />
         </div>
 
+        <!-- Chest on South-West Edge (opposite of Reds) -->
+        <div class="chest-sw-container pointer-events-auto">
+          <ZoneChestButton
+            :chest="props.data.features?.chest"
+            :chest-size="props.data.features?.chestSize"
+            :chest-timer="props.data.features?.chestTimer"
+            :now="now"
+            :has-reds="hasReds"
+            @click="isChestModalOpen = !isChestModalOpen"
+          />
+        </div>
       </div>
 
       <!-- Central Content Block -->
@@ -871,15 +905,14 @@ function lockCore(core: string) {
             />
 
           <!-- Map Features -->
-          <div class="nodrag flex flex-col items-center pointer-events-auto mt-1" ref="featuresContainerRef">
+          <div class="nodrag flex flex-col items-center pointer-events-auto mt-2" ref="featuresContainerRef">
             <div class="flex items-center justify-center gap-1 mb-1 relative">
               <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Map Features</span>
               <button 
                 ref="mapFeaturesButtonRef"
                 @click.stop="isMapFeaturesModalOpen = !isMapFeaturesModalOpen"
                 @mousedown.stop
-                class="zone-button p-1 pointer-events-auto relative"
-                :class="Z_INDEX.CONTENT_HIGH"
+                :class="['zone-button p-1 pointer-events-auto relative', hasReds ? 'zone-button-reds' : '', Z_INDEX.CONTENT_HIGH]"
                 title="Edit Map Features"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -902,6 +935,19 @@ function lockCore(core: string) {
           @toggle="toggleFeature"
           @size="setFeatureSize"
           @close="handleCloseTray"
+        />
+      </div>
+
+      <div ref="chestModalContainerRef">
+        <ZoneChestModal
+          :is-open="isChestModalOpen"
+          :has-reds="hasReds"
+          :chest-size="props.data.features?.chestSize"
+          :chest-timer="props.data.features?.chestTimer"
+          :now="now"
+          @save="saveChest"
+          @clear="clearChest"
+          @close="isChestModalOpen = false"
         />
       </div>
 
@@ -935,14 +981,14 @@ function lockCore(core: string) {
 
 .cores-nw-container {
   position: absolute;
-  top: 85px;
-  left: 85px;
+  top: 90px;
+  left: 80px;
 }
 
 .cores-ne-container {
   position: absolute;
-  top: 85px;
-  right: 85px;
+  top: 90px;
+  right: 80px;
 }
 
 .reds-ne-container {
@@ -951,9 +997,15 @@ function lockCore(core: string) {
   right: 2px;
 }
 
+.chest-sw-container {
+  position: absolute;
+  top: 200px;
+  left: 2px;
+}
+
 .handle-editor-container {
   position: absolute;
-  top: 180px;
+  top: 165px;
   left: 50px;
 }
 

@@ -63,11 +63,18 @@ describe('Last Updated Text and Color', () => {
     expect(wrapper.text()).toContain('Updated: 15m ago')
   })
 
-  it('shows hours ago when updated between 1 and 23 hours ago', () => {
+  it('shows hours ago when updated between 1 and 23 hours ago (exact hours)', () => {
     const now = 1000000
     const features = { lastUpdatedAt: now - 3 * 3600000 } // 3 hours ago
     const wrapper = mountNode(features, now)
     expect(wrapper.text()).toContain('Updated: 3h ago')
+  })
+
+  it('shows hours and minutes ago when updated with remaining minutes', () => {
+    const now = 10000000
+    const features = { lastUpdatedAt: now - 83 * 60 * 1000 } // 1h 23m ago
+    const wrapper = mountNode(features, now)
+    expect(wrapper.text()).toContain('Updated: 1h 23m ago')
   })
 
   it('shows days ago when updated 24+ hours ago', () => {
