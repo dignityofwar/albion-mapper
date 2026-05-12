@@ -213,7 +213,7 @@ const handles = computed(() => {
         :class="[hasReds ? 'bg-red-500' : (props.data.zoneName === 'Brecillien' ? 'bg-purple-500 border-purple-200' : getBorderBgClass(props.data.type)), Z_INDEX.NODE_BASE]"
       ></div>
       <div 
-        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none"
+        class="absolute inset-[4px] diamond-shape transition-colors duration-300 pointer-events-none"
         :class="[hasReds ? 'bg-red-950' : 'bg-gray-800', Z_INDEX.NODE_BORDER]"
       ></div>
 

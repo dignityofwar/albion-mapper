@@ -789,13 +789,12 @@ function lockCore(core: string) {
       <!-- Diamond Shape Background -->
       <div 
         class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
-        :class="[hasReds ? 'bg-red-500/80' : (props.data.zoneName === 'Brecillien' ? 'bg-purple-500/80 border-purple-200/80' : getBorderBgClass(props.data.type) + '/80'), Z_INDEX.NODE_BASE]"
+        :class="[hasReds ? 'bg-red-500/80' : (props.data.zoneName === 'Brecillien' ? 'bg-purple-500/80 border-purple-200/80' : getBorderBgClass(props.data.type) + '/80'), props.data.isHome && !hasReds ? 'home-border' : '', Z_INDEX.NODE_BASE]"
       ></div>
       <div 
-        class="absolute inset-[2px] diamond-shape transition-colors duration-300 pointer-events-none"
-        :class="[hasReds ? 'bg-red-950/80' : 'bg-gray-800/80', Z_INDEX.NODE_BORDER]"
+        class="absolute inset-[4px] diamond-shape transition-colors duration-300 pointer-events-none"
+        :class="[hasReds ? 'bg-red-950/80' : (props.data.isHome ? 'bg-gray-800' : 'bg-gray-800/80'), Z_INDEX.NODE_BORDER]"
       ></div>
-
 
       <div 
         v-if="showFeatures"
@@ -982,25 +981,25 @@ function lockCore(core: string) {
 .cores-nw-container {
   position: absolute;
   top: 90px;
-  left: 80px;
+  left: 82px;
 }
 
 .cores-ne-container {
   position: absolute;
   top: 90px;
-  right: 80px;
+  right: 82px;
 }
 
 .reds-ne-container {
   position: absolute;
   top: 200px;
-  right: 2px;
+  right: 4px;
 }
 
 .chest-sw-container {
   position: absolute;
   top: 200px;
-  left: 2px;
+  left: 4px;
 }
 
 .handle-editor-container {
