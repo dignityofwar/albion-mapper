@@ -32,6 +32,7 @@ const emit = defineEmits<{
         <button
           @click="emit('close')"
           class="zone-button px-2 py-1 flex items-center gap-1.5 transition-colors"
+          :class="hasReds ? 'zone-button-reds' : ''"
           title="Close"
         >
           <span class="text-[10px] uppercase text-white font-bold tracking-widest">Close</span>
