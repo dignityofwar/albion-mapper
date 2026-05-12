@@ -32,10 +32,10 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center gap-8 p-6">
-    <img src="/images/share.png" alt="Albion Roads Mapper" class="max-w-lg" />
-    <h1 class="text-4xl font-bold text-indigo-400">Albion Roads Mapper</h1>
+    <img src="/images/share.png" alt="Albion Roads Mapper" class="w-full max-w-md md:max-w-3xl" />
+    <h1 class="text-4xl font-bold text-indigo-400">Albion Roadmap</h1>
     <p class="text-gray-400 text-center max-w-md">
-      Collaborate with your guild in real-time to track Roads of Avalon portal connections.
+      Collaborate with your guild or friends in real-time to track Roads of Avalon portal connections. Track connections between your hideout, send alerts to your guild when enemies are near your hideout, easily find connections to the Royal Continent and Outlands.
     </p>
 
     <RecentlyViewedRooms />
@@ -54,8 +54,8 @@ onMounted(() => {
         Join Room
       </button>
     </div>
+  </div>
 
     <CreateRoomModal v-if="showCreate" @close="showCreate = false" />
     <JoinRoomModal v-if="showJoin" @close="showJoin = false" />
-  </div>
 </template>
