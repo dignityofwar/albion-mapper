@@ -16,6 +16,7 @@ import RoomMapFeaturesToolbar from '../components/flow/zone/RoomMapFeaturesToolb
 import RoomResourcesToolbar from '../components/flow/zone/RoomResourcesToolbar.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import MegaToast from '../components/common/MegaToast.vue';
+import ConfirmationModal from '../components/common/ConfirmationModal.vue';
 import TitleSegment from '../components/room/TitleSegment.vue';
 import TopToolbar from '../components/room/TopToolbar.vue';
 import TopLeftToolbar from '../components/room/TopLeftToolbar.vue';
@@ -49,6 +50,16 @@ provide('goToNode', goToNode);
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
 const toastType = ref<'info' | 'error'>('info');
+const showConfirmationModal = ref(false);
+const confirmationModalText = ref("");
+const pendingConnection = ref<any>(null);
+
+function isRoads(zoneId: string): boolean {
+  const zone = ZONE_BY_ID.get(zoneId);
+  if (!zone) return false;
+  return zone.type === 'roads' || zone.type === 'roadsHideout';
+}
+
 const megaToastRegion = ref('');
 const megaToastNodeId = ref('');
 const megaToastVisible = ref(false);
@@ -727,6 +738,23 @@ async function handleConnect(params: any) {
   );
 
   if (existing) {
+    const isSourceRoads = isRoads(params.source);
+    const isTargetRoads = isRoads(params.target);
+
+    // One roads, one non-roads: Disallowed
+    if ((isSourceRoads && !isTargetRoads) || (!isSourceRoads && isTargetRoads)) {
+      showToast("A non-roads zone cannot have multiple portal entrances to a roads zone.", "error");
+      return;
+    }
+
+    // Both roads: Show confirmation modal
+    if (isSourceRoads && isTargetRoads) {
+      pendingConnection.value = params;
+      confirmationModalText.value = "This will create an unusual and rare connection where there are two portals linking to the same destination zone. Are you sure this is correct?";
+      showConfirmationModal.value = true;
+      return;
+    }
+
     // Determine which handle is which based on the existing connection direction
     let fHandleId = params.sourceHandle;
     let tHandleId = params.targetHandle;
@@ -754,6 +782,31 @@ async function handleConnect(params: any) {
     showToast("This connection would create a cycle.", "error");
     return;
   }
+
+  const isLoop = wouldCreateLongerLoop(store.connections, params.source, params.target);
+
+  const sourceNode = getNode.value(params.source);
+  const targetNode = getNode.value(params.target);
+
+  if (sourceNode && targetNode) {
+     if (params.targetHandle === 'center') {
+        updateNodeHandlePosition(params.target, 'center', 'bottom');
+     }
+  }
+
+  reportForm.value?.setConnection(
+    params.source,
+    params.sourceHandle,
+    params.target,
+    params.targetHandle,
+    isLoop
+  );
+}
+
+async function handleConfirmConnection() {
+  if (!pendingConnection.value) return;
+  const params = pendingConnection.value;
+  pendingConnection.value = null;
 
   const isLoop = wouldCreateLongerLoop(store.connections, params.source, params.target);
 
@@ -979,7 +1032,7 @@ function isHandleOccupied(nodeId: string, handleId: string | null) {
   );
 }
 
-defineExpose({ flowNodes, onNodeDragStop });
+defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirmationModal, confirmationModalText, toast, toastType, reportForm });
 </script>
 
 <template>
@@ -1180,6 +1233,13 @@ defineExpose({ flowNodes, onNodeDragStop });
       containerClass="fixed bottom-20 left-1/2 -translate-x-1/2"
       :class="Z_INDEX.OVERLAY"
       textClass="text-xl"
+    />
+
+    <ConfirmationModal
+      v-model="showConfirmationModal"
+      title="Rare Connection"
+      :message="confirmationModalText"
+      @confirm="handleConfirmConnection"
     />
   </div>
 </template>
