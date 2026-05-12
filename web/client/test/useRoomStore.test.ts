@@ -42,6 +42,22 @@ describe('useRoomStore', () => {
     expect(store.nodePositions).toEqual([]);
   });
 
+  it('updateNodeCustomHandles should set lastUpdatedAt on node features', () => {
+    const store = useRoomStore();
+    store.roomId = 'room1';
+    store.token = 'token1';
+    store.nodePositions = [{ zoneId: 'z1', x: 0, y: 0 }];
+
+    const before = Date.now();
+    store.updateNodeCustomHandles('z1', [{ id: 'h1', left: '50%', top: '0%' }]);
+    const after = Date.now();
+
+    const features = store.nodePositions[0].features;
+    expect(features).toBeDefined();
+    expect(features!.lastUpdatedAt).toBeGreaterThanOrEqual(before);
+    expect(features!.lastUpdatedAt).toBeLessThanOrEqual(after);
+  });
+
   it('should update node features and update local state', () => {
     const store = useRoomStore();
     

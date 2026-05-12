@@ -322,7 +322,9 @@ export const useRoomStore = defineStore('room', () => {
     const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
     if (index === -1) return;
     const newNodePositions = [...nodePositions.value];
-    newNodePositions[index] = { ...newNodePositions[index], customHandles, explored: true };
+    const existingFeatures = newNodePositions[index].features || {};
+    const featuresWithTimestamp = { ...existingFeatures, lastUpdatedAt: Date.now() };
+    newNodePositions[index] = { ...newNodePositions[index], customHandles, features: featuresWithTimestamp, explored: true };
     nodePositions.value = newNodePositions;
     lastUpdate.value = new Date();
     if (ws && ws.readyState === WebSocket.OPEN) {
