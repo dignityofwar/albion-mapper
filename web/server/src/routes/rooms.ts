@@ -258,9 +258,9 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       // Insert new node positions
       for (const node of nodePositions) {
         await client.query(`
-          INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
-          VALUES ($1, $2, $3, $4, $5, $6)
-        `, [id, node.zoneId, node.x, node.y, JSON.stringify(node.features || {}), JSON.stringify(node.customHandles || null)]);
+          INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles, explored)
+          VALUES ($1, $2, $3, $4, $5, $6, $7)
+        `, [id, node.zoneId, node.x, node.y, JSON.stringify(node.features || {}), JSON.stringify(node.customHandles || null), !!node.explored]);
       }
 
       await client.query('COMMIT');
