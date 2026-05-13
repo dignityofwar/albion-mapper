@@ -34,7 +34,6 @@ export interface GameMap {
   socketCount?: number;
   largeSocketCount?: number;
   smallSocketCount?: number;
-  socketCountIsMinimum?: boolean;
   proximityTo?: string;
 }
 

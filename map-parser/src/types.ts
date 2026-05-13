@@ -22,7 +22,6 @@ export interface GameMap {
   socketCount?: number;
   largeSocketCount?: number;
   smallSocketCount?: number;
-  socketCountIsMinimum?: boolean;
 }
 
 export const MapTypeSchema = z.enum([
@@ -48,5 +47,4 @@ export const GameMapSchema = z.object({
   socketCount: z.number().int().nonnegative().optional(),
   largeSocketCount: z.number().int().nonnegative().optional(),
   smallSocketCount: z.number().int().nonnegative().optional(),
-  socketCountIsMinimum: z.boolean().optional(),
 });

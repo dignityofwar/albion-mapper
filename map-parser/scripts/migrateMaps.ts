@@ -14,7 +14,6 @@ async function migrate() {
   var totalProcessed = 0;
   var unknownShapes = 0;
   var nullGuaranteedContent = 0;
-  var socketCountMin = 0;
   var failures: { mapID: string; reason: string }[] = [];
 
   var migratedMaps = maps.map((entry) => {
@@ -29,7 +28,6 @@ async function migrate() {
         socketCount: socketInfo.socketCount,
         largeSocketCount: socketInfo.largeSocketCount,
         smallSocketCount: socketInfo.smallSocketCount,
-        socketCountIsMinimum: socketInfo.socketCountIsMinimum,
         guaranteedContent: guaranteedContent,
       };
 
@@ -54,7 +52,6 @@ async function migrate() {
       if (guaranteedContent === null && !ZoneNameParser.isAvalonianRest(entry)) {
         nullGuaranteedContent++;
       }
-      if (socketInfo.socketCountIsMinimum) socketCountMin++;
 
       return result.data;
     } catch (e: any) {
@@ -75,7 +72,6 @@ async function migrate() {
   console.log(`- Total zones processed: ${totalProcessed}`);
   console.log(`- Zones where mapShape is "unknown": ${unknownShapes}`);
   console.log(`- Zones where guaranteedContent is null (excluding Rests): ${nullGuaranteedContent}`);
-  console.log(`- Zones where socketCountIsMinimum is true: ${socketCountMin}`);
 }
 
 migrate().catch(console.error);

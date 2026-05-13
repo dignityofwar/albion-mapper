@@ -159,7 +159,6 @@ async function main(): Promise<void> {
         gameMap.socketCount = socketInfo.socketCount;
         gameMap.largeSocketCount = socketInfo.largeSocketCount;
         gameMap.smallSocketCount = socketInfo.smallSocketCount;
-        gameMap.socketCountIsMinimum = socketInfo.socketCountIsMinimum;
 
         if (shape === 'rest') {
           gameMap.isRoadsHideout = true;

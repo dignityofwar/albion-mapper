@@ -62,24 +62,11 @@ describe('ZoneNameParser', () => {
         });
     });
 
-    it('should set socketCountIsMinimum correctly', () => {
-        expect(ZoneNameParser.resolveSocketInfo('c').socketCountIsMinimum).toBe(false);
-        expect(ZoneNameParser.resolveSocketInfo('f').socketCountIsMinimum).toBe(true);
-        expect(ZoneNameParser.resolveSocketInfo('h').socketCountIsMinimum).toBe(false);
-        expect(ZoneNameParser.resolveSocketInfo('o').socketCountIsMinimum).toBe(true);
-        expect(ZoneNameParser.resolveSocketInfo('p').socketCountIsMinimum).toBe(true);
-        expect(ZoneNameParser.resolveSocketInfo('s').socketCountIsMinimum).toBe(false);
-        expect(ZoneNameParser.resolveSocketInfo('t').socketCountIsMinimum).toBe(true);
-        expect(ZoneNameParser.resolveSocketInfo('x').socketCountIsMinimum).toBe(true);
-        expect(ZoneNameParser.resolveSocketInfo('rest').socketCountIsMinimum).toBe(false);
-    });
-
     it('should return 2/2/4 for rest', () => {
         var info = ZoneNameParser.resolveSocketInfo('rest');
         expect(info.largeSocketCount).toBe(2);
         expect(info.smallSocketCount).toBe(2);
         expect(info.socketCount).toBe(4);
-        expect(info.socketCountIsMinimum).toBe(false);
     });
 
     it('should return zeros for unknown', () => {
@@ -87,7 +74,6 @@ describe('ZoneNameParser', () => {
         expect(info.largeSocketCount).toBe(0);
         expect(info.smallSocketCount).toBe(0);
         expect(info.socketCount).toBe(0);
-        expect(info.socketCountIsMinimum).toBe(false);
     });
   });
 });

@@ -4,7 +4,6 @@ export interface ZoneSocketInfo {
   largeSocketCount: number;
   smallSocketCount: number;
   socketCount: number;
-  socketCountIsMinimum: boolean;
 }
 
 export class ZoneNameParser {
@@ -49,28 +48,28 @@ export class ZoneNameParser {
   public static resolveSocketInfo(mapShape: string): ZoneSocketInfo {
     switch (mapShape.toLowerCase()) {
       case 'c':
-        return { largeSocketCount: 2, smallSocketCount: 6, socketCount: 8, socketCountIsMinimum: false };
+        return { largeSocketCount: 2, smallSocketCount: 6, socketCount: 8 };
       case 'f':
-        return { largeSocketCount: 2, smallSocketCount: 6, socketCount: 8, socketCountIsMinimum: true };
+        return { largeSocketCount: 2, smallSocketCount: 6, socketCount: 8 };
       case 'h':
-        return { largeSocketCount: 2, smallSocketCount: 6, socketCount: 8, socketCountIsMinimum: false };
+        return { largeSocketCount: 2, smallSocketCount: 6, socketCount: 8 };
       case 'o':
-        return { largeSocketCount: 1, smallSocketCount: 7, socketCount: 8, socketCountIsMinimum: true };
+        return { largeSocketCount: 1, smallSocketCount: 7, socketCount: 8 };
       case 'p':
-        return { largeSocketCount: 1, smallSocketCount: 7, socketCount: 8, socketCountIsMinimum: true };
+        return { largeSocketCount: 1, smallSocketCount: 7, socketCount: 8 };
       case 's':
-        return { largeSocketCount: 2, smallSocketCount: 6, socketCount: 8, socketCountIsMinimum: false };
+        return { largeSocketCount: 2, smallSocketCount: 6, socketCount: 8 };
       case 't':
-        return { largeSocketCount: 3, smallSocketCount: 5, socketCount: 8, socketCountIsMinimum: true };
+        return { largeSocketCount: 3, smallSocketCount: 5, socketCount: 8 };
       case 'x':
-        return { largeSocketCount: 3, smallSocketCount: 5, socketCount: 8, socketCountIsMinimum: true };
+        return { largeSocketCount: 3, smallSocketCount: 5, socketCount: 8 };
       case 'rest':
-        return { largeSocketCount: 2, smallSocketCount: 2, socketCount: 4, socketCountIsMinimum: false };
+        return { largeSocketCount: 2, smallSocketCount: 2, socketCount: 4 };
       default:
         if (mapShape !== 'unknown') {
             console.warn(`[warn] Unrecognised map shape for socket info resolution: "${mapShape}"`);
         }
-        return { largeSocketCount: 0, smallSocketCount: 0, socketCount: 0, socketCountIsMinimum: false };
+        return { largeSocketCount: 0, smallSocketCount: 0, socketCount: 0 };
     }
   }
 }
