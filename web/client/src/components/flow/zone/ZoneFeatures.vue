@@ -80,7 +80,7 @@ const featureRows = computed(() => {
             <div
               v-if="(feature.largeCount ?? 0) > 0"
               class="flex flex-col items-center justify-center px-0.5 min-w-[18px]"
-              :class="[(feature.smallCount ?? 0) > 0 ? 'border-l-2 border-gray-400' : '', hasReds ? 'bg-red-600/60' : 'bg-gray-500/60']"
+              :class="[(feature.smallCount ?? 0) > 0 ? 'border-l border-gray-400' : '', hasReds ? 'bg-red-600/60' : 'bg-gray-500/60']"
             >
               <span class="text-[14px] font-bold text-white leading-none">{{ feature.largeCount }}</span>
               <span class="text-[10px] font-bold text-white/70 leading-none mt-0.5">L</span>
