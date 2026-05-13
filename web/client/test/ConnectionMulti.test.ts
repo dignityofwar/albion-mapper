@@ -185,4 +185,164 @@ describe('RoomView - Multiple Connections', () => {
       true // isLoop
     );
   });
+
+  it('does NOT show confirmation modal when replacing a center handle with a real handle between two roads zones', async () => {
+    const store = useRoomStore();
+    // Both are roads; existing connection uses center on the target side (e.g. after adding a shaped zone)
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'xerites-oxoulum',
+        toZoneId: 'puyitos-aiataum',
+        fromHandleId: 'x-p4',
+        toHandleId: 'center', // hideout/shapeless zone assigned center
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'test-room' },
+      global: {
+        plugins: [pinia],
+        stubs: {
+          ZoneNode: true,
+          NonRoadsNode: true,
+          ConnectionEdge: true,
+          ConnectionLine: true,
+          ReportForm: true,
+          DebugTray: true,
+          MegaToast: true,
+          TopToolbar: true,
+          TopLeftToolbar: true,
+          TopRightToolbar: true,
+          BottomRightPins: true,
+          MobileRoomSummary: true,
+          Background: true,
+          Controls: true,
+        }
+      }
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Attempt to connect with a real handle on the target (replacing center)
+    await vm.handleConnect({
+      source: 'xerites-oxoulum',
+      sourceHandle: 'x-p4',
+      target: 'puyitos-aiataum',
+      targetHandle: 'p-p3'
+    });
+
+    // Should NOT show the confirmation modal — this is a handle replacement
+    expect(vm.showConfirmationModal).toBe(false);
+  });
+
+  it('does NOT show confirmation modal when replacing a null/undefined handle (treated as center) between two roads zones', async () => {
+    const store = useRoomStore();
+    // Both are roads; existing connection has no fromHandleId (defaults to center)
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'xerites-oxoulum',
+        toZoneId: 'puyitos-aiataum',
+        fromHandleId: undefined as any,
+        toHandleId: 'p-p6',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'test-room' },
+      global: {
+        plugins: [pinia],
+        stubs: {
+          ZoneNode: true,
+          NonRoadsNode: true,
+          ConnectionEdge: true,
+          ConnectionLine: true,
+          ReportForm: true,
+          DebugTray: true,
+          MegaToast: true,
+          TopToolbar: true,
+          TopLeftToolbar: true,
+          TopRightToolbar: true,
+          BottomRightPins: true,
+          MobileRoomSummary: true,
+          Background: true,
+          Controls: true,
+        }
+      }
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Attempt to connect with a real handle on the source (replacing the implicit center)
+    await vm.handleConnect({
+      source: 'xerites-oxoulum',
+      sourceHandle: 'x-p2',
+      target: 'puyitos-aiataum',
+      targetHandle: 'p-p6'
+    });
+
+    // Should NOT show the confirmation modal — this is a handle replacement
+    expect(vm.showConfirmationModal).toBe(false);
+  });
+
+  it('does NOT show confirmation modal when dragging one end of an existing connection to a new handle (both roads, real handles)', async () => {
+    const store = useRoomStore();
+    // firos-ezatam -> settun-al-odetum scenario: both roads, both have real handles
+    // User drags from f-p6 (same source handle) to a different target handle (s instead of w)
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'firos-ezatam',
+        toZoneId: 'settun-al-odetum',
+        fromHandleId: 'f-p6',
+        toHandleId: 'w',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'test-room' },
+      global: {
+        plugins: [pinia],
+        stubs: {
+          ZoneNode: true,
+          NonRoadsNode: true,
+          ConnectionEdge: true,
+          ConnectionLine: true,
+          ReportForm: true,
+          DebugTray: true,
+          MegaToast: true,
+          TopToolbar: true,
+          TopLeftToolbar: true,
+          TopRightToolbar: true,
+          BottomRightPins: true,
+          MobileRoomSummary: true,
+          Background: true,
+          Controls: true,
+        }
+      }
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Drag from the same source handle (f-p6) to a different target handle (s instead of w)
+    await vm.handleConnect({
+      source: 'firos-ezatam',
+      sourceHandle: 'f-p6',
+      target: 'settun-al-odetum',
+      targetHandle: 's'
+    });
+
+    // Should NOT show the confirmation modal — same source handle, just moving the target end
+    expect(vm.showConfirmationModal).toBe(false);
+  });
 });

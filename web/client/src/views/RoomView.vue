@@ -747,12 +747,29 @@ async function handleConnect(params: any) {
       return;
     }
 
-    // Both roads: Show confirmation modal
+    // Both roads: Show confirmation modal only if this is truly a second connection
+    // (not a handle replacement where one side currently uses the center handle)
     if (isSourceRoads && isTargetRoads) {
-      pendingConnection.value = params;
-      confirmationModalText.value = "This will create an unusual and rare connection where there are two portals linking to the same destination zone. Are you sure this is correct?";
-      showConfirmationModal.value = true;
-      return;
+      const existingFromHandle = existing.fromHandleId || 'center';
+      const existingToHandle = existing.toHandleId || 'center';
+
+      // Determine which existing handle corresponds to source and target
+      const existingSourceHandle = existing.fromZoneId === params.source ? existingFromHandle : existingToHandle;
+      const existingTargetHandle = existing.fromZoneId === params.source ? existingToHandle : existingFromHandle;
+
+      // If either side currently uses center, this is a handle replacement — not a new connection
+      const isReplacingCenter = existingSourceHandle === 'center' || existingTargetHandle === 'center';
+
+      // If the source handle matches the existing handle on that side, the user is just
+      // moving the other end of the same connection — not creating a duplicate
+      const isMovingOtherEnd = existingSourceHandle === params.sourceHandle;
+
+      if (!isReplacingCenter && !isMovingOtherEnd) {
+        pendingConnection.value = params;
+        confirmationModalText.value = "This will create an unusual and rare connection where there are two portals linking to the same destination zone. Are you sure this is correct?";
+        showConfirmationModal.value = true;
+        return;
+      }
     }
 
     // Determine which handle is which based on the existing connection direction
