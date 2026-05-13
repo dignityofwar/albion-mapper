@@ -93,41 +93,41 @@ describe('Last Updated Text and Color', () => {
     expect(span.text()).toContain('Updated:')
   })
 
-  it('shows orange text when updated between 1 and 2 hours ago', () => {
+  it('shows orange text when updated between 2 and 3 hours ago', () => {
     const now = 1000000
-    const features = { lastUpdatedAt: now - 90 * 60 * 1000 } // 90 minutes ago
+    const features = { lastUpdatedAt: now - 150 * 60 * 1000 } // 150 minutes ago
     const wrapper = mountNode(features, now)
     const span = wrapper.find('span.text-orange-400')
     expect(span.exists()).toBe(true)
     expect(span.text()).toContain('Updated:')
   })
 
-  it('shows red text when updated more than 2 hours ago', () => {
+  it('shows red text when updated more than 3 hours ago', () => {
     const now = 1000000
-    const features = { lastUpdatedAt: now - 3 * 3600000 } // 3 hours ago
+    const features = { lastUpdatedAt: now - 4 * 3600000 } // 4 hours ago
     const wrapper = mountNode(features, now)
     const span = wrapper.find('span.text-red-400')
     expect(span.exists()).toBe(true)
     expect(span.text()).toContain('Updated:')
   })
 
-  it('shows green text at exactly 59 minutes (boundary)', () => {
+  it('shows green text at exactly 1 hour and 59 minutes (boundary)', () => {
     const now = 1000000
-    const features = { lastUpdatedAt: now - 59 * 60 * 1000 }
+    const features = { lastUpdatedAt: now - 119 * 60 * 1000 }
     const wrapper = mountNode(features, now)
     expect(wrapper.find('span.text-green-400').exists()).toBe(true)
   })
 
-  it('shows orange text at exactly 1 hour (boundary)', () => {
+  it('shows orange text at exactly 2 hours (boundary)', () => {
     const now = 10000000
-    const features = { lastUpdatedAt: now - 3600000 } // exactly 1 hour
+    const features = { lastUpdatedAt: now - 2 * 3600000 } // exactly 2 hours
     const wrapper = mountNode(features, now)
     expect(wrapper.find('span.text-orange-400').exists()).toBe(true)
   })
 
-  it('shows red text at exactly 2 hours (boundary)', () => {
+  it('shows red text at exactly 3 hours (boundary)', () => {
     const now = 10000000
-    const features = { lastUpdatedAt: now - 2 * 3600000 } // exactly 2 hours
+    const features = { lastUpdatedAt: now - 3 * 3600000 } // exactly 3 hours
     const wrapper = mountNode(features, now)
     expect(wrapper.find('span.text-red-400').exists()).toBe(true)
   })
