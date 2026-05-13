@@ -12,20 +12,17 @@ const emit = defineEmits<{
 }>();
 
 const featureRows = computed(() => {
-  const resources = props.activeFeatures.filter(f => f.isResource);
-  const others = props.activeFeatures.filter(f => !f.isResource);
-
+  const all = props.activeFeatures;
+  const rowSizes = [4, 3, 2];
   const rows: { type: string; title: string; icon: string; smallCount?: number; largeCount?: number; count?: number; isResource: boolean }[][] = [];
 
-  if (resources.length > 0) {
-    rows.push(resources.slice(0, 3));
-  }
-
-  // Pack non-resource features into rows of up to 4
   let current = 0;
-  while (current < others.length) {
-    rows.push(others.slice(current, current + 4));
-    current += 4;
+  let sizeIndex = 0;
+  while (current < all.length) {
+    const size = rowSizes[sizeIndex] ?? 2;
+    rows.push(all.slice(current, current + size));
+    current += size;
+    sizeIndex++;
   }
 
   return rows;
