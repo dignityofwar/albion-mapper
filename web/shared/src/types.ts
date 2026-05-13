@@ -125,6 +125,16 @@ export function getConnectionStatus(connection: Connection, now: Date = new Date
   return 'expired';
 }
 
+// ── Room Memory ──────────────────────────────────────────────────────────────
+
+export interface RoomMemoryEntry {
+  zoneId: string;
+  timesAdded: string[]; // ISO date strings
+  features?: NodeFeatures;
+  customHandles?: CustomHandle[];
+  lastUpdated: string; // ISO date string
+}
+
 // ── Room ─────────────────────────────────────────────────────────────────────
 
 export interface Room {
@@ -308,6 +318,8 @@ export type ServerMessage =
   | { type: 'ping'; zoneName: string; nodeId?: string }
   | { type: 'marco' }
   | { type: 'watching'; roomId: string; count: number; totalConnected: number }
+  | { type: 'memory_sync'; memory: RoomMemoryEntry[] }
+  | { type: 'memory_updated'; entry: RoomMemoryEntry }
   | { type: 'error'; message: string };
 
 export type ClientMessage =

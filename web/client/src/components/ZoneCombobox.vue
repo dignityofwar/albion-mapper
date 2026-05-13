@@ -8,10 +8,16 @@ import {
   ComboboxViewport,
   ComboboxItem,
   ComboboxItemIndicator,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipPortal,
 } from 'reka-ui';
 import { ZONES } from 'shared';
 import type { Zone, ZoneType } from 'shared';
 import { useRoomStore } from '../stores/useRoomStore.js';
+import { useRoomMemoryStore } from '../stores/useRoomMemoryStore.js';
 import TagTier from './common/TagTier.vue';
 import TagZone from './common/TagZone.vue';
 import { TYPE_LABELS, getZoneTypeDisplay } from '../utils/zoneStyles';
@@ -42,11 +48,17 @@ const emit = defineEmits<{
 }>();
 
 const store = useRoomStore();
+const memoryStore = useRoomMemoryStore();
 const query = ref('');
 const comboboxInput = ref<any>(null);
 const isOpen = ref(false);
 const highlightedId = ref<string | null>(null);
 const isFlashing = ref(false);
+
+function formatLastSeen(isoDate: string): string {
+  const d = new Date(isoDate);
+  return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+}
 
 defineExpose({
   focus: () => {
@@ -165,6 +177,7 @@ function onWrapperKeydown(e: KeyboardEvent) {
 
 <template>
   <!-- capture Tab on the wrapper before reka-ui's internal listeners fire -->
+  <TooltipProvider :delay-duration="300">
   <div class="relative" @keydown.capture="onWrapperKeydown">
     <ComboboxRoot
       :model-value="modelValue"
@@ -221,10 +234,23 @@ function onWrapperKeydown(e: KeyboardEvent) {
             <TagTier :tier="zone.tier" :type="zone.type" />
             <TagZone :type="zone.type" :category="zone.category" :map-shape="zone.mapShape" :zone-name="zone.name" :proximity-to="zone.proximityTo" />
             <span v-if="mappedZoneIds.has(zone.id) && zone.id !== modelValue" class="shrink-0 text-green-400 text-xs">●</span>
+            <template v-if="memoryStore.getEntry(zone.id)">
+              <TooltipRoot>
+                <TooltipTrigger asChild>
+                  <span class="shrink-0 text-yellow-300 text-xs cursor-default">⏳</span>
+                </TooltipTrigger>
+                <TooltipPortal>
+                  <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
+                    Last seen: {{ formatLastSeen(memoryStore.getEntry(zone.id)!.timesAdded[memoryStore.getEntry(zone.id)!.timesAdded.length - 1]) }}
+                  </TooltipContent>
+                </TooltipPortal>
+              </TooltipRoot>
+            </template>
             <ComboboxItemIndicator class="shrink-0 text-green-400">✓</ComboboxItemIndicator>
           </ComboboxItem>
         </ComboboxViewport>
       </ComboboxContent>
     </ComboboxRoot>
   </div>
+  </TooltipProvider>
 </template>

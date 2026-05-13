@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { Connection, ClientMessage, ServerMessage, NodePosition } from 'shared';
+import type { Connection, ClientMessage, ServerMessage, NodePosition, RoomMemoryEntry } from 'shared';
 import { addSocket, removeSocket, broadcast, getTotalSocketCount } from './broadcast.js';
 import { recordPolo, getWatchingCount } from './marcopolo.js';
 
@@ -129,7 +129,20 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               explored: row.explored ?? false,
             }));
 
+            const { rows: memoryRows } = await app.db.query<{ zone_id: string; times_added: string[]; features: any; custom_handles: any; last_updated: string }>(
+              'SELECT zone_id, times_added, features, custom_handles, last_updated FROM room_node_memory WHERE room_id = $1',
+              [roomId]
+            );
+            const memory: RoomMemoryEntry[] = memoryRows.map((row) => ({
+              zoneId: row.zone_id,
+              timesAdded: row.times_added,
+              features: row.features ?? undefined,
+              customHandles: row.custom_handles ?? undefined,
+              lastUpdated: row.last_updated,
+            }));
+
             send({ type: 'sync', connections, homeZoneId: room.home_zone_id, title: room.title || undefined, nodePositions, lastUpdatedAt, watching: getWatchingCount(roomId), totalConnected: getTotalSocketCount() });
+            send({ type: 'memory_sync', memory });
           } catch {
             socket.close(4401, 'Invalid token');
           }
@@ -198,6 +211,52 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
             explored: row.explored ?? false,
           }));
           broadcast(roomId, { type: 'node_positions_updated', nodePositions: broadcastPositions, updateLastUpdated: msg.updateLastUpdated }, socket);
+
+          // Update zone memory for nodes that already have a memory entry,
+          // storing only map features (resources) and custom handles.
+          const now = new Date().toISOString();
+          for (const pos of deduplicated) {
+            const memoryFeatures = pos.features?.resources && pos.features.resources.length > 0
+              ? { resources: pos.features.resources }
+              : null;
+            const memoryHandles = pos.customHandles && pos.customHandles.length > 0
+              ? pos.customHandles
+              : null;
+
+            // Only update if a memory entry already exists for this zone
+            const { rows: existing } = await app.db.query<{ zone_id: string }>(
+              'SELECT zone_id FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
+              [roomId, pos.zoneId]
+            );
+            if (existing.length === 0) continue;
+
+            await app.db.query(`
+              UPDATE room_node_memory
+              SET features = $1, custom_handles = $2, last_updated = $3
+              WHERE room_id = $4 AND zone_id = $5
+            `, [
+              JSON.stringify(memoryFeatures),
+              JSON.stringify(memoryHandles),
+              now,
+              roomId,
+              pos.zoneId,
+            ]);
+
+            const { rows: updatedMem } = await app.db.query<{ zone_id: string; times_added: string[]; features: any; custom_handles: any; last_updated: string }>(
+              'SELECT zone_id, times_added, features, custom_handles, last_updated FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
+              [roomId, pos.zoneId]
+            );
+            if (updatedMem[0]) {
+              const entry: RoomMemoryEntry = {
+                zoneId: updatedMem[0].zone_id,
+                timesAdded: updatedMem[0].times_added,
+                features: updatedMem[0].features ?? undefined,
+                customHandles: updatedMem[0].custom_handles ?? undefined,
+                lastUpdated: updatedMem[0].last_updated,
+              };
+              broadcast(roomId, { type: 'memory_updated', entry });
+            }
+          }
           return;
         }
 

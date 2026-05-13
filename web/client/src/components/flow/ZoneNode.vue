@@ -15,8 +15,10 @@ import ZoneChestModal from './zone/ZoneChestModal.vue';
 import ZoneHandleEditor from './zone/ZoneHandleEditor.vue';
 import ZoneHandleEditorButton from './zone/ZoneHandleEditorButton.vue';
 import PingButton from './zone/PingButton.vue';
+import RoomMemoryButton from './zone/RoomMemoryButton.vue';
 import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
+import { useRoomMemoryStore } from '@/stores/useRoomMemoryStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { storeToRefs } from 'pinia';
 import { deleteConnection, deleteNode } from '@/utils/roomOperations';
@@ -40,7 +42,9 @@ const props = defineProps<NodeProps<{
 }>>();
 
 const store = useRoomStore();
+const memoryStore = useRoomMemoryStore();
 const { connections, homeZoneId, isConnecting } = storeToRefs(store);
+const memoryEntry = computed(() => memoryStore.getEntry(props.id));
 const { updateNodeData } = useVueFlow();
 const tutorialStore = useTutorialStore();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
@@ -808,7 +812,7 @@ function lockCore(core: string) {
 
     <div v-if="isUnexplored && !isRestricted" class="absolute inset-0 pointer-events-none flex items-center justify-center" :class="Z_INDEX.RESTRICTED_NODE">
       <div class="absolute inset-0 bg-gray-900/70 diamond-shape"></div>
-      <span class="relative text-[24px] font-semibold tracking-widest uppercase text-gray-400/70 select-none mt-48">Unexplored</span>
+      <span class="relative text-[18px] font-semibold tracking-widest border-dashed border uppercase text-white select-none mt-48 bg-gray-700 px-3 py-1 rounded-xl">Unexplored</span>
     </div>
     <TooltipProvider :delay-duration="100">
       <div 
@@ -1031,6 +1035,11 @@ function lockCore(core: string) {
         :target="handleEditorButtonRef?.$el ?? undefined"
         :class="[Z_INDEX.HANDLE_OVERLAY]"
       />
+
+      <!-- Room Memory Button (bottom tip) -->
+      <div class="absolute left-1/2 -translate-x-1/2 bottom-5 flex items-center justify-center" :class="Z_INDEX.CONTENT_LOW">
+        <RoomMemoryButton :entry="memoryEntry ?? null" :zone-name="props.data.zoneName || props.id" />
+      </div>
       
     </div>
     </TooltipProvider>

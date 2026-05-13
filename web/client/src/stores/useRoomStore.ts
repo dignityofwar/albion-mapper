@@ -4,6 +4,7 @@ import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandl
 import { API_BASE_URL } from '@/utils/api';
 import { track } from '@vercel/analytics';
 import { treeQuery } from '@/utils/treeQuery';
+import { useRoomMemoryStore } from './useRoomMemoryStore';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected' | 'auth_failed';
 
@@ -72,6 +73,7 @@ export const useRoomStore = defineStore('room', () => {
   }
 
   function applyMessage(msg: ServerMessage) {
+    const memoryStore = useRoomMemoryStore();
     switch (msg.type) {
       case 'sync':
         connections.value = msg.connections;
@@ -82,6 +84,14 @@ export const useRoomStore = defineStore('room', () => {
         watchingCount.value = msg.watching;
         totalConnected.value = msg.totalConnected;
         addToRecentRooms(roomId.value, roomId.value, roomTitle.value);
+        break;
+
+      case 'memory_sync':
+        memoryStore.applyMemorySync(msg.memory);
+        break;
+
+      case 'memory_updated':
+        memoryStore.applyMemoryUpdated(msg.entry);
         break;
 
       case 'connection_added':
@@ -249,6 +259,7 @@ export const useRoomStore = defineStore('room', () => {
     token.value = '';
     watchingCount.value = null;
     totalConnected.value = null;
+    useRoomMemoryStore().clear();
   }
 
   function logout() {

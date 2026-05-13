@@ -2,9 +2,11 @@ import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'node:crypto';
 import { CreateConnectionBodySchema, UpdateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus } from 'shared';
 import * as Shared from 'shared';
-import type { Connection, NodePosition } from 'shared';
+import type { Connection, RoomMemoryEntry } from 'shared';
 import { broadcast } from '../broadcast.js';
 import { getInitialFeatures } from '../utils/nodeFeatures.js';
+
+const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
 
 interface DbConnection {
   id: string;
@@ -108,12 +110,63 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
 
     // If target position is provided, save it (new node); otherwise just update slots on existing node
     if (targetPosition) {
-      const initialFeatures = { ...getInitialFeatures(toZoneId), slots, lastUpdatedAt: lastUpdateMs };
+      // Check if there's an existing memory entry for this zone and apply its features/handles
+      const { rows: memoryCheck } = await app.db.query<{ features: any; custom_handles: any }>(
+        'SELECT features, custom_handles FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
+        [id, toZoneId]
+      );
+      const memoryEntry = memoryCheck[0];
+      const baseFeatures = memoryEntry?.features ?? getInitialFeatures(toZoneId);
+      const initialFeatures = { ...baseFeatures, slots, lastUpdatedAt: lastUpdateMs };
+      const initialHandles = memoryEntry?.custom_handles ?? null;
       await app.db.query(`
-        INSERT INTO room_node_positions (room_id, zone_id, x, y, features)
-        VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features
-      `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(initialFeatures)]);
+        INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features, custom_handles = EXCLUDED.custom_handles
+      `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(initialFeatures), JSON.stringify(initialHandles)]);
+
+      // Record room memory for the newly added node (with 3-hour dedup guard)
+      const { rows: memRows } = await app.db.query<{ times_added: string[] }>(
+        'SELECT times_added FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
+        [id, toZoneId]
+      );
+      const existing = memRows[0];
+      const shouldAppend = !existing ||
+        existing.times_added.length === 0 ||
+        (now.getTime() - new Date(existing.times_added[existing.times_added.length - 1]).getTime()) > THREE_HOURS_MS;
+
+      if (shouldAppend) {
+        const nodePos = await app.db.query<{ features: any; custom_handles: any }>(
+          'SELECT features, custom_handles FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
+          [id, toZoneId]
+        );
+        const nodeFeatures = nodePos.rows[0]?.features ?? null;
+        const nodeHandles = nodePos.rows[0]?.custom_handles ?? null;
+        await app.db.query(`
+          INSERT INTO room_node_memory (room_id, zone_id, times_added, features, custom_handles, last_updated)
+          VALUES ($1, $2, ARRAY[$3::timestamptz], $4, $5, $3::timestamptz)
+          ON CONFLICT (room_id, zone_id) DO UPDATE
+            SET times_added = room_node_memory.times_added || ARRAY[$3::timestamptz],
+                features = EXCLUDED.features,
+                custom_handles = EXCLUDED.custom_handles,
+                last_updated = EXCLUDED.last_updated
+        `, [id, toZoneId, now.toISOString(), JSON.stringify(nodeFeatures), JSON.stringify(nodeHandles)]);
+
+        const { rows: updatedMem } = await app.db.query<{ zone_id: string; times_added: string[]; features: any; custom_handles: any; last_updated: string }>(
+          'SELECT zone_id, times_added, features, custom_handles, last_updated FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
+          [id, toZoneId]
+        );
+        if (updatedMem[0]) {
+          const entry: RoomMemoryEntry = {
+            zoneId: updatedMem[0].zone_id,
+            timesAdded: updatedMem[0].times_added,
+            features: updatedMem[0].features ?? undefined,
+            customHandles: updatedMem[0].custom_handles ?? undefined,
+            lastUpdated: updatedMem[0].last_updated,
+          };
+          broadcast(id, { type: 'memory_updated', entry });
+        }
+      }
     } else {
       // No target position provided (connecting two existing nodes) — update slots and lastUpdatedAt on the target node
       await app.db.query(`

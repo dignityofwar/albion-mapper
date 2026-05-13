@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useRoomStore } from '../stores/useRoomStore';
+import { useRoomMemoryStore } from '../stores/useRoomMemoryStore';
 import { addConnection } from '../utils/roomOperations';
 import ShapeEditor from './debug/ShapeEditor.vue';
 import ImportDataModal from './ImportDataModal.vue';
 
 const store = useRoomStore();
+const memoryStore = useRoomMemoryStore();
 const showShapeEditor = ref(false);
 const showImportModal = ref(false);
 
@@ -85,12 +87,6 @@ async function exportNodes() {
           <button class="text-gray-400 hover:text-white text-xl leading-none" @click="emit('close')">&times;</button>
         </div>
         <div class="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-mono">
-          <div class="bg-gray-800 rounded-lg p-3 font-sans">
-            <div class="text-[10px] uppercase text-gray-500 font-bold mb-1">Room Title</div>
-            <div class="text-sm font-semibold" :class="store.roomTitle ? 'text-indigo-400' : 'text-red-400'">
-              {{ store.roomTitle || 'NO TITLE' }}
-            </div>
-          </div>
           <details class="bg-gray-800 rounded-lg">
             <summary class="p-3 font-sans font-bold cursor-pointer">Nodes ({{ debugNodes.length }})</summary>
             <div class="p-3 space-y-2">
@@ -106,6 +102,16 @@ async function exportNodes() {
               <details v-for="(edge, index) in debugEdges" :key="index" class="bg-gray-950 rounded">
                 <summary class="p-2 cursor-pointer">{{ (edge as any).source }} <-> {{ (edge as any).target }}</summary>
                 <pre class="p-2 overflow-x-auto whitespace-pre-wrap break-all">{{ JSON.stringify(edge, null, 2) }}</pre>
+              </details>
+            </div>
+          </details>
+          <details class="bg-gray-800 rounded-lg">
+            <summary class="p-3 font-sans font-bold cursor-pointer">Zone Memory ({{ memoryStore.memory.size }})</summary>
+            <div class="p-3 space-y-2">
+              <div v-if="memoryStore.memory.size === 0" class="text-gray-500 text-xs p-2">No zone memory entries.</div>
+              <details v-for="[zoneId, entry] in memoryStore.memory" :key="zoneId" class="bg-gray-950 rounded">
+                <summary class="p-2 cursor-pointer">{{ zoneId }} <span class="text-gray-500">(seen {{ entry.timesAdded.length }}x, updated {{ new Date(entry.lastUpdated).toLocaleString() }})</span></summary>
+                <pre class="p-2 overflow-x-auto whitespace-pre-wrap break-all">{{ JSON.stringify(entry, null, 2) }}</pre>
               </details>
             </div>
           </details>

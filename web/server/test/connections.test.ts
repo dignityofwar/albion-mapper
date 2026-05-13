@@ -167,6 +167,7 @@ describe('POST /api/rooms/:id/connections', () => {
   it('creates a connection with slots=7 and stores it in node features', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
     mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // memory check (no existing memory)
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position (target)
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE node position (source)
     mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_B, x: 100, y: 200, features: { slots: 7 }, custom_handles: null }] }); // SELECT positions
@@ -192,6 +193,7 @@ describe('POST /api/rooms/:id/connections', () => {
   it('creates a connection with slots=20 and stores it in node features', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
     mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // memory check (no existing memory)
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position (target)
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE node position (source)
     mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_B, x: 100, y: 200, features: { slots: 20 }, custom_handles: null }] }); // SELECT positions
