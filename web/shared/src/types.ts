@@ -9,7 +9,7 @@ export interface Zone {
   name: string;
   type: ZoneType;
   tier: number;
-  knownResources?: string[];
+  knownFeatures?: KnownFeatures;
   isRoadsHome?: boolean;
   category?: string;
   mapShape?: string;
@@ -20,10 +20,7 @@ export interface Zone {
 
 export type MapType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' | 'other';
 
-export interface GuaranteedContent {
-  type: string;
-  category: string;
-}
+export type KnownFeatures = string[];
 
 export interface GameMap {
   mapID: string;
@@ -32,13 +29,12 @@ export interface GameMap {
   tier: number;
   category?: string;
   isRoadsHideout?: true;
-  knownResources?: string[];
+  knownFeatures?: KnownFeatures;
   mapShape?: string;
   socketCount?: number;
   largeSocketCount?: number;
   smallSocketCount?: number;
   socketCountIsMinimum?: boolean;
-  guaranteedContent?: GuaranteedContent | null;
   proximityTo?: string;
 }
 

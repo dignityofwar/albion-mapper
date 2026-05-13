@@ -15,13 +15,22 @@ describe('getInitialFeatures', () => {
   });
 
   it('returns multiple resource features', () => {
-     // cases-ugumlos has [ "LOGS", "ORE", "ROCK" ]
+     // cases-ugumlos has [ "logs", "ore", "rock", "largeGreenChest" ]
     const features = getInitialFeatures('cases-ugumlos');
     expect(features).toEqual({
       resourceWood: true,
       resourceOre: true,
-      resourceStone: true
+      resourceStone: true,
+      treasuresGreen: true
     });
+  });
+
+  it('returns cotton (unknown size) and blue treasure chest for firos-ezatam', () => {
+    // firos-ezatam has knownFeatures: ["cotton", "largeBlueChest"]
+    const features = getInitialFeatures('firos-ezatam');
+    expect(features.resourceFibre).toBe(true);
+    expect(features.resourceFibreSize).toBeUndefined();
+    expect(features.treasuresBlue).toBe(true);
   });
 });
 

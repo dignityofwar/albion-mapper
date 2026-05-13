@@ -78,7 +78,7 @@ export const ZONES: Zone[] = (mapsData as GameMap[]).map((m) => {
     name: m.mapName,
     type: type as ZoneType,
     tier: m.tier,
-    knownResources: m.knownResources,
+    knownFeatures: m.knownFeatures,
     category: m.category ?? getZoneCategory(m.mapName, m.mapType),
     mapShape: m.mapShape,
     proximityTo: m.proximityTo,

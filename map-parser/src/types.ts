@@ -8,10 +8,7 @@ export type MapType =
   | 'roads'
   | 'other';
 
-export interface GuaranteedContent {
-  type: string;
-  category: string;
-}
+export type KnownFeatures = string[];
 
 export interface GameMap {
   mapID: string;
@@ -20,13 +17,12 @@ export interface GameMap {
   tier: number;
   category?: string;
   isRoadsHideout?: true;
-  knownResources?: string[];
+  knownFeatures?: KnownFeatures;
   mapShape?: string;
   socketCount?: number;
   largeSocketCount?: number;
   smallSocketCount?: number;
   socketCountIsMinimum?: boolean;
-  guaranteedContent?: GuaranteedContent | null;
 }
 
 export const MapTypeSchema = z.enum([
@@ -38,10 +34,7 @@ export const MapTypeSchema = z.enum([
   'other',
 ]);
 
-export const GuaranteedContentSchema = z.object({
-  type: z.string(),
-  category: z.string(),
-});
+export const KnownFeaturesSchema = z.array(z.string());
 
 export const GameMapSchema = z.object({
   mapID: z.string(),
@@ -50,11 +43,10 @@ export const GameMapSchema = z.object({
   tier: z.number().int().min(1).max(8),
   category: z.string().optional(),
   isRoadsHideout: z.literal(true).optional(),
-  knownResources: z.array(z.string()).optional(),
+  knownFeatures: KnownFeaturesSchema.optional(),
   mapShape: z.string().optional(),
   socketCount: z.number().int().nonnegative().optional(),
   largeSocketCount: z.number().int().nonnegative().optional(),
   smallSocketCount: z.number().int().nonnegative().optional(),
   socketCountIsMinimum: z.boolean().optional(),
-  guaranteedContent: GuaranteedContentSchema.nullable().optional(),
 });

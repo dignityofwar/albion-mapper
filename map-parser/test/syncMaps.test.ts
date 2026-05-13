@@ -69,13 +69,13 @@ const EXCLUDED_MAP_NAMES = new Set([
   'Mountain Fort',
 ]);
 
-const RESOURCE_ICONS = new Set(['ROCK', 'LOGS', 'ORE', 'COTTON', 'HIDE']);
+const RESOURCE_ICONS = new Set(['rock', 'logs', 'ore', 'cotton', 'hide']);
 const TWO_HYPHEN_RE = /^[^-\s]+-[^-\s]+-[^-\s]+$/;
 const ONE_HYPHEN_RE = /^[^-\s]+-[^-\s]+$/;
 
 function extractResources(icons: RawIcon[] | undefined): string[] {
   if (!icons) return [];
-  const resources = icons.map((i) => i.alt).filter((alt) => RESOURCE_ICONS.has(alt));
+  const resources = icons.map((i) => i.alt.toLowerCase()).filter((alt) => RESOURCE_ICONS.has(alt));
   return [...new Set(resources)].sort();
 }
 
@@ -102,7 +102,7 @@ interface GameMap {
   mapType: MapType;
   tier: number;
   isRoadsHideout?: true;
-  knownResources?: string[];
+  knownFeatures?: string[];
 }
 
 function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } | { warn: true; reason: string } {
@@ -116,7 +116,7 @@ function processEntry(raw: RawEntry): GameMap | { skip: true; reason: string } |
   const mapID = raw.name.toLowerCase().replace(/\s+/g, '-');
   const result: GameMap = { mapID, mapName: raw.name, mapType, tier: tierNum };
   if (mapType === 'roads' || mapType === 'roadsHideout') {
-    result.knownResources = extractResources(raw.icons);
+    result.knownFeatures = extractResources(raw.icons);
   }
   return result;
 }
@@ -173,7 +173,7 @@ describe('knownResources extraction', () => {
       { alt: 'BLUE' }, { alt: 'GREEN' }, { alt: 'COTTON' },
       { alt: 'ROCK' }, { alt: 'LOGS' },
     ];
-    expect(extractResources(icons)).toEqual(['COTTON', 'LOGS', 'ROCK']);
+    expect(extractResources(icons)).toEqual(['cotton', 'logs', 'rock']);
   });
 
   it('full mixed set from truth table', () => {
@@ -182,14 +182,14 @@ describe('knownResources extraction', () => {
       { alt: 'BLUE' }, { alt: 'GREEN' }, { alt: 'ROCK' },
       { alt: 'DUNGEON' }, { alt: 'LOGS' }, { alt: 'ORE' }, { alt: 'HIRE' },
     ];
-    expect(extractResources(icons)).toEqual(['LOGS', 'ORE', 'ROCK']);
+    expect(extractResources(icons)).toEqual(['logs', 'ore', 'rock']);
   });
 
   it('deduplicates repeated resource icons', () => {
     const icons: RawIcon[] = [
       { alt: 'ROCK' }, { alt: 'ROCK' }, { alt: 'LOGS' },
     ];
-    expect(extractResources(icons)).toEqual(['LOGS', 'ROCK']);
+    expect(extractResources(icons)).toEqual(['logs', 'rock']);
   });
 
   it('discards FIBER, STONE, LEATHER, GROUP, YELLOW', () => {
@@ -197,7 +197,7 @@ describe('knownResources extraction', () => {
       { alt: 'FIBER' }, { alt: 'STONE' }, { alt: 'LEATHER' },
       { alt: 'GROUP' }, { alt: 'YELLOW' }, { alt: 'ORE' },
     ];
-    expect(extractResources(icons)).toEqual(['ORE']);
+    expect(extractResources(icons)).toEqual(['ore']);
   });
 });
 
@@ -209,7 +209,7 @@ describe('processEntry — truth table', () => {
       mapName: 'Qiient-In-Odetum',
       mapType: 'roads',
       tier: 6,
-      knownResources: [],
+      knownFeatures: [],
     });
   });
 
@@ -224,7 +224,7 @@ describe('processEntry — truth table', () => {
       mapName: 'Cebos-Avemlum',
       mapType: 'roads',
       tier: 4,
-      knownResources: ['COTTON', 'LOGS', 'ROCK'],
+      knownFeatures: ['cotton', 'logs', 'rock'],
     });
     expect(result).not.toHaveProperty('isRoadsHideout');
   });
@@ -240,7 +240,7 @@ describe('processEntry — truth table', () => {
       mapName: 'Cases-Ugumlos',
       mapType: 'roads',
       tier: 6,
-      knownResources: ['LOGS', 'ORE', 'ROCK'],
+      knownFeatures: ['logs', 'ore', 'rock'],
     });
     expect(result).not.toHaveProperty('isRoadsHideout');
   });
@@ -427,14 +427,14 @@ describe('script integration (via --source fixture)', () => {
     expect(first).toBe(second);
   });
 
-  it('roads entry with no resource icons gets knownResources: []', () => {
+  it('roads entry with no resource icons gets knownFeatures: []', () => {
     const fixture = writeFixture('roads-no-ores.json', [
       { name: 'Qiient-In-Odetum', tier: 6, icons: [{ alt: 'BLUE' }, { alt: 'GREEN' }] },
     ]);
     runSync(fixture);
     const maps = readOutput() as GameMap[];
-    expect(maps[0]).toHaveProperty('knownResources');
-    expect(maps[0].knownResources).toEqual([]);
+    expect(maps[0]).toHaveProperty('knownFeatures');
+    expect(maps[0].knownFeatures).toEqual([]);
   });
 
   it('three-barrel roads entry initially roads', () => {

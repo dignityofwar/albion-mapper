@@ -20,7 +20,7 @@ const OUTPUT_PATH = outputIndex !== -1
   : resolve(__dirname, '../../web/shared/data/maps.json');
 
 const UPSTREAM_URL = 'https://albionroadsmapper.com/avalon-roads-info.json';
-const RESOURCE_ICONS = new Set(['ROCK', 'LOGS', 'ORE', 'COTTON', 'HIDE']);
+const RESOURCE_ICONS = new Set(['rock', 'logs', 'ore', 'cotton', 'hide']);
 
 // ── Warning helper ─────────────────────────────────────────────────────────────
 
@@ -87,7 +87,7 @@ function classifyMapType(raw: RawEntry): MapType | null {
 function extractResources(icons: RawIcon[] | undefined): string[] {
   if (!icons) return [];
   const resources = icons
-    .map((i) => i.alt)
+    .map((i) => i.alt.toLowerCase())
     .filter((alt) => RESOURCE_ICONS.has(alt));
   return [...new Set(resources)].sort();
 }
@@ -143,18 +143,23 @@ async function main(): Promise<void> {
       };
 
       if (type === 'roads' || type === 'roadsHideout') {
-        gameMap.knownResources = extractResources(icons);
-
+        const resources = extractResources(icons);
         const shape = ZoneNameParser.parseMapShape({ mapName: name, mapID: id } as any);
         const socketInfo = ZoneNameParser.resolveSocketInfo(shape);
         const guaranteedContent = ZoneNameParser.parseGuaranteedContent({ mapName: name } as any);
 
+        const features = [...resources];
+        if (guaranteedContent) {
+          const mappedType = guaranteedContent.type.charAt(0).toLowerCase() + guaranteedContent.type.slice(1);
+          features.push(mappedType);
+        }
+
+        gameMap.knownFeatures = features;
         gameMap.mapShape = shape;
         gameMap.socketCount = socketInfo.socketCount;
         gameMap.largeSocketCount = socketInfo.largeSocketCount;
         gameMap.smallSocketCount = socketInfo.smallSocketCount;
         gameMap.socketCountIsMinimum = socketInfo.socketCountIsMinimum;
-        gameMap.guaranteedContent = guaranteedContent;
 
         if (shape === 'rest') {
           gameMap.isRoadsHideout = true;
