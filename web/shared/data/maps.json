@@ -2002,7 +2002,7 @@
     "mapID": "firos-ezatam",
     "mapName": "Firos-Ezatam",
     "mapType": "roads",
-    "tier": 6,
+    "tier": 8,
     "knownResources": [
       "COTTON"
     ],
