@@ -608,13 +608,19 @@ const activeResources = computed(() => {
   };
   flowNodes.value.forEach(node => {
     const f = node.data.features as NodeFeatures | undefined;
-    if (!f) return;
+    if (!f?.resources) return;
     const z = { zoneId: node.id, zoneName: node.data.zoneName, tier: node.data.tier ?? 0, type: node.data.type as ZoneType };
-    if (f.resourceFibre)   result.fibre.push({ ...z, size: f.resourceFibreSize });
-    if (f.resourceLeather) result.leather.push({ ...z, size: f.resourceLeatherSize });
-    if (f.resourceOre)     result.ore.push({ ...z, size: f.resourceOreSize });
-    if (f.resourceStone)   result.stone.push({ ...z, size: f.resourceStoneSize });
-    if (f.resourceWood)    result.wood.push({ ...z, size: f.resourceWoodSize });
+    for (const entry of f.resources) {
+      const hasSmall = (entry.small ?? 0) > 0;
+      const hasLarge = (entry.large ?? 0) > 0;
+      if (!hasSmall && !hasLarge) continue;
+      const size: 'S' | 'L' | undefined = hasSmall && hasLarge ? undefined : hasLarge ? 'L' : 'S';
+      if (entry.type === 'fibre')   result.fibre.push({ ...z, size });
+      if (entry.type === 'leather') result.leather.push({ ...z, size });
+      if (entry.type === 'ore')     result.ore.push({ ...z, size });
+      if (entry.type === 'stone')   result.stone.push({ ...z, size });
+      if (entry.type === 'wood')    result.wood.push({ ...z, size });
+    }
   });
   result.fibre.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
   result.leather.sort((a, b) => a.zoneName.localeCompare(b.zoneName));

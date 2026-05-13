@@ -77,6 +77,14 @@ export interface CustomHandle {
   position?: 'top' | 'right' | 'bottom' | 'left';
 }
 
+export type ResourceType = 'fibre' | 'leather' | 'ore' | 'stone' | 'wood';
+
+export interface ResourceEntry {
+  type: ResourceType;
+  small?: number;
+  large?: number;
+}
+
 export interface NodeFeatures {
   slots?: 7 | 20;
   reds?: number | null;
@@ -98,16 +106,12 @@ export interface NodeFeatures {
   treasuresGreen?: boolean;
   treasuresBlue?: boolean;
   treasuresYellow?: boolean;
-  resourceFibre?: boolean;
-  resourceLeather?: boolean;
-  resourceOre?: boolean;
-  resourceStone?: boolean;
-  resourceWood?: boolean;
-  resourceFibreSize?: 'S' | 'L';
-  resourceLeatherSize?: 'S' | 'L';
-  resourceOreSize?: 'S' | 'L';
-  resourceStoneSize?: 'S' | 'L';
-  resourceWoodSize?: 'S' | 'L';
+  treasuresGreenCount?: number;
+  treasuresBlueCount?: number;
+  treasuresYellowCount?: number;
+  dungeonStaticCount?: number;
+  dungeonGroupCount?: number;
+  resources?: ResourceEntry[];
   lastUpdatedAt?: number; // Timestamp in ms
 }
 
@@ -221,6 +225,12 @@ export const ChangePasswordBodySchema = z.object({
   adminPassword: z.string().min(1),
 });
 
+export const ResourceEntrySchema = z.object({
+  type: z.enum(['fibre', 'leather', 'ore', 'stone', 'wood']),
+  small: z.number().optional(),
+  large: z.number().optional(),
+});
+
 export const NodeFeaturesSchema = z.object({
   slots: z.union([z.literal(7), z.literal(20)]).optional(),
   reds: z.number().nullable().optional(),
@@ -242,16 +252,12 @@ export const NodeFeaturesSchema = z.object({
   treasuresGreen: z.boolean().optional(),
   treasuresBlue: z.boolean().optional(),
   treasuresYellow: z.boolean().optional(),
-  resourceFibre: z.boolean().optional(),
-  resourceLeather: z.boolean().optional(),
-  resourceOre: z.boolean().optional(),
-  resourceStone: z.boolean().optional(),
-  resourceWood: z.boolean().optional(),
-  resourceFibreSize: z.enum(['S', 'L']).optional(),
-  resourceLeatherSize: z.enum(['S', 'L']).optional(),
-  resourceOreSize: z.enum(['S', 'L']).optional(),
-  resourceStoneSize: z.enum(['S', 'L']).optional(),
-  resourceWoodSize: z.enum(['S', 'L']).optional(),
+  treasuresGreenCount: z.number().optional(),
+  treasuresBlueCount: z.number().optional(),
+  treasuresYellowCount: z.number().optional(),
+  dungeonStaticCount: z.number().optional(),
+  dungeonGroupCount: z.number().optional(),
+  resources: z.array(ResourceEntrySchema).optional(),
 }).passthrough().optional();
 
 export const CustomHandleSchema = z.object({

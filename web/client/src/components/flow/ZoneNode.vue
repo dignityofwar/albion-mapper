@@ -509,27 +509,40 @@ const showFeatures = computed(() => {
 const activeFeatures = computed(() => {
   if (!props.data.features) return [];
   const features = props.data.features;
-  const list: { type: string; title: string; icon: string; size?: 'S' | 'L'; isResource: boolean }[] = [];
+  const list: { type: string; title: string; icon: string; smallCount?: number; largeCount?: number; count?: number; isResource: boolean }[] = [];
   
-  const allFeatures = [
-    { key: 'treasuresGreen', title: 'Green Treasures', icon: '/images/treasures-green.png' },
-    { key: 'treasuresBlue', title: 'Blue Treasures', icon: '/images/treasures-blue.png' },
-    { key: 'treasuresYellow', title: 'Yellow Treasures', icon: '/images/treasures-yellow.png' },
-    { key: 'resourceFibre', title: 'Fibre', icon: '/images/resource-fibre.png' },
-    { key: 'resourceLeather', title: 'Leather', icon: '/images/resource-leather.png' },
-    { key: 'resourceOre', title: 'Ore', icon: '/images/resource-ore.png' },
-    { key: 'resourceStone', title: 'Stone', icon: '/images/resource-stone.png' },
-    { key: 'resourceWood', title: 'Wood', icon: '/images/resource-wood.png' },
-    { key: 'crystalCreaturePresent', title: 'Crystal Creature', icon: '/images/crystal.png' },
-    { key: 'dungeonStatic', title: 'Static Dungeon', icon: '/images/dungeon-static.png' },
-    { key: 'dungeonGroup', title: 'Group Dungeon', icon: '/images/dungeon-group.png' },
+  const countableFeatures = [
+    { key: 'treasuresGreen',        countKey: 'treasuresGreenCount',  title: 'Green Treasures',   icon: '/images/treasures-green.png' },
+    { key: 'treasuresBlue',         countKey: 'treasuresBlueCount',   title: 'Blue Treasures',    icon: '/images/treasures-blue.png' },
+    { key: 'treasuresYellow',       countKey: 'treasuresYellowCount', title: 'Yellow Treasures',  icon: '/images/treasures-yellow.png' },
+    { key: 'crystalCreaturePresent',countKey: null,                   title: 'Crystal Creature',  icon: '/images/crystal.png' },
+    { key: 'dungeonStatic',         countKey: 'dungeonStaticCount',   title: 'Static Dungeon',    icon: '/images/dungeon-static.png' },
+    { key: 'dungeonGroup',          countKey: 'dungeonGroupCount',    title: 'Group Dungeon',     icon: '/images/dungeon-group.png' },
   ];
 
-  for (const f of allFeatures) {
-    if (features[f.key as keyof NodeFeatures]) {
-      const sizeKey = `${f.key}Size` as keyof NodeFeatures;
-      const size = features[sizeKey] as 'S' | 'L' | undefined;
-      list.push({ type: f.key, title: f.title, icon: f.icon, size, isResource: f.key.startsWith('resource') });
+  const resourceMeta: Record<string, { title: string; icon: string }> = {
+    fibre:   { title: 'Fibre',   icon: '/images/resource-fibre.png' },
+    leather: { title: 'Leather', icon: '/images/resource-leather.png' },
+    ore:     { title: 'Ore',     icon: '/images/resource-ore.png' },
+    stone:   { title: 'Stone',   icon: '/images/resource-stone.png' },
+    wood:    { title: 'Wood',    icon: '/images/resource-wood.png' },
+  };
+
+  for (const entry of (features.resources ?? [])) {
+    const meta = resourceMeta[entry.type];
+    if (!meta) continue;
+    const smallCount = entry.small ?? 0;
+    const largeCount = entry.large ?? 0;
+    if (smallCount > 0 || largeCount > 0) {
+      list.push({ type: entry.type, title: meta.title, icon: meta.icon, smallCount, largeCount, isResource: true });
+    }
+  }
+
+  for (const f of countableFeatures) {
+    const count = f.countKey ? ((features[f.countKey as keyof NodeFeatures] as number | undefined) ?? 0) : 0;
+    const active = count > 0 || !!features[f.key as keyof NodeFeatures];
+    if (active) {
+      list.push({ type: f.key, title: f.title, icon: f.icon, count: count || undefined, isResource: false });
     }
   }
   return list;
@@ -542,7 +555,7 @@ const hasReds = computed(() => {
   return reds !== undefined && reds !== 0;
 });
 
-function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'powercoreYellow' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup' | 'treasuresGreen' | 'treasuresBlue' | 'treasuresYellow' | 'resourceFibre' | 'resourceLeather' | 'resourceOre' | 'resourceStone' | 'resourceWood') {
+function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'powercoreYellow' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup' | 'treasuresGreen' | 'treasuresBlue' | 'treasuresYellow') {
   const currentFeatures = props.data.features || {};
   const features = { ...currentFeatures };
   
@@ -584,11 +597,6 @@ function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercore
     }
   } else {
     features[feature] = !features[feature];
-    // If a resource is being deselected, wipe its size
-    if (feature.startsWith('resource') && !features[feature]) {
-      const sizeKey = `${feature}Size` as keyof NodeFeatures;
-      delete features[sizeKey];
-    }
   }
   
   store.updateNodeFeatures(props.id, features);
@@ -601,6 +609,38 @@ function setFeatureSize(type: keyof NodeFeatures, size: 'S' | 'L') {
   features[sizeKey] = size;
   features[type] = true;
   store.updateNodeFeatures(props.id, features);
+}
+
+function setFeatureCount(type: string, count: number) {
+  const countKey = `${type}Count` as keyof NodeFeatures;
+  const currentFeatures = props.data.features || {};
+  const features: any = { ...currentFeatures };
+  if (count > 0) {
+    features[type] = true;
+    features[countKey] = count;
+  } else {
+    delete features[countKey];
+    // keep the boolean flag off if count is 0
+    features[type] = false;
+  }
+  store.updateNodeFeatures(props.id, features);
+}
+
+function setResourceCount(type: string, size: 'small' | 'large', count: number) {
+  const currentFeatures = props.data.features || {};
+  const resources = [...(currentFeatures.resources ?? [])];
+  const idx = resources.findIndex(r => r.type === type);
+  if (idx >= 0) {
+    const updated = { ...resources[idx], [size]: count > 0 ? count : undefined };
+    if (!updated.small && !updated.large) {
+      resources.splice(idx, 1);
+    } else {
+      resources[idx] = updated;
+    }
+  } else if (count > 0) {
+    resources.push({ type: type as any, [size]: count });
+  }
+  store.updateNodeFeatures(props.id, { ...currentFeatures, resources });
 }
 
 
@@ -953,6 +993,8 @@ function lockCore(core: string) {
           :features="props.data.features"
           @toggle="toggleFeature"
           @size="setFeatureSize"
+          @feature-count="setFeatureCount"
+          @resource-count="setResourceCount"
           @close="handleCloseTray"
         />
       </div>

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { NodeFeatures } from 'shared';
-import ZoneFeatureToggle from './ZoneFeatureToggle.vue';
 import { Z_INDEX } from '@/constants/Layers';
 
-defineProps<{
+const props = defineProps<{
   isOpen: boolean;
   hasReds: boolean;
   features?: NodeFeatures;
@@ -12,14 +11,57 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'toggle', feature: any): void;
   (e: 'size', type: any, size: 'S' | 'L'): void;
+  (e: 'resourceCount', type: string, size: 'small' | 'large', count: number): void;
+  (e: 'featureCount', type: string, count: number): void;
   (e: 'close'): void;
 }>();
+
+const RESOURCES = [
+  { type: 'fibre',   title: 'Fibre',   icon: '/images/resource-fibre.png' },
+  { type: 'leather', title: 'Leather', icon: '/images/resource-leather.png' },
+  { type: 'ore',     title: 'Ore',     icon: '/images/resource-ore.png' },
+  { type: 'stone',   title: 'Stone',   icon: '/images/resource-stone.png' },
+  { type: 'wood',    title: 'Wood',    icon: '/images/resource-wood.png' },
+];
+
+const TREASURES = [
+  { type: 'treasuresGreen',  title: 'Green',  icon: '/images/treasures-green.png' },
+  { type: 'treasuresBlue',   title: 'Blue',   icon: '/images/treasures-blue.png' },
+  { type: 'treasuresYellow', title: 'Yellow', icon: '/images/treasures-yellow.png' },
+];
+
+const DUNGEONS = [
+  { type: 'dungeonStatic', title: 'Static', icon: '/images/dungeon-static.png' },
+  { type: 'dungeonGroup',  title: 'Group',  icon: '/images/dungeon-group.png' },
+];
+
+function getCount(type: string, size: 'small' | 'large'): number {
+  const entry = props.features?.resources?.find(r => r.type === type);
+  return entry?.[size] ?? 0;
+}
+
+function adjustResource(type: string, size: 'small' | 'large', delta: number) {
+  const current = getCount(type, size);
+  const next = Math.max(0, current + delta);
+  emit('resourceCount', type, size, next);
+}
+
+function getFeatureCount(type: string): number {
+  const countKey = `${type}Count` as keyof NodeFeatures;
+  return (props.features?.[countKey] as number | undefined) ?? 0;
+}
+
+function adjustFeature(type: string, delta: number) {
+  const current = getFeatureCount(type);
+  const next = Math.max(0, current + delta);
+  emit('featureCount', type, next);
+}
 </script>
 
 <template>
   <Transition name="tray">
     <div v-if="isOpen" 
-      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] rounded-xl shadow-2xl backdrop-blur-xl border p-4 text-left space-y-3 transition-all duration-300"
+      class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] rounded-xl shadow-2xl backdrop-blur-xl border p-4 text-left space-y-3 transition-all duration-300"
       :class="[
         hasReds ? 'bg-red-950/90 border-red-500/50' : 'bg-gray-900/95 border-gray-700',
         Z_INDEX.MODAL
@@ -42,71 +84,115 @@ const emit = defineEmits<{
 
       <hr class="transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 
-      <!-- Treasures -->
-      <div>
-        <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Treasures">Avalonian Treasures</div>
-        <div class="flex flex-wrap gap-1.5 justify-start">
-          <ZoneFeatureToggle 
-            v-for="f in [
-              { type: 'treasuresGreen', title: 'Green Treasures' },
-              { type: 'treasuresBlue', title: 'Blue Treasures' },
-              { type: 'treasuresYellow', title: 'Yellow Treasures' }
-            ]"
-            :key="f.type"
-            :type="f.type as any"
-            :active="!!features?.[f.type as keyof NodeFeatures]"
-            :has-reds="hasReds"
-            :title="f.title"
-            @toggle="emit('toggle', f.type as any)"
-          />
-        </div>
-      </div>
-      
-      <hr class="transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
-
       <!-- Resources -->
       <div>
-        <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Resources">Resources</div>
-        <div class="flex flex-wrap gap-1.5 justify-center">
-          <ZoneFeatureToggle 
-            v-for="f in [
-              { type: 'resourceFibre', title: 'Fibre' },
-              { type: 'resourceLeather', title: 'Leather' },
-              { type: 'resourceOre', title: 'Ore' },
-              { type: 'resourceStone', title: 'Stone' },
-              { type: 'resourceWood', title: 'Wood' }
-            ]"
-            :key="f.type"
-            :type="f.type as any"
-            :active="!!features?.[f.type as keyof NodeFeatures]"
-            :size="features?.[`${f.type}Size` as keyof NodeFeatures] as 'S' | 'L'"
-            :has-reds="hasReds"
-            :title="f.title"
-            @toggle="emit('toggle', f.type as any)"
-            @size="(type, size) => emit('size', type, size)"
-          />
+        <div class="section-label">Resources</div>
+        <!-- Table header -->
+        <div class="grid grid-cols-[28px_1fr_1fr] gap-x-2 mb-0.5">
+          <div></div>
+          <div class="col-label">Small</div>
+          <div class="col-label">Large</div>
+        </div>
+        <!-- Resource rows -->
+        <div
+          v-for="(r, i) in RESOURCES"
+          :key="r.type"
+          class="grid grid-cols-[28px_1fr_1fr] gap-x-2 items-center py-1 px-1"
+          :class="i < RESOURCES.length - 1 ? (hasReds ? 'border-b border-red-500/20' : 'border-b border-gray-700/50') : ''"
+        >
+          <!-- Icon -->
+          <img :src="r.icon" :alt="r.title" class="w-7 h-7 object-cover p-0.5 rounded" :title="r.title" />
+          <!-- Small count -->
+          <div class="flex items-center justify-center gap-0.5">
+            <button
+              @click.stop="adjustResource(r.type, 'small', -1)"
+              class="count-btn zone-button"
+              :class="hasReds ? 'zone-button-reds' : ''"
+            >−</button>
+            <input
+              type="number"
+              min="0"
+              :value="getCount(r.type, 'small')"
+              @change.stop="emit('resourceCount', r.type, 'small', Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
+              @click.stop
+              class="count-input"
+            />
+            <button
+              @click.stop="adjustResource(r.type, 'small', 1)"
+              class="count-btn zone-button"
+              :class="hasReds ? 'zone-button-reds' : ''"
+            >+</button>
+          </div>
+          <!-- Large count -->
+          <div class="flex items-center justify-center gap-0.5">
+            <button
+              @click.stop="adjustResource(r.type, 'large', -1)"
+              class="count-btn zone-button"
+              :class="hasReds ? 'zone-button-reds' : ''"
+            >−</button>
+            <input
+              type="number"
+              min="0"
+              :value="getCount(r.type, 'large')"
+              @change.stop="emit('resourceCount', r.type, 'large', Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
+              @click.stop
+              class="count-input"
+            />
+            <button
+              @click.stop="adjustResource(r.type, 'large', 1)"
+              class="count-btn zone-button"
+              :class="hasReds ? 'zone-button-reds' : ''"
+            >+</button>
+          </div>
         </div>
       </div>
 
       <hr class="transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 
-      <!-- Other -->
+      <!-- Map Features (Treasures, Dungeons, Other) -->
       <div>
-        <div class="text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider" title="Other">Other</div>
-        <div class="flex flex-wrap gap-1.5 justify-start pb-1">
-          <ZoneFeatureToggle 
-            v-for="f in [
-              { type: 'crystalCreaturePresent', title: 'Crystal Creature' },
-              { type: 'dungeonStatic', title: 'Static Dungeon' },
-              { type: 'dungeonGroup', title: 'Group Dungeon' }
-            ]"
+        <div class="section-label">Map Features</div>
+        <div class="flex flex-wrap gap-2 items-center justify-start">
+          <!-- Countable features: treasures + dungeons -->
+          <div
+            v-for="f in [...TREASURES, ...DUNGEONS]"
             :key="f.type"
-            :type="f.type as any"
-            :active="!!features?.[f.type as keyof NodeFeatures]"
-            :has-reds="hasReds"
-            :title="f.title"
-            @toggle="emit('toggle', f.type as any)"
-          />
+            class="feature-item flex flex-col items-center gap-1"
+          >
+            <img :src="f.icon" :alt="f.title" class="w-8 h-8 object-cover p-0.5 rounded" :title="f.title" />
+            <div class="flex items-center gap-0.5">
+              <button
+                @click.stop="adjustFeature(f.type, -1)"
+                class="count-btn zone-button"
+                :class="hasReds ? 'zone-button-reds' : ''"
+              >−</button>
+              <input
+                type="number"
+                min="0"
+                :value="getFeatureCount(f.type)"
+                @change.stop="emit('featureCount', f.type, Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
+                @click.stop
+                class="count-input"
+              />
+              <button
+                @click.stop="adjustFeature(f.type, 1)"
+                class="count-btn zone-button"
+                :class="hasReds ? 'zone-button-reds' : ''"
+              >+</button>
+            </div>
+          </div>
+          <!-- Toggle-only features -->
+          <div class="feature-item flex flex-col items-center gap-1 self-center">
+            <button
+              @click.stop="emit('toggle', 'crystalCreaturePresent')"
+              class="zone-button w-8 h-8 flex items-center justify-center rounded p-0.5"
+              :class="[hasReds ? 'zone-button-reds' : '', features?.crystalCreaturePresent ? 'ring-1 ring-white bg-gray-500' : 'opacity-60']"
+              title="Crystal Creature"
+            >
+              <img src="/images/crystal.png" alt="Crystal Creature" class="w-full h-full object-cover" />
+            </button>
+            <span class="col-label my-0.5" style="font-size: 8px">Crystal Creature</span>
+          </div>
         </div>
       </div>
     </div>
@@ -123,5 +209,36 @@ const emit = defineEmits<{
 .tray-leave-to {
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.9);
+}
+
+.count-btn {
+  @apply w-6 h-6 flex items-center justify-center text-white text-sm leading-none rounded flex-shrink-0;
+  transition: background-color 0.1s ease;
+}
+
+.count-btn:active {
+  @apply bg-white/30;
+}
+
+.count-input {
+  @apply w-6 text-center text-xs text-white bg-gray-800 border border-gray-600 rounded h-6;
+  appearance: textfield;
+}
+
+.count-input::-webkit-outer-spin-button,
+.count-input::-webkit-inner-spin-button {
+  appearance: none;
+}
+
+.feature-item {
+  width: 83px;
+}
+
+.section-label {
+  @apply text-[9px] uppercase text-white font-bold mb-1.5 tracking-wider;
+}
+
+.col-label {
+  @apply text-[9px] uppercase text-gray-400 font-bold tracking-wider text-center;
 }
 </style>
