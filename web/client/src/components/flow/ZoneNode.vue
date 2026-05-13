@@ -695,6 +695,26 @@ function unlockCore(core: string) {
   }
 }
 
+function isInsideDiamond(e: MouseEvent): boolean {
+  const el = zoneNodeRef.value;
+  if (!el) return true;
+  const rect = el.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+  return Math.abs(x - cx) + Math.abs(y - cy) <= cx;
+}
+
+function onNodeMouseDown(e: MouseEvent) {
+  // Allow events from interactive children (buttons, inputs, handles) regardless of position
+  const target = e.target as HTMLElement;
+  if (target.closest('button, input, .vue-flow__handle, .nodrag')) return;
+  if (!isInsideDiamond(e)) {
+    e.stopPropagation();
+  }
+}
+
 function lockCore(core: string) {
   const timerKey = getTimerKey(core);
   const features = { ...(props.data.features || {}) };
@@ -711,7 +731,7 @@ function lockCore(core: string) {
 </script>
 
 <template>
-  <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }">
+  <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }" @mousedown="onNodeMouseDown">
     <div :class="[isConnecting ? 'connecting-mode' : '']">
         <template v-if="!isHandleEditorOpen && !isMapFeaturesModalOpen && !isChestModalOpen" v-for="handle in handles" :key="handle.id">
           <Handle
@@ -736,7 +756,7 @@ function lockCore(core: string) {
         </template>
     </div>
     
-    <div v-if="isRestricted" class="absolute inset-0 cursor-pointer" :class="[Z_INDEX.RESTRICTED_NODE, { 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }]" @click="showDeleteOverlay = true">
+    <div v-if="isRestricted" class="absolute inset-0 cursor-pointer diamond-shape" :class="[Z_INDEX.RESTRICTED_NODE, { 'bg-transparent': !showDeleteOverlay, 'bg-black/80': showDeleteOverlay }]" @click="showDeleteOverlay = true">
        <div v-if="showDeleteOverlay" class="flex flex-col items-center justify-center h-full rounded-lg" @click.stop>
          <p class="text-white mb-4">Node is expired. Delete it?</p>
          <div class="flex gap-2">
