@@ -421,8 +421,8 @@ const lastUpdatedColor = computed(() => {
   if (!ts) return '';
   const diffMs = now.value - ts;
   const diffHours = diffMs / 3600000;
-  if (diffHours < 1) return 'text-green-400';
-  if (diffHours < 2) return 'text-orange-400';
+  if (diffHours < 2) return 'text-green-400';
+  if (diffHours < 3) return 'text-orange-400';
   return 'text-red-400';
 });
 
