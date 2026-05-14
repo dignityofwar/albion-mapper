@@ -282,6 +282,14 @@ export const NodePositionSchema = z.object({
   explored: z.boolean().optional(),
 });
 
+export const RoomMemoryEntrySchema = z.object({
+  zoneId: z.string(),
+  timesAdded: z.array(z.string()),
+  features: NodeFeaturesSchema.optional(),
+  customHandles: z.array(CustomHandleSchema).nullable().optional(),
+  lastUpdated: z.string(),
+});
+
 export const ImportRoomBodySchema = z.object({
   homeZoneId: z.string(),
   connections: z.array(z.object({
@@ -296,6 +304,7 @@ export const ImportRoomBodySchema = z.object({
       reportedBy: z.string().optional(),
   })),
   nodePositions: z.array(NodePositionSchema),
+  roomHistory: z.array(RoomMemoryEntrySchema).optional(),
 });
 
 // ── WebSocket message types ───────────────────────────────────────────────────

@@ -22,7 +22,7 @@ const props = defineProps<{
 
 const dialogOpen = ref(false);
 
-const hasHistory = computed(() => !!props.entry && props.entry.timesAdded.length > 0);
+const hasHistory = computed(() => !!props.entry && props.entry.timesAdded.length > 1);
 
 const lastSeen = computed(() => {
   const arr = props.entry?.timesAdded;

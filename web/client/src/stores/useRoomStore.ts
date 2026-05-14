@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, nextTick } from 'vue';
-import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle } from 'shared';
+import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle, RoomMemoryEntry } from 'shared';
 import { API_BASE_URL } from '@/utils/api';
 import { track } from '@vercel/analytics';
 import { treeQuery } from '@/utils/treeQuery';
@@ -373,7 +373,12 @@ export const useRoomStore = defineStore('room', () => {
     localStorage.setItem('recentRooms', JSON.stringify(recentlyViewedRooms.value));
   }
 
-  async function importData(data: { connections: any[], nodePositions: NodePosition[], homeZoneId: string }) {
+  async function importData(data: { 
+    connections: any[], 
+    nodePositions: NodePosition[], 
+    homeZoneId: string,
+    roomHistory?: RoomMemoryEntry[]
+  }) {
     if (!roomId.value || !token.value) {
       throw new Error('Not authenticated');
     }
@@ -389,6 +394,12 @@ export const useRoomStore = defineStore('room', () => {
     
     if (!response.ok) {
       throw new Error(`Failed to import data: ${await response.text()}`);
+    }
+    
+    // Update memory if provided
+    if (data.roomHistory) {
+      const memoryStore = useRoomMemoryStore();
+      memoryStore.applyMemorySync(data.roomHistory);
     }
   }
 

@@ -228,7 +228,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: formatZodError(parsed.error) });
     }
 
-    const { homeZoneId, connections, nodePositions } = parsed.data;
+    const { homeZoneId, connections, nodePositions, roomHistory } = parsed.data;
 
     // Validate homeZoneId
     const zone = ZONE_BY_ID.get(homeZoneId);
@@ -246,6 +246,7 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       // Delete all existing data
       await client.query('DELETE FROM connections WHERE room_id = $1', [id]);
       await client.query('DELETE FROM room_node_positions WHERE room_id = $1', [id]);
+      await client.query('DELETE FROM room_node_memory WHERE room_id = $1', [id]);
       
       // Insert new connections
       for (const conn of connections) {
@@ -261,6 +262,16 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
           INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles, explored)
           VALUES ($1, $2, $3, $4, $5, $6, $7)
         `, [id, node.zoneId, node.x, node.y, JSON.stringify(node.features || {}), JSON.stringify(node.customHandles || null), !!node.explored]);
+      }
+
+      // Insert new room memory
+      if (roomHistory) {
+        for (const entry of roomHistory) {
+          await client.query(`
+            INSERT INTO room_node_memory (room_id, zone_id, times_added, features, custom_handles, last_updated)
+            VALUES ($1, $2, $3, $4, $5, $6)
+          `, [id, entry.zoneId, entry.timesAdded, JSON.stringify(entry.features || {}), JSON.stringify(entry.customHandles || null), entry.lastUpdated]);
+        }
       }
 
       await client.query('COMMIT');

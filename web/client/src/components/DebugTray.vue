@@ -55,7 +55,8 @@ async function exportNodes() {
   const data = JSON.stringify({
     connections: store.connections,
     homeZoneId: store.homeZoneId,
-    nodePositions: store.nodePositions
+    nodePositions: store.nodePositions,
+    roomHistory: Array.from(memoryStore.memory.values())
   }, null, 2);
   try {
     await navigator.clipboard.writeText(data);
