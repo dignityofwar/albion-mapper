@@ -49,7 +49,6 @@ const featureRows = computed(() => {
       >
         <div class="flex items-center justify-center relative">
           <img :src="feature.icon" class="w-8 h-8 object-cover aspect-square p-1" :alt="feature.title" />
-          <span v-if="feature.upstream" class="absolute -top-1 -right-1 bg-gray-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">?</span>
         </div>
         <!-- Non-resource: show count badge or ? if upstream -->
         <template v-if="!feature.isResource && (feature.count || feature.upstream)">

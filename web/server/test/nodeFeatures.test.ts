@@ -19,7 +19,7 @@ describe('getInitialFeatures', () => {
     const features = getInitialFeatures('cases-ugumlos');
     expect(features).toEqual({
       resources: [{ type: 'wood' }, { type: 'ore' }, { type: 'stone' }],
-      treasuresGreenCount: 1,
+      treasuresGreenCount: 0,
       upstreamFeatures: ['wood', 'ore', 'stone', 'treasuresGreenCount']
     });
   });
@@ -28,7 +28,7 @@ describe('getInitialFeatures', () => {
     // firos-ezatam has knownFeatures: ["cotton", "largeBlueChest"]
     const features = getInitialFeatures('firos-ezatam');
     expect(features.resources).toEqual([{ type: 'fibre' }]);
-    expect(features.treasuresBlueCount).toBe(1);
+    expect(features.treasuresBlueCount).toBe(0);
     expect(features.upstreamFeatures).toEqual(['fibre', 'treasuresBlueCount']);
   });
 });

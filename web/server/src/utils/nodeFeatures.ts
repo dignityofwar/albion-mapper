@@ -32,7 +32,7 @@ export function getInitialFeatures(zoneId: string): NodeFeatures {
       }
       const countKey = KNOWN_FEATURE_TO_COUNT[feat];
       if (countKey) {
-        (features as any)[countKey] = 1;
+        (features as any)[countKey] = 0;
         upstream.push(String(countKey));
       }
     }

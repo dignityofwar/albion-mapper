@@ -93,6 +93,12 @@ function adjustFeature(type: string, delta: number) {
         </button>
       </div>
 
+      <!-- Upstream callout -->
+      <div v-if="(upstreamFeatures ?? []).length > 0" class="flex items-start gap-2 rounded-lg border border-yellow-500/60 bg-yellow-500/10 px-3 py-2">
+        <span class="mt-0.5 flex-shrink-0 w-4 h-4 rounded-full bg-yellow-400 text-gray-900 text-[9px] font-black flex items-center justify-center leading-none">?</span>
+        <span class="text-[10px] text-yellow-300 leading-tight">Please confirm the presence of this map feature. If it does not exist, increment it up by one then down.</span>
+      </div>
+
       <hr class="transition-colors duration-300" :class="hasReds ? 'border-red-500/30' : 'border-gray-700/50'" />
 
       <!-- Resources -->
@@ -119,7 +125,7 @@ function adjustFeature(type: string, delta: number) {
             <!-- Icon -->
             <div class="relative w-7 h-7">
               <img :src="r.icon" :alt="r.title" class="w-7 h-7 object-cover p-0.5 rounded" :title="r.title" />
-              <span v-if="isUpstreamResource(r.type)" class="absolute -top-1 -right-1 bg-gray-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">?</span>
+              <span v-if="isUpstreamResource(r.type)" class="absolute -top-1 -right-1 bg-yellow-400 text-gray-900 text-[8px] font-black rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">?</span>
             </div>
             <!-- Small count -->
             <div class="flex items-center justify-center gap-0.5">
@@ -172,7 +178,6 @@ function adjustFeature(type: string, delta: number) {
               >×</button>
             </div>
           </div>
-          <p v-if="isUpstreamResource(r.type)" class="text-[10px] text-gray-400 italic px-1 pb-1">Please confirm this resource is present</p>
         </div>
       </div>
 
@@ -191,9 +196,8 @@ function adjustFeature(type: string, delta: number) {
           >
             <div class="relative w-8 h-8">
               <img :src="f.icon" :alt="f.title" class="w-8 h-8 object-cover p-0.5 rounded" :title="f.title" />
-              <span v-if="isUpstreamFeature(f.type)" class="absolute -top-1 -right-1 bg-gray-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">?</span>
+              <span v-if="isUpstreamFeature(f.type)" class="absolute -top-1 -right-1 bg-yellow-400 text-gray-900 text-[8px] font-black rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">?</span>
             </div>
-            <p v-if="isUpstreamFeature(f.type)" class="text-[10px] text-gray-400 italic text-center leading-tight">Please confirm this resource is present</p>
             <div class="flex items-center gap-0.5">
               <button
                 @click.stop="adjustFeature(f.type, -1)"
