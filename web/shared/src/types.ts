@@ -146,6 +146,7 @@ export interface Room {
   homeZoneId: string;
   createdAt: string;
   updatedAt?: string;
+  plottedRoute?: string[];
 }
 
 // ── Zod schemas ──────────────────────────────────────────────────────────────
@@ -315,7 +316,7 @@ export const ImportRoomBodySchema = z.object({
 
 export type ServerMessage =
   | { type: 'auth_ok' }
-  | { type: 'sync'; connections: Connection[]; homeZoneId: string; title?: string; nodePositions: NodePosition[]; lastUpdatedAt: string; watching: number; totalConnected: number }
+  | { type: 'sync'; connections: Connection[]; homeZoneId: string; title?: string; nodePositions: NodePosition[]; lastUpdatedAt: string; watching: number; totalConnected: number; plottedRoute?: string[] }
   | { type: 'connection_added'; connection: Connection }
   | { type: 'connection_updated'; connection: Connection }
   | { type: 'connection_removed'; connectionId: string }
@@ -329,10 +330,12 @@ export type ServerMessage =
   | { type: 'memory_sync'; memory: RoomMemoryEntry[] }
   | { type: 'memory_updated'; entry: RoomMemoryEntry }
   | { type: 'memory_deleted'; zoneId: string }
+  | { type: 'plot_route_updated'; plottedRoute: string[]; destinationZoneId?: string }
   | { type: 'error'; message: string };
 
 export type ClientMessage =
   | { type: 'auth'; token: string }
   | { type: 'ping'; zoneName: string; nodeId?: string }
   | { type: 'polo' }
-  | { type: 'update_node_positions'; nodePositions: NodePosition[]; updateLastUpdated?: boolean };
+  | { type: 'update_node_positions'; nodePositions: NodePosition[]; updateLastUpdated?: boolean }
+  | { type: 'update_plot_route'; plottedRoute: string[]; destinationZoneId?: string };

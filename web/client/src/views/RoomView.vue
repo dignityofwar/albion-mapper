@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
+import { usePlotRouteStore } from '@/stores/usePlotRouteStore';
 import { Z_INDEX } from '@/constants/Layers';
 import ReportForm from '../components/ReportForm.vue';
 import DebugTray from '../components/DebugTray.vue';
@@ -12,8 +13,6 @@ import NonRoadsNode from '../components/flow/NonRoadsNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import TipButton from '../components/TipButton.vue';
-import RoomMapFeaturesToolbar from '../components/flow/zone/RoomMapFeaturesToolbar.vue';
-import RoomResourcesToolbar from '../components/flow/zone/RoomResourcesToolbar.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import MegaToast from '../components/common/MegaToast.vue';
 import ConfirmationModal from '../components/common/ConfirmationModal.vue';
@@ -36,6 +35,7 @@ import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, type
 const props = defineProps<{ id: string }>();
 const store = useRoomStore();
 const tutorialStore = useTutorialStore();
+const plotRouteStore = usePlotRouteStore();
 const { connections, homeZoneId, roomTitle, nodePositions, lastUpdate } = storeToRefs(store);
 const router = useRouter();
 
@@ -50,6 +50,8 @@ provide('goToNode', goToNode);
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
 const toastType = ref<'info' | 'error'>('info');
+const routePlottedToast = ref('');
+let routePlottedToastTimeout: ReturnType<typeof setTimeout> | null = null;
 const showConfirmationModal = ref(false);
 const confirmationModalText = ref("");
 const pendingConnection = ref<any>(null);
@@ -415,6 +417,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
         data: {
           connection: { ...conn },
           now: now.value,
+          isPlotted: plotRouteStore.plottedConnectionIds.has(conn.id),
           onDelete: async (id: string) => {
             try {
               await deleteConnection(props.id, store.token!, id);
@@ -514,8 +517,29 @@ watch(now, () => {
       edge.label = formatExpiresIn(remainingMs);
       edge.animated = style.animated;
       edge.data.now = now.value;
+      edge.data.isPlotted = plotRouteStore.plottedConnectionIds.has(conn.id);
     }
   });
+});
+
+// Update isPlotted on edges when the route changes
+watch(() => plotRouteStore.plottedConnectionIds, () => {
+  flowEdges.value.forEach((edge) => {
+    edge.data.isPlotted = plotRouteStore.plottedConnectionIds.has(edge.id);
+  });
+}, { deep: true });
+
+// Show toast when a route is plotted (either locally or from server)
+watch(() => plotRouteStore.destinationZoneId, (newId) => {
+  if (newId) {
+    const destNode = flowNodes.value.find((n: any) => n.id === newId);
+    routePlottedToast.value = destNode?.data?.zoneName || newId;
+    if (routePlottedToastTimeout) clearTimeout(routePlottedToastTimeout);
+    routePlottedToastTimeout = setTimeout(() => (routePlottedToast.value = ''), 5000);
+  } else {
+    routePlottedToast.value = '';
+    if (routePlottedToastTimeout) clearTimeout(routePlottedToastTimeout);
+  }
 });
 const showDebug = ref(false);
 const showDebugOverride = ref(false);
@@ -526,10 +550,19 @@ function handleKeyDown(e: KeyboardEvent) {
     e.preventDefault();
     showDebugOverride.value = !showDebugOverride.value;
   }
+  if (e.key === 'Escape' && plotRouteStore.isPlotRouteMode) {
+    plotRouteStore.exitPlotRouteMode();
+  }
 }
 const showMobileSummary = ref(false);
 
 // ── Actions ──────────────────────────────────────────────────────────────────
+function onNodeClick(event: any) {
+  if (plotRouteStore.isPlotRouteMode && !event.node.data.isHome && !event.node.data.isGhost) {
+    plotRouteStore.selectDestination(store.homeZoneId, event.node.id, store.connections);
+  }
+}
+
 function onNodeDragStop() {
   const positions: NodePosition[] = flowNodes.value.map((n: any) => ({
     zoneId: n.id,
@@ -1062,7 +1095,7 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
 <template>
   <div class="h-dvh relative bg-gray-950 text-white">
     <TitleSegment :room-title="roomTitle" :class="Z_INDEX.UI_OVERLAY" @logout="logout" @fit-view="fitView({ padding: 0.2, duration: 300 })" />
-    <TopToolbar :nodes="flowNodes" :show-debug="isLocal || showDebugOverride" @select="goToNode" @fit-view="fitView({ padding: 0.2, duration: 300 })" @open-debug="showDebug = true" />
+    <TopToolbar :nodes="flowNodes" :show-debug="isLocal || showDebugOverride" :plot-route-mode="plotRouteStore.isPlotRouteMode" :has-route="plotRouteStore.hasRoute" @select="goToNode" @fit-view="fitView({ padding: 0.2, duration: 300 })" @open-debug="showDebug = true" @plot-route="plotRouteStore.enterPlotRouteMode()" @clear-route="plotRouteStore.exitPlotRouteMode()" />
 
     <ReportForm
       ref="reportForm"
@@ -1105,6 +1138,7 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
         @connect="handleConnect"
         @connect-start="handleConnectStart"
         @connect-end="handleConnectEnd"
+        @node-click="onNodeClick"
       >
         <template #connection-line="connectionLineProps">
           <ConnectionLine v-bind="connectionLineProps" :is-occupied="isHandleOccupied(connectionLineProps.sourceNode.id, connectionLineProps.sourceHandle?.id ?? null)" />
@@ -1147,6 +1181,33 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
         </Transition>
       </div>
 
+      <!-- Plot Route Mode Toast -->
+      <div class="absolute top-20 md:top-24 left-1/2 -translate-x-1/2 pointer-events-none w-full max-w-[95vw] flex flex-col items-center gap-2 px-4" :class="Z_INDEX.TOAST">
+        <Transition name="ping-toast">
+          <MegaToast
+            v-if="plotRouteStore.isPlotRouteMode"
+            :visible="true"
+            :fading-out="false"
+            :fill-duration="9999"
+            :enable-internal-animation="false"
+            fill-color="rgba(59, 130, 246, 0.15)"
+            bg-class="bg-blue-900/40"
+            border-class="border-blue-400"
+          >🗺️ Click on a zone to plot a route</MegaToast>
+        </Transition>
+        <Transition name="ping-toast">
+          <MegaToast
+            v-if="routePlottedToast"
+            :visible="true"
+            :fading-out="false"
+            :fill-duration="5"
+            fill-color="rgba(59, 130, 246, 0.35)"
+            bg-class="bg-blue-600/30 backdrop-blur-md"
+            border-class="border-blue-300"
+          >✅ Route plotted to {{ routePlottedToast }}</MegaToast>
+        </Transition>
+      </div>
+
       <TopLeftToolbar
         :fibre="activeResources.fibre"
         :leather="activeResources.leather"
@@ -1166,9 +1227,13 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
 
     <BottomRightPins
       :show-debug="isLocal || showDebugOverride"
+      :plot-route-mode="plotRouteStore.isPlotRouteMode"
+      :has-route="plotRouteStore.hasRoute"
       @open-debug="showDebug = true"
       @open-mobile-summary="showMobileSummary = true"
       @fit-view="fitView({ padding: 0.2, duration: 300 })"
+      @plot-route="plotRouteStore.enterPlotRouteMode()"
+      @clear-route="plotRouteStore.exitPlotRouteMode()"
     />
 
     <MobileRoomSummary

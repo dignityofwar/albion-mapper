@@ -8,6 +8,7 @@ import { computed, ref, inject, type Ref, watch } from 'vue';
 import { connectionStyle } from '@/utils/connectionStyle';
 import type { NodeFeatures } from 'shared';
 import { useRoomStore } from '@/stores/useRoomStore';
+import { usePlotRouteStore } from '@/stores/usePlotRouteStore';
 import { deleteConnection, deleteNode } from '@/utils/roomOperations';
 import { Z_INDEX } from '@/constants/Layers';
 import { storeToRefs } from 'pinia';
@@ -28,6 +29,7 @@ const props = defineProps<NodeProps<{
 }>>();
 
 const store = useRoomStore();
+const plotRouteStore = usePlotRouteStore();
 const { isConnecting, connections } = storeToRefs(store);
 const { updateNodeData } = useVueFlow();
 const now = inject<Ref<number>>('globalNow', ref(Date.now()));
@@ -35,6 +37,8 @@ const showPingToast = inject<(zoneName: string, nodeId?: string) => void>('showP
 
 const isPinged = ref(false);
 const pingKey = ref(0);
+const isHovered = ref(false);
+const isPlotRouteTarget = computed(() => plotRouteStore.isPlotRouteMode && !props.data.isHome && !props.data.isGhost && isHovered.value);
 
 function handlePing() {
   store.send({ type: 'ping', zoneName: props.data.zoneName || props.id, nodeId: props.id });
@@ -82,6 +86,7 @@ const handleEdgeClass = (handleId: string): string => {
     (c.toZoneId === props.id && c.toHandleId === handleId)
   );
   if (!conn) return '';
+  if (plotRouteStore.plottedConnectionIds.has(conn.id)) return 'handle-edge-plotted';
   const remainingMs = new Date(conn.expiresAt).getTime() - now.value;
   const style = connectionStyle(remainingMs, conn.isExpired ?? false);
   if (style.stroke === '#0ee25e') return 'handle-edge-green';
@@ -135,6 +140,7 @@ async function handleDelete() {
       await deleteConnection(store.roomId, store.token, connId);
     }
     await deleteNode(store.roomId, store.token, props.id);
+    plotRouteStore.onNodeRemoved(props.id);
   } catch (err) {
     console.error('Failed to delete node connections:', err);
   }
@@ -189,7 +195,7 @@ const handles = computed(() => {
          </div>
        </div>
     </div>
-    <TooltipProvider :delay-duration="100">
+    <TooltipProvider :delay-duration="0">
     <div
       :key="pingKey"
       class="text-white text-xs text-center w-full h-full relative transition-all duration-300"
@@ -198,9 +204,12 @@ const handles = computed(() => {
         props.data.isHome ? 'home-glow' : '',
         props.data.highlighted ? 'goto-glow-animation' : '',
         isPinged ? 'ping-animation' : '',
-        props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
+        props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : '',
+        isPlotRouteTarget ? 'plot-route-hover' : ''
       ]"
       @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow' || e.animationName === 'ping-glow-home') isPinged = false; }"
+      @mouseenter="isHovered = true"
+      @mouseleave="isHovered = false"
     >
       <!-- Ping Button (top tip) -->
       <div class="absolute left-1/2 -translate-x-1/2 top-5" :class="Z_INDEX.CONTENT_LOW">
@@ -245,5 +254,10 @@ const handles = computed(() => {
 .non-roads-node {
   width: 200px;
   height: 200px;
+}
+
+.plot-route-hover {
+  filter: drop-shadow(0 0 12px #3b82f6) drop-shadow(0 0 4px #60a5fa);
+  transition: filter 0.15s ease;
 }
 </style>

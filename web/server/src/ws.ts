@@ -22,6 +22,7 @@ interface DbRoom {
   home_zone_id: string;
   created_at: string;
   updated_at: string | null;
+  plotted_route: string[] | null;
 }
 
 export async function wsRoutes(app: FastifyInstance): Promise<void> {
@@ -141,7 +142,7 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               lastUpdated: row.last_updated,
             }));
 
-            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, title: room.title || undefined, nodePositions, lastUpdatedAt, watching: getWatchingCount(roomId), totalConnected: getTotalSocketCount() });
+            send({ type: 'sync', connections, homeZoneId: room.home_zone_id, title: room.title || undefined, nodePositions, lastUpdatedAt, watching: getWatchingCount(roomId), totalConnected: getTotalSocketCount(), plottedRoute: room.plotted_route ?? undefined });
             send({ type: 'memory_sync', memory });
           } catch {
             socket.close(4401, 'Invalid token');
@@ -267,6 +268,18 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               broadcast(roomId, { type: 'memory_updated', entry });
             }
           }
+          return;
+        }
+
+        if (msg.type === 'update_plot_route') {
+          if (!authenticated) return;
+          const plottedRoute = Array.isArray(msg.plottedRoute) ? msg.plottedRoute : [];
+          const destinationZoneId = msg.destinationZoneId;
+          await app.db.query(
+            'UPDATE rooms SET plotted_route = $1 WHERE id = $2',
+            [plottedRoute.length > 0 ? plottedRoute : null, roomId]
+          );
+          broadcast(roomId, { type: 'plot_route_updated', plottedRoute, destinationZoneId }, socket);
           return;
         }
 

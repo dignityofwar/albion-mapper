@@ -151,6 +151,15 @@
   &.handle-edge-grey::before {
     border-top: 2px solid #acadae;
   }
+
+  &.handle-edge-plotted::after {
+    animation: pulse-blue 2s infinite ease-in-out;
+    border: 2px solid #3b82f6;
+  }
+
+  &.handle-edge-plotted::before {
+    border-top: 2px solid #3b82f6;
+  }
 }
 
 .center-handle {

@@ -20,6 +20,7 @@ import TutorialTooltip from '../tutorial/TutorialTooltip.vue';
 import { useRoomStore } from '@/stores/useRoomStore';
 import { useRoomMemoryStore } from '@/stores/useRoomMemoryStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
+import { usePlotRouteStore } from '@/stores/usePlotRouteStore';
 import { storeToRefs } from 'pinia';
 import { deleteConnection, deleteNode, updateConnection } from '@/utils/roomOperations';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
@@ -43,6 +44,7 @@ const props = defineProps<NodeProps<{
 
 const store = useRoomStore();
 const memoryStore = useRoomMemoryStore();
+const plotRouteStore = usePlotRouteStore();
 const { connections, homeZoneId, isConnecting } = storeToRefs(store);
 const memoryEntry = computed(() => memoryStore.getEntry(props.id));
 const { updateNodeData } = useVueFlow();
@@ -55,6 +57,8 @@ const isRestricted = computed(() => isIsolated.value || isExpired.value);
 const isUnexplored = computed(() => !props.data.isHome && !props.data.isGhost && !props.data.explored);
 
 const isRoadsHideout = computed(() => props.data.type === 'roadsHideout');
+const isHovered = ref(false);
+const isPlotRouteTarget = computed(() => plotRouteStore.isPlotRouteMode && !props.data.isHome && !props.data.isGhost && isHovered.value);
 const hasCustomHandles = computed(() => (props.data.customHandles?.length ?? 0) > 0);
 const needsCustomHandles = computed(() => isRoadsHideout.value && !hasCustomHandles.value);
 
@@ -157,6 +161,7 @@ async function handleDelete() {
     if (nodeConns.length === 0) {
       // Orphaned node — no connections at all, just remove the position
       await deleteNode(store.roomId, store.token, props.id);
+      plotRouteStore.onNodeRemoved(props.id);
     } else {
       // Collect all connections touching this node plus their descendants
       const toDelete = new Set<string>();
@@ -178,6 +183,7 @@ async function handleDelete() {
         await deleteConnection(store.roomId, store.token, connId);
       }
       await deleteNode(store.roomId, store.token, props.id);
+      plotRouteStore.onNodeRemoved(props.id);
     }
   } catch (err) {
     console.error('Failed to delete node:', err);
@@ -282,6 +288,7 @@ const handleEdgeClass = (handleId: string): string => {
     (c.toZoneId === props.id && c.toHandleId === handleId)
   );
   if (!conn) return '';
+  if (plotRouteStore.plottedConnectionIds.has(conn.id)) return 'handle-edge-plotted';
   if (isRestricted.value || store.isEdgeIsolated(conn.id, now.value)) return 'handle-edge-grey';
   const remainingMs = new Date(conn.expiresAt).getTime() - now.value;
   const style = connectionStyle(remainingMs, conn.isExpired ?? false);
@@ -848,7 +855,7 @@ function lockCore(core: string) {
       <div class="absolute inset-0 bg-gray-900/70 diamond-shape"></div>
       <span class="relative text-[18px] font-semibold tracking-widest border-dashed border uppercase text-white select-none mt-48 bg-gray-700 px-3 py-1 rounded-xl">Unexplored</span>
     </div>
-    <TooltipProvider :delay-duration="100">
+    <TooltipProvider :delay-duration="0">
       <div 
         :key="pingKey"
         class="text-white text-xs text-center min-w-[400px] min-h-[400px] relative transition-all duration-300"
@@ -857,9 +864,12 @@ function lockCore(core: string) {
           props.data.isHome ? 'home-glow' : '',
           props.data.highlighted ? 'goto-glow-animation' : '',
           isPinged ? 'ping-animation' : '',
-          props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : ''
+          props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : '',
+          isPlotRouteTarget ? 'plot-route-hover' : ''
         ]"
         @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow' || e.animationName === 'ping-glow-home') isPinged = false; }"
+        @mouseenter="isHovered = true"
+        @mouseleave="isHovered = false"
       >
       <!-- Ping Button (top tip) -->
       <div class="absolute left-1/2 -translate-x-1/2 top-9 flex flex-col items-center gap-0.5" :class="Z_INDEX.CONTENT_LOW">
@@ -1103,6 +1113,11 @@ function lockCore(core: string) {
   position: absolute;
   top: 165px;
   left: 50px;
+}
+
+.plot-route-hover {
+  filter: drop-shadow(0 0 12px #3b82f6) drop-shadow(0 0 4px #60a5fa);
+  transition: filter 0.15s ease;
 }
 
 </style>

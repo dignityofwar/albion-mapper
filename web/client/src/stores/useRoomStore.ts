@@ -5,6 +5,7 @@ import { API_BASE_URL } from '@/utils/api';
 import { track } from '@vercel/analytics';
 import { treeQuery } from '@/utils/treeQuery';
 import { useRoomMemoryStore } from './useRoomMemoryStore';
+import { usePlotRouteStore } from './usePlotRouteStore';
 
 export type WsStatus = 'disconnected' | 'connecting' | 'connected' | 'auth_failed';
 
@@ -69,6 +70,8 @@ export const useRoomStore = defineStore('room', () => {
   function send(msg: any) {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify(msg));
+    } else {
+      console.warn('[RoomStore] send() DROPPED — ws not open', msg.type, 'readyState:', ws?.readyState);
     }
   }
 
@@ -84,6 +87,10 @@ export const useRoomStore = defineStore('room', () => {
         watchingCount.value = msg.watching;
         totalConnected.value = msg.totalConnected;
         addToRecentRooms(roomId.value, roomId.value, roomTitle.value);
+        if (msg.plottedRoute && msg.plottedRoute.length > 0) {
+          const plotRouteStore = usePlotRouteStore();
+          plotRouteStore.applyPlottedRoute(msg.plottedRoute);
+        }
         break;
 
       case 'memory_sync':
@@ -134,6 +141,7 @@ export const useRoomStore = defineStore('room', () => {
       case 'connection_removed':
         connections.value = connections.value.filter((c) => c.id !== msg.connectionId);
         lastUpdate.value = new Date();
+        usePlotRouteStore().onConnectionRemoved(msg.connectionId);
         break;
 
       case 'connection_expired':
@@ -157,6 +165,11 @@ export const useRoomStore = defineStore('room', () => {
         connections.value = [];
         nodePositions.value = nodePositions.value.filter(n => n.zoneId === homeZoneId.value);
         lastUpdate.value = new Date();
+        usePlotRouteStore().exitPlotRouteMode();
+        break;
+
+      case 'plot_route_updated':
+        usePlotRouteStore().applyPlottedRoute(msg.plottedRoute, msg.destinationZoneId);
         break;
       
       case 'node_positions_updated':

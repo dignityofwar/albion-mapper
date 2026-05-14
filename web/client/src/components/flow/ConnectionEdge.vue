@@ -25,6 +25,7 @@ type EdgeData = {
   sourceFacing?: string;
   targetFacing?: string;
   slots?: 7 | 20;
+  isPlotted?: boolean;
 };
 
 const props = defineProps<EdgeProps<EdgeData>>();
@@ -137,8 +138,18 @@ const style = computed(() => {
       color: '#6366f1'
     };
   }
+  if (props.data?.isPlotted) {
+    return {
+      stroke: '#3b82f6',
+      strokeDasharray: undefined,
+      animated: false,
+      color: '#1d4ed8'
+    };
+  }
   return connectionStyle(remainingMs.value, isRestricted.value);
 });
+
+const isPlotted = computed(() => props.data?.isPlotted ?? false);
 
 function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;
@@ -220,7 +231,7 @@ defineExpose({
     :id="id"
     :path="path"
     :animated="style.animated"
-    :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: 2, opacity: isRestricted ? 0.3 : 1, animation: isRestricted ? 'none' : undefined }"
+    :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: isPlotted ? 3 : 2, opacity: isRestricted ? 0.3 : 1, animation: isPlotted ? 'pulse-blue-stroke 0.75s infinite ease-in-out' : (isRestricted ? 'none' : undefined) }"
     class="cursor-pointer"
     @click.stop="showPopover = !showPopover"
     @mousedown.stop
@@ -230,9 +241,9 @@ defineExpose({
     <path
       v-for="i in numChevrons"
       :key="`${chevronEpoch}-${i}`"
-      d="M -6 -6 L 0 0 L -6 6"
+      :d="isPlotted ? 'M -18 -18 L 0 0 L -18 18' : 'M -6 -6 L 0 0 L -6 6'"
       fill="none"
-      stroke-width="3"
+      :stroke-width="isPlotted ? 4 : 3"
       stroke-linecap="round"
       stroke-linejoin="round"
       :stroke="style.stroke"
@@ -393,6 +404,15 @@ defineExpose({
   }
   to {
     stroke-dashoffset: -18;
+  }
+}
+
+@keyframes pulse-blue-stroke {
+  0%, 100% {
+    stroke: #3b82f6;
+  }
+  50% {
+    stroke: #93c5fd;
   }
 }
 </style>

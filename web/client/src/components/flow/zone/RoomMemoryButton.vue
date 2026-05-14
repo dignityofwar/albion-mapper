@@ -39,7 +39,7 @@ function formatDate(iso: string): string {
 </script>
 
 <template>
-  <TooltipProvider :delay-duration="300">
+  <TooltipProvider :delay-duration="0">
     <DialogRoot v-model:open="dialogOpen">
       <TooltipRoot>
         <TooltipTrigger asChild>
