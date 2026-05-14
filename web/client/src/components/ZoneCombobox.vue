@@ -55,6 +55,10 @@ const isOpen = ref(false);
 const highlightedId = ref<string | null>(null);
 const isFlashing = ref(false);
 
+const selectedZone = computed<Zone | undefined>(() =>
+  props.modelValue ? ZONES.find((z) => z.id === props.modelValue) : undefined
+);
+
 function formatLastSeen(isoDate: string): string {
   const d = new Date(isoDate);
   return d.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
@@ -197,13 +201,27 @@ function onWrapperKeydown(e: KeyboardEvent) {
         ]"
       >
         <span v-if="icon" class="mr-2 text-sm leading-none shrink-0">{{ icon }}</span>
+        <!-- Selected zone display (shown when a zone is chosen and dropdown is closed) -->
+        <div
+          v-if="selectedZone && !isOpen"
+          class="flex-1 flex items-center gap-2 min-w-0 cursor-text"
+          @click="() => { comboboxInput.$el?.focus(); }"
+        >
+          <span class="truncate flex-1 text-base leading-none">{{ selectedZone.name }}</span>
+          <img v-if="selectedZone.id === store.homeZoneId" src="/images/hideout.png" class="shrink-0 w-4 h-4 object-contain" />
+          <TagZone :type="selectedZone.type" :category="selectedZone.category" :map-shape="selectedZone.mapShape" :zone-name="selectedZone.name" :proximity-to="selectedZone.proximityTo" />
+          <TagTier :tier="selectedZone.tier" :type="selectedZone.type" />
+        </div>
         <ComboboxInput
           ref="comboboxInput"
           v-model="query"
           :display-value="displayValue"
           :placeholder="placeholder ?? 'Search zones…'"
-          class="flex-1 bg-transparent py-0 outline-none text-base leading-none min-w-0"
-          :class="disabled ? 'cursor-not-allowed opacity-75' : ''"
+          class="bg-transparent py-0 outline-none text-base leading-none min-w-0"
+          :class="[
+            disabled ? 'cursor-not-allowed opacity-75' : '',
+            selectedZone && !isOpen ? 'w-0 opacity-0 absolute' : 'flex-1'
+          ]"
           data-testid="zone-combobox-input"
           @focus="onInputFocus"
         />
