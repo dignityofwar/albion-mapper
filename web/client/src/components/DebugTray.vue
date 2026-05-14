@@ -5,6 +5,7 @@ import { useRoomMemoryStore } from '../stores/useRoomMemoryStore';
 import { addConnection } from '../utils/roomOperations';
 import ShapeEditor from './debug/ShapeEditor.vue';
 import ImportDataModal from './ImportDataModal.vue';
+import { API_BASE_URL } from '../utils/api';
 
 const store = useRoomStore();
 const memoryStore = useRoomMemoryStore();
@@ -80,6 +81,13 @@ function flushLegacyData() {
   alert('Legacy feature data flushed from all nodes.');
 }
 
+async function flushMemory() {
+  await fetch(`${API_BASE_URL}/api/rooms/${store.roomId}/memory`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${store.token}` },
+  });
+}
+
 async function exportNodes() {
   const data = JSON.stringify({
     connections: store.connections,
@@ -141,7 +149,10 @@ async function exportNodes() {
             </div>
           </details>
           <details class="bg-gray-800 rounded-lg">
-            <summary class="p-3 font-sans font-bold cursor-pointer">Zone Memory ({{ memoryStore.memory.size }})</summary>
+            <summary class="p-3 font-sans font-bold cursor-pointer flex items-center justify-between">
+              <span>Zone Memory ({{ memoryStore.memory.size }})</span>
+              <button @click.stop="flushMemory" class="bg-red-700 hover:bg-red-800 text-white px-2 py-0.5 rounded text-xs">Flush Memory</button>
+            </summary>
             <div class="p-3 space-y-2">
               <div v-if="memoryStore.memory.size === 0" class="text-gray-500 text-xs p-2">No zone memory entries.</div>
               <details v-for="[zoneId, entry] in [...memoryStore.memory.entries()].sort(([a], [b]) => a === store.homeZoneId ? -1 : b === store.homeZoneId ? 1 : a.localeCompare(b))" :key="zoneId" :class="['rounded', zoneId === store.homeZoneId ? 'bg-green-950' : 'bg-gray-950']">

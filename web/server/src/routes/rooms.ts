@@ -213,6 +213,23 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
     return reply.status(204).send();
   });
 
+  // DELETE /api/rooms/:id/memory — flush all zone memory for a room
+  app.delete<{ Params: { id: string } }>('/api/rooms/:id/memory', {
+    preHandler: [app.authenticate],
+  }, async (request, reply) => {
+    const { id } = request.params;
+    const jwtPayload = request.user as { roomId: string };
+    if (jwtPayload.roomId !== id) {
+      return reply.status(403).send({ error: 'Forbidden' });
+    }
+
+    await app.db.query('DELETE FROM room_node_memory WHERE room_id = $1', [id]);
+
+    broadcast(id, { type: 'memory_sync', memory: [] });
+
+    return reply.status(204).send();
+  });
+
   // PUT /api/rooms/:id/import — import full room state
   app.put<{ Params: { id: string }, Body: any }>('/api/rooms/:id/import', {
     preHandler: [app.authenticate],
