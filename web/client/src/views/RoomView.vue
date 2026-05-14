@@ -590,9 +590,9 @@ const activeChests = computed(() => {
   flowNodes.value.forEach(node => {
     const f = node.data.features;
     if (!f) return;
-    if (f.treasuresGreen) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'green' });
-    if (f.treasuresBlue) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'blue' });
-    if (f.treasuresYellow) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'yellow' });
+    if ((f.treasuresGreenCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'green' });
+    if ((f.treasuresBlueCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'blue' });
+    if ((f.treasuresYellowCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'yellow' });
     if (f.chest) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'chest' });
   });
   return result.sort((a, b) => a.zoneName.localeCompare(b.zoneName));

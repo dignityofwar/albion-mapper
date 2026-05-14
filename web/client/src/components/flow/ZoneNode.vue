@@ -513,7 +513,8 @@ const showFeatures = computed(() => {
 const activeFeatures = computed(() => {
   if (!props.data.features) return [];
   const features = props.data.features;
-  const list: { type: string; title: string; icon: string; smallCount?: number; largeCount?: number; count?: number; isResource: boolean }[] = [];
+  const upstream = features.upstreamFeatures ?? [];
+  const list: { type: string; title: string; icon: string; smallCount?: number; largeCount?: number; count?: number; isResource: boolean; upstream?: boolean }[] = [];
   
   const countableFeatures = [
     { key: 'treasuresGreen',        countKey: 'treasuresGreenCount',  title: 'Green Treasures',   icon: '/images/treasures-green.png' },
@@ -537,16 +538,19 @@ const activeFeatures = computed(() => {
     if (!meta) continue;
     const smallCount = entry.small ?? 0;
     const largeCount = entry.large ?? 0;
-    if (smallCount > 0 || largeCount > 0) {
-      list.push({ type: entry.type, title: meta.title, icon: meta.icon, smallCount, largeCount, isResource: true });
+    const isUpstream = upstream.includes(entry.type);
+    if (smallCount > 0 || largeCount > 0 || isUpstream) {
+      list.push({ type: entry.type, title: meta.title, icon: meta.icon, smallCount, largeCount, isResource: true, upstream: isUpstream && smallCount === 0 && largeCount === 0 });
     }
   }
 
   for (const f of countableFeatures) {
-    const count = f.countKey ? ((features[f.countKey as keyof NodeFeatures] as number | undefined) ?? 0) : 0;
-    const active = count > 0 || !!features[f.key as keyof NodeFeatures];
+    const countKey = f.countKey ?? '';
+    const count = countKey ? ((features[countKey as keyof NodeFeatures] as number | undefined) ?? 0) : 0;
+    const isUpstream = upstream.includes(countKey);
+    const active = count > 0 || isUpstream;
     if (active) {
-      list.push({ type: f.key, title: f.title, icon: f.icon, count: count || undefined, isResource: false });
+      list.push({ type: f.key, title: f.title, icon: f.icon, count: count || undefined, isResource: false, upstream: isUpstream && count === 0 });
     }
   }
   return list;
@@ -559,7 +563,7 @@ const hasReds = computed(() => {
   return reds !== undefined && reds !== 0;
 });
 
-function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'powercoreYellow' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup' | 'treasuresGreen' | 'treasuresBlue' | 'treasuresYellow') {
+function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'powercoreYellow' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup') {
   const currentFeatures = props.data.features || {};
   const features = { ...currentFeatures };
   
@@ -620,12 +624,14 @@ function setFeatureCount(type: string, count: number) {
   const currentFeatures = props.data.features || {};
   const features: any = { ...currentFeatures };
   if (count > 0) {
-    features[type] = true;
     features[countKey] = count;
   } else {
     delete features[countKey];
-    // keep the boolean flag off if count is 0
-    features[type] = false;
+  }
+  // Clear upstream marker when user explicitly sets a count
+  if (features.upstreamFeatures) {
+    features.upstreamFeatures = features.upstreamFeatures.filter((k: string) => k !== String(countKey));
+    if (features.upstreamFeatures.length === 0) delete features.upstreamFeatures;
   }
   store.updateNodeFeatures(props.id, features);
 }
@@ -644,7 +650,13 @@ function setResourceCount(type: string, size: 'small' | 'large', count: number) 
   } else if (count > 0) {
     resources.push({ type: type as any, [size]: count });
   }
-  store.updateNodeFeatures(props.id, { ...currentFeatures, resources });
+  // Clear upstream marker when user explicitly sets a resource count
+  let upstreamFeatures = currentFeatures.upstreamFeatures ? [...currentFeatures.upstreamFeatures] : undefined;
+  if (upstreamFeatures) {
+    upstreamFeatures = upstreamFeatures.filter(k => k !== type);
+    if (upstreamFeatures.length === 0) upstreamFeatures = undefined;
+  }
+  store.updateNodeFeatures(props.id, { ...currentFeatures, resources, upstreamFeatures });
 }
 
 
@@ -995,6 +1007,7 @@ function lockCore(core: string) {
           :is-open="isMapFeaturesModalOpen"
           :has-reds="hasReds"
           :features="props.data.features"
+          :upstream-features="props.data.features?.upstreamFeatures ?? []"
           @toggle="toggleFeature"
           @size="setFeatureSize"
           @feature-count="setFeatureCount"

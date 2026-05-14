@@ -11,7 +11,7 @@ describe('getInitialFeatures', () => {
   it('returns resource features for a roads zone with knownResources', () => {
     // We know 'qiient-et-qinsum' has LOGS in maps.json
     const features = getInitialFeatures('qiient-et-qinsum');
-    expect(features).toEqual({ resources: [{ type: 'wood' }] });
+    expect(features).toEqual({ resources: [{ type: 'wood' }], upstreamFeatures: ['wood'] });
   });
 
   it('returns multiple resource features', () => {
@@ -19,7 +19,8 @@ describe('getInitialFeatures', () => {
     const features = getInitialFeatures('cases-ugumlos');
     expect(features).toEqual({
       resources: [{ type: 'wood' }, { type: 'ore' }, { type: 'stone' }],
-      treasuresGreen: true
+      treasuresGreenCount: 1,
+      upstreamFeatures: ['wood', 'ore', 'stone', 'treasuresGreenCount']
     });
   });
 
@@ -27,7 +28,8 @@ describe('getInitialFeatures', () => {
     // firos-ezatam has knownFeatures: ["cotton", "largeBlueChest"]
     const features = getInitialFeatures('firos-ezatam');
     expect(features.resources).toEqual([{ type: 'fibre' }]);
-    expect(features.treasuresBlue).toBe(true);
+    expect(features.treasuresBlueCount).toBe(1);
+    expect(features.upstreamFeatures).toEqual(['fibre', 'treasuresBlueCount']);
   });
 });
 
@@ -67,7 +69,7 @@ describe('Auto-pre-population in routes', () => {
         'qiient-al-nusom',
         0,
         0,
-        JSON.stringify({ resources: [{ type: 'ore' }] }),
+        expect.stringContaining('"resources":[{"type":"ore"}]'),
         JSON.stringify(null)
       ])
     );

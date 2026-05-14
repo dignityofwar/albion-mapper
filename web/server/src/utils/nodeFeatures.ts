@@ -8,15 +8,16 @@ const KNOWN_FEATURE_TO_RESOURCE: Record<string, ResourceType> = {
   'logs': 'wood',
 };
 
-const KNOWN_FEATURE_TO_FLAG: Record<string, keyof NodeFeatures> = {
-  'largeBlueChest': 'treasuresBlue',
-  'largeGreenChest': 'treasuresGreen',
-  'largeYellowChest': 'treasuresYellow',
+const KNOWN_FEATURE_TO_COUNT: Record<string, keyof NodeFeatures> = {
+  'largeBlueChest': 'treasuresBlueCount',
+  'largeGreenChest': 'treasuresGreenCount',
+  'largeYellowChest': 'treasuresYellowCount',
 };
 
 export function getInitialFeatures(zoneId: string): NodeFeatures {
   const zone = ZONE_BY_ID.get(zoneId);
   const features: NodeFeatures = {};
+  const upstream: string[] = [];
 
   if (zone && zone.knownFeatures) {
     for (const feat of zone.knownFeatures) {
@@ -25,14 +26,20 @@ export function getInitialFeatures(zoneId: string): NodeFeatures {
         if (!features.resources) features.resources = [];
         if (!features.resources.find(r => r.type === resourceType)) {
           features.resources.push({ type: resourceType });
+          upstream.push(resourceType);
         }
         continue;
       }
-      const flagKey = KNOWN_FEATURE_TO_FLAG[feat];
-      if (flagKey) {
-        (features as any)[flagKey] = true;
+      const countKey = KNOWN_FEATURE_TO_COUNT[feat];
+      if (countKey) {
+        (features as any)[countKey] = 1;
+        upstream.push(String(countKey));
       }
     }
+  }
+
+  if (upstream.length > 0) {
+    features.upstreamFeatures = upstream;
   }
 
   return features;

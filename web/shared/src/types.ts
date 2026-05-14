@@ -103,15 +103,13 @@ export interface NodeFeatures {
   chest?: boolean;
   chestSize?: 'S' | 'M' | 'L';
   chestTimer?: number; // Expiration timestamp in ms
-  treasuresGreen?: boolean;
-  treasuresBlue?: boolean;
-  treasuresYellow?: boolean;
   treasuresGreenCount?: number;
   treasuresBlueCount?: number;
   treasuresYellowCount?: number;
   dungeonStaticCount?: number;
   dungeonGroupCount?: number;
   resources?: ResourceEntry[];
+  upstreamFeatures?: string[]; // Feature keys/resource types populated from upstream maps.json data (unconfirmed)
   lastUpdatedAt?: number; // Timestamp in ms
 }
 
@@ -259,9 +257,6 @@ export const NodeFeaturesSchema = z.object({
   chest: z.boolean().optional(),
   chestSize: z.enum(['S', 'M', 'L']).optional(),
   chestTimer: z.number().optional(),
-  treasuresGreen: z.boolean().optional(),
-  treasuresBlue: z.boolean().optional(),
-  treasuresYellow: z.boolean().optional(),
   treasuresGreenCount: z.number().optional(),
   treasuresBlueCount: z.number().optional(),
   treasuresYellowCount: z.number().optional(),

@@ -227,13 +227,14 @@ function onWrapperKeydown(e: KeyboardEvent) {
             v-for="zone in filteredZones"
             :key="zone.id"
             :value="zone.id"
-            class="flex items-center gap-2 px-3 py-2 text-sm text-white cursor-pointer hover:bg-gray-700 data-[highlighted]:bg-gray-700"
+            class="flex items-center gap-2 px-3 py-2 text-sm text-white cursor-pointer data-[highlighted]:bg-gray-700 transition-colors"
+            :class="mappedZoneIds.has(zone.id) && zone.id !== modelValue ? 'bg-green-900/40 hover:bg-green-900/60' : 'hover:bg-gray-700'"
           >
             <span class="truncate flex-1">{{ zone.name }}</span>
-            <span v-if="zone.id === store.homeZoneId" class="shrink-0 text-yellow-400" title="Room home zone">🏠</span>
-            <TagTier :tier="zone.tier" :type="zone.type" />
+            <span v-if="mappedZoneIds.has(zone.id) && zone.id !== modelValue" class="shrink-0 bg-green-700 text-white text-[11px] font-semibold px-2 py-0.5 rounded-full leading-none">Already Added</span>
+            <img v-if="zone.id === store.homeZoneId" src="/images/hideout.png" class="shrink-0 w-5 h-5 object-contain" title="Room home zone" />
             <TagZone :type="zone.type" :category="zone.category" :map-shape="zone.mapShape" :zone-name="zone.name" :proximity-to="zone.proximityTo" />
-            <span v-if="mappedZoneIds.has(zone.id) && zone.id !== modelValue" class="shrink-0 text-green-400 text-xs">●</span>
+            <TagTier :tier="zone.tier" :type="zone.type" />
             <template v-if="memoryStore.getEntry(zone.id)">
               <TooltipRoot>
                 <TooltipTrigger asChild>

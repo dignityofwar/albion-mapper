@@ -141,6 +141,69 @@ describe('Node features persistence', () => {
     socket.close();
   });
 
+  it('saves avalonian treasures to memory but excludes crystalCreaturePresent and timed chest', async () => {
+    const { app, mockDb, token } = testApp;
+    await app!.listen({ port: 0 });
+
+    const { socket } = await connectWs(roomId);
+
+    // Auth mocks (4 calls: room, connections, node_positions, memory)
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId, home_zone_id: VALID_ZONE_A, created_at: new Date().toISOString() }] });
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // node positions
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // memory sync
+
+    socket.send(JSON.stringify({ type: 'auth', token }));
+    await new Promise((r) => setTimeout(r, 100));
+
+    const nodePositions = [
+      {
+        zoneId: VALID_ZONE_A,
+        x: 100,
+        y: 100,
+        features: {
+          treasuresGreenCount: 3,
+          treasuresBlueCount: 1,
+          crystalCreaturePresent: true, // should NOT be saved to memory
+          chest: true,                  // should NOT be saved to memory (timed)
+          chestTimer: 9999999,          // should NOT be saved to memory (timed)
+        }
+      }
+    ];
+
+    const mockClient = await mockDb.connect();
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // BEGIN
+    mockClient.query.mockResolvedValueOnce({ rows: [{ home_zone_id: VALID_ZONE_A }] }); // room lock
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // DELETE room_node_positions
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // INSERT room_node_positions
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // COMMIT
+
+    // Re-read after save (app.db.query)
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_A, x: 100, y: 100, features: nodePositions[0].features, custom_handles: null, explored: true }] });
+
+    // Memory: zone exists in memory
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_A }] }); // SELECT zone_id FROM room_node_memory
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // UPDATE room_node_memory
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT after update
+
+    socket.send(JSON.stringify({ type: 'update_node_positions', nodePositions }));
+    await new Promise((r) => setTimeout(r, 150));
+
+    // Verify memory update includes treasures but NOT crystalCreaturePresent or chest/chestTimer
+    // The 7th call should be the UPDATE room_node_memory with only treasure fields
+    const updateCall = mockDb.query.mock.calls.find(
+      (call: any[]) => typeof call[0] === 'string' && call[0].includes('UPDATE room_node_memory')
+    );
+    expect(updateCall).toBeDefined();
+    const savedFeatures = JSON.parse(updateCall[1][0]);
+    expect(savedFeatures).toEqual({ treasuresGreenCount: 3, treasuresBlueCount: 1 });
+    expect(savedFeatures).not.toHaveProperty('crystalCreaturePresent');
+    expect(savedFeatures).not.toHaveProperty('chest');
+    expect(savedFeatures).not.toHaveProperty('chestTimer');
+
+    socket.close();
+  });
+
   it('saves node features even for a single node (home zone)', async () => {
     const { app, mockDb, token } = testApp;
     await app!.listen({ port: 0 });

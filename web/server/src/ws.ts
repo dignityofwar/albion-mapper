@@ -216,9 +216,19 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
           // storing only map features (resources) and custom handles.
           const now = new Date().toISOString();
           for (const pos of deduplicated) {
-            const memoryFeatures = pos.features?.resources && pos.features.resources.length > 0
-              ? { resources: pos.features.resources }
-              : null;
+            const memoryFeatures = (() => {
+              const f = pos.features;
+              if (!f) return null;
+              const result: Record<string, any> = {};
+              if (f.resources && f.resources.length > 0) result.resources = f.resources;
+              if (f.treasuresGreenCount !== undefined) result.treasuresGreenCount = f.treasuresGreenCount;
+              if (f.treasuresBlueCount !== undefined) result.treasuresBlueCount = f.treasuresBlueCount;
+              if (f.treasuresYellowCount !== undefined) result.treasuresYellowCount = f.treasuresYellowCount;
+              if (f.upstreamFeatures && f.upstreamFeatures.length > 0) result.upstreamFeatures = f.upstreamFeatures;
+              // crystalCreaturePresent is intentionally excluded (temporary flag)
+              // chest/chestTimer are intentionally excluded (timed chest, not permanent)
+              return Object.keys(result).length > 0 ? result : null;
+            })();
             const memoryHandles = pos.customHandles && pos.customHandles.length > 0
               ? pos.customHandles
               : null;

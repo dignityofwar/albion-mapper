@@ -6,6 +6,7 @@ const props = defineProps<{
   isOpen: boolean;
   hasReds: boolean;
   features?: NodeFeatures;
+  upstreamFeatures?: string[];
 }>();
 
 const emit = defineEmits<{
@@ -49,6 +50,15 @@ function adjustResource(type: string, size: 'small' | 'large', delta: number) {
 function getFeatureCount(type: string): number {
   const countKey = `${type}Count` as keyof NodeFeatures;
   return (props.features?.[countKey] as number | undefined) ?? 0;
+}
+
+function isUpstreamResource(type: string): boolean {
+  return (props.upstreamFeatures ?? []).includes(type);
+}
+
+function isUpstreamFeature(type: string): boolean {
+  const countKey = `${type}Count`;
+  return (props.upstreamFeatures ?? []).includes(countKey);
 }
 
 function adjustFeature(type: string, delta: number) {
@@ -97,53 +107,62 @@ function adjustFeature(type: string, delta: number) {
         <div
           v-for="(r, i) in RESOURCES"
           :key="r.type"
-          class="grid grid-cols-[28px_1fr_1fr] gap-x-2 items-center py-1 px-1"
-          :class="i < RESOURCES.length - 1 ? (hasReds ? 'border-b border-red-500/20' : 'border-b border-gray-700/50') : ''"
+          class="flex flex-col rounded transition-all"
+          :class="[
+            i < RESOURCES.length - 1 ? (hasReds ? 'border-b border-red-500/20' : 'border-b border-gray-700/50') : '',
+            isUpstreamResource(r.type) ? 'animate-pulse bg-gray-700/60' : ''
+          ]"
         >
-          <!-- Icon -->
-          <img :src="r.icon" :alt="r.title" class="w-7 h-7 object-cover p-0.5 rounded" :title="r.title" />
-          <!-- Small count -->
-          <div class="flex items-center justify-center gap-0.5">
-            <button
-              @click.stop="adjustResource(r.type, 'small', -1)"
-              class="count-btn zone-button"
-              :class="hasReds ? 'zone-button-reds' : ''"
-            >−</button>
-            <input
-              type="number"
-              min="0"
-              :value="getCount(r.type, 'small')"
-              @change.stop="emit('resourceCount', r.type, 'small', Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
-              @click.stop
-              class="count-input"
-            />
-            <button
-              @click.stop="adjustResource(r.type, 'small', 1)"
-              class="count-btn zone-button"
-              :class="hasReds ? 'zone-button-reds' : ''"
-            >+</button>
+          <div class="grid grid-cols-[28px_1fr_1fr] gap-x-2 items-center py-1 px-1">
+            <!-- Icon -->
+            <div class="relative w-7 h-7">
+              <img :src="r.icon" :alt="r.title" class="w-7 h-7 object-cover p-0.5 rounded" :title="r.title" />
+              <span v-if="isUpstreamResource(r.type)" class="absolute -top-1 -right-1 bg-gray-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">?</span>
+            </div>
+            <!-- Small count -->
+            <div class="flex items-center justify-center gap-0.5">
+              <button
+                @click.stop="adjustResource(r.type, 'small', -1)"
+                class="count-btn zone-button"
+                :class="hasReds ? 'zone-button-reds' : ''"
+              >−</button>
+              <input
+                type="number"
+                min="0"
+                :value="getCount(r.type, 'small')"
+                @change.stop="emit('resourceCount', r.type, 'small', Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
+                @click.stop
+                class="count-input"
+              />
+              <button
+                @click.stop="adjustResource(r.type, 'small', 1)"
+                class="count-btn zone-button"
+                :class="hasReds ? 'zone-button-reds' : ''"
+              >+</button>
+            </div>
+            <!-- Large count -->
+            <div class="flex items-center justify-center gap-0.5">
+              <button
+                @click.stop="adjustResource(r.type, 'large', -1)"
+                class="count-btn zone-button"
+                :class="hasReds ? 'zone-button-reds' : ''"
+              >−</button>
+              <input
+                type="number"
+                min="0"
+                :value="getCount(r.type, 'large')"
+                @change.stop="emit('resourceCount', r.type, 'large', Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
+                @click.stop
+                class="count-input"
+              />
+              <button
+                @click.stop="adjustResource(r.type, 'large', 1)"
+                class="count-btn zone-button"
+                :class="hasReds ? 'zone-button-reds' : ''"
+              >+</button>
+            </div>
           </div>
-          <!-- Large count -->
-          <div class="flex items-center justify-center gap-0.5">
-            <button
-              @click.stop="adjustResource(r.type, 'large', -1)"
-              class="count-btn zone-button"
-              :class="hasReds ? 'zone-button-reds' : ''"
-            >−</button>
-            <input
-              type="number"
-              min="0"
-              :value="getCount(r.type, 'large')"
-              @change.stop="emit('resourceCount', r.type, 'large', Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
-              @click.stop
-              class="count-input"
-            />
-            <button
-              @click.stop="adjustResource(r.type, 'large', 1)"
-              class="count-btn zone-button"
-              :class="hasReds ? 'zone-button-reds' : ''"
-            >+</button>
-          </div>
+          <p v-if="isUpstreamResource(r.type)" class="text-[10px] text-gray-400 italic px-1 pb-1">Please confirm this resource is present</p>
         </div>
       </div>
 
@@ -157,9 +176,14 @@ function adjustFeature(type: string, delta: number) {
           <div
             v-for="f in [...TREASURES, ...DUNGEONS]"
             :key="f.type"
-            class="feature-item flex flex-col items-center gap-1"
+            class="feature-item flex flex-col items-center gap-1 rounded p-1 transition-all"
+            :class="isUpstreamFeature(f.type) ? 'animate-pulse bg-gray-700/60' : ''"
           >
-            <img :src="f.icon" :alt="f.title" class="w-8 h-8 object-cover p-0.5 rounded" :title="f.title" />
+            <div class="relative w-8 h-8">
+              <img :src="f.icon" :alt="f.title" class="w-8 h-8 object-cover p-0.5 rounded" :title="f.title" />
+              <span v-if="isUpstreamFeature(f.type)" class="absolute -top-1 -right-1 bg-gray-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center leading-none">?</span>
+            </div>
+            <p v-if="isUpstreamFeature(f.type)" class="text-[10px] text-gray-400 italic text-center leading-tight">Please confirm this resource is present</p>
             <div class="flex items-center gap-0.5">
               <button
                 @click.stop="adjustFeature(f.type, -1)"
