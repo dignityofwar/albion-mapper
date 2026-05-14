@@ -54,6 +54,10 @@ const isExpired = computed(() => store.isNodeExpired(props.id, now.value));
 const isRestricted = computed(() => isIsolated.value || isExpired.value);
 const isUnexplored = computed(() => !props.data.isHome && !props.data.isGhost && !props.data.explored);
 
+const isRoadsHideout = computed(() => props.data.type === 'roadsHideout');
+const hasCustomHandles = computed(() => (props.data.customHandles?.length ?? 0) > 0);
+const needsCustomHandles = computed(() => isRoadsHideout.value && !hasCustomHandles.value);
+
 const isMapFeaturesModalOpen = ref(false);
 const isHandleEditorOpen = ref(false);
 const mapFeaturesModalContainerRef = ref<HTMLElement | null>(null);
@@ -939,22 +943,14 @@ function lockCore(core: string) {
 
         <!-- Handle Editor Button -->
         <div class="handle-editor-container pointer-events-auto" :class="Z_INDEX.CONTENT_HIGH">
-          <TooltipRoot>
-            <TooltipTrigger asChild>
-              <ZoneHandleEditorButton
-                ref="handleEditorButtonRef"
-                :map-shape="props.data.mapShape"
-                :type="props.data.type"
-                :has-reds="hasReds"
-                @click="openHandleEditor"
-              />
-            </TooltipTrigger>
-            <TooltipPortal>
-              <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
-                Edit Portals
-              </TooltipContent>
-            </TooltipPortal>
-          </TooltipRoot>
+          <ZoneHandleEditorButton
+            ref="handleEditorButtonRef"
+            :map-shape="props.data.mapShape"
+            :type="props.data.type"
+            :has-reds="hasReds"
+            :needs-custom-handles="needsCustomHandles"
+            @click="openHandleEditor"
+          />
         </div>
 
         <!-- Reds on North-East Edge -->
