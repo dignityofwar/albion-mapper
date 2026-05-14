@@ -143,9 +143,6 @@ function save() {
   emit('save', handles.value);
 }
 
-function clearAll() {
-  handles.value = [];
-}
 
 function rotate(degrees: number) {
   handles.value = handles.value.map(h => {
@@ -257,19 +254,6 @@ function getHandleFacing(left: string, top: string): string {
               />
             </div>
 
-            <div class="flex items-center justify-center w-full" v-if="!isToggleMode">
-              <div class="flex items-center gap-2 bg-red-900/30 px-2 py-1 rounded border border-red-900/40">
-                <p class="text-[9px] text-red-300 leading-tight italic">
-                  Clearing points clears connections
-                </p>
-                <button 
-                  @click.stop="clearAll" 
-                  class="px-1.5 py-0.5 bg-red-900/50 hover:bg-red-900/70 text-red-100 text-[9px] rounded border border-red-800/60 transition-colors whitespace-nowrap"
-                >
-                  Clear All
-                </button>
-              </div>
-            </div>
           </div>
         </div>
         <!-- Diamond Shape Background -->

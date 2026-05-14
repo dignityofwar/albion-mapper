@@ -21,7 +21,7 @@ import { useRoomStore } from '@/stores/useRoomStore';
 import { useRoomMemoryStore } from '@/stores/useRoomMemoryStore';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { storeToRefs } from 'pinia';
-import { deleteConnection, deleteNode } from '@/utils/roomOperations';
+import { deleteConnection, deleteNode, updateConnection } from '@/utils/roomOperations';
 import { ref, watch, computed, nextTick, inject, type Ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { Z_INDEX } from '@/constants/Layers';
@@ -105,7 +105,7 @@ async function saveCustomHandles(newHandles: CustomHandle[]) {
   if (affectedHandleIds.length > 0) {
     // Find connections using these handles on THIS node (deduplicated)
     const seenConnIds = new Set<string>();
-    const connectionsToDelete = store.connections.filter(c => {
+    const affectedConnections = store.connections.filter(c => {
       if (seenConnIds.has(c.id)) return false;
       const affected =
         (c.fromZoneId === props.id && affectedHandleIds.includes(c.fromHandleId!)) ||
@@ -114,12 +114,17 @@ async function saveCustomHandles(newHandles: CustomHandle[]) {
       return affected;
     });
 
-    // Delete only the directly affected connections (no cascade into downstream nodes)
-    for (const conn of connectionsToDelete) {
+    for (const conn of affectedConnections) {
       try {
-        await deleteConnection(store.roomId, store.token, conn.id);
+        if (conn.toZoneId === props.id && affectedHandleIds.includes(conn.toHandleId!)) {
+          // Redirect the destination handle to center instead of deleting the connection
+          await updateConnection(store.roomId, store.token, conn.id, { toHandleId: 'center' });
+        } else {
+          // Source handle was removed — delete the connection
+          await deleteConnection(store.roomId, store.token, conn.id);
+        }
       } catch (err) {
-        console.error('Failed to delete connection for handle:', err);
+        console.error('Failed to update/delete connection for handle:', err);
       }
     }
   }
@@ -966,7 +971,7 @@ function lockCore(core: string) {
       </div>
 
       <!-- Handle Editor Button -->
-      <div class="handle-editor-container pointer-events-auto" :class="Z_INDEX.TOAST">
+      <div v-if="!isHandleEditorOpen" class="handle-editor-container pointer-events-auto" :class="Z_INDEX.TOAST">
         <ZoneHandleEditorButton
           ref="handleEditorButtonRef"
           :map-shape="props.data.mapShape"
