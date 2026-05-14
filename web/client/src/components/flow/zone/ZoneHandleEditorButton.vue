@@ -23,7 +23,7 @@ defineExpose({
 <template>
   <div class="relative flex items-center">
     <!-- Floating Element -->
-    <div v-if="needsCustomHandles" class="absolute right-full mr-2 whitespace-nowrap bg-blue-700 border-blue-400 border text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none z-[10000]">
+    <div v-if="needsCustomHandles" class="absolute right-full mr-2 whitespace-nowrap bg-blue-600 border border-blue-400 text-white text-xs px-2 py-1 rounded shadow-lg pointer-events-none z-[10000]">
       Set Portal Positions!
     </div>
     

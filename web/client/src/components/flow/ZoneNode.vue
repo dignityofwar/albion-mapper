@@ -941,18 +941,6 @@ function lockCore(core: string) {
           />
         </div>
 
-        <!-- Handle Editor Button -->
-        <div class="handle-editor-container pointer-events-auto" :class="Z_INDEX.CONTENT_HIGH">
-          <ZoneHandleEditorButton
-            ref="handleEditorButtonRef"
-            :map-shape="props.data.mapShape"
-            :type="props.data.type"
-            :has-reds="hasReds"
-            :needs-custom-handles="needsCustomHandles"
-            @click="openHandleEditor"
-          />
-        </div>
-
         <!-- Reds on North-East Edge -->
         <div class="reds-ne-container pointer-events-auto">
           <ZoneReds 
@@ -975,6 +963,18 @@ function lockCore(core: string) {
             @click="isChestModalOpen = !isChestModalOpen"
           />
         </div>
+      </div>
+
+      <!-- Handle Editor Button -->
+      <div class="handle-editor-container pointer-events-auto" :class="Z_INDEX.TOAST">
+        <ZoneHandleEditorButton
+          ref="handleEditorButtonRef"
+          :map-shape="props.data.mapShape"
+          :type="props.data.type"
+          :has-reds="hasReds"
+          :needs-custom-handles="needsCustomHandles"
+          @click="openHandleEditor"
+        />
       </div>
 
       <!-- Central Content Block -->
