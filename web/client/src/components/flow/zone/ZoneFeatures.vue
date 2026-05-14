@@ -31,16 +31,12 @@ const featureRows = computed(() => {
 
 <template>
   <div class="flex flex-col items-center justify-center gap-1 mt-1 max-w-[220px] mx-auto">
-    <div v-if="activeFeatures.length === 0" 
-      class="text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-lg border border-dashed border-gray-700 text-gray-600 bg-gray-800/20"
-    >
-      None
+    <div v-if="activeFeatures.length === 0" class="callout" @click="$emit('edit')">
+      No features!
     </div>
     <template v-else>
-      <div v-if="!activeFeatures.some(f => f.isResource)" 
-        class="text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-lg border border-dashed border-gray-700 text-gray-600 bg-gray-800/20"
-      >
-        No Resources Logged
+      <div v-if="!activeFeatures.some(f => f.isResource)" class="callout" @click="$emit('edit')">
+        Missing Resources
       </div>
     </template>
     <div v-for="(row, rowIndex) in featureRows" :key="rowIndex" class="flex items-center justify-center gap-1">
@@ -96,10 +92,35 @@ const featureRows = computed(() => {
         </template>
       </div>
     </div>
-    <div v-if="activeFeatures.some(f => f.isResource) && !activeFeatures.some(f => !f.isResource)" 
-      class="text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-lg border border-dashed border-gray-700 text-gray-600 bg-gray-800/20"
-    >
-      Missing Chests Etc
+    <div v-if="activeFeatures.some(f => f.isResource) && !activeFeatures.some(f => !f.isResource)" class="callout" @click="$emit('edit')">
+      Missing Features
     </div>
   </div>
 </template>
+
+<style scoped>
+@keyframes callout-pulse {
+  0%, 100% {
+    border-color: rgba(153, 27, 27, 0.6);
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+    color: rgba(220, 38, 38, 0.7);
+  }
+  50% {
+    border-color: rgba(239, 68, 68, 0.9);
+    box-shadow: 0 0 8px 2px rgba(220, 38, 38, 0.25);
+    color: rgb(253 0 0);
+  }
+}
+
+.callout {
+  @apply text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-lg border border-dashed bg-gray-800/20 border-red-800 text-red-600 cursor-pointer;
+  animation: callout-pulse 5s ease-in-out infinite;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    @apply bg-red-900/60 border-red-400;
+    animation: none;
+    color: rgb(253 0 0);
+  }
+}
+</style>

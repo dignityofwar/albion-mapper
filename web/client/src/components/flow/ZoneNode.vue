@@ -659,6 +659,23 @@ function setResourceCount(type: string, size: 'small' | 'large', count: number) 
   store.updateNodeFeatures(props.id, { ...currentFeatures, resources, upstreamFeatures });
 }
 
+function clearResource(type: string) {
+  const currentFeatures = props.data.features || {};
+  const resources = [...(currentFeatures.resources ?? [])];
+  const idx = resources.findIndex(r => r.type === type);
+  if (idx >= 0) {
+    resources.splice(idx, 1);
+    
+    // Clear upstream marker
+    let upstreamFeatures = currentFeatures.upstreamFeatures ? [...currentFeatures.upstreamFeatures] : undefined;
+    if (upstreamFeatures) {
+      upstreamFeatures = upstreamFeatures.filter(k => k !== type);
+      if (upstreamFeatures.length === 0) upstreamFeatures = undefined;
+    }
+    store.updateNodeFeatures(props.id, { ...currentFeatures, resources, upstreamFeatures });
+  }
+}
+
 
 function saveTimer() {
   if (!activeEditingCore.value) return;
@@ -1012,6 +1029,7 @@ function lockCore(core: string) {
           @size="setFeatureSize"
           @feature-count="setFeatureCount"
           @resource-count="setResourceCount"
+          @clear-resource="clearResource"
           @close="handleCloseTray"
         />
       </div>

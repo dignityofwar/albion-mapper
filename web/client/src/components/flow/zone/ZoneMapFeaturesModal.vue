@@ -14,6 +14,7 @@ const emit = defineEmits<{
   (e: 'size', type: any, size: 'S' | 'L'): void;
   (e: 'resourceCount', type: string, size: 'small' | 'large', count: number): void;
   (e: 'featureCount', type: string, count: number): void;
+  (e: 'clearResource', type: string): void;
   (e: 'close'): void;
 }>();
 
@@ -98,10 +99,11 @@ function adjustFeature(type: string, delta: number) {
       <div>
         <div class="section-label">Resources</div>
         <!-- Table header -->
-        <div class="grid grid-cols-[28px_1fr_1fr] gap-x-2 mb-0.5">
+        <div class="grid grid-cols-[28px_1fr_1fr_28px] gap-x-2 mb-0.5">
           <div></div>
           <div class="col-label">Small</div>
           <div class="col-label">Large</div>
+          <div></div>
         </div>
         <!-- Resource rows -->
         <div
@@ -113,7 +115,7 @@ function adjustFeature(type: string, delta: number) {
             isUpstreamResource(r.type) ? 'animate-pulse bg-gray-700/60' : ''
           ]"
         >
-          <div class="grid grid-cols-[28px_1fr_1fr] gap-x-2 items-center py-1 px-1">
+          <div class="grid grid-cols-[28px_1fr_1fr_28px] gap-x-2 items-center py-1 px-1">
             <!-- Icon -->
             <div class="relative w-7 h-7">
               <img :src="r.icon" :alt="r.title" class="w-7 h-7 object-cover p-0.5 rounded" :title="r.title" />
@@ -160,6 +162,14 @@ function adjustFeature(type: string, delta: number) {
                 class="count-btn zone-button"
                 :class="hasReds ? 'zone-button-reds' : ''"
               >+</button>
+            </div>
+            <!-- Clear button -->
+            <div class="flex items-center justify-center">
+              <button
+                @click.stop="emit('clearResource', r.type)"
+                class="count-btn clear-btn disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="getCount(r.type, 'small') === 0 && getCount(r.type, 'large') === 0"
+              >×</button>
             </div>
           </div>
           <p v-if="isUpstreamResource(r.type)" class="text-[10px] text-gray-400 italic px-1 pb-1">Please confirm this resource is present</p>
@@ -238,6 +248,14 @@ function adjustFeature(type: string, delta: number) {
 .count-btn {
   @apply w-6 h-6 flex items-center justify-center text-white text-sm leading-none rounded flex-shrink-0;
   transition: background-color 0.1s ease;
+}
+
+.clear-btn {
+  @apply bg-red-900 border border-red-500 hover:bg-red-600 hover:border-red-400;
+
+  &:disabled {
+    @apply bg-gray-600 border-0;
+  }
 }
 
 .count-btn:active {

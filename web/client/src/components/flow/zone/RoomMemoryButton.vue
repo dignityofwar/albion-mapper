@@ -54,13 +54,13 @@ function formatDate(iso: string): string {
           </button>
         </TooltipTrigger>
         <TooltipPortal>
-          <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000]">
+          <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000] text-center">
             <template v-if="hasHistory">
-              <div v-if="lastSeen">Last added: {{ formatDate(lastSeen) }}</div>
-              <div>Times seen: {{ timesSeen }}</div>
+              <div v-if="lastSeen">Last added: <b>{{ formatDate(lastSeen) }}</b></div>
+              <div>Times seen: <b>{{ timesSeen }}</b></div>
             </template>
             <template v-else>
-              <div>No history yet</div>
+              <div>First sighting of this zone.<br>Future additions will show a history of sightings, <br> and retain Map Features and portal settings applied to them.</div>
             </template>
           </TooltipContent>
         </TooltipPortal>
