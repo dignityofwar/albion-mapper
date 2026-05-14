@@ -980,7 +980,7 @@ function lockCore(core: string) {
             />
 
           <!-- Map Features -->
-          <div class="nodrag flex flex-col items-center pointer-events-auto mt-2" ref="featuresContainerRef">
+          <div class="flex flex-col items-center pointer-events-auto mt-2" ref="featuresContainerRef">
             <div class="flex items-center justify-center gap-1 mb-1 relative">
               <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Map Features</span>
               <button 
