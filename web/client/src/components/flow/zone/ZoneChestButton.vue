@@ -2,14 +2,13 @@
 import { computed, onMounted, ref } from 'vue';
 import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import { Z_INDEX } from '@/constants/Layers';
+import type { TimedChest } from 'shared';
 
 const isMounted = ref(false);
 onMounted(() => { isMounted.value = true; });
 
 const props = defineProps<{
-  chest?: boolean;
-  chestSize?: 'S' | 'M' | 'L';
-  chestTimer?: number;
+  timedChest?: TimedChest;
   now: number;
   hasReds: boolean;
 }>();
@@ -19,22 +18,22 @@ const emit = defineEmits<{
 }>();
 
 const isActive = computed(() => {
-  if (!props.chest) return false;
-  if (props.chestTimer && props.chestTimer <= props.now) return false;
+  if (!props.timedChest) return false;
+  if (props.timedChest.timer <= props.now) return false;
   return true;
 });
 
 const timerLabel = computed(() => {
-  if (!isActive.value || !props.chestTimer) return '';
-  const remaining = Math.max(0, Math.floor((props.chestTimer - props.now) / 1000));
+  if (!isActive.value || !props.timedChest) return '';
+  const remaining = Math.max(0, Math.floor((props.timedChest.timer - props.now) / 1000));
   if (remaining <= 0) return '';
   const m = Math.floor(remaining / 60);
   const s = remaining % 60;
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-});
+})
 
 const containerStyle = computed(() => {
-  const hasContent = isActive.value && (timerLabel.value || props.chestSize);
+  const hasContent = isActive.value && (timerLabel.value || props.timedChest?.size);
   const targetWidth = hasContent ? '110px' : '80px';
   const color = '#f59e0b';
   const shadow = 'rgba(245, 158, 11, 0.5)';
@@ -62,12 +61,13 @@ const containerStyle = computed(() => {
 });
 
 const tooltipText = computed(() => {
-  if (!isActive.value || !props.chestTimer) return 'Treasure Chest';
-  const remaining = Math.max(0, Math.floor((props.chestTimer - props.now) / 1000));
+  if (!isActive.value || !props.timedChest) return 'Treasure Chest';
+  const remaining = Math.max(0, Math.floor((props.timedChest.timer - props.now) / 1000));
   if (remaining <= 0) return 'Treasure Chest';
   const m = Math.floor(remaining / 60);
   const s = remaining % 60;
-  const sizeLabel = props.chestSize ? ` (${props.chestSize === 'S' ? 'Small' : props.chestSize === 'M' ? 'Medium' : 'Large'})` : '';
+  const size = props.timedChest.size;
+  const sizeLabel = size ? ` (${size === 'S' ? 'Small' : size === 'M' ? 'Medium' : 'Large'})` : '';
   return `Treasure Chest${sizeLabel} (expires in ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')})`;
 });
 </script>
@@ -92,12 +92,12 @@ const tooltipText = computed(() => {
 
           <!-- Right Div: Timer and Size -->
           <Transition name="fade-slide">
-            <div v-if="isActive && (timerLabel || chestSize)" class="flex flex-col items-start ml-2 items-center shrink-0 overflow-hidden">
+            <div v-if="isActive && (timerLabel || timedChest?.size)" class="flex flex-col items-start ml-2 items-center shrink-0 overflow-hidden">
               <div v-if="timerLabel" class="text-[12px] font-bold leading-none text-slate-200">
                 {{ timerLabel }}
               </div>
-              <div v-if="chestSize" class="text-[12px] font-bold leading-none text-amber-300 mt-0.5">
-                {{ chestSize }}
+              <div v-if="timedChest?.size" class="text-[12px] font-bold leading-none text-amber-300 mt-0.5">
+                {{ timedChest.size }}
               </div>
             </div>
           </Transition>

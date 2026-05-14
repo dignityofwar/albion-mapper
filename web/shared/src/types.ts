@@ -85,6 +85,11 @@ export interface ResourceEntry {
   large?: number;
 }
 
+export interface TimedChest {
+  size: 'S' | 'M' | 'L';
+  timer: number; // Expiration timestamp in ms
+}
+
 export interface NodeFeatures {
   slots?: 7 | 20;
   reds?: number | null;
@@ -100,9 +105,7 @@ export interface NodeFeatures {
   crystalCreaturePresent?: boolean;
   dungeonStatic?: boolean;
   dungeonGroup?: boolean;
-  chest?: boolean;
-  chestSize?: 'S' | 'M' | 'L';
-  chestTimer?: number; // Expiration timestamp in ms
+  timedChest?: TimedChest;
   treasuresGreenCount?: number;
   treasuresBlueCount?: number;
   treasuresYellowCount?: number;
@@ -254,9 +257,10 @@ export const NodeFeaturesSchema = z.object({
   crystalCreaturePresent: z.boolean().optional(),
   dungeonStatic: z.boolean().optional(),
   dungeonGroup: z.boolean().optional(),
-  chest: z.boolean().optional(),
-  chestSize: z.enum(['S', 'M', 'L']).optional(),
-  chestTimer: z.number().optional(),
+  timedChest: z.object({
+    size: z.enum(['S', 'M', 'L']),
+    timer: z.number(),
+  }).optional(),
   treasuresGreenCount: z.number().optional(),
   treasuresBlueCount: z.number().optional(),
   treasuresYellowCount: z.number().optional(),

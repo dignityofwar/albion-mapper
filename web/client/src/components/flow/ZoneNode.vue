@@ -353,17 +353,13 @@ function saveChest(size: 'S' | 'M' | 'L', timerValue: string) {
   const currentFeatures = props.data.features || {};
   store.updateNodeFeatures(props.id, {
     ...currentFeatures,
-    chest: true,
-    chestSize: size,
-    chestTimer: now.value + totalSeconds * 1000,
+    timedChest: { size, timer: now.value + totalSeconds * 1000 },
   });
 }
 
 function clearChest() {
   const currentFeatures = { ...(props.data.features || {}) };
-  delete currentFeatures.chest;
-  delete currentFeatures.chestSize;
-  delete currentFeatures.chestTimer;
+  delete currentFeatures.timedChest;
   store.updateNodeFeatures(props.id, currentFeatures);
 }
 
@@ -960,9 +956,7 @@ function lockCore(core: string) {
         <!-- Chest on South-West Edge (opposite of Reds) -->
         <div class="chest-sw-container pointer-events-auto">
           <ZoneChestButton
-            :chest="props.data.features?.chest"
-            :chest-size="props.data.features?.chestSize"
-            :chest-timer="props.data.features?.chestTimer"
+            :timed-chest="props.data.features?.timedChest"
             :now="now"
             :has-reds="hasReds"
             @click="isChestModalOpen = !isChestModalOpen"
@@ -971,7 +965,7 @@ function lockCore(core: string) {
       </div>
 
       <!-- Handle Editor Button -->
-      <div v-if="!isHandleEditorOpen" class="handle-editor-container pointer-events-auto" :class="Z_INDEX.TOAST">
+      <div v-if="!isHandleEditorOpen && !isMapFeaturesModalOpen && !isChestModalOpen" class="handle-editor-container pointer-events-auto" :class="Z_INDEX.TOAST">
         <ZoneHandleEditorButton
           ref="handleEditorButtonRef"
           :map-shape="props.data.mapShape"
@@ -1039,8 +1033,8 @@ function lockCore(core: string) {
         <ZoneChestModal
           :is-open="isChestModalOpen"
           :has-reds="hasReds"
-          :chest-size="props.data.features?.chestSize"
-          :chest-timer="props.data.features?.chestTimer"
+          :chest-size="props.data.features?.timedChest?.size"
+          :chest-timer="props.data.features?.timedChest?.timer"
           :now="now"
           @save="saveChest"
           @clear="clearChest"

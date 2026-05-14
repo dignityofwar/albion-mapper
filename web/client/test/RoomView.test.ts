@@ -188,7 +188,7 @@ describe('RoomView', () => {
     const spy = vi.spyOn(store, 'updateNodePositionsInStore');
     
     const customHandles = [{ id: 'h1', left: '10%', top: '20%' }];
-    const features = { chest: true };
+    const features = { timedChest: { size: 'S' as const, timer: Date.now() + 300000 } };
 
     store.applyMessage({
         type: 'sync',

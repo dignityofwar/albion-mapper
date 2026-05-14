@@ -593,7 +593,7 @@ const activeChests = computed(() => {
     if ((f.treasuresGreenCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'green' });
     if ((f.treasuresBlueCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'blue' });
     if ((f.treasuresYellowCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'yellow' });
-    if (f.chest) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'chest' });
+    if (f.timedChest && f.timedChest.timer > now.value) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'chest' });
   });
   return result.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
 });
