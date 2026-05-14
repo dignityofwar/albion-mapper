@@ -218,7 +218,7 @@ const handles = computed(() => {
       ></div>
 
       <!-- Central Content Block -->
-      <div class="absolute inset-x-0 top-[45%] pointer-events-none flex flex-col items-center px-4" :class="Z_INDEX.CONTENT_LOW">
+      <div class="absolute inset-x-0 top-[40%] pointer-events-none flex flex-col items-center px-4" :class="Z_INDEX.CONTENT_LOW">
         <ZoneHeader
           :id="props.id" 
           :zone-name="props.data.zoneName" 
@@ -228,7 +228,6 @@ const handles = computed(() => {
           :map-shape="props.data.mapShape"
           :tier="props.data.tier"
           :proximity-to="props.data.proximityTo"
-          compact
         />
       </div>
 
