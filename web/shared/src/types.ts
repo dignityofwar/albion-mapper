@@ -328,6 +328,7 @@ export type ServerMessage =
   | { type: 'watching'; roomId: string; count: number; totalConnected: number }
   | { type: 'memory_sync'; memory: RoomMemoryEntry[] }
   | { type: 'memory_updated'; entry: RoomMemoryEntry }
+  | { type: 'memory_deleted'; zoneId: string }
   | { type: 'error'; message: string };
 
 export type ClientMessage =

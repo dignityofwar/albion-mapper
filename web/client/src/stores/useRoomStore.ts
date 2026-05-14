@@ -94,6 +94,10 @@ export const useRoomStore = defineStore('room', () => {
         memoryStore.applyMemoryUpdated(msg.entry);
         break;
 
+      case 'memory_deleted':
+        memoryStore.applyMemoryDeleted(msg.zoneId);
+        break;
+
       case 'connection_added':
         if (!connections.value.find((c) => c.id === msg.connection.id)) {
           connections.value = [...connections.value, msg.connection];

@@ -23,6 +23,12 @@ export const useRoomMemoryStore = defineStore('roomMemory', () => {
     return memory.value.get(zoneId);
   }
 
+  function applyMemoryDeleted(zoneId: string) {
+    const map = new Map(memory.value);
+    map.delete(zoneId);
+    memory.value = map;
+  }
+
   function clear() {
     memory.value = new Map();
   }
@@ -31,6 +37,7 @@ export const useRoomMemoryStore = defineStore('roomMemory', () => {
     memory,
     applyMemorySync,
     applyMemoryUpdated,
+    applyMemoryDeleted,
     getEntry,
     clear,
   };

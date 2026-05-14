@@ -88,6 +88,13 @@ async function flushMemory() {
   });
 }
 
+async function deleteZoneMemory(zoneId: string) {
+  await fetch(`${API_BASE_URL}/api/rooms/${store.roomId}/memory/${encodeURIComponent(zoneId)}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${store.token}` },
+  });
+}
+
 async function exportNodes() {
   const data = JSON.stringify({
     connections: store.connections,
@@ -156,7 +163,10 @@ async function exportNodes() {
             <div class="p-3 space-y-2">
               <div v-if="memoryStore.memory.size === 0" class="text-gray-500 text-xs p-2">No zone memory entries.</div>
               <details v-for="[zoneId, entry] in [...memoryStore.memory.entries()].sort(([a], [b]) => a === store.homeZoneId ? -1 : b === store.homeZoneId ? 1 : a.localeCompare(b))" :key="zoneId" :class="['rounded', zoneId === store.homeZoneId ? 'bg-green-950' : 'bg-gray-950']">
-                <summary class="p-2 cursor-pointer">{{ zoneId }} <span class="text-gray-500">(seen {{ entry.timesAdded.length }}x, updated {{ new Date(entry.lastUpdated).toLocaleString() }})</span></summary>
+                <summary class="p-2 cursor-pointer flex items-center justify-between">
+                  <span>{{ zoneId }} <span class="text-gray-500">(seen {{ entry.timesAdded.length }}x, updated {{ new Date(entry.lastUpdated).toLocaleString() }})</span></span>
+                  <button @click.stop="deleteZoneMemory(zoneId)" class="bg-red-700 hover:bg-red-800 text-white px-2 py-0.5 rounded text-xs ml-2 shrink-0">Delete</button>
+                </summary>
                 <pre class="p-2 overflow-x-auto whitespace-pre-wrap break-all">{{ JSON.stringify(entry, null, 2) }}</pre>
               </details>
             </div>
