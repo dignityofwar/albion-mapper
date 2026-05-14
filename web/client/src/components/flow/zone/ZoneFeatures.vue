@@ -35,7 +35,7 @@ const featureRows = computed(() => {
       No features!
     </div>
     <template v-else>
-      <div v-if="!activeFeatures.some(f => f.isResource)" class="callout" @click="$emit('edit')">
+      <div v-if="!activeFeatures.some(f => f.isResource)" class="callout callout-gray" @click="$emit('edit')">
         Missing Resources
       </div>
     </template>
@@ -91,7 +91,7 @@ const featureRows = computed(() => {
         </template>
       </div>
     </div>
-    <div v-if="activeFeatures.some(f => f.isResource) && !activeFeatures.some(f => !f.isResource)" class="callout" @click="$emit('edit')">
+    <div v-if="activeFeatures.some(f => f.isResource) && !activeFeatures.some(f => !f.isResource)" class="callout callout-gray" @click="$emit('edit')">
       Missing Features
     </div>
   </div>
@@ -120,6 +120,10 @@ const featureRows = computed(() => {
     @apply bg-red-900/60 border-red-400;
     animation: none;
     color: rgb(253 0 0);
+  }
+
+  &.callout-gray {
+    @apply border-gray-500 text-gray-500 animate-none !important;
   }
 }
 </style>
