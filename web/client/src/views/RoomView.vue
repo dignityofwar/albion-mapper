@@ -644,7 +644,8 @@ function goToNode(nodeId: string) {
     const height = node.dimensions?.height || 160;
     const centerX = node.position.x + (width / 2);
     const centerY = node.position.y + (height / 2);
-    setCenter(centerX, centerY, { zoom: 1.5, duration: 800 });
+    const zoom = 1.5 * Math.sqrt(Math.min(1, window.innerWidth / 1440));
+    setCenter(centerX, centerY, { zoom, duration: 800 });
     showMobileSummary.value = false;
 
     // Apply brief glow — removed via animationend to avoid snap on duration change
