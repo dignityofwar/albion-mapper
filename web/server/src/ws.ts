@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { Connection, ClientMessage, ServerMessage, NodePosition, RoomMemoryEntry } from 'shared';
+import { ZONE_BY_ID, type Connection, type ClientMessage, type ServerMessage, type NodePosition, type RoomMemoryEntry } from 'shared';
 import { addSocket, removeSocket, broadcast, getTotalSocketCount } from './broadcast.js';
 import { recordPolo, getWatchingCount } from './marcopolo.js';
 
@@ -134,13 +134,18 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               'SELECT zone_id, times_added, features, custom_handles, last_updated FROM room_node_memory WHERE room_id = $1',
               [roomId]
             );
-            const memory: RoomMemoryEntry[] = memoryRows.map((row) => ({
-              zoneId: row.zone_id,
-              timesAdded: row.times_added,
-              features: row.features ?? undefined,
-              customHandles: row.custom_handles ?? undefined,
-              lastUpdated: row.last_updated,
-            }));
+            const memory: RoomMemoryEntry[] = memoryRows
+              .filter((row) => {
+                const zone = ZONE_BY_ID.get(row.zone_id);
+                return zone?.type === 'roads' || zone?.type === 'roadsHideout';
+              })
+              .map((row) => ({
+                zoneId: row.zone_id,
+                timesAdded: row.times_added,
+                features: row.features ?? undefined,
+                customHandles: row.custom_handles ?? undefined,
+                lastUpdated: row.last_updated,
+              }));
 
             send({ type: 'sync', connections, homeZoneId: room.home_zone_id, title: room.title || undefined, nodePositions, lastUpdatedAt, watching: getWatchingCount(roomId), totalConnected: getTotalSocketCount(), plottedRoute: room.plotted_route ?? undefined });
             send({ type: 'memory_sync', memory });
@@ -215,8 +220,12 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
 
           // Update zone memory for nodes that already have a memory entry,
           // storing only map features (resources) and custom handles.
+          // Skip non-roads zones.
           const now = new Date().toISOString();
           for (const pos of deduplicated) {
+            const zone = ZONE_BY_ID.get(pos.zoneId);
+            if (zone?.type !== 'roads' && zone?.type !== 'roadsHideout') continue;
+
             const memoryFeatures = (() => {
               const f = pos.features;
               if (!f) return null;

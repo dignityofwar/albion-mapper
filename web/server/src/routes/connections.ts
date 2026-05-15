@@ -110,12 +110,18 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
 
     // If target position is provided, save it (new node); otherwise just update slots on existing node
     if (targetPosition) {
+      const toZone = ZONE_BY_ID.get(toZoneId);
+      const isRoads = toZone?.type === 'roads' || toZone?.type === 'roadsHideout';
+
       // Check if there's an existing memory entry for this zone and apply its features/handles
-      const { rows: memoryCheck } = await app.db.query<{ features: any; custom_handles: any }>(
-        'SELECT features, custom_handles FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
-        [id, toZoneId]
-      );
-      const memoryEntry = memoryCheck[0];
+      let memoryEntry = null;
+      if (isRoads) {
+        const { rows: memoryCheck } = await app.db.query<{ features: any; custom_handles: any }>(
+          'SELECT features, custom_handles FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
+          [id, toZoneId]
+        );
+        memoryEntry = memoryCheck[0];
+      }
       const baseFeatures = memoryEntry?.features ?? getInitialFeatures(toZoneId);
       const initialFeatures = { ...baseFeatures, slots, lastUpdatedAt: lastUpdateMs };
       const initialHandles = memoryEntry?.custom_handles ?? null;
@@ -126,14 +132,15 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(initialFeatures), JSON.stringify(initialHandles)]);
 
       // Record room memory for the newly added node (with 3-hour dedup guard)
+      // Only for roads zones
       const { rows: memRows } = await app.db.query<{ times_added: string[] }>(
         'SELECT times_added FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
         [id, toZoneId]
       );
       const existing = memRows[0];
-      const shouldAppend = !existing ||
+      const shouldAppend = isRoads && (!existing ||
         existing.times_added.length === 0 ||
-        (now.getTime() - new Date(existing.times_added[existing.times_added.length - 1]).getTime()) > THREE_HOURS_MS;
+        (now.getTime() - new Date(existing.times_added[existing.times_added.length - 1]).getTime()) > THREE_HOURS_MS);
 
       if (shouldAppend) {
         const nodePos = await app.db.query<{ features: any; custom_handles: any }>(

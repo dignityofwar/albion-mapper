@@ -298,9 +298,12 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
         `, [id, node.zoneId, node.x, node.y, JSON.stringify(node.features || {}), JSON.stringify(node.customHandles || null), !!node.explored]);
       }
 
-      // Insert new room memory
+      // Insert new room memory (roads only)
       if (roomHistory) {
         for (const entry of roomHistory) {
+          const zone = ZONE_BY_ID.get(entry.zoneId);
+          if (zone?.type !== 'roads' && zone?.type !== 'roadsHideout') continue;
+
           await client.query(`
             INSERT INTO room_node_memory (room_id, zone_id, times_added, features, custom_handles, last_updated)
             VALUES ($1, $2, $3, $4, $5, $6)

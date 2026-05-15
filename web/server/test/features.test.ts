@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { setupTestApp } from './testApp.js';
 import type { FastifyInstance } from 'fastify';
 
-const VALID_ZONE_A = 'adrens-hill';
-const VALID_ZONE_B = 'anklesnag-mire';
+const VALID_ZONE_A = 'cases-ugumlos';
+const VALID_ZONE_B = 'casitos-alieam';
 
 const testApp = setupTestApp();
 const { roomId } = testApp;
