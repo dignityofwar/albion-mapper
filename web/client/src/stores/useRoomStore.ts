@@ -89,7 +89,9 @@ export const useRoomStore = defineStore('room', () => {
         addToRecentRooms(roomId.value, roomId.value, roomTitle.value);
         if (msg.plottedRoute && msg.plottedRoute.length > 0) {
           const plotRouteStore = usePlotRouteStore();
-          plotRouteStore.applyPlottedRoute(msg.plottedRoute);
+          const lastConnId = msg.plottedRoute[msg.plottedRoute.length - 1];
+          const lastConn = connections.value.find(c => c.id === lastConnId);
+          plotRouteStore.applyPlottedRoute(msg.plottedRoute, lastConn?.toZoneId);
         }
         break;
 

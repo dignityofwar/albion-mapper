@@ -59,6 +59,7 @@ const isUnexplored = computed(() => !props.data.isHome && !props.data.isGhost &&
 const isRoadsHideout = computed(() => props.data.type === 'roadsHideout');
 const isHovered = ref(false);
 const isPlotRouteTarget = computed(() => plotRouteStore.isPlotRouteMode && !props.data.isHome && !props.data.isGhost && isHovered.value);
+const isRouteDestination = computed(() => plotRouteStore.destinationZoneId === props.id && plotRouteStore.hasRoute);
 const hasCustomHandles = computed(() => (props.data.customHandles?.length ?? 0) > 0);
 const needsCustomHandles = computed(() => isRoadsHideout.value && !hasCustomHandles.value);
 
@@ -865,7 +866,8 @@ function lockCore(core: string) {
           props.data.highlighted ? 'goto-glow-animation' : '',
           isPinged ? 'ping-animation' : '',
           props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : '',
-          isPlotRouteTarget ? 'plot-route-hover' : ''
+          isPlotRouteTarget ? 'plot-route-hover' : '',
+          isRouteDestination ? 'plot-route-destination' : ''
         ]"
         @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow' || e.animationName === 'ping-glow-home') isPinged = false; }"
         @mouseenter="isHovered = true"
@@ -1116,8 +1118,21 @@ function lockCore(core: string) {
 }
 
 .plot-route-hover {
-  filter: drop-shadow(0 0 12px #3b82f6) drop-shadow(0 0 4px #60a5fa);
-  transition: filter 0.15s ease;
+  animation: plot-route-hover-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes plot-route-hover-pulse {
+  0%, 100% { filter: drop-shadow(0 0 18px #60a5fa) drop-shadow(0 0 6px #93c5fd); }
+  50% { filter: drop-shadow(0 0 6px #1d4ed8) drop-shadow(0 0 2px #3b82f6); }
+}
+
+.plot-route-destination {
+  animation: plot-route-destination-pulse 5s ease-in-out infinite;
+}
+
+@keyframes plot-route-destination-pulse {
+  0%, 100% { filter: drop-shadow(0 0 20px #1d4ed8) drop-shadow(0 0 8px #1e40af); }
+  50% { filter: drop-shadow(0 0 8px #1e3a8a) drop-shadow(0 0 2px #1d4ed8); }
 }
 
 </style>

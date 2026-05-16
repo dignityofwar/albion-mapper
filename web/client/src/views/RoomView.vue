@@ -1197,7 +1197,7 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
       </div>
 
       <!-- Route Bottleneck Countdown Pill -->
-      <Transition name="ping-toast">
+      <Transition name="route-pill-fade">
         <RouteBottleneckPill v-if="routeBottleneckMs !== null" :ms="routeBottleneckMs" />
       </Transition>
 
@@ -1388,6 +1388,17 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
 }
 .ping-toast-leave-active {
   animation: ping-toast-out 0.4s ease-in forwards;
+}
+
+.route-pill-fade-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+.route-pill-fade-leave-active {
+  transition: opacity 0.3s ease-in;
+}
+.route-pill-fade-enter-from,
+.route-pill-fade-leave-to {
+  opacity: 0;
 }
 
 @keyframes ping-toast-in {
