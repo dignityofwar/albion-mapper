@@ -20,7 +20,7 @@ defineProps<{ ms: number }>();
     ]"
   >
     <span>⏱</span>
-    <span>Route open for: {{ ms <= 0 ? 'Expired' : formatCountdown(ms) }}</span>
+    <span>Route open for: <b>{{ ms <= 0 ? 'Expired' : formatCountdown(ms) }}</b></span>
   </div>
 </template>
 

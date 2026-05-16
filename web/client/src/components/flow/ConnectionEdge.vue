@@ -151,6 +151,15 @@ const style = computed(() => {
 
 const isPlotted = computed(() => props.data?.isPlotted ?? false);
 
+// Pill uses time-based colours, but blue instead of green when plotted
+const pillStyle = computed(() => {
+  const s = connectionStyle(remainingMs.value, isRestricted.value);
+  if (isPlotted.value && s.stroke === '#0ee25e') {
+    return { ...s, stroke: '#3b82f6', color: '#1d4ed8' };
+  }
+  return s;
+});
+
 function getZoneName(id: string) {
   return ZONE_BY_ID.get(id)?.name ?? id;
 }
@@ -287,7 +296,7 @@ defineExpose({
       <div
         data-trigger="true"
         class="text-xs px-3 py-2 inline-flex flex-col items-center justify-center gap-0.5 rounded-full text-white cursor-pointer backdrop-blur-sm"
-        :style="{ backgroundColor: style.color + 'b3', border: `1px solid ${style.stroke}` }"
+        :style="{ backgroundColor: pillStyle.color + 'b3', border: `1px solid ${pillStyle.stroke}` }"
         @click.stop="showPopover = !showPopover"
         @mousedown.stop
       >
