@@ -18,6 +18,7 @@ import MegaToast from '../components/common/MegaToast.vue';
 import ConfirmationModal from '../components/common/ConfirmationModal.vue';
 import TitleSegment from '../components/room/TitleSegment.vue';
 import TopToolbar from '../components/room/TopToolbar.vue';
+import RouteBottleneckPill from '../components/room/RouteBottleneckPill.vue';
 import TopLeftToolbar from '../components/room/TopLeftToolbar.vue';
 import TopRightToolbar from '../components/room/TopRightToolbar.vue';
 import BottomRightPins from '../components/room/BottomRightPins.vue';
@@ -27,7 +28,7 @@ import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { formatTime, formatExpiresIn } from '@/utils/formatters';
+import { formatTime, formatExpiresIn, formatCountdown } from '@/utils/formatters';
 import { deleteConnection, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
 import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, type ZoneType, wouldCreateCycle, wouldCreateLongerLoop, getDefaultHandles, getHandleFacing } from 'shared';
@@ -199,6 +200,20 @@ provide('showPingToast', showPingToast);
 const now = ref(Date.now());
 provide('globalNow', now);
 const ticker = setInterval(() => (now.value = Date.now()), 1000);
+
+// ── Route bottleneck countdown ────────────────────────────────────────────────
+const routeBottleneckMs = computed(() => {
+  if (!plotRouteStore.hasRoute) return null;
+  let minExpiry: number | null = null;
+  for (const conn of store.connections) {
+    if (plotRouteStore.plottedConnectionIds.has(conn.id)) {
+      const expiry = new Date(conn.expiresAt).getTime();
+      if (minExpiry === null || expiry < minExpiry) minExpiry = expiry;
+    }
+  }
+  if (minExpiry === null) return null;
+  return minExpiry - now.value;
+});
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleKeyDown);
@@ -1180,6 +1195,11 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
           >⚔️ Enemies sighted in {{ megaToastRegion }}!</MegaToast>
         </Transition>
       </div>
+
+      <!-- Route Bottleneck Countdown Pill -->
+      <Transition name="ping-toast">
+        <RouteBottleneckPill v-if="routeBottleneckMs !== null" :ms="routeBottleneckMs" />
+      </Transition>
 
       <!-- Plot Route Mode Toast -->
       <div class="absolute top-20 md:top-24 left-1/2 -translate-x-1/2 pointer-events-none w-full max-w-[95vw] flex flex-col items-center gap-2 px-4" :class="Z_INDEX.TOAST">
