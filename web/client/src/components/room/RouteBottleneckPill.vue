@@ -20,7 +20,8 @@ defineProps<{ ms: number }>();
     ]"
   >
     <span>⏱</span>
-    <span>Route open for: <b>{{ ms <= 0 ? 'Expired' : formatCountdown(ms) }}</b></span>
+    <span v-if="ms > 0">Route open for: <b>{{ ms <= 0 ? 'Expired' : formatCountdown(ms) }}</b></span>
+    <span v-else class="font-bold">Route expired!</span>
   </div>
 </template>
 
