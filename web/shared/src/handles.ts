@@ -117,11 +117,12 @@ export function getShapeHandlePositions(shape: string | undefined): HandleDefini
 
   if (shape === 's') {
     return [
-      { id: 's-p1', left: '64.45%', top: '14.45%' },
-      { id: 's-p2', left: '19.53%', top: '30.47%' },
-      { id: 's-p3', left: '87.89%', top: '37.89%' },
-      { id: 's-p4', left: '77.73%', top: '72.27%' },
-      { id: 's-p5', left: '46.48%', top: '96.48%' },
+      { id: 's-p1', left: '90.43%', top: '59.57%' },
+      { id: 's-p2', left: '74.80%', top: '24.80%' },
+      { id: 's-p3', left: '32.23%', top: '17.77%' },
+      { id: 's-p4', left: '65.43%', top: '84.57%' },
+      { id: 's-p5', left: '24.80%', top: '74.80%' },
+      { id: 's-p6', left: '9.57%', top: '40.43%' },
     ];
   }
 

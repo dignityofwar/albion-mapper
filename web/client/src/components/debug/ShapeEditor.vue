@@ -52,7 +52,7 @@ function getTFromPos(xPercent: number, yPercent: number): number {
 
 function handleEdgeClick(e: MouseEvent) {
   if (!containerRef.value) return;
-  if ((e.target as HTMLElement).closest('.handle')) return;
+  if ((e.target as HTMLElement).closest('.shape-handle')) return;
 
   const rect = containerRef.value.getBoundingClientRect();
   const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -177,7 +177,7 @@ function clearAll() {
             <div 
               v-for="h in handles" 
               :key="h.id"
-              class="handle absolute w-4 h-4 bg-yellow-500 border-2 border-white rounded-full -ml-2 -mt-2 cursor-move z-10 shadow-[0_0_8px_rgba(234,179,8,0.5)] hover:scale-110 transition-transform"
+              class="shape-handle absolute w-4 h-4 bg-yellow-500 border-2 border-white rounded-full -ml-2 -mt-2 cursor-move z-10 shadow-[0_0_8px_rgba(234,179,8,0.5)] hover:scale-110 transition-transform"
               :style="{ left: h.left, top: h.top }"
               @mousedown="startDragging(h.id, $event)"
               @dblclick="removeHandle(h.id, $event)"
