@@ -796,10 +796,24 @@ async function handleConnect(params: any) {
     const isSourceRoads = isRoads(params.source);
     const isTargetRoads = isRoads(params.target);
 
-    // One roads, one non-roads: Disallowed
+    // One roads, one non-roads: Disallowed UNLESS the user is reassigning the handle on the
+    // roads zone side while keeping the non-roads handle the same (rotating which portal on the
+    // roads zone connects to the non-roads destination).
     if ((isSourceRoads && !isTargetRoads) || (!isSourceRoads && isTargetRoads)) {
-      showToast("A non-roads zone cannot have multiple portal entrances to a roads zone.", "error");
-      return;
+      // Identify which handle each zone currently uses in the existing connection
+      const nonRoadsZoneIsFrom = existing.fromZoneId === (isSourceRoads ? params.target : params.source);
+      const existingNonRoadsHandle = nonRoadsZoneIsFrom
+        ? (existing.fromHandleId || 'center')
+        : (existing.toHandleId || 'center');
+      const newNonRoadsHandle = isSourceRoads
+        ? (params.targetHandle || 'center')
+        : (params.sourceHandle || 'center');
+
+      // Only allow if the non-roads handle stays the same (pure roads-side handle reassignment)
+      if (existingNonRoadsHandle !== newNonRoadsHandle) {
+        showToast("A non-roads zone cannot have multiple portal entrances to a roads zone.", "error");
+        return;
+      }
     }
 
     // Both roads: Show confirmation modal only if this is truly a second connection

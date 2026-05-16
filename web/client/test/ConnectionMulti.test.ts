@@ -345,4 +345,71 @@ describe('RoomView - Multiple Connections', () => {
     // Should NOT show the confirmation modal — same source handle, just moving the target end
     expect(vm.showConfirmationModal).toBe(false);
   });
+
+  it('allows reassigning the source handle on a roads→non-roads connection (different fromHandleId, same zone pair)', async () => {
+    const store = useRoomStore();
+    // soros-axaesum is roads, nightcreak-marsh is non-roads (no mapType entry → treated as non-roads)
+    // Existing connection uses s-p2 as the source handle
+    store.connections = [
+      {
+        id: 'gKfdzU8EvQHVGLTx3Ze65',
+        roomId: 'test-room',
+        fromZoneId: 'soros-axaesum',
+        toZoneId: 'nightcreak-marsh',
+        fromHandleId: 's-p2',
+        toHandleId: 'center',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    // Mock fetch so updateConnection succeeds
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    } as any);
+
+    const wrapper = mount(RoomView, {
+      props: { id: 'test-room' },
+      global: {
+        plugins: [pinia],
+        stubs: {
+          ZoneNode: true,
+          NonRoadsNode: true,
+          ConnectionEdge: true,
+          ConnectionLine: true,
+          ReportForm: true,
+          DebugTray: true,
+          MegaToast: true,
+          TopToolbar: true,
+          TopLeftToolbar: true,
+          TopRightToolbar: true,
+          BottomRightPins: true,
+          MobileRoomSummary: true,
+          Background: true,
+          Controls: true,
+        }
+      }
+    });
+
+    const vm = wrapper.vm as any;
+
+    // User drags from s-p3 (a different source handle) to the same nightcreak-marsh destination
+    await vm.handleConnect({
+      source: 'soros-axaesum',
+      sourceHandle: 's-p3',
+      target: 'nightcreak-marsh',
+      targetHandle: 'center',
+    });
+
+    // Should NOT show the error toast — this is a handle reassignment, not a duplicate connection
+    expect(vm.toast).not.toBe("A non-roads zone cannot have multiple portal entrances to a roads zone.");
+    expect(vm.showConfirmationModal).toBe(false);
+
+    // Should have called fetch to update the existing connection
+    expect(global.fetch).toHaveBeenCalledWith(
+      expect.stringContaining('gKfdzU8EvQHVGLTx3Ze65'),
+      expect.objectContaining({ method: 'PATCH' })
+    );
+  });
 });
