@@ -25,8 +25,8 @@ pnpm db:up
 # 2. Install all dependencies
 pnpm install
 
-# 3. Populate the zone catalogue
-pnpm --filter map-parser sync-maps   # writes web/shared/data/maps.json
+# 3. Perform a build so shared components are available
+pnpm build
 
 # 4. Start both server and client (concurrently)
 pnpm dev
