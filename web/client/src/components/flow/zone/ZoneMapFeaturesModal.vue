@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { NodeFeatures } from 'shared';
 import { Z_INDEX } from '@/constants/Layers';
+import { ref, watch } from 'vue';
 
 const props = defineProps<{
   isOpen: boolean;
@@ -37,20 +38,85 @@ const DUNGEONS = [
   { type: 'dungeonGroup',  title: 'Group',  icon: '/images/dungeon-group.png' },
 ];
 
+// --- Draft input state ---
+// Tracks which inputs are currently focused so prop changes don't overwrite them
+const focusedInputs = ref<Set<string>>(new Set());
+
+type DraftKey = string; // e.g. "fibre-small", "fibre-large", "treasuresGreenCount"
+const drafts = ref<Record<DraftKey, string>>({});
+
+function draftKey(type: string, size?: 'small' | 'large'): DraftKey {
+  return size ? `${type}-${size}` : `${type}Count`;
+}
+
 function getCount(type: string, size: 'small' | 'large'): number {
   const entry = props.features?.resources?.find(r => r.type === type);
   return entry?.[size] ?? 0;
 }
 
+function getFeatureCount(type: string): number {
+  const countKey = `${type}Count` as keyof NodeFeatures;
+  return (props.features?.[countKey] as number | undefined) ?? 0;
+}
+
+function getDraftValue(type: string, size?: 'small' | 'large'): string {
+  const key = draftKey(type, size);
+  if (focusedInputs.value.has(key)) {
+    return drafts.value[key] ?? String(size ? getCount(type, size) : getFeatureCount(type));
+  }
+  return String(size ? getCount(type, size) : getFeatureCount(type));
+}
+
+function onFocus(type: string, size?: 'small' | 'large') {
+  const key = draftKey(type, size);
+  drafts.value[key] = String(size ? getCount(type, size) : getFeatureCount(type));
+  focusedInputs.value.add(key);
+}
+
+function onInput(value: string, type: string, size?: 'small' | 'large') {
+  const key = draftKey(type, size);
+  drafts.value[key] = value;
+}
+
+function commitResource(type: string, size: 'small' | 'large') {
+  const key = draftKey(type, size);
+  const raw = drafts.value[key] ?? '';
+  const count = Math.max(0, parseInt(raw) || 0);
+  focusedInputs.value.delete(key);
+  emit('resourceCount', type, size, count);
+}
+
+function commitFeature(type: string) {
+  const key = draftKey(type);
+  const raw = drafts.value[key] ?? '';
+  const count = Math.max(0, parseInt(raw) || 0);
+  focusedInputs.value.delete(key);
+  emit('featureCount', type, count);
+}
+
+function onResourceKeydown(e: KeyboardEvent, type: string, size: 'small' | 'large') {
+  if (e.key === 'Enter') {
+    (e.target as HTMLInputElement).blur();
+  }
+}
+
+function onFeatureKeydown(e: KeyboardEvent, type: string) {
+  if (e.key === 'Enter') {
+    (e.target as HTMLInputElement).blur();
+  }
+}
+
+// --- Stepper buttons still work instantly ---
 function adjustResource(type: string, size: 'small' | 'large', delta: number) {
   const current = getCount(type, size);
   const next = Math.max(0, current + delta);
   emit('resourceCount', type, size, next);
 }
 
-function getFeatureCount(type: string): number {
-  const countKey = `${type}Count` as keyof NodeFeatures;
-  return (props.features?.[countKey] as number | undefined) ?? 0;
+function adjustFeature(type: string, delta: number) {
+  const current = getFeatureCount(type);
+  const next = Math.max(0, current + delta);
+  emit('featureCount', type, next);
 }
 
 function isUpstreamResource(type: string): boolean {
@@ -62,11 +128,13 @@ function isUpstreamFeature(type: string): boolean {
   return (props.upstreamFeatures ?? []).includes(countKey);
 }
 
-function adjustFeature(type: string, delta: number) {
-  const current = getFeatureCount(type);
-  const next = Math.max(0, current + delta);
-  emit('featureCount', type, next);
-}
+// When the modal closes, clear all draft/focus state
+watch(() => props.isOpen, (open) => {
+  if (!open) {
+    focusedInputs.value.clear();
+    drafts.value = {};
+  }
+});
 </script>
 
 <template>
@@ -137,8 +205,11 @@ function adjustFeature(type: string, delta: number) {
               <input
                 type="number"
                 min="0"
-                :value="getCount(r.type, 'small')"
-                @change.stop="emit('resourceCount', r.type, 'small', Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
+                :value="getDraftValue(r.type, 'small')"
+                @focus.stop="onFocus(r.type, 'small')"
+                @input.stop="onInput(($event.target as HTMLInputElement).value, r.type, 'small')"
+                @blur.stop="commitResource(r.type, 'small')"
+                @keydown.stop="onResourceKeydown($event, r.type, 'small')"
                 @click.stop
                 class="count-input"
               />
@@ -158,8 +229,11 @@ function adjustFeature(type: string, delta: number) {
               <input
                 type="number"
                 min="0"
-                :value="getCount(r.type, 'large')"
-                @change.stop="emit('resourceCount', r.type, 'large', Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
+                :value="getDraftValue(r.type, 'large')"
+                @focus.stop="onFocus(r.type, 'large')"
+                @input.stop="onInput(($event.target as HTMLInputElement).value, r.type, 'large')"
+                @blur.stop="commitResource(r.type, 'large')"
+                @keydown.stop="onResourceKeydown($event, r.type, 'large')"
                 @click.stop
                 class="count-input"
               />
@@ -207,8 +281,11 @@ function adjustFeature(type: string, delta: number) {
               <input
                 type="number"
                 min="0"
-                :value="getFeatureCount(f.type)"
-                @change.stop="emit('featureCount', f.type, Math.max(0, parseInt(($event.target as HTMLInputElement).value) || 0))"
+                :value="getDraftValue(f.type)"
+                @focus.stop="onFocus(f.type)"
+                @input.stop="onInput(($event.target as HTMLInputElement).value, f.type)"
+                @blur.stop="commitFeature(f.type)"
+                @keydown.stop="onFeatureKeydown($event, f.type)"
                 @click.stop
                 class="count-input"
               />
