@@ -116,14 +116,23 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center pt-4">
      <div class="w-full max-w-md md:max-w-3xl flex flex-col gap-4 items-center">
-      <h1 class="text-4xl font-bold text-indigo-400 text-center">Albion Roads Mapper</h1>
-      <p class="text-white text-center">Created by <a href="https://discord.gg/joindig" class="text-indigo-400 hover:underline" target="_blank">[DIG]</a> Maelstrome</p>
-       <button
-          class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
-          @click="openCreateRoom()"
-        >
-          Create Room
-        </button>
+      <h1 class="text-4xl font-bold text-indigo-600 text-center">Albion Roads Mapper</h1>
+      <p class="text-white text-center">Created by <a href="https://discord.gg/t372jvcsZn" class="text-indigo-400 hover:underline" target="_blank">[DIG]</a> Maelstrome</p>
+        <div class="flex gap-4">
+          <button
+            class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
+            @click="openCreateRoom()"
+          >
+            Create Room
+          </button>
+          <a
+            href="https://discord.gg/uFq2PJuZ3r"
+            target="_blank"
+            class="px-6 py-3 rounded-lg bg-[#5865F2] hover:bg-indigo-500 font-medium transition-colors text-center"
+          >
+            Discord
+          </a>
+        </div>
       <RecentlyViewedRooms />
       <p class="text-gray-400 text-center">
         Collaborate with your guild <b>real-time</b> to track Roads of Avalon portal zones and map content. Locate and track Cores and Treasure Chests with real time-timers, Map Resources (and sizes), Avalonian Chests, and easily find connections to the Royal Continent, Outlands portals and rest zones.
