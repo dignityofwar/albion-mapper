@@ -18,6 +18,8 @@ Multiple users join a shared, password-protected room and contribute connection 
 
 ## Quick Start
 
+Create `.env` files in `provisioning` and `web/server` (see below). Then run:
+
 ```bash
 # 1. Start the local database (Postgres in Docker)
 pnpm db:up
@@ -33,8 +35,6 @@ pnpm dev
 ```
 
 The client dev server runs on **http://localhost:5173** (proxied to the API server on **:3001**).
-
-Note: Ensure you have a `.env` file in `web/server` (you can copy `.env.example`) with `DATABASE_URL=postgres://user:password@localhost:5432/dbname` (matching the defaults in `provisioning/docker-compose.yml`).
 
 ---
 
