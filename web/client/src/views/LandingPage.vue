@@ -116,26 +116,26 @@ onMounted(() => {
         @ended="stopAnimation"
         class="w-full border-2 border border-gray-500 rounded-lg"
       />
-      <div class="mt-4 w-full flex flex-col gap-1">
-        <div class="w-full flex gap-2 h-2">
-          <div v-for="chapter in chapters" :key="chapter.name" class="flex-1 bg-gray-700 rounded-full overflow-hidden">
+      <div class="mt-4 w-full flex gap-2">
+        <button
+          v-for="chapter in chapters"
+          :key="chapter.name"
+          class="flex-1 flex flex-col gap-1 cursor-pointer group"
+          @click="jumpToChapter(chapter)"
+        >
+          <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
             <div
               class="bg-indigo-500 h-full transition-all duration-300 ease-linear"
               :style="{ width: getChapterProgress(chapter) }"
             ></div>
           </div>
-        </div>
-        <div class="w-full flex gap-2 text-xs">
-          <button
-            v-for="chapter in chapters"
-            :key="chapter.name"
-            class="flex-1 text-center truncate cursor-pointer transition-colors"
+          <div
+            class="w-full text-xs text-center truncate transition-colors group-hover:text-white"
             :class="currentTime >= chapter.start && currentTime < chapter.end ? 'text-white' : 'text-gray-500'"
-            @click="jumpToChapter(chapter)"
           >
             {{ chapter.name }}
-          </button>
-        </div>
+          </div>
+        </button>
       </div>
     </div>
 
