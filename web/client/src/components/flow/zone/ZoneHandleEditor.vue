@@ -216,12 +216,12 @@ function getHandleFacing(left: string, top: string): string {
         <!-- Center Content - Inside Diamond -->
         <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-12" :class="Z_INDEX.TOOLTIP_BASE">
           <div class="flex flex-col items-center pointer-events-auto max-w-[280px]">
-            <p class="text-gray-300 text-[11px] text-center mb-4 leading-tight drop-shadow-md">
+            <p class="text-gray-300 text-[11px] text-center mb-4 mx-4 leading-tight drop-shadow-md">
               <template v-if="isToggleMode">
                 <template v-if="!isHideout">
-                  Press on a dot to turn off the location of the portal.<br>
+                  Press on a handle to mark the portal as missing.<br>
                 </template>
-                If there is a golden "spoon" looking area, don't turn it off.
+                If there is a golden "spoon" (or a portal), don't turn it off.
                 <div class="mt-2 flex justify-center">
                   <img src="/images/spoon.jpg" class="w-12 h-auto rounded border border-gray-600 shadow-md" alt="Spoon reference" />
                 </div>
@@ -262,14 +262,14 @@ function getHandleFacing(left: string, top: string): string {
           style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"
         ></div>
         <div 
-          class="absolute inset-[2px] bg-gray-800 pointer-events-none"
+          class="absolute inset-[4px] bg-gray-800 pointer-events-none"
           style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"
         ></div>
 
         <div 
           v-for="h in handles" 
           :key="h.id"
-          class="absolute w-8 h-8 handle"
+          class="absolute handle"
           :class="[
             Z_INDEX.HANDLE_OVERLAY,
             h.disabled ? 'is-disabled' : 'is-active',
@@ -288,6 +288,48 @@ function getHandleFacing(left: string, top: string): string {
 </template>
 
 <style scoped>
+.handle {
+  width: 40px;
+  height: 40px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.handle.facing-n  { transform: translate(-50%, -50%) rotate(0deg); }
+.handle.facing-ne { transform: translate(-50%, -50%) rotate(45deg); }
+.handle.facing-e  { transform: translate(-50%, -50%) rotate(90deg); }
+.handle.facing-se { transform: translate(-50%, -50%) rotate(135deg); }
+.handle.facing-s  { transform: translate(-50%, -50%) rotate(180deg); }
+.handle.facing-sw { transform: translate(-50%, -50%) rotate(225deg); }
+.handle.facing-w  { transform: translate(-50%, -50%) rotate(270deg); }
+.handle.facing-nw { transform: translate(-50%, -50%) rotate(315deg); }
+
+.handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%);
+  box-sizing: border-box;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.handle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 0;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
 .handle.is-active::after {
   background-color: #3b82f6;
   border: 2px solid white;

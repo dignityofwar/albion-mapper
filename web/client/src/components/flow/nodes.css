@@ -2,10 +2,6 @@
   clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
 }
 
-.home-border {
-  background-color: rgb(0 117 7) !important;
-}
-
 .red-glow {
   filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.7));
   animation: slow-glow 3s infinite ease-in-out;

@@ -576,6 +576,31 @@ const hasReds = computed(() => {
   return reds !== undefined && reds !== 0;
 });
 
+const diamondOuterClass = computed(() => {
+  const classes: string[] = [Z_INDEX.NODE_BASE];
+
+  if (hasReds.value) {
+    classes.push('bg-red-500/80');
+  } else if (props.data.isHome && !hasReds.value) {
+    classes.push('bg-green-500');
+  } else {
+    classes.push(getBorderBgClass(props.data.type));
+  }
+  return classes;
+});
+
+const diamondInnerClass = computed(() => {
+  const classes: string[] = [Z_INDEX.NODE_BORDER];
+
+  if (hasReds.value) {
+    classes.push('bg-red-950/80');
+  } else {
+    classes.push('bg-gray-800');
+  }
+
+  return classes;
+});
+
 function toggleFeature(feature: 'powercoreBlue' | 'powercorePurple' | 'powercoreGreen' | 'powercoreYellow' | 'crystalCreaturePresent' | 'dungeonStatic' | 'dungeonGroup') {
   const currentFeatures = props.data.features || {};
   const features = { ...currentFeatures };
@@ -899,11 +924,11 @@ function lockCore(core: string) {
       <!-- Diamond Shape Background -->
       <div 
         class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
-        :class="[hasReds ? 'bg-red-500/80' : (props.data.zoneName === 'Brecillien' ? 'bg-purple-500/80 border-purple-200/80' : getBorderBgClass(props.data.type) + '/80'), props.data.isHome && !hasReds ? 'home-border' : '', Z_INDEX.NODE_BASE]"
+        :class="diamondOuterClass"
       ></div>
       <div 
         class="absolute inset-[4px] diamond-shape transition-colors duration-300 pointer-events-none"
-        :class="[hasReds ? 'bg-red-950/80' : (props.data.isHome ? 'bg-gray-800' : 'bg-gray-800/80'), Z_INDEX.NODE_BORDER]"
+        :class="diamondInnerClass"
       ></div>
 
       <div 

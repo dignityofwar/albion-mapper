@@ -36,7 +36,7 @@ export function getBorderBgClass(type: string): string {
     case 'royalRed': return 'bg-red-500';
     case 'outlands': return 'bg-[#1f1f1f]';
     case 'roads':
-    case 'roadsHideout': return 'bg-gray-500';
+    case 'roadsHideout': return 'bg-gray-600';
     default: return 'bg-gray-500';
   }
 }
