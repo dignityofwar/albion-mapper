@@ -19,14 +19,14 @@ interface Chapter {
 }
 
 const chapters: Chapter[] = [
-  { name: "Adding a zone", start: 0, end: 19 },
-  { name: "Updating Map Features", start: 19, end: 48 },
-  { name: "Updating Map Portals", start: 48, end: 65 },
-  { name: "Updating hideouts", start: 65, end: 98 },
-  { name: "Searching zones", start: 98, end: 106 },
-  { name: "Editing Connections", start: 106, end: 126 },
-  { name: "Route plotting", start: 126, end: 161 },
-  { name: "Toolbar navigation", start: 161, end: 182 },
+  { name: "Adding Zones", start: 0, end: 10 },
+  { name: "Updating Map Portals", start: 10, end: 21 },
+  { name: "Updating Map Features", start: 21, end: 89 },
+  { name: "Editing Connections", start: 89, end: 122 },
+  { name: "Searching zones", start: 122, end: 148 },
+  { name: "Real-Time Sync", start: 148, end: 186 },
+  { name: "Route Plotting", start: 186, end: 222 },
+  { name: "Map Summaries", start: 222, end: 268 },
 ];
 
 const activeChapterName = computed(() => {
@@ -120,7 +120,7 @@ onMounted(() => {
     <div class="w-full mt-4 min-[1200px]:mt-0 min-[1200px]:px-24 min-[1200px]:py-4">
       <video
         ref="videoRef"
-        src="/demo.mp4"
+        src="/demo2.mp4"
         autoplay
         loop
         muted
