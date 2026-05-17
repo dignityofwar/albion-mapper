@@ -61,7 +61,7 @@ const stopAnimation = () => {
 const jumpToChapter = (chapter: Chapter) => {
   if (videoRef.value) {
     videoRef.value.currentTime = chapter.start;
-    const offset = 50;
+    const offset = 10;
     const elementPosition = videoRef.value.getBoundingClientRect().top;
     const offsetPosition = elementPosition + window.scrollY - offset;
 
@@ -115,8 +115,23 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center pt-4">
-    <h1 class="text-4xl font-bold text-indigo-400 text-center">Albion Roads Mapper</h1>
-    <p class="text-white text-center">Created by <a href="https://discord.gg/joindig" class="text-indigo-400 hover:underline" target="_blank">[DIG]</a> Maelstrome</p>
+     <div class="w-full max-w-md md:max-w-3xl flex flex-col gap-4 items-center">
+      <h1 class="text-4xl font-bold text-indigo-400 text-center">Albion Roads Mapper</h1>
+      <p class="text-white text-center">Created by <a href="https://discord.gg/joindig" class="text-indigo-400 hover:underline" target="_blank">[DIG]</a> Maelstrome</p>
+       <button
+          class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
+          @click="openCreateRoom()"
+        >
+          Create Room
+        </button>
+      <RecentlyViewedRooms />
+      <p class="text-gray-400 text-center">
+        Collaborate with your guild <b>real-time</b> to track Roads of Avalon portal zones and map content. Locate and track Cores and Treasure Chests with real time-timers, Map Resources (and sizes), Avalonian Chests, and easily find connections to the Royal Continent, Outlands portals and rest zones.
+      </p>
+      <p class="text-gray-400 text-center">
+        All Rooms are secured with a password, which you can rotate at any time.
+      </p>
+    </div>
     <div class="w-full mt-4 min-[1200px]:mt-0 min-[1200px]:px-24 min-[1200px]:py-4">
       <video
         ref="videoRef"
@@ -165,22 +180,6 @@ onMounted(() => {
           </button>
         </div>
       </div>
-    </div>
-
-    <div class="w-full max-w-md md:max-w-3xl flex flex-col gap-4 items-center">
-       <button
-          class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
-          @click="openCreateRoom()"
-        >
-          Create Room
-        </button>
-      <RecentlyViewedRooms />
-      <p class="text-gray-400 text-center">
-        Collaborate with your guild or friends in <b>real-time</b> to track Roads of Avalon portal connections and map content. Locate and track Cores, Map Resources (and sizes), Avalonian Chests, Treasure Chests with real time-timers and easily find connections to the Royal Continent and Outlands portal and rest zones.
-      </p>
-      <p class="text-gray-400 text-center">
-        All Rooms are secured with a password, which you can rotate at any time. Hideout location data is never shared with anyone else without the password.
-      </p>
     </div>
   </div>
 
