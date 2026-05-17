@@ -10,7 +10,8 @@ export interface ResourceZone {
   zoneName: string;
   tier: number;
   type: ZoneType;
-  size?: 'S' | 'L';
+  small?: number;
+  large?: number;
 }
 
 const props = defineProps<{
@@ -68,6 +69,7 @@ const totalCount = computed(() => ({
   stone:   props.stone.length,
   wood:    props.wood.length,
 }));
+
 </script>
 
 <template>
@@ -105,13 +107,10 @@ const totalCount = computed(() => ({
       <div 
         v-if="activeTab !== null && activeZones.length > 0"
         :key="activeTab"
-        class="relative frosted-background border border-gray-700/50 rounded-xl p-3 shadow-2xl pointer-events-auto w-full md:w-64 flex flex-col"
+        class="relative frosted-background border border-gray-700/50 rounded-xl p-3 shadow-2xl pointer-events-auto w-full md:w-72 flex flex-col"
       >
         <div class="text-sm uppercase text-gray-400 font-bold mb-3 px-1 flex items-center justify-between">
           <span>{{ activeLabel }}</span>
-          <span class="bg-gray-800 text-xs px-2 py-0.5 rounded text-gray-400 border border-gray-700">
-            {{ activeZones.length }}
-          </span>
         </div>
 
         <button 

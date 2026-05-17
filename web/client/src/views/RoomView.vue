@@ -623,24 +623,24 @@ const activeCrystals = computed(() => {
 });
 
 const activeDungeons = computed(() => {
-  const dungeons: { zoneId: string; zoneName: string; type: 'static' | 'group' }[] = [];
+  const dungeons: { zoneId: string; zoneName: string; type: 'static' | 'group'; count?: number }[] = [];
   flowNodes.value.forEach(node => {
     const f = node.data.features;
     if (!f) return;
-    if (f.dungeonStatic) dungeons.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'static' });
-    if (f.dungeonGroup) dungeons.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'group' });
+    if ((f.dungeonStaticCount ?? 0) > 0) dungeons.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'static', count: f.dungeonStaticCount });
+    if ((f.dungeonGroupCount ?? 0) > 0) dungeons.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'group', count: f.dungeonGroupCount });
   });
   return dungeons.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
 });
 
 const activeChests = computed(() => {
-  const result: { zoneId: string; zoneName: string; type: 'green' | 'blue' | 'yellow' | 'chest' }[] = [];
+  const result: { zoneId: string; zoneName: string; type: 'green' | 'blue' | 'yellow' | 'chest'; count?: number }[] = [];
   flowNodes.value.forEach(node => {
     const f = node.data.features;
     if (!f) return;
-    if ((f.treasuresGreenCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'green' });
-    if ((f.treasuresBlueCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'blue' });
-    if ((f.treasuresYellowCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'yellow' });
+    if ((f.treasuresGreenCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'green', count: f.treasuresGreenCount });
+    if ((f.treasuresBlueCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'blue', count: f.treasuresBlueCount });
+    if ((f.treasuresYellowCount ?? 0) > 0) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'yellow', count: f.treasuresYellowCount });
     if (f.timedChest && f.timedChest.timer > now.value) result.push({ zoneId: node.id, zoneName: node.data.zoneName, type: 'chest' });
   });
   return result.sort((a, b) => a.zoneName.localeCompare(b.zoneName));
@@ -648,26 +648,25 @@ const activeChests = computed(() => {
 
 const activeResources = computed(() => {
   const result = {
-    fibre:   [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
-    leather: [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
-    ore:     [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
-    stone:   [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
-    wood:    [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[],
+    fibre:   [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; small?: number; large?: number }[],
+    leather: [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; small?: number; large?: number }[],
+    ore:     [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; small?: number; large?: number }[],
+    stone:   [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; small?: number; large?: number }[],
+    wood:    [] as { zoneId: string; zoneName: string; tier: number; type: ZoneType; small?: number; large?: number }[],
   };
   flowNodes.value.forEach(node => {
     const f = node.data.features as NodeFeatures | undefined;
     if (!f?.resources) return;
     const z = { zoneId: node.id, zoneName: node.data.zoneName, tier: node.data.tier ?? 0, type: node.data.type as ZoneType };
     for (const entry of f.resources) {
-      const hasSmall = (entry.small ?? 0) > 0;
-      const hasLarge = (entry.large ?? 0) > 0;
-      if (!hasSmall && !hasLarge) continue;
-      const size: 'S' | 'L' | undefined = hasSmall && hasLarge ? undefined : hasLarge ? 'L' : 'S';
-      if (entry.type === 'fibre')   result.fibre.push({ ...z, size });
-      if (entry.type === 'leather') result.leather.push({ ...z, size });
-      if (entry.type === 'ore')     result.ore.push({ ...z, size });
-      if (entry.type === 'stone')   result.stone.push({ ...z, size });
-      if (entry.type === 'wood')    result.wood.push({ ...z, size });
+      const small = entry.small ?? 0;
+      const large = entry.large ?? 0;
+      if (!small && !large) continue;
+      if (entry.type === 'fibre')   result.fibre.push({ ...z, small: small || undefined, large: large || undefined });
+      if (entry.type === 'leather') result.leather.push({ ...z, small: small || undefined, large: large || undefined });
+      if (entry.type === 'ore')     result.ore.push({ ...z, small: small || undefined, large: large || undefined });
+      if (entry.type === 'stone')   result.stone.push({ ...z, small: small || undefined, large: large || undefined });
+      if (entry.type === 'wood')    result.wood.push({ ...z, small: small || undefined, large: large || undefined });
     }
   });
   result.fibre.sort((a, b) => a.zoneName.localeCompare(b.zoneName));

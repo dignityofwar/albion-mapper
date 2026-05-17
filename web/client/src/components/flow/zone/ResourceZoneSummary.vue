@@ -3,7 +3,7 @@ import { ZoneType } from 'shared';
 import TagTier from '../../common/TagTier.vue';
 
 const props = defineProps<{
-  zones: { zoneId: string; zoneName: string; tier: number; type: ZoneType; size?: 'S' | 'L' }[];
+  zones: { zoneId: string; zoneName: string; tier: number; type: ZoneType; small?: number; large?: number }[];
 }>();
 
 const emit = defineEmits<{
@@ -23,10 +23,10 @@ const emit = defineEmits<{
       <span class="truncate flex-1 font-medium group-hover:text-white">
         {{ zone.zoneName }}
       </span>
-      <span
-        class="shrink-0 text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none"
-      >
-        {{ zone.size ?? '?' }}
+      <span class="shrink-0 flex gap-1">
+        <span v-if="zone.small" class="text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">{{ zone.small }}S</span>
+        <span v-if="zone.large" class="text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">{{ zone.large }}L</span>
+        <span v-if="!zone.small && !zone.large" class="text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">?</span>
       </span>
     </button>
   </div>

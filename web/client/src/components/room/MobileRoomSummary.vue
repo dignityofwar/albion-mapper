@@ -2,11 +2,11 @@
 import { ref } from 'vue';
 import { Z_INDEX } from '@/constants/Layers';
 
-type ResourceZone = { zoneId: string; zoneName: string; tier: number; size?: 'S' | 'L' };
+type ResourceZone = { zoneId: string; zoneName: string; tier: number; small?: number; large?: number };
 type CoreZone     = { zoneId: string; zoneName: string; coreType: 'green' | 'blue' | 'purple' | 'yellow' };
 type CrystalZone  = { zoneId: string; zoneName: string };
-type DungeonZone  = { zoneId: string; zoneName: string; type: 'static' | 'group' };
-type ChestZone    = { zoneId: string; zoneName: string; type: 'green' | 'blue' | 'yellow' | 'chest' };
+type DungeonZone  = { zoneId: string; zoneName: string; type: 'static' | 'group'; count?: number };
+type ChestZone    = { zoneId: string; zoneName: string; type: 'green' | 'blue' | 'yellow' | 'chest'; count?: number };
 
 const props = defineProps<{
   show: boolean;
@@ -102,7 +102,11 @@ function navigateTo(zoneId: string) {
                 class="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-white bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left rounded border border-gray-700"
               >
                 <span class="truncate flex-1 font-medium">{{ zone.zoneName }}</span>
-                <span class="shrink-0 text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">{{ zone.size ?? '?' }}</span>
+                <span class="shrink-0 flex gap-1">
+                  <span v-if="zone.small" class="text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">{{ zone.small }}S</span>
+                  <span v-if="zone.large" class="text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">{{ zone.large }}L</span>
+                  <span v-if="!zone.small && !zone.large" class="text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">?</span>
+                </span>
               </button>
             </div>
           </Transition>
@@ -222,6 +226,7 @@ function navigateTo(zoneId: string) {
               >
                 <img :src="item.type === 'static' ? '/images/dungeon-static.png' : '/images/dungeon-group.png'" class="w-5 h-5 object-contain" alt="Dungeon" />
                 <span class="truncate flex-1 font-medium">{{ item.zoneName }}</span>
+                <span v-if="item.count" class="shrink-0 text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">{{ item.count }}</span>
               </button>
             </div>
             <div v-else-if="mobileActiveFeatureTab === 'chests' && activeChests.length > 0" class="mt-2 flex flex-col gap-1">
@@ -233,6 +238,7 @@ function navigateTo(zoneId: string) {
               >
                 <img :src="item.type === 'blue' ? '/images/treasures-blue.png' : item.type === 'yellow' ? '/images/treasures-yellow.png' : item.type === 'chest' ? '/images/chest.png' : '/images/treasures-green.png'" class="w-5 h-5 object-contain" alt="Chest" />
                 <span class="truncate flex-1 font-medium">{{ item.zoneName }}</span>
+                <span v-if="item.count" class="shrink-0 text-xs font-bold text-gray-300 bg-gray-950 border border-gray-700 rounded px-1.5 py-0.5 leading-none">{{ item.count }}</span>
               </button>
             </div>
           </Transition>
