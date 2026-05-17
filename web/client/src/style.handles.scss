@@ -78,20 +78,20 @@
   // Canvas handle state colors
   &.handle-default::after {
     background-color: rgb(87 87 87 / 0.42);
-    border: 1px solid #919191;
+    border: 2px solid #919191;
   }
 
   &.handle-default::before {
-    border-top: 1px solid #919191;
+    border-top: 2px solid #919191;
   }
 
   &.handle-default:hover::after {
     background-color: #979797;
-    border: 1px solid white;
+    border: 2px solid white;
   }
 
   &.handle-default:hover::before {
-    border-top-color: white;
+    border-top: 2px solid white;
   }
 
   &.handle-active::after {
