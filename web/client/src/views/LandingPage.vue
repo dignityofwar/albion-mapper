@@ -141,7 +141,7 @@ onMounted(() => {
         All Rooms are secured with a password, which you can rotate at any time.
       </p>
     </div>
-    <div class="w-full mt-4 min-[1200px]:mt-0 min-[1200px]:px-24 min-[1200px]:py-4">
+    <div class="w-full max-w-[2000px] mt-4 min-[1200px]:mt-0 min-[1200px]:px-24 min-[1200px]:py-4">
       <video
         ref="videoRef"
         src="/demo2.mp4"
