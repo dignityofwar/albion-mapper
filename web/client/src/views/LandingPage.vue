@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import CreateRoomModal from '../components/CreateRoomModal.vue';
 import RecentlyViewedRooms from '../components/RecentlyViewedRooms.vue';
@@ -29,11 +29,12 @@ const chapters: Chapter[] = [
   { name: "Toolbar navigation", start: 161, end: 182 },
 ];
 
-const onTimeUpdate = () => {
-  if (videoRef.value) {
-    currentTime.value = videoRef.value.currentTime;
-  }
-};
+const activeChapterName = computed(() => {
+  const chapter = chapters.find(c => currentTime.value >= c.start && currentTime.value < c.end);
+  return chapter ? chapter.name : chapters[0].name;
+});
+
+const dropdownValue = ref<string>(chapters[0].name);
 
 let animationFrameId: number | null = null;
 
@@ -60,7 +61,7 @@ const stopAnimation = () => {
 const jumpToChapter = (chapter: Chapter) => {
   if (videoRef.value) {
     videoRef.value.currentTime = chapter.start;
-    const offset = 10;
+    const offset = 50;
     const elementPosition = videoRef.value.getBoundingClientRect().top;
     const offsetPosition = elementPosition + window.scrollY - offset;
 
@@ -68,6 +69,16 @@ const jumpToChapter = (chapter: Chapter) => {
       top: offsetPosition,
       behavior: 'smooth'
     });
+  }
+};
+
+const onChapterChange = (event: Event) => {
+  const target = event.target as HTMLSelectElement;
+  const selectedName = target.value;
+  dropdownValue.value = selectedName;
+  const chapter = chapters.find(c => c.name === selectedName);
+  if (chapter) {
+    jumpToChapter(chapter);
   }
 };
 
@@ -81,6 +92,10 @@ const getChapterProgress = (chapter: Chapter) => {
 function openCreateRoom() {
   showCreate.value = true;
 }
+
+watch(activeChapterName, (name) => {
+  dropdownValue.value = name;
+});
 
 watch(() => route.query.create, (val) => {
   if (val === 'true') {
@@ -102,7 +117,7 @@ onMounted(() => {
   <div class="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center pt-4">
     <h1 class="text-4xl font-bold text-indigo-400 text-center">Albion Roads Mapper</h1>
     <p class="text-white text-center">Created by <a href="https://discord.gg/joindig" class="text-indigo-400 hover:underline" target="_blank">[DIG]</a> Maelstrome</p>
-    <div class="w-full px-24 py-4">
+    <div class="w-full mt-4 min-[1200px]:mt-0 min-[1200px]:px-24 min-[1200px]:py-4">
       <video
         ref="videoRef"
         src="/demo.mp4"
@@ -114,28 +129,41 @@ onMounted(() => {
         @play="startAnimation"
         @pause="stopAnimation"
         @ended="stopAnimation"
-        class="w-full border-2 border border-gray-500 rounded-lg"
+        class="w-full min-[1200px]:border-2 min-[1200px]:border-gray-500 min-[1200px]:rounded-lg"
       />
-      <div class="mt-4 w-full flex gap-2">
-        <button
-          v-for="chapter in chapters"
-          :key="chapter.name"
-          class="flex-1 flex flex-col gap-1 cursor-pointer group"
-          @click="jumpToChapter(chapter)"
+      <div class="mt-4 w-full px-4 min-[1200px]:px-0 text-center">
+        <select
+          :value="dropdownValue"
+          @change="onChapterChange"
+          @focus="stopAnimation"
+          @blur="startAnimation"
+          class="min-[1200px]:hidden w-64 mb-4 p-3 bg-gray-900 text-white rounded-lg border border-gray-700 text-center"
         >
-          <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              class="bg-indigo-500 h-full transition-all duration-300 ease-linear"
-              :style="{ width: getChapterProgress(chapter) }"
-            ></div>
-          </div>
-          <div
-            class="w-full text-xs text-center truncate transition-colors group-hover:text-white"
-            :class="currentTime >= chapter.start && currentTime < chapter.end ? 'text-white' : 'text-gray-500'"
-          >
+          <option v-for="chapter in chapters" :key="chapter.name" :value="chapter.name">
             {{ chapter.name }}
-          </div>
-        </button>
+          </option>
+        </select>
+        <div class="hidden min-[1200px]:flex gap-2">
+          <button
+            v-for="chapter in chapters"
+            :key="chapter.name"
+            class="flex-1 flex flex-col gap-1 cursor-pointer group"
+            @click="jumpToChapter(chapter)"
+          >
+            <div class="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+              <div
+                class="bg-indigo-500 h-full transition-all duration-300 ease-linear"
+                :style="{ width: getChapterProgress(chapter) }"
+              ></div>
+            </div>
+            <div
+              class="w-full text-xs text-center truncate transition-colors group-hover:text-white"
+              :class="currentTime >= chapter.start && currentTime < chapter.end ? 'text-white' : 'text-gray-500'"
+            >
+              {{ chapter.name }}
+            </div>
+          </button>
+        </div>
       </div>
     </div>
 
