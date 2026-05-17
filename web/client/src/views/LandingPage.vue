@@ -146,6 +146,7 @@ onMounted(() => {
         >
           Create Room
         </button>
+      <RecentlyViewedRooms />
       <p class="text-gray-400 text-center">
         Collaborate with your guild or friends in <b>real-time</b> to track Roads of Avalon portal connections and map content. Locate and track Cores, Map Resources (and sizes), Avalonian Chests, Treasure Chests with real time-timers and easily find connections to the Royal Continent and Outlands portal and rest zones.
       </p>
@@ -153,8 +154,6 @@ onMounted(() => {
         All Rooms are secured with a password, which you can rotate at any time. Hideout location data is never shared with anyone else without the password.
       </p>
     </div>
-
-    <RecentlyViewedRooms />
   </div>
 
     <CreateRoomModal v-if="showCreate" @close="showCreate = false" />
