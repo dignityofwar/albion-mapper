@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import { CreateConnectionBodySchema, UpdateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus } from 'shared';
+import { CreateConnectionBodySchema, UpdateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus, getDefaultHandles } from 'shared';
 import * as Shared from 'shared';
 import type { Connection, RoomMemoryEntry } from 'shared';
 import { broadcast } from '../broadcast.js';
@@ -124,7 +124,24 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       }
       const baseFeatures = memoryEntry?.features ?? getInitialFeatures(toZoneId);
       const initialFeatures = { ...baseFeatures, slots, lastUpdatedAt: lastUpdateMs };
-      const initialHandles = memoryEntry?.custom_handles ?? null;
+      let initialHandles = memoryEntry?.custom_handles ?? null;
+      // If the zone has a shape, check that the history handles match the expected positions exactly;
+      // if any handle has moved (or count differs), replace with fresh shape handles to avoid stale data bugs.
+      // Disabled state is intentional user data and is not considered a difference.
+      if (initialHandles && toZone?.mapShape) {
+        const expectedHandles = getDefaultHandles(toZone.type, toZone.mapShape);
+        const handlesMatch = initialHandles.length === expectedHandles.length &&
+          expectedHandles.every((expected: { id: string; top: string; left: string }) => {
+            const actual = initialHandles.find((h: { id: string }) => h.id === expected.id);
+            return actual && actual.top === expected.top && actual.left === expected.left;
+          });
+        if (!handlesMatch) {
+          initialHandles = expectedHandles.map((expected: { id: string; top: string; left: string }) => {
+            const stale = initialHandles.find((h: { id: string; disabled?: boolean }) => h.id === expected.id);
+            return stale?.disabled ? { ...expected, disabled: true } : expected;
+          });
+        }
+      }
       await app.db.query(`
         INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
         VALUES ($1, $2, $3, $4, $5, $6)
@@ -141,14 +158,10 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       const shouldAppend = isRoads && (!existing ||
         existing.times_added.length === 0 ||
         (now.getTime() - new Date(existing.times_added[existing.times_added.length - 1]).getTime()) > THREE_HOURS_MS);
+      // Also update memory (without appending a new timestamp) if handles were corrected
+      const handlesWereCorrected = isRoads && existing && memoryEntry?.custom_handles !== initialHandles;
 
       if (shouldAppend) {
-        const nodePos = await app.db.query<{ features: any; custom_handles: any }>(
-          'SELECT features, custom_handles FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
-          [id, toZoneId]
-        );
-        const nodeFeatures = nodePos.rows[0]?.features ?? null;
-        const nodeHandles = nodePos.rows[0]?.custom_handles ?? null;
         await app.db.query(`
           INSERT INTO room_node_memory (room_id, zone_id, times_added, features, custom_handles, last_updated)
           VALUES ($1, $2, ARRAY[$3::timestamptz], $4, $5, $3::timestamptz)
@@ -157,8 +170,17 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
                 features = EXCLUDED.features,
                 custom_handles = EXCLUDED.custom_handles,
                 last_updated = EXCLUDED.last_updated
-        `, [id, toZoneId, now.toISOString(), JSON.stringify(nodeFeatures), JSON.stringify(nodeHandles)]);
+        `, [id, toZoneId, now.toISOString(), JSON.stringify(initialFeatures), JSON.stringify(initialHandles)]);
+      } else if (handlesWereCorrected) {
+        // Handles were stale and corrected — update memory in-place without adding a new timestamp
+        await app.db.query(`
+          UPDATE room_node_memory
+          SET custom_handles = $1, features = $2, last_updated = $3
+          WHERE room_id = $4 AND zone_id = $5
+        `, [JSON.stringify(initialHandles), JSON.stringify(initialFeatures), now.toISOString(), id, toZoneId]);
+      }
 
+      if (shouldAppend || handlesWereCorrected) {
         const { rows: updatedMem } = await app.db.query<{ zone_id: string; times_added: string[]; features: any; custom_handles: any; last_updated: string }>(
           'SELECT zone_id, times_added, features, custom_handles, last_updated FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
           [id, toZoneId]

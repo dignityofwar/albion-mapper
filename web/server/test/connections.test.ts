@@ -215,6 +215,220 @@ describe('POST /api/rooms/:id/connections', () => {
     expect(featuresArg.slots).toBe(20);
   });
 
+  it('replaces stale memory handles with fresh shape defaults when count differs for a shaped zone', async () => {
+    // sases-aoarsum is a roads zone with mapShape 's' (6 default handles)
+    const SHAPED_ZONE = 'sases-aoarsum';
+    // Stale memory has only 5 handles (wrong count)
+    const staleHandles = [
+      { id: 's-p1', top: '35.55%', left: '14.45%' },
+      { id: 's-p2', top: '80.47%', left: '30.47%' },
+      { id: 's-p3', top: '12.11%', left: '37.89%' },
+      { id: 's-p4', top: '22.27%', left: '72.27%' },
+      { id: 's-p5', top: '53.52%', left: '96.48%' },
+    ];
+
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ features: { slots: 7 }, custom_handles: staleHandles }] }); // memory check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT times_added (no existing — shouldAppend=true)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT/UPDATE memory
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: SHAPED_ZONE, times_added: [new Date().toISOString()], features: { slots: 7 }, custom_handles: staleHandles, last_updated: new Date().toISOString() }] }); // SELECT updated memory
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE source node lastUpdatedAt
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (broadcast)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: SHAPED_ZONE, secondsRemaining: 1800, slots: 7, targetPosition: { x: 100, y: 200 } },
+    });
+    expect(res.statusCode).toBe(201);
+
+    const insertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_positions')
+    );
+    expect(insertCall).toBeDefined();
+    const handlesArg = JSON.parse(insertCall[1][5]);
+    expect(handlesArg).toHaveLength(6);
+    expect(handlesArg.map((h: any) => h.id)).toEqual(['s-p1', 's-p2', 's-p3', 's-p4', 's-p5', 's-p6']);
+
+    // Memory INSERT must also receive the corrected 6 handles
+    const memInsertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_memory')
+    );
+    expect(memInsertCall).toBeDefined();
+    const memHandlesArg = JSON.parse(memInsertCall[1][4]);
+    expect(memHandlesArg).toHaveLength(6);
+    expect(memHandlesArg.map((h: any) => h.id)).toEqual(['s-p1', 's-p2', 's-p3', 's-p4', 's-p5', 's-p6']);
+  });
+
+  it('replaces stale memory handles with fresh shape defaults when positions differ for a shaped zone', async () => {
+    // sases-aoarsum is a roads zone with mapShape 's' (6 default handles)
+    const SHAPED_ZONE = 'sases-aoarsum';
+    // Memory has 6 handles but with moved positions (not matching defaults)
+    const movedHandles = [
+      { id: 's-p1', top: '10.00%', left: '20.00%' },
+      { id: 's-p2', top: '30.00%', left: '40.00%' },
+      { id: 's-p3', top: '50.00%', left: '60.00%' },
+      { id: 's-p4', top: '70.00%', left: '80.00%' },
+      { id: 's-p5', top: '15.00%', left: '25.00%' },
+      { id: 's-p6', top: '35.00%', left: '45.00%' },
+    ];
+
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ features: { slots: 7 }, custom_handles: movedHandles }] }); // memory check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT times_added (no existing — shouldAppend=true)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT/UPDATE memory
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: SHAPED_ZONE, times_added: [new Date().toISOString()], features: { slots: 7 }, custom_handles: movedHandles, last_updated: new Date().toISOString() }] }); // SELECT updated memory
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE source node lastUpdatedAt
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (broadcast)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: SHAPED_ZONE, secondsRemaining: 1800, slots: 7, targetPosition: { x: 100, y: 200 } },
+    });
+    expect(res.statusCode).toBe(201);
+
+    const insertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_positions')
+    );
+    expect(insertCall).toBeDefined();
+    const handlesArg = JSON.parse(insertCall[1][5]);
+    // Positions should be reset to defaults
+    expect(handlesArg).toHaveLength(6);
+    expect(handlesArg[0].left).toBe('90.43%');
+    expect(handlesArg[0].top).toBe('59.57%');
+
+    // Memory INSERT must also receive the corrected default positions
+    const memInsertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_memory')
+    );
+    expect(memInsertCall).toBeDefined();
+    const memHandlesArg = JSON.parse(memInsertCall[1][4]);
+    expect(memHandlesArg).toHaveLength(6);
+    expect(memHandlesArg[0].left).toBe('90.43%');
+    expect(memHandlesArg[0].top).toBe('59.57%');
+  });
+
+  it('preserves disabled flags from stale handles when resetting to shape defaults', async () => {
+    const SHAPED_ZONE = 'sases-aoarsum';
+    // Memory has 5 handles, one is disabled
+    const staleHandles = [
+      { id: 's-p1', top: '35.55%', left: '14.45%', disabled: true },
+      { id: 's-p2', top: '80.47%', left: '30.47%' },
+      { id: 's-p3', top: '12.11%', left: '37.89%' },
+      { id: 's-p4', top: '22.27%', left: '72.27%' },
+      { id: 's-p5', top: '53.52%', left: '96.48%' },
+    ];
+
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ features: { slots: 7 }, custom_handles: staleHandles }] }); // memory check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT times_added (no existing — shouldAppend=true)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT/UPDATE memory
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: SHAPED_ZONE, times_added: [new Date().toISOString()], features: { slots: 7 }, custom_handles: staleHandles, last_updated: new Date().toISOString() }] }); // SELECT updated memory
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE source node lastUpdatedAt
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (broadcast)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: SHAPED_ZONE, secondsRemaining: 1800, slots: 7, targetPosition: { x: 100, y: 200 } },
+    });
+    expect(res.statusCode).toBe(201);
+
+    const insertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_positions')
+    );
+    expect(insertCall).toBeDefined();
+    const handlesArg = JSON.parse(insertCall[1][5]);
+    expect(handlesArg).toHaveLength(6);
+    // s-p1 was disabled in stale data — disabled flag should be preserved
+    const p1 = handlesArg.find((h: any) => h.id === 's-p1');
+    expect(p1.disabled).toBe(true);
+    // s-p6 is new (didn't exist in stale) — should not be disabled
+    const p6 = handlesArg.find((h: any) => h.id === 's-p6');
+    expect(p6.disabled).toBeUndefined();
+
+    // Memory INSERT must also receive the corrected 6 handles with disabled flag preserved
+    const memInsertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_memory')
+    );
+    expect(memInsertCall).toBeDefined();
+    const memHandlesArg = JSON.parse(memInsertCall[1][4]);
+    expect(memHandlesArg).toHaveLength(6);
+    const memP1 = memHandlesArg.find((h: any) => h.id === 's-p1');
+    expect(memP1.disabled).toBe(true);
+    const memP6 = memHandlesArg.find((h: any) => h.id === 's-p6');
+    expect(memP6.disabled).toBeUndefined();
+  });
+
+  it('updates memory in-place when handles are stale but zone was added recently (within 3 hours)', async () => {
+    const SHAPED_ZONE = 'sases-aoarsum';
+    // Stale memory has only 5 handles (wrong count), added 17 minutes ago (within 3-hour guard)
+    const recentTimestamp = new Date(Date.now() - 17 * 60 * 1000).toISOString();
+    const staleHandles = [
+      { id: 's-p1', top: '35.55%', left: '14.45%' },
+      { id: 's-p2', top: '80.47%', left: '30.47%' },
+      { id: 's-p3', top: '12.11%', left: '37.89%' },
+      { id: 's-p4', top: '22.27%', left: '72.27%' },
+      { id: 's-p5', top: '53.52%', left: '96.48%' },
+    ];
+
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ features: { slots: 7 }, custom_handles: staleHandles }] }); // memory check (returns stale)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rows: [{ times_added: [recentTimestamp] }] }); // SELECT times_added (recent — shouldAppend=false)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE room_node_memory (handles corrected in-place)
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: SHAPED_ZONE, times_added: [recentTimestamp], features: { slots: 7 }, custom_handles: null, last_updated: new Date().toISOString() }] }); // SELECT updated memory
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE source node lastUpdatedAt
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (broadcast)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: SHAPED_ZONE, secondsRemaining: 1800, slots: 7, targetPosition: { x: 100, y: 200 } },
+    });
+    expect(res.statusCode).toBe(201);
+
+    // Node position must have 6 corrected handles
+    const insertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_positions')
+    );
+    expect(insertCall).toBeDefined();
+    const handlesArg = JSON.parse(insertCall[1][5]);
+    expect(handlesArg).toHaveLength(6);
+    expect(handlesArg.map((h: any) => h.id)).toEqual(['s-p1', 's-p2', 's-p3', 's-p4', 's-p5', 's-p6']);
+
+    // Memory must be updated in-place (UPDATE, not INSERT) with the corrected 6 handles
+    const memUpdateCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('UPDATE room_node_memory')
+    );
+    expect(memUpdateCall).toBeDefined();
+    const memHandlesArg = JSON.parse(memUpdateCall[1][0]);
+    expect(memHandlesArg).toHaveLength(6);
+    expect(memHandlesArg.map((h: any) => h.id)).toEqual(['s-p1', 's-p2', 's-p3', 's-p4', 's-p5', 's-p6']);
+
+    // No new timestamp should have been appended (no INSERT INTO room_node_memory)
+    const memInsertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_memory')
+    );
+    expect(memInsertCall).toBeUndefined();
+  });
+
   it('updates a connection', async () => {
     // PATCH /api/rooms/:id/connections/:connId
     const connId = 'conn-1';
