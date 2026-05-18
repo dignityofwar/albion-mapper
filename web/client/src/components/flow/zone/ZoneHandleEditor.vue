@@ -151,6 +151,7 @@ function save() {
 
 function rotate(clockwise: boolean) {
   rotationSteps.value = clockwise ? rotateClockwise(rotationSteps.value) : rotateCounterClockwise(rotationSteps.value);
+  visualRotation.value += clockwise ? 90 : -90;
   handles.value = handles.value.map(h => {
     const x = parseFloat(h.left);
     const y = parseFloat(h.top);
@@ -228,7 +229,7 @@ function getHandleFacing(left: string, top: string): string {
           :src="`/images/shapes/${mapShape}.png`"
           class="absolute inset-0 w-full h-full object-contain pointer-events-none p-1"
           :class="Z_INDEX.TOOLTIP_BASE"
-          :style="{ transform: `rotate(${imageRotation}deg)`, transition: 'transform 0.3s ease' }"
+          :style="{ transform: `rotate(${visualRotation}deg)`, transition: 'transform 0.3s ease' }"
           alt=""
         />
 

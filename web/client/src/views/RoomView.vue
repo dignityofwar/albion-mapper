@@ -28,7 +28,7 @@ import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { formatTime, formatExpiresIn, formatCountdown } from '@/utils/formatters';
+import { formatTime, formatExpiresIn } from '@/utils/formatters';
 import { deleteConnection, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
 import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, type ZoneType, wouldCreateCycle, wouldCreateLongerLoop, getDefaultHandles, getHandleFacing } from 'shared';
