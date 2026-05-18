@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import { useRoomStore } from '../stores/useRoomStore';
 import { useRoomMemoryStore } from '../stores/useRoomMemoryStore';
 import { addConnection } from '../utils/roomOperations';
+import { getShapeHandlePositions } from 'shared';
 import ShapeEditor from './debug/ShapeEditor.vue';
 import ImportDataModal from './ImportDataModal.vue';
 import { API_BASE_URL } from '../utils/api';
@@ -95,6 +96,21 @@ async function deleteZoneMemory(zoneId: string) {
   });
 }
 
+function reapplyShapeHandles() {
+  const nodes = props.nodes as Array<Record<string, any>>;
+  let count = 0;
+  for (const node of nodes) {
+    const { type, mapShape } = node.data ?? {};
+    if (type === 'roadsHideout') continue;
+    if (!mapShape || mapShape === 'rest') continue;
+    const handles = getShapeHandlePositions(mapShape);
+    if (handles.length === 0) continue;
+    store.updateNodeCustomHandles(node.id as string, handles);
+    count++;
+  }
+  alert(`Re-applied shape handles to ${count} node(s).`);
+}
+
 async function exportNodes() {
   const data = JSON.stringify({
     connections: store.connections,
@@ -134,6 +150,7 @@ async function exportNodes() {
             <button @click="showImportModal = true" class="bg-indigo-600 hover:bg-indigo-700 text-white px-2 py-1 rounded text-xs">Import</button>
             <button @click="showShapeEditor = true" class="bg-purple-600 hover:bg-purple-700 text-white px-2 py-1 rounded text-xs">Shape Editor</button>
             <button @click="flushLegacyData" class="bg-red-700 hover:bg-red-800 text-white px-2 py-1 rounded text-xs">Flush Legacy Data</button>
+            <button @click="reapplyShapeHandles" class="bg-yellow-600 hover:bg-yellow-700 text-white px-2 py-1 rounded text-xs">Reapply Shape Handles</button>
           </div>
         </div>
         <div class="flex-1 overflow-y-auto p-4 space-y-4 text-xs font-mono">
