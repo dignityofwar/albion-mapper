@@ -403,8 +403,8 @@ onClickOutside(timerContainerRefNE, (e) => {
 const MAX_TIMES = {
   powercoreGreen: 5 * 60,
   powercoreBlue: 15 * 60,
-  powercorePurple: 20 * 60,
-  powercoreYellow: 30 * 60,
+  powercorePurple: 30 * 60,
+  powercoreYellow: 50 * 60,
 };
 
 const showToast = inject<(msg: string, type?: 'info' | 'error', duration?: number) => void>('showToast');
