@@ -115,6 +115,17 @@ export function getShapeHandlePositions(shape: string | undefined): HandleDefini
     ];
   }
 
+   if (shape === 's') {
+    return [
+      { id: 's-p1', left: '73.40%', top: '23.40%' },
+      { id: 's-p2', left: '88.60%', top: '61.40%' },
+      { id: 's-p3', left: '71.40%', top: '78.60%' },
+      { id: 's-p4', left: '21.60%', top: '71.60%' },
+      { id: 's-p5', left: '9.40%', top: '40.60%' },
+      { id: 's-p6', left: '32.20%', top: '17.80%' },
+    ];
+  }
+
   if (shape === 't') {
     return [
       { id: 't-p1', left: '27.93%', top: '77.93%' },
