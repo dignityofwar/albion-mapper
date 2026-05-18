@@ -128,12 +128,12 @@ export function getShapeHandlePositions(shape: string | undefined): HandleDefini
 
   if (shape === 't') {
     return [
-      { id: 't-p1', left: '27.93%', top: '77.93%' },
-      { id: 't-p2', left: '6.84%', top: '56.84%' },
-      { id: 't-p3', left: '53.71%', top: '96.29%' },
-      { id: 't-p4', left: '21.68%', top: '28.32%' },
-      { id: 't-p5', left: '88.87%', top: '61.13%' },
-      { id: 't-p6', left: '79.88%', top: '29.88%' },
+      { id: 't-p1', left: '73.20%', top: '23.20%' },
+      { id: 't-p2', left: '88.20%', top: '61.80%' },
+      { id: 't-p3', left: '77.00%', top: '73.00%' },
+      { id: 't-p4', left: '23.80%', top: '73.80%' },
+      { id: 't-p5', left: '9.60%', top: '40.40%' },
+      { id: 't-p6', left: '38.80%', top: '11.20%' },
     ];
   }
 
