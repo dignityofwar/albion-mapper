@@ -767,6 +767,12 @@ async function handleConnect(params: any) {
   if (params.sourceHandle === 'center-overlay') params.sourceHandle = 'center';
   if (params.targetHandle === 'center-overlay') params.targetHandle = 'center';
 
+  // Block same-zone connections
+  if (params.source === params.target) {
+    showToast('You cannot have same-zone connections.', 'error');
+    return;
+  }
+
   // Block connections using disabled handles
   const srcNode = getNode.value(params.source);
   const tgtNode = getNode.value(params.target);

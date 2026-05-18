@@ -85,7 +85,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
     const { fromZoneId, toZoneId, fromHandleId, toHandleId, secondsRemaining, slots, reportedBy, targetPosition } = parsed.data;
 
     if (fromZoneId === toZoneId) {
-      return reply.status(400).send({ error: 'fromZoneId and toZoneId must be different' });
+      return reply.status(400).send({ error: 'You cannot have same-zone connections' });
     }
 
     if (!ZONE_BY_ID.has(fromZoneId)) {
