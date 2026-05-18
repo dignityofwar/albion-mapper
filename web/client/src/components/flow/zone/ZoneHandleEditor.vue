@@ -13,6 +13,7 @@ const props = defineProps<{
   initialHandles: CustomHandle[];
   isToggleMode?: boolean;
   isHideout?: boolean;
+  mapShape?: string;
 }>();
 
 const emit = defineEmits<{
@@ -21,6 +22,7 @@ const emit = defineEmits<{
 }>();
 
 const handles = ref<CustomHandle[]>([...props.initialHandles]);
+const imageRotation = ref(0);
 const containerRef = ref<HTMLDivElement | null>(null);
 const saveButtonRef = ref<HTMLButtonElement | null>(null);
 const draggingHandleId = ref<string | null>(null);
@@ -145,11 +147,11 @@ function save() {
 
 
 function rotate(degrees: number) {
+  imageRotation.value = imageRotation.value + degrees;
   handles.value = handles.value.map(h => {
     const x = parseFloat(h.left);
     const y = parseFloat(h.top);
     const t = getTFromPos(x, y);
-    
     let nextT;
     if (degrees === 90) {
       nextT = (t + 1) % 4;
@@ -213,10 +215,30 @@ function getHandleFacing(left: string, top: string): string {
           <span class="text-[10px] mt-1">90°</span>
         </button>
 
+        <!-- Diamond Shape Background -->
+        <div 
+          class="absolute inset-0 bg-gray-600 pointer-events-none"
+          style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"
+        ></div>
+        <div 
+          class="absolute inset-[4px] bg-gray-800 pointer-events-none"
+          style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"
+        ></div>
+
+        <!-- Shape Image Overlay -->
+        <img
+          v-if="mapShape && !isHideout"
+          :src="`/images/shapes/${mapShape}.png`"
+          class="absolute inset-0 w-full h-full object-contain pointer-events-none p-1 pl-0"
+          :class="Z_INDEX.TOOLTIP_BASE"
+          :style="{ transform: `rotate(${imageRotation}deg)`, transition: 'transform 0.3s ease' }"
+          alt=""
+        />
+
         <!-- Center Content - Inside Diamond -->
-        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-12" :class="Z_INDEX.TOOLTIP_BASE">
-          <div class="flex flex-col items-center pointer-events-auto max-w-[280px]">
-            <p class="text-gray-300 text-[11px] text-center mb-4 mx-4 leading-tight drop-shadow-md">
+        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none px-12" :class="Z_INDEX.UI_OVERLAY">
+          <div class="flex flex-col items-center pointer-events-auto max-w-[280px] bg-gray-800/60 backdrop-blur-xs rounded-lg p-2">
+            <p class="text-gray-300 text-[11px] text-center mb-2 mx-2 leading-tight drop-shadow-md">
               <template v-if="isToggleMode">
                 <template v-if="!isHideout">
                   Press on a handle to mark the portal as missing.<br>
@@ -231,7 +253,7 @@ function getHandleFacing(left: string, top: string): string {
               </template>
             </p>
 
-            <div class="relative flex gap-3 w-full mb-4 px-6">
+            <div class="relative flex gap-2 w-full px-6">
               <button 
                 class="flex-1 px-3 py-1 bg-gray-700/90 hover:bg-gray-600 text-white rounded transition-colors text-xs shadow-xl border border-gray-600"
                 @click.stop="emit('close')"
@@ -256,15 +278,6 @@ function getHandleFacing(left: string, top: string): string {
 
           </div>
         </div>
-        <!-- Diamond Shape Background -->
-        <div 
-          class="absolute inset-0 bg-gray-600 pointer-events-none"
-          style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"
-        ></div>
-        <div 
-          class="absolute inset-[4px] bg-gray-800 pointer-events-none"
-          style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"
-        ></div>
 
         <div 
           v-for="h in handles" 

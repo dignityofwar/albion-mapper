@@ -1088,6 +1088,7 @@ function lockCore(core: string) {
         :initial-handles="getInitialHandles()"
         :is-toggle-mode="props.data.mapShape !== 'rest' && props.data.type !== 'roadsHideout'"
         :is-hideout="props.data.type === 'roadsHideout'"
+        :map-shape="props.data.mapShape"
         @save="saveCustomHandles"
         @close="isHandleEditorOpen = false"
       />

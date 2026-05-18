@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { Z_INDEX } from '@/constants/Layers';
+import { getShapeHandlePositions } from 'shared';
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -10,6 +11,7 @@ interface DebugHandle {
   id: string;
   left: string;
   top: string;
+  disabled?: boolean;
 }
 
 const handles = ref<DebugHandle[]>([]);
@@ -48,6 +50,27 @@ function getTFromPos(xPercent: number, yPercent: number): number {
   if (minDist === d1) return 1 + Math.max(0, Math.min(1, (100 - xPercent) / 50));
   if (minDist === d2) return 2 + Math.max(0, Math.min(1, (50 - xPercent) / 50));
   return 3 + Math.max(0, Math.min(1, xPercent / 50));
+}
+
+const facingRotations: Record<string, number> = { n: 0, ne: 45, e: 90, se: 135, s: 180, sw: 225, w: 270, nw: 315 };
+
+function getHandleRotation(left: string, top: string): number {
+  return facingRotations[getHandleFacing(left, top)] ?? 0;
+}
+
+function getHandleFacing(left: string, top: string): string {
+  const l = parseFloat(left);
+  const t = parseFloat(top);
+
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t) < 0.1) return 'n';
+  if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
+  if (Math.abs(l) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+
+  if (l >= 50 && t < 50) return 'ne';
+  if (l > 50 && t >= 50) return 'se';
+  if (l <= 50 && t > 50) return 'sw';
+  return 'nw';
 }
 
 function handleEdgeClick(e: MouseEvent) {
@@ -96,6 +119,7 @@ function stopDragging() {
 }
 
 onMounted(() => {
+  loadShapeDefaults();
   window.addEventListener('mousemove', onMouseMove);
   window.addEventListener('mouseup', stopDragging);
 });
@@ -128,6 +152,11 @@ async function copyToClipboard() {
   }
 }
 
+function loadShapeDefaults() {
+  const defaults = getShapeHandlePositions(selectedShape.value);
+  handles.value = defaults.length > 0 ? defaults.map(h => ({ ...h })) : [];
+}
+
 function clearAll() {
   handles.value = [];
 }
@@ -135,13 +164,13 @@ function clearAll() {
 
 <template>
   <div class="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" :class="Z_INDEX.DEBUG_SHAPE" @click.self="emit('close')">
-    <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-2xl max-w-2xl w-full p-6 flex flex-col items-center">
+    <div class="bg-gray-900 border border-gray-700 rounded-lg shadow-2xl max-w-5xl w-full p-6 flex flex-col items-center">
       <div class="w-full flex justify-between items-center mb-6">
         <h3 class="text-xl font-bold text-white">Road Shape Editor</h3>
         <button class="text-gray-400 hover:text-white text-2xl" @click="emit('close')">&times;</button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+      <div class="flex flex-col md:flex-row gap-8 w-full items-stretch">
         <div class="flex flex-col items-center">
           <div class="w-full flex gap-2 mb-4">
             <div class="flex-1">
@@ -149,7 +178,7 @@ function clearAll() {
               <select 
                 v-model="selectedShape"
                 class="w-full bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-blue-500"
-                @change="clearAll"
+                @change="loadShapeDefaults"
               >
                 <option v-for="s in shapes" :key="s" :value="s">{{ s.toUpperCase() }}</option>
               </select>
@@ -161,7 +190,7 @@ function clearAll() {
 
           <div 
             ref="containerRef"
-            class="relative w-64 h-64 mb-4 cursor-crosshair group"
+            class="relative w-[500px] h-[500px] mb-4 cursor-crosshair group"
             @click="handleEdgeClick"
           >
             <!-- Diamond Shape Background -->
@@ -174,27 +203,38 @@ function clearAll() {
               style="clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);"
             ></div>
 
+            <!-- Shape Image Overlay -->
+            <img
+              v-if="selectedShape && selectedShape !== 'rest'"
+              :src="`/images/shapes/${selectedShape}.png`"
+              class="absolute inset-0 w-full h-full object-contain pointer-events-none"
+              :class="Z_INDEX.TOOLTIP_BASE"
+              alt=""
+            />
+
             <div 
               v-for="h in handles" 
               :key="h.id"
-              class="shape-handle absolute w-4 h-4 bg-yellow-500 border-2 border-white rounded-full -ml-2 -mt-2 cursor-move z-10 shadow-[0_0_8px_rgba(234,179,8,0.5)] hover:scale-110 transition-transform"
+              class="shape-handle absolute handle handle-active cursor-move"
+              :class="[`facing-${getHandleFacing(h.left, h.top)}`, Z_INDEX.HANDLE_OVERLAY]"
               :style="{ left: h.left, top: h.top }"
+              :data-facing="getHandleFacing(h.left, h.top)"
               @mousedown="startDragging(h.id, $event)"
               @dblclick="removeHandle(h.id, $event)"
             >
-              <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/80 text-[10px] px-1 rounded text-white whitespace-nowrap pointer-events-none">
+              <div class="absolute -top-6 left-1/2 bg-black/80 text-[10px] px-1 rounded text-white whitespace-nowrap pointer-events-none" :style="{ transform: `translateX(-50%) rotate(-${getHandleRotation(h.left, h.top)}deg)` }">
                 {{ h.id }}
               </div>
             </div>
           </div>
         </div>
 
-        <div class="flex flex-col h-full">
+        <div class="flex flex-col flex-1">
           <div class="text-sm font-semibold text-gray-400 mb-2">Output Datagram:</div>
-          <div class="relative flex-1 min-h-[200px]">
+          <div class="relative flex-1 min-h-0">
             <textarea 
               readonly
-              class="w-full h-full bg-black rounded p-3 text-xs font-mono text-green-400 border border-gray-700 resize-none focus:outline-none"
+              class="w-full h-full min-h-[460px] bg-black rounded p-3 text-xs font-mono text-green-400 border border-gray-700 resize-none focus:outline-none"
               :value="outputCode"
             ></textarea>
             <button 
@@ -212,3 +252,4 @@ function clearAll() {
     </div>
   </div>
 </template>
+
