@@ -937,7 +937,7 @@ function lockCore(core: string) {
       <img
         v-if="props.data.mapShape && props.data.mapShape !== 'rest' && store.showShapeBackground"
         :src="`/images/shapes/${props.data.mapShape}.png`"
-        class="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-30"
+        class="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-15"
         :class="Z_INDEX.CONTENT_LOW"
         alt=""
       />
@@ -1154,6 +1154,7 @@ function lockCore(core: string) {
   left: 50px;
 }
 
+/*noinspection ALL*/
 .plot-route-hover {
   animation: plot-route-hover-pulse 1.5s ease-in-out infinite;
 }
@@ -1163,6 +1164,7 @@ function lockCore(core: string) {
   50% { filter: drop-shadow(0 0 6px #1d4ed8) drop-shadow(0 0 2px #3b82f6); }
 }
 
+/*noinspection ALL*/
 .plot-route-destination {
   animation: plot-route-destination-pulse 5s ease-in-out infinite;
 }
