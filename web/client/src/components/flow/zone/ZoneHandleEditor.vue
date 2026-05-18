@@ -229,7 +229,7 @@ function getHandleFacing(left: string, top: string): string {
         <img
           v-if="mapShape && !isHideout"
           :src="`/images/shapes/${mapShape}.png`"
-          class="absolute inset-0 w-full h-full object-contain pointer-events-none p-1 pl-0"
+          class="absolute inset-0 w-full h-full object-contain pointer-events-none p-1"
           :class="Z_INDEX.TOOLTIP_BASE"
           :style="{ transform: `rotate(${imageRotation}deg)`, transition: 'transform 0.3s ease' }"
           alt=""
