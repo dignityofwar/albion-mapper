@@ -101,8 +101,8 @@ function handleHandleClick(id: string, e: Event) {
 }
 
 function startDragging(id: string, e: MouseEvent) {
-  if (props.isToggleMode) return;
   e.stopPropagation();
+  if (props.isToggleMode) return;
   didDrag.value = false;
   draggingHandleId.value = id;
 }
@@ -282,8 +282,8 @@ function getHandleFacing(left: string, top: string): string {
           :key="h.id"
           class="absolute handle"
           :class="[
-            Z_INDEX.HANDLE_OVERLAY,
-            h.disabled ? 'is-disabled' : 'is-active',
+            Z_INDEX.HANDLE,
+            h.disabled ? 'handle-default' : 'is-active',
             isToggleMode ? 'cursor-pointer' : 'cursor-move',
             `facing-${getHandleFacing(h.left, h.top)}`
           ]"
@@ -355,14 +355,4 @@ function getHandleFacing(left: string, top: string): string {
   box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
 }
 
-.handle.is-disabled::after {
-  background-color: transparent;
-  border: 3px solid #4b5563;
-  opacity: 0.8;
-}
-
-.handle.is-disabled::before {
-  border-top: 3px solid #4b5563;
-  opacity: 0.8;
-}
 </style>

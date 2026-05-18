@@ -849,25 +849,34 @@ function lockCore(core: string) {
   <div class="zone-node relative" ref="zoneNodeRef" :class="{ 'ghost-node': props.data.isGhost }" @mousedown="onNodeMouseDown">
     <div :class="[isConnecting ? 'connecting-mode' : '']">
         <template v-if="!isHandleEditorOpen && !isMapFeaturesModalOpen && !isChestModalOpen" v-for="handle in handles" :key="handle.id">
+          <div
+            v-if="handle.disabled"
+            class="handle absolute"
+            :class="[
+              Z_INDEX.HANDLE,
+              `facing-${getHandleFacing(handle.left, handle.top)}`,
+              'is-disabled'
+            ]"
+            :style="{ left: handle.left, top: handle.top }"
+          />
           <Handle
+            v-else
             type="source"
             :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
             :id="handle.id"
             :style="{ left: handle.left, top: handle.top }"
-            :connectable="!handle.disabled"
             :class="[
               'handle', 
               handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
               handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
               handle.id === 'center-overlay' ? 'center-handle-snap' : '',
               handle.id !== 'center' && handle.id !== 'center-overlay' ? `facing-${getHandleFacing(handle.left, handle.top)}` : '',
-              handle.disabled ? 'is-disabled' : '',
-              !handle.disabled && isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
-              !handle.disabled && isActive(handle.id) ? 'handle-active' : '',
-              !handle.disabled && isPulsing(handle.id) ? 'pulsing-handle' : '',
-              !handle.disabled ? handleEdgeClass(handle.id) : ''
+              isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
+              isActive(handle.id) ? 'handle-active' : '',
+              isPulsing(handle.id) ? 'pulsing-handle' : '',
+              handleEdgeClass(handle.id)
             ]"
-            @mouseenter="!handle.disabled && (hoveredHandleId = handle.id === 'center-overlay' ? 'center' : handle.id)"
+            @mouseenter="hoveredHandleId = handle.id === 'center-overlay' ? 'center' : handle.id"
             @mouseleave="(e: MouseEvent) => { if (!(e.relatedTarget as HTMLElement)?.closest?.('.vue-flow__handle')) hoveredHandleId = null }"
           />
         </template>
