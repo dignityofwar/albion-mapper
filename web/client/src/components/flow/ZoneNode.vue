@@ -933,6 +933,14 @@ function lockCore(core: string) {
         :class="diamondInnerClass"
       ></div>
 
+      <!-- Shape Image Overlay -->
+      <img
+        v-if="props.data.mapShape && props.data.mapShape !== 'rest'"
+        :src="`/images/shapes/${props.data.mapShape}.png`"
+        class="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-30"
+        alt=""
+      />
+
       <div 
         v-if="showFeatures"
         class="absolute top-0 left-0 w-full h-full pointer-events-none" :class="Z_INDEX.CONTENT_MID"
