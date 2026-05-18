@@ -105,6 +105,31 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'This connection would create a direct cycle' });
     }
 
+    // Validate that neither handle is disabled
+    if (fromHandleId) {
+      const { rows: fromPos } = await app.db.query<{ custom_handles: any }>(
+        'SELECT custom_handles FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
+        [id, fromZoneId]
+      );
+      const fromHandles: { id: string; disabled?: boolean }[] = fromPos[0]?.custom_handles ?? [];
+      const fromHandle = fromHandles.find(h => h.id === fromHandleId);
+      if (fromHandle?.disabled) {
+        return reply.status(400).send({ error: 'The source handle is disabled and cannot be used for connections' });
+      }
+    }
+
+    if (toHandleId) {
+      const { rows: toPos } = await app.db.query<{ custom_handles: any }>(
+        'SELECT custom_handles FROM room_node_positions WHERE room_id = $1 AND zone_id = $2',
+        [id, toZoneId]
+      );
+      const toHandles: { id: string; disabled?: boolean }[] = toPos[0]?.custom_handles ?? [];
+      const toHandle = toHandles.find(h => h.id === toHandleId);
+      if (toHandle?.disabled) {
+        return reply.status(400).send({ error: 'The destination handle is disabled and cannot be used for connections' });
+      }
+    }
+
     const now = new Date();
     const lastUpdateMs = now.getTime();
 

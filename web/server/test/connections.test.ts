@@ -129,6 +129,56 @@ describe('POST /api/rooms/:id/connections', () => {
     expect(res.json<{ error: string }>().error).toMatch(/cycle/i);
   });
 
+  it('rejects connection when fromHandleId is disabled', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ custom_handles: [{ id: 'handle-1', left: '50%', top: '0%', disabled: true }] }] }); // from-zone handles
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7, fromHandleId: 'handle-1' },
+    });
+    expect(res.statusCode).toBe(400);
+    expect(res.json<{ error: string }>().error).toMatch(/source handle is disabled/i);
+  });
+
+  it('rejects connection when toHandleId is disabled', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ custom_handles: [{ id: 'handle-from', left: '50%', top: '0%' }] }] }); // from-zone handles (not disabled)
+    mockDb.query.mockResolvedValueOnce({ rows: [{ custom_handles: [{ id: 'handle-2', left: '50%', top: '100%', disabled: true }] }] }); // to-zone handles
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7, fromHandleId: 'handle-from', toHandleId: 'handle-2' },
+    });
+    expect(res.statusCode).toBe(400);
+    expect(res.json<{ error: string }>().error).toMatch(/destination handle is disabled/i);
+  });
+
+  it('allows connection when handles exist but are not disabled', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ custom_handles: [{ id: 'handle-from', left: '50%', top: '0%' }] }] }); // from-zone handles
+    mockDb.query.mockResolvedValueOnce({ rows: [{ custom_handles: [{ id: 'handle-to', left: '50%', top: '100%' }] }] }); // to-zone handles
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE source node features
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE target node features
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_B, x: 0, y: 0, features: {}, custom_handles: null }] }); // SELECT positions
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7, fromHandleId: 'handle-from', toHandleId: 'handle-to' },
+    });
+    expect(res.statusCode).toBe(201);
+  });
+
   it('requires authorization', async () => {
     const res = await app.inject({
       method: 'POST',

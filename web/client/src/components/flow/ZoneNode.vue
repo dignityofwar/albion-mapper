@@ -220,8 +220,8 @@ const handles = computed(() => {
     h.push({ id: 'center-overlay', left: '50%', top: '50%', position: Position.Right });
   }
 
-  // Hide disabled handles outside the editor
-  return h.filter(handle => !handle.disabled);
+  // Keep disabled handles visible but non-interactive (shown as hollow/greyed out)
+  return h;
 });
 
 function getHandlePosition(left: string, top: string) {
@@ -850,18 +850,20 @@ function lockCore(core: string) {
             :position="(handle.position ? handle.position : getHandlePosition(handle.left, handle.top)) as Position"
             :id="handle.id"
             :style="{ left: handle.left, top: handle.top }"
+            :connectable="!handle.disabled"
             :class="[
               'handle', 
               handle.id === 'center-overlay' ? Z_INDEX.HANDLE_OVERLAY : Z_INDEX.HANDLE,
               handle.id === 'center' || handle.id === 'center-overlay' ? 'center-handle' : '',
               handle.id === 'center-overlay' ? 'center-handle-snap' : '',
               handle.id !== 'center' && handle.id !== 'center-overlay' ? `facing-${getHandleFacing(handle.left, handle.top)}` : '',
-              isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
-              isActive(handle.id) ? 'handle-active' : '',
-              isPulsing(handle.id) ? 'pulsing-handle' : '',
-              handleEdgeClass(handle.id)
+              handle.disabled ? 'is-disabled' : '',
+              !handle.disabled && isIdle(handle.id) && !isConnecting ? 'handle-default' : '',
+              !handle.disabled && isActive(handle.id) ? 'handle-active' : '',
+              !handle.disabled && isPulsing(handle.id) ? 'pulsing-handle' : '',
+              !handle.disabled ? handleEdgeClass(handle.id) : ''
             ]"
-            @mouseenter="hoveredHandleId = handle.id === 'center-overlay' ? 'center' : handle.id"
+            @mouseenter="!handle.disabled && (hoveredHandleId = handle.id === 'center-overlay' ? 'center' : handle.id)"
             @mouseleave="(e: MouseEvent) => { if (!(e.relatedTarget as HTMLElement)?.closest?.('.vue-flow__handle')) hoveredHandleId = null }"
           />
         </template>

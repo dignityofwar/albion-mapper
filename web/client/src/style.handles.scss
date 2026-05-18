@@ -75,6 +75,23 @@
     transition: border-color 0.2s;
   }
 
+  // Disabled handle state (hollow/greyed out, non-interactive)
+  &.is-disabled {
+    pointer-events: none !important;
+    cursor: default !important;
+  }
+
+  &.is-disabled::after {
+    background-color: transparent;
+    border: 3px solid #4b5563;
+    opacity: 0.8;
+  }
+
+  &.is-disabled::before {
+    border-top: 3px solid #4b5563;
+    opacity: 0.8;
+  }
+
   // Canvas handle state colors
   &.handle-default::after {
     background-color: rgb(87 87 87 / 0.42);

@@ -767,6 +767,18 @@ async function handleConnect(params: any) {
   if (params.sourceHandle === 'center-overlay') params.sourceHandle = 'center';
   if (params.targetHandle === 'center-overlay') params.targetHandle = 'center';
 
+  // Block connections using disabled handles
+  const srcNode = getNode.value(params.source);
+  const tgtNode = getNode.value(params.target);
+  const srcHandles: any[] = srcNode?.data?.customHandles ?? [];
+  const tgtHandles: any[] = tgtNode?.data?.customHandles ?? [];
+  const srcHandle = srcHandles.find((h: any) => h.id === params.sourceHandle);
+  const tgtHandle = tgtHandles.find((h: any) => h.id === params.targetHandle);
+  if (srcHandle?.disabled || tgtHandle?.disabled) {
+    showToast('This portal is disabled and cannot be used for connections.', 'error');
+    return;
+  }
+
   // Check if source handle is already occupied by ANY connection
   const sourceHandleOccupied = store.connections.find(c => 
     !c.isExpired && (
@@ -942,6 +954,16 @@ function handleConnectStart(params: OnConnectStartParams & { event?: MouseEvent 
   }
 
   if (!params.handleId) {
+    draggingFromNodeId = null;
+    draggingFromHandleId = null;
+    return;
+  }
+
+  // Block dragging from a disabled handle
+  const sourceNode = getNode.value(params.nodeId);
+  const sourceHandles: any[] = sourceNode?.data?.customHandles ?? [];
+  const sourceHandle = sourceHandles.find((h: any) => h.id === params.handleId);
+  if (sourceHandle?.disabled) {
     draggingFromNodeId = null;
     draggingFromHandleId = null;
     return;
