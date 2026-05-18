@@ -33,7 +33,11 @@ async function authenticate() {
       body: JSON.stringify({ password: password.value }),
     });
     if (!res.ok) {
-      authError.value = 'Invalid password';
+      if (res.status === 401) {
+        authError.value = 'Invalid password';
+      } else {
+        authError.value = 'Server error, please try again later';
+      }
       return;
     }
     const { token } = await res.json() as { token: string };
@@ -41,6 +45,8 @@ async function authenticate() {
     store.setCredentials(props.id, token);
     track('authenticate_room');
     router.push({ path: `/rooms/${props.id}` });
+  } catch (e) {
+    authError.value = 'Network error, please check your connection';
   } finally {
     authenticating.value = false;
   }
