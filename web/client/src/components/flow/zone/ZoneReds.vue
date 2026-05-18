@@ -183,7 +183,7 @@ const timerLabel = computed(() => {
                 @focus="onFocus"
                 @blur="onBlur"
                 @click.stop
-                class="nodrag bg-gray-950/50 text-white text-[12px] font-bold w-6 h-5 text-center border rounded h-5 px-0 leading-none outline-none transition-colors border-gray-600 focus:border-blue-400"
+                class="nodrag bg-gray-950/50 text-white text-[12px] font-bold w-6 h-5 text-center border rounded px-0 leading-none outline-none transition-colors border-gray-600 focus:border-blue-400"
                 placeholder="?"
               />
               <div v-if="timerLabel" class="text-[10px] font-bold leading-none text-slate-200 mt-0.5">
