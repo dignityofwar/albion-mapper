@@ -187,6 +187,7 @@ export const useRoomStore = defineStore('room', () => {
               proximityTo: p.proximityTo ?? existing.proximityTo,
               features: p.features ?? existing.features,
               customHandles: p.customHandles ?? existing.customHandles,
+              rotation: p.rotation ?? existing.rotation,
               explored: p.explored || existing.explored,
             };
           });
@@ -363,6 +364,19 @@ export const useRoomStore = defineStore('room', () => {
     }
   }
 
+  function updateNodeRotation(zoneId: string, rotation: number) {
+    const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
+    if (index === -1) return;
+    const newNodePositions = [...nodePositions.value];
+    newNodePositions[index] = { ...newNodePositions[index], rotation, explored: true };
+    nodePositions.value = newNodePositions;
+    lastUpdate.value = new Date();
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value, updateLastUpdated: true }));
+      track('update_node_rotation');
+    }
+  }
+
   // Recently Viewed Rooms
   interface RecentRoom {
     id: string;
@@ -451,6 +465,7 @@ export const useRoomStore = defineStore('room', () => {
     markNodeExplored,
     updateNodeFeatures,
     updateNodeCustomHandles,
+    updateNodeRotation,
     isNodeIsolated,
     isNodeExpired,
     isNodeRestricted,

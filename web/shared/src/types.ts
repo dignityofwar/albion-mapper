@@ -65,6 +65,7 @@ export interface NodePosition {
   virtualGridPos?: { x: number; y: number };
   features?: NodeFeatures;
   customHandles?: CustomHandle[];
+  rotation?: number;
   proximityTo?: string;
   explored?: boolean;
 }
@@ -133,6 +134,7 @@ export interface RoomMemoryEntry {
   timesAdded: string[]; // ISO date strings
   features?: NodeFeatures;
   customHandles?: CustomHandle[];
+  rotation?: number;
   lastUpdated: string; // ISO date string
 }
 
@@ -284,6 +286,7 @@ export const NodePositionSchema = z.object({
   virtualGridPos: z.object({ x: z.number(), y: z.number() }).optional(),
   features: NodeFeaturesSchema.optional(),
   customHandles: z.array(CustomHandleSchema).nullable().optional(),
+  rotation: z.number().optional(),
   explored: z.boolean().optional(),
 });
 
@@ -292,6 +295,7 @@ export const RoomMemoryEntrySchema = z.object({
   timesAdded: z.array(z.string()),
   features: NodeFeaturesSchema.optional(),
   customHandles: z.array(CustomHandleSchema).nullable().optional(),
+  rotation: z.number().optional(),
   lastUpdated: z.string(),
 });
 

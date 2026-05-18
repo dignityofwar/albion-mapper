@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import type { CustomHandle } from 'shared';
+import { rotationStepsToDegrees, rotateClockwise, rotateCounterClockwise } from 'shared';
 import { useTutorialStore } from '@/stores/useTutorialStore';
 import { Z_INDEX } from '@/constants/Layers';
 import TutorialTooltip from '../../tutorial/TutorialTooltip.vue';
@@ -14,15 +15,17 @@ const props = defineProps<{
   isToggleMode?: boolean;
   isHideout?: boolean;
   mapShape?: string;
+  initialRotation?: number;
 }>();
 
 const emit = defineEmits<{
-  (e: 'save', handles: CustomHandle[]): void;
+  (e: 'save', handles: CustomHandle[], rotation: number): void;
   (e: 'close'): void;
 }>();
 
 const handles = ref<CustomHandle[]>([...props.initialHandles]);
-const imageRotation = ref(0);
+const rotationSteps = ref(props.initialRotation || 0);
+const visualRotation = ref((props.initialRotation || 0) * 90);
 const containerRef = ref<HTMLDivElement | null>(null);
 const saveButtonRef = ref<HTMLButtonElement | null>(null);
 const draggingHandleId = ref<string | null>(null);
@@ -142,25 +145,17 @@ onUnmounted(() => {
 });
 
 function save() {
-  emit('save', handles.value);
+  emit('save', handles.value, rotationSteps.value);
 }
 
 
-function rotate(degrees: number) {
-  imageRotation.value = imageRotation.value + degrees;
+function rotate(clockwise: boolean) {
+  rotationSteps.value = clockwise ? rotateClockwise(rotationSteps.value) : rotateCounterClockwise(rotationSteps.value);
   handles.value = handles.value.map(h => {
     const x = parseFloat(h.left);
     const y = parseFloat(h.top);
     const t = getTFromPos(x, y);
-    let nextT;
-    if (degrees === 90) {
-      nextT = (t + 1) % 4;
-    } else if (degrees === -90) {
-      nextT = (t + 3) % 4;
-    } else {
-      return h;
-    }
-    
+    const nextT = clockwise ? (t + 1) % 4 : (t + 3) % 4;
     return {
       ...h,
       ...getPosFromT(nextT)
@@ -196,20 +191,22 @@ function getHandleFacing(left: string, top: string): string {
         @click="handleEdgeClick"
       >
         <!-- Rotation Buttons - Top Left and Top Right -->
-        <button 
+        <button
+          v-if="!isHideout"
           class="absolute top-2 left-2 w-14 h-14 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded border border-gray-600 transition-colors flex flex-col items-center justify-center leading-none shadow-lg"
           :class="Z_INDEX.UI_OVERLAY"
           title="Rotate Counter-Clockwise"
-          @click.stop="rotate(-90)"
+          @click.stop="rotate(false)"
         >
           <span class="text-2xl">↺</span>
           <span class="text-[10px] mt-1">90°</span>
         </button>
-        <button 
+        <button
+          v-if="!isHideout"
           class="absolute top-2 right-2 w-14 h-14 bg-gray-800/90 hover:bg-gray-700 text-gray-200 rounded border border-gray-600 transition-colors flex flex-col items-center justify-center leading-none shadow-lg"
           :class="Z_INDEX.UI_OVERLAY"
           title="Rotate Clockwise"
-          @click.stop="rotate(90)"
+          @click.stop="rotate(true)"
         >
           <span class="text-2xl">↻</span>
           <span class="text-[10px] mt-1">90°</span>

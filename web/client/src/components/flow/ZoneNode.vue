@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Position, useVueFlow, Handle } from '@vue-flow/core';
 import type { NodeProps } from '@vue-flow/core';
-import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, getHandleFacing } from 'shared';
+import { ZoneType, NodeFeatures, CustomHandle, getDefaultHandles, getHandleFacing, rotationStepsToDegrees } from 'shared';
 import { getBorderBgClass } from '@/utils/zoneStyles';
 import { connectionStyle } from '@/utils/connectionStyle';
 import { TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
@@ -38,6 +38,7 @@ const props = defineProps<NodeProps<{
   highlighted?: boolean;
   mapShape?: string;
   customHandles?: CustomHandle[];
+  rotation?: number;
   isGhost?: boolean;
   explored?: boolean;
 }>>();
@@ -95,7 +96,10 @@ function openHandleEditor() {
   isHandleEditorOpen.value = true;
 }
 
-async function saveCustomHandles(newHandles: CustomHandle[]) {
+async function saveCustomHandles(newHandles: CustomHandle[], newRotation: number) {
+  store.updateNodeRotation(props.id, newRotation);
+  updateNodeData(props.id, { rotation: newRotation });
+
   const currentHandles = getInitialHandles();
   const newHandleIds = new Set(newHandles.map(h => h.id));
 
@@ -939,6 +943,7 @@ function lockCore(core: string) {
         :src="`/images/shapes/${props.data.mapShape}.png`"
         class="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-15"
         :class="Z_INDEX.CONTENT_LOW"
+        :style="props.data.rotation ? { transform: `rotate(${rotationStepsToDegrees(props.data.rotation)}deg)` } : undefined"
         alt=""
       />
 
@@ -1098,6 +1103,7 @@ function lockCore(core: string) {
         :is-toggle-mode="props.data.mapShape !== 'rest' && props.data.type !== 'roadsHideout'"
         :is-hideout="props.data.type === 'roadsHideout'"
         :map-shape="props.data.mapShape"
+        :initial-rotation="props.data.rotation ?? 0"
         @save="saveCustomHandles"
         @close="isHandleEditorOpen = false"
       />

@@ -372,6 +372,7 @@ watch([homeZoneId, nodePositions, connections], (newVal, oldVal) => {
           features: pos.features,
           mapShape: zone?.mapShape,
           customHandles: pos.customHandles,
+          rotation: pos.rotation,
           proximityTo: zone?.proximityTo,
           explored: pos.explored,
           isIsolated: store.isNodeIsolated(pos.zoneId, now.value),
