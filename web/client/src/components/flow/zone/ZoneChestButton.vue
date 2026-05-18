@@ -49,12 +49,13 @@ const containerStyle = computed(() => {
     style.backgroundColor = `rgba(245, 158, 11, 0.2)`;
     style.boxShadow = `inset 0 0 0 1px ${color}, 0 4px 10px -2px ${shadow}`;
     style['--hover-bg'] = `rgba(245, 158, 11, 0.35)`;
+    style.backdropFilter = 'blur(8px)';
   } else if (props.hasReds) {
-    style.backgroundColor = `rgba(127, 29, 29, 0.7)`;
-    style['--hover-bg'] = `rgba(153, 27, 27, 0.8)`;
+    style.backgroundColor = `rgba(127, 29, 29, 0.6)`;
+    style['--hover-bg'] = `rgba(153, 27, 27, 0.7)`;
   } else {
-    style.backgroundColor = `#374151`;
-    style['--hover-bg'] = '#4b5563';
+    style.backgroundColor = `rgba(55, 65, 81, 0.8)`;
+    style['--hover-bg'] = 'rgba(75, 85, 99, 0.8)';
   }
 
   return style;
@@ -77,7 +78,7 @@ const tooltipText = computed(() => {
     <TooltipTrigger as-child>
       <div
         @click.stop="emit('click')"
-        class="chest-container relative group cursor-pointer overflow-visible shrink-0 rounded-tr-md rounded-br-md"
+        class="chest-container slide-button relative group rounded-tr-md rounded-br-md"
         :class="[
           { 'active': isActive },
           Z_INDEX.CONTENT_HIGH
@@ -118,9 +119,6 @@ const tooltipText = computed(() => {
 <style scoped>
 .chest-container {
   height: 44px;
-  width: var(--target-width, 44px);
-  min-width: 44px;
-  transition: width 0.3s ease, padding-right 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 44px 100%);
   padding-left: 16px;
   padding-right: 8px;
@@ -130,10 +128,6 @@ const tooltipText = computed(() => {
   padding-right: 8px;
 }
 
-.chest-container:hover {
-  background-color: var(--hover-bg) !important;
-  box-shadow: inset 0 0 0 1px var(--border-color), var(--outer-shadow) !important;
-}
 
 .fade-slide-enter-active,
 .fade-slide-leave-active {

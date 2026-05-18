@@ -6,10 +6,10 @@
 
 @layer components {
   .zone-button {
-    @apply rounded bg-gray-700 hover:bg-gray-600 border border-gray-500 hover:border-gray-400 text-gray-400 transition-colors duration-500;
+    @apply rounded bg-gray-700/80 hover:bg-gray-600/80 border border-gray-500 hover:border-gray-400 text-gray-400 transition-colors duration-500 backdrop-blur-sm;
   }
   .zone-button-reds {
-    @apply bg-red-900/70 hover:bg-red-700/80 border-red-800 hover:border-red-600 transition-colors duration-500;
+    @apply bg-red-900/70 hover:bg-red-700/80 border-red-800 hover:border-red-600 transition-colors duration-500 backdrop-blur-sm;
   }
   .frosted-background {
     @apply bg-gray-800/30 backdrop-blur-md;
@@ -46,6 +46,19 @@
   }
   .key {
     @apply bg-gray-800 text-gray-300 px-1.5 py-0.5 rounded border border-gray-700 font-mono text-[10px] uppercase;
+  }
+  .slide-button {
+    width: var(--target-width, 44px);
+    min-width: 44px;
+    transition: width 0.3s ease, padding-right 0.3s ease, padding-left 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: visible;
+    flex-shrink: 0;
+  }
+  .slide-button:hover {
+    background-color: var(--hover-bg) !important;
+    box-shadow: inset 0 0 0 1px var(--border-color), var(--outer-shadow, none) !important;
   }
 }
 

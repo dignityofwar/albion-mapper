@@ -79,12 +79,15 @@ const containerStyle = computed(() => {
     style.backgroundColor = `${color}33`;
     style['--hover-bg'] = `${color}4D`;
     style.boxShadow = `inset 0 0 0 1px var(--border-color), var(--outer-shadow)`;
+    style.backdropFilter = 'blur(8px)';
   } else {
-    style['--hover-bg'] = '#4b5563';
+    style.backgroundColor = 'rgba(55, 65, 81, 0.8)';
+    style['--hover-bg'] = 'rgba(75, 85, 99, 0.8)';
   }
   
   if (props.editing) {
     style.boxShadow = `inset 0 0 0 1px var(--border-color), var(--outer-shadow)`;
+    style.backdropFilter = 'blur(8px)';
   }
 
   return style;
@@ -124,7 +127,7 @@ defineExpose({
         />
       <div 
         @click.stop="$emit('toggle')" 
-        class="core-container relative group cursor-pointer overflow-visible shrink-0"
+        class="core-container slide-button relative group"
         :class="[
           active ? '' : (hasReds ? `${ZONE_BUTTON_BG_HAS_REDS} ${ZONE_BUTTON_HOVER_REDS}` : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_INACTIVE}`),
           { 'active': active, 'editing': editing },
@@ -228,13 +231,6 @@ defineExpose({
 <style scoped>
 .core-container {
   height: 32px;
-  width: var(--target-width, 44px);
-  min-width: 44px;
-  transition: width 0.3s ease, padding-right 0.3s ease, padding-left 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.core-container:hover {
-  background-color: var(--hover-bg) !important;
-  box-shadow: inset 0 0 0 1px var(--border-color), var(--outer-shadow) !important;
-}
 </style>

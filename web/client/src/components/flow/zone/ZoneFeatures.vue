@@ -112,7 +112,7 @@ const featureRows = computed(() => {
 }
 
 .callout {
-  @apply text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-lg border border-dashed bg-gray-800/20 border-red-800 text-red-600 cursor-pointer;
+  @apply text-[9px] uppercase font-bold tracking-widest px-3 py-1.5 rounded-lg border border-dashed bg-gray-700/80 backdrop-blur-sm border-red-800 text-red-600 cursor-pointer;
   animation: callout-pulse 5s ease-in-out infinite;
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 

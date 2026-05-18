@@ -938,6 +938,7 @@ function lockCore(core: string) {
         v-if="props.data.mapShape && props.data.mapShape !== 'rest'"
         :src="`/images/shapes/${props.data.mapShape}.png`"
         class="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-30"
+        :class="Z_INDEX.CONTENT_LOW"
         alt=""
       />
 

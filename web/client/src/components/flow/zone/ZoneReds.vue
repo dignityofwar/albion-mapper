@@ -114,8 +114,10 @@ const containerStyle = computed(() => {
     style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
     style.boxShadow = 'inset 0 0 0 1px #ef4444, 0 4px 10px -2px rgba(239, 68, 68, 0.5)';
     style['--hover-bg'] = 'rgba(239, 68, 68, 0.35)';
+    style.backdropFilter = 'blur(8px)';
   } else {
-    style['--hover-bg'] = '#4b5563';
+    style.backgroundColor = 'rgba(55, 65, 81, 0.8)';
+    style['--hover-bg'] = 'rgba(75, 85, 99, 0.8)';
   }
 
   return style;
@@ -160,7 +162,7 @@ const timerLabel = computed(() => {
       <div 
         ref="containerRef"
         @click.stop="handleToggle" 
-        class="reds-container relative group cursor-pointer overflow-visible shrink-0 rounded-tl-md rounded-bl-md"
+        class="reds-container slide-button relative group rounded-tl-md rounded-bl-md"
         :class="[
           (isActuallyActive || isOpen) ? '' : `${ZONE_BUTTON_BG_DEFAULT} ${ZONE_BUTTON_HOVER_INACTIVE}`,
           { 'active': isActuallyActive || isOpen },
@@ -212,9 +214,6 @@ const timerLabel = computed(() => {
 <style scoped>
 .reds-container {
   height: 44px;
-  width: var(--target-width, 44px);
-  min-width: 44px;
-  transition: width 0.3s ease, padding-left 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
   clip-path: polygon(0 0, 100% 0, calc(100% - 44px) 100%, 0 100%);
   padding-left: 8px;
   padding-right: 16px;
@@ -224,10 +223,6 @@ const timerLabel = computed(() => {
   padding-left: 8px;
 }
 
-.reds-container:hover {
-  background-color: var(--hover-bg) !important;
-  box-shadow: inset 0 0 0 1px var(--border-color) !important;
-}
 
 .fade-slide-enter-active,
 .fade-slide-leave-active {
