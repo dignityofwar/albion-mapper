@@ -29,12 +29,10 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/better-sqlite3": "^7.6.11",
     "@types/node": "^22.7.4",
     "@types/pg": "^8.20.0",
     "@types/supertest": "^6.0.2",
     "@types/ws": "^8.18.1",
-    "better-sqlite3": "^11.3.0",
     "supertest": "^7.0.0",
     "tsx": "^4.19.1",
     "typescript": "^5.5.3",
