@@ -73,12 +73,12 @@ export function getShapeHandlePositions(shape: string | undefined): HandleDefini
   }
   if (shape === 'f') {
     return [
-      { id: 'f-p1', left: '45.12%', top: '4.88%' },
-      { id: 'f-p2', left: '27.93%', top: '22.07%' },
-      { id: 'f-p3', left: '8.40%', top: '58.40%' },
-      { id: 'f-p4', left: '31.05%', top: '81.05%' },
-      { id: 'f-p5', left: '61.13%', top: '88.87%' },
-      { id: 'f-p6', left: '84.18%', top: '34.18%' },
+      { id: 'f-p1', left: '21.20%', top: '28.80%' },
+      { id: 'f-p2', left: '36.60%', top: '13.40%' },
+      { id: 'f-p3', left: '76.40%', top: '26.40%' },
+      { id: 'f-p4', left: '87.40%', top: '37.40%' },
+      { id: 'f-p5', left: '70.80%', top: '79.20%' },
+      { id: 'f-p6', left: '13.20%', top: '63.20%' },
     ];
   }
 
