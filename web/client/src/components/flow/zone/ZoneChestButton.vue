@@ -19,8 +19,7 @@ const emit = defineEmits<{
 
 const isActive = computed(() => {
   if (!props.timedChest) return false;
-  if (props.timedChest.timer <= props.now) return false;
-  return true;
+  return props.timedChest.timer > props.now;
 });
 
 const timerLabel = computed(() => {
@@ -34,7 +33,7 @@ const timerLabel = computed(() => {
 
 const containerStyle = computed(() => {
   const hasContent = isActive.value && (timerLabel.value || props.timedChest?.size);
-  const targetWidth = hasContent ? '110px' : '80px';
+  const targetWidth = hasContent ? '115px' : '75px';
   const color = '#f59e0b';
   const shadow = 'rgba(245, 158, 11, 0.5)';
 
@@ -93,7 +92,7 @@ const tooltipText = computed(() => {
 
           <!-- Right Div: Timer and Size -->
           <Transition name="fade-slide">
-            <div v-if="isActive && (timerLabel || timedChest?.size)" class="flex flex-col items-start ml-2 items-center shrink-0 overflow-hidden">
+            <div v-if="isActive && (timerLabel || timedChest?.size)" class="flex flex-col ml-2 items-center shrink-0 overflow-hidden">
               <div v-if="timerLabel" class="text-[12px] font-bold leading-none text-slate-200">
                 {{ timerLabel }}
               </div>
@@ -122,21 +121,5 @@ const tooltipText = computed(() => {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 44px 100%);
   padding-left: 16px;
   padding-right: 8px;
-}
-
-.chest-container.active {
-  padding-right: 8px;
-}
-
-
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.fade-slide-enter-from,
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateX(-10px);
 }
 </style>

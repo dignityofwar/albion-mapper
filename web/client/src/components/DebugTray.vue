@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRoomStore } from '../stores/useRoomStore';
-import { useRoomMemoryStore } from '../stores/useRoomMemoryStore';
-import { addConnection } from '../utils/roomOperations';
+import { useRoomStore } from '@/stores/useRoomStore';
+import { useRoomMemoryStore } from '@/stores/useRoomMemoryStore';
+import { addConnection } from '@/utils/roomOperations';
 import { getShapeHandlePositions } from 'shared';
 import ShapeEditor from './debug/ShapeEditor.vue';
 import ImportDataModal from './ImportDataModal.vue';
-import { API_BASE_URL } from '../utils/api';
+import { API_BASE_URL } from '@/utils/api';
 
 const store = useRoomStore();
 const memoryStore = useRoomMemoryStore();

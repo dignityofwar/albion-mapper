@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_RING_ACTIVE_HAS_REDS, ZONE_BUTTON_HOVER_REDS, ZONE_BUTTON_HOVER_INACTIVE } from '../../../constants/ui';
+import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_HOVER_INACTIVE } from '@/constants/ui';
 import { ref, watch, nextTick, computed, onMounted } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import TutorialTooltip from '../../tutorial/TutorialTooltip.vue';
-import { useTutorialStore } from '../../../stores/useTutorialStore';
+import { useTutorialStore } from '@/stores/useTutorialStore';
 import { Z_INDEX } from '@/constants/Layers';
 
 const tutorialStore = useTutorialStore();
@@ -98,12 +98,11 @@ function onBlur() {
 
 const isActuallyActive = computed(() => {
   if (props.reds === undefined) return false;
-  if (props.redsTimer && props.now && props.redsTimer <= props.now) return false;
-  return true;
+  return !(props.redsTimer && props.now && props.redsTimer <= props.now);
 });
 
 const containerStyle = computed(() => {
-  const targetWidth = (isActuallyActive.value || props.isOpen) ? '110px' : '80px';
+  const targetWidth = (isActuallyActive.value || props.isOpen) ? '110px' : '75px';
   const style: any = {
     width: targetWidth,
     '--target-width': targetWidth,
@@ -219,19 +218,4 @@ const timerLabel = computed(() => {
   padding-right: 16px;
 }
 
-.reds-container.active {
-  padding-left: 8px;
-}
-
-
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.fade-slide-enter-from,
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateX(10px);
-}
 </style>

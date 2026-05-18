@@ -21,17 +21,15 @@ export function getDefaultHandles(type: ZoneType, shape?: string): CustomHandle[
   return [];
 }
 
-export const DEFAULT_INTERNAL_HANDLES: CustomHandle[] = [];
-
 export function getHandleFacing(left: string, top: string): string {
-  const l = parseFloat(left);
-  const t = parseFloat(top);
+  const l = Number.parseFloat(left);
+  const t = Number.parseFloat(top);
   
   // Points
-  if (Math.abs(l - 50) < 0.1 && Math.abs(t - 0) < 0.1) return 'n';
+  if (Math.abs(l - 50) < 0.1 && Math.abs(t) < 0.1) return 'n';
   if (Math.abs(l - 100) < 0.1 && Math.abs(t - 50) < 0.1) return 'e';
   if (Math.abs(l - 50) < 0.1 && Math.abs(t - 100) < 0.1) return 's';
-  if (Math.abs(l - 0) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
+  if (Math.abs(l) < 0.1 && Math.abs(t - 50) < 0.1) return 'w';
 
   // Sides
   if (l >= 50 && t < 50) return 'ne';

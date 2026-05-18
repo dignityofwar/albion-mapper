@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_DEFAULT, ZONE_BUTTON_HOVER_HAS_REDS, ZONE_BUTTON_HOVER_REDS, ZONE_BUTTON_HOVER_INACTIVE } from '../../../constants/ui';
+import { ZONE_BUTTON_BG_DEFAULT, ZONE_BUTTON_BG_HAS_REDS, ZONE_BUTTON_HOVER_REDS, ZONE_BUTTON_HOVER_INACTIVE } from '@/constants/ui';
 import { TooltipRoot, TooltipTrigger, TooltipContent, TooltipPortal } from 'reka-ui';
 import IconUnlocked from '../../icons/IconUnlocked.vue';
 import IconLocked from '../../icons/IconLocked.vue';
 import { ref, watch, nextTick, computed, onMounted } from 'vue';
 import TutorialTooltip from '../../tutorial/TutorialTooltip.vue';
-import { useTutorialStore } from '../../../stores/useTutorialStore';
+import { useTutorialStore } from '@/stores/useTutorialStore';
 import { Z_INDEX } from '@/constants/Layers';
 
 const tutorialStore = useTutorialStore();

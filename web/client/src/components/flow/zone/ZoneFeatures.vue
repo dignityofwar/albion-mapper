@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ZONE_BUTTON_BG_HAS_REDS } from '../../../constants/ui';
+import { ZONE_BUTTON_BG_HAS_REDS } from '@/constants/ui';
 
 const props = defineProps<{
   activeFeatures: { type: string; title: string; icon: string; smallCount?: number; largeCount?: number; count?: number; isResource: boolean; upstream?: boolean }[];
