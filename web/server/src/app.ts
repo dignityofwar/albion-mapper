@@ -7,6 +7,7 @@ import { Pool } from 'pg';
 import { roomRoutes } from './routes/rooms.js';
 import { connectionRoutes } from './routes/connections.js';
 import { wsRoutes } from './ws.js';
+import { healthRoutes } from './routes/health.js';
 
 export interface AppOptions {
   db: Pool;
@@ -73,6 +74,7 @@ export async function buildApp(options: AppOptions) {
   await app.register(roomRoutes, { prefix: '' });
   await app.register(connectionRoutes, { prefix: '' });
   await app.register(wsRoutes, { prefix: '' });
+  await app.register(healthRoutes, { prefix: '' });
 
   return app;
 }
