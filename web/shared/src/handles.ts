@@ -95,12 +95,12 @@ export function getShapeHandlePositions(shape: string | undefined): HandleDefini
 
   if (shape === 'o') {
     return [
-      { id: 'o-p1', left: '44.34%', top: '5.66%' },
-      { id: 'o-p2', left: '8.40%', top: '41.60%' },
-      { id: 'o-p3', left: '17.38%', top: '67.38%' },
-      { id: 'o-p4', left: '58.01%', top: '91.99%' },
-      { id: 'o-p5', left: '91.21%', top: '58.79%' },
-      { id: 'o-p6', left: '83.40%', top: '33.40%' },
+      { id: 'o-p1', left: '62.00%', top: '12.00%' },
+      { id: 'o-p2', left: '88.80%', top: '61.20%' },
+      { id: 'o-p3', left: '68.60%', top: '81.40%' },
+      { id: 'o-p4', left: '38.00%', top: '88.00%' },
+      { id: 'o-p5', left: '12.00%', top: '62.00%' },
+      { id: 'o-p6', left: '31.80%', top: '18.20%' },
     ];
   }
 
