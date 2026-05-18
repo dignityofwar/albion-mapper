@@ -901,7 +901,7 @@ function lockCore(core: string) {
         @mouseleave="isHovered = false"
       >
       <!-- Ping Button (top tip) -->
-      <div class="absolute left-1/2 -translate-x-1/2 top-9 flex flex-col items-center gap-0.5" :class="Z_INDEX.CONTENT_LOW">
+      <div class="absolute left-1/2 -translate-x-1/2 top-9 flex flex-col items-center gap-0.5" :class="Z_INDEX.CONTENT_MID">
         <div class="flex items-center gap-1">
           <PingButton :has-reds="hasReds" @ping="handlePing" />
           <TooltipRoot>
@@ -935,7 +935,7 @@ function lockCore(core: string) {
 
       <!-- Shape Image Overlay -->
       <img
-        v-if="props.data.mapShape && props.data.mapShape !== 'rest'"
+        v-if="props.data.mapShape && props.data.mapShape !== 'rest' && store.showShapeBackground"
         :src="`/images/shapes/${props.data.mapShape}.png`"
         class="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-30"
         :class="Z_INDEX.CONTENT_LOW"

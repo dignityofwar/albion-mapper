@@ -93,6 +93,10 @@ function copyLink() {
   });
 }
 
+function toggleShapeBackground() {
+  store.toggleShapeBackground();
+}
+
 function logout() {
   store.logout();
   router.replace({ path: '/' });
@@ -148,6 +152,25 @@ function logout() {
             @click="showChangePasswordModal = true"
           >
             🔒  Change password
+          </button>
+        </div>
+
+        <!-- Shape Background Toggle -->
+        <div class="border-b border-gray-700 p-2">
+          <button
+            type="button"
+            class="w-full flex items-center justify-between px-3 py-2 text-sm rounded text-gray-200 hover:bg-gray-700"
+            @click="toggleShapeBackground"
+          >
+            <span>👣 Show Paths</span>
+            <span
+              :class="[
+                'inline-flex items-center justify-center w-12 h-5 rounded-full transition-colors duration-300 text-[10px] font-bold text-white',
+                store.showShapeBackground ? 'bg-green-500' : 'bg-gray-500'
+              ]"
+            >
+              {{ store.showShapeBackground ? 'On' : 'Off' }}
+            </span>
           </button>
         </div>
 
