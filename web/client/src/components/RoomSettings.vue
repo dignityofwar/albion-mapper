@@ -93,9 +93,6 @@ function copyLink() {
   });
 }
 
-function toggleShapeBackground() {
-  store.toggleShapeBackground();
-}
 
 function logout() {
   store.logout();
@@ -137,12 +134,31 @@ function logout() {
       <div
         v-if="open"
         :class="[
-          'absolute w-56 bg-gray-900 border border-gray-600 rounded shadow-xl',
+          'absolute w-64 bg-gray-900 border border-gray-600 rounded shadow-xl',
           tray ? 'left-0 top-full mt-2' : 'left-0 top-full mt-1',
           Z_INDEX.OVERLAY
         ]"
         data-testid="settings-popup"
       >
+        <!-- Shape Background Opacity -->
+        <div class="border-b border-gray-700 p-2">
+          <div class="w-full text-left px-3 py-2 text-sm text-gray-200">
+            👣 Path Background Opacity
+          </div>
+          <div class="px-3 pb-1">
+            <label class="text-xs text-gray-400 block mb-1">Opacity: {{ store.shapeBackgroundOpacity === 0 ? 'Off' : `${store.shapeBackgroundOpacity}%` }}</label>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="5"
+              :value="store.shapeBackgroundOpacity"
+              @input="e => store.setShapeBackgroundOpacity(Number((e.target as HTMLInputElement).value))"
+              class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+            />
+          </div>
+        </div>
+
         <!-- Change password -->
         <div class="border-b border-gray-700 p-2">
           <button
@@ -152,25 +168,6 @@ function logout() {
             @click="showChangePasswordModal = true"
           >
             🔒  Change password
-          </button>
-        </div>
-
-        <!-- Shape Background Toggle -->
-        <div class="border-b border-gray-700 p-2">
-          <button
-            type="button"
-            class="w-full flex items-center justify-between px-3 py-2 text-sm rounded text-gray-200 hover:bg-gray-700"
-            @click="toggleShapeBackground"
-          >
-            <span>👣 Show Paths</span>
-            <span
-              :class="[
-                'inline-flex items-center justify-center w-12 h-5 rounded-full transition-colors duration-300 text-[10px] font-bold text-white',
-                store.showShapeBackground ? 'bg-green-500' : 'bg-gray-500'
-              ]"
-            >
-              {{ store.showShapeBackground ? 'On' : 'Off' }}
-            </span>
           </button>
         </div>
 

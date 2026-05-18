@@ -384,11 +384,11 @@ export const useRoomStore = defineStore('room', () => {
     title: string;
   }
 
-  const showShapeBackground = ref<boolean>(localStorage.getItem('showShapeBackground') !== 'false');
+  const shapeBackgroundOpacity = ref<number>(Number(localStorage.getItem('shapeBackgroundOpacity') || 30));
 
-  function toggleShapeBackground() {
-    showShapeBackground.value = !showShapeBackground.value;
-    localStorage.setItem('showShapeBackground', String(showShapeBackground.value));
+  function setShapeBackgroundOpacity(opacity: number) {
+    shapeBackgroundOpacity.value = opacity;
+    localStorage.setItem('shapeBackgroundOpacity', String(opacity));
   }
 
   const recentlyViewedRooms = ref<RecentRoom[]>(JSON.parse(localStorage.getItem('recentRooms') || '[]').map((r: any) => ({
@@ -475,8 +475,8 @@ export const useRoomStore = defineStore('room', () => {
     connect,
     disconnect,
     logout,
-    showShapeBackground,
-    toggleShapeBackground,
+    shapeBackgroundOpacity,
+    setShapeBackgroundOpacity,
     removeFromRecentRooms,
     importData,
   };

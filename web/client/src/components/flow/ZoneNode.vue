@@ -939,11 +939,14 @@ function lockCore(core: string) {
 
       <!-- Shape Image Overlay -->
       <img
-        v-if="props.data.mapShape && props.data.mapShape !== 'rest' && store.showShapeBackground"
+        v-if="props.data.mapShape && props.data.mapShape !== 'rest'"
         :src="`/images/shapes/${props.data.mapShape}.png`"
-        class="absolute inset-0 w-full h-full object-contain pointer-events-none opacity-15"
+        class="absolute w-full h-full p-1.5 object-contain pointer-events-none"
         :class="Z_INDEX.CONTENT_LOW"
-        :style="props.data.rotation ? { transform: `rotate(${rotationStepsToDegrees(props.data.rotation)}deg)` } : undefined"
+        :style="{
+          opacity: isHandleEditorOpen ? 1 : (store.shapeBackgroundOpacity / 100),
+          ...(props.data.rotation ? { transform: `rotate(${rotationStepsToDegrees(props.data.rotation)}deg)` } : {})
+        }"
         alt=""
       />
 
