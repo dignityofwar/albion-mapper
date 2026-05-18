@@ -8,11 +8,11 @@
       <jdbc-url>jdbc:postgresql://dig-roadmap.public.lan:5432/dig-roadmap</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="local@localhost" uuid="c1814cf5-2aa0-47da-951e-6522fd32ff4d">
+    <data-source source="LOCAL" name="database@localhost" uuid="c1814cf5-2aa0-47da-951e-6522fd32ff4d">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/local</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:5432/database</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="Roads @ TESTING" uuid="0475e664-c1a6-4d9b-82e3-84bbc0554d9c">

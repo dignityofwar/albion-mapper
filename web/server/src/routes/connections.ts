@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import { CreateConnectionBodySchema, UpdateConnectionBodySchema, ZONE_BY_ID, getConnectionStatus, getDefaultHandles } from 'shared';
+import {CreateConnectionBodySchema, getDefaultHandles, UpdateConnectionBodySchema, ZONE_BY_ID} from 'shared';
 import * as Shared from 'shared';
 import type { Connection, RoomMemoryEntry } from 'shared';
 import { broadcast } from '../broadcast.js';
