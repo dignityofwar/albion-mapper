@@ -562,12 +562,25 @@ const activeFeatures = computed(() => {
   }
 
   for (const f of countableFeatures) {
+    const isBoolean = f.countKey === null;
     const countKey = f.countKey ?? '';
     const count = countKey ? ((features[countKey as keyof NodeFeatures] as number | undefined) ?? 0) : 0;
-    const isUpstream = upstream.includes(countKey);
-    const active = count > 0 || isUpstream;
+    const booleanVal = isBoolean ? (features[f.key as keyof NodeFeatures] as boolean | undefined) : false;
+    
+    const upstreamKey = isBoolean ? f.key : countKey;
+    const isUpstream = upstream.includes(upstreamKey);
+    
+    const active = (isBoolean ? booleanVal : count > 0) || isUpstream;
+    
     if (active) {
-      list.push({ type: f.key, title: f.title, icon: f.icon, count: count || undefined, isResource: false, upstream: isUpstream && count === 0 });
+      list.push({ 
+        type: f.key, 
+        title: f.title, 
+        icon: f.icon, 
+        count: isBoolean ? undefined : count, 
+        isResource: false, 
+        upstream: isUpstream && (isBoolean ? !booleanVal : count === 0) 
+      });
     }
   }
   return list;
