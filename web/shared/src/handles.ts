@@ -61,11 +61,11 @@ export function getOppositeHandleId(handleId: string | null | undefined): string
 export function getShapeHandlePositions(shape: string | undefined): HandleDefinition[] {
   if (shape === 'c') {
     return [
-      { id: 'c-p1', left: '35.60%', top: '14.40%' },
-      { id: 'c-p2', left: '13.00%', top: '37.00%' },
-      { id: 'c-p3', left: '16.99%', top: '66.99%' },
+      { id: 'c-p1', left: '36.40%', top: '13.60%' },
+      { id: 'c-p2', left: '11.80%', top: '38.20%' },
+      { id: 'c-p3', left: '17.80%', top: '67.80%' },
       { id: 'c-p4', left: '32.00%', top: '82.00%' },
-      { id: 'c-p5', left: '68.80%', top: '81.20%' },
+      { id: 'c-p5', left: '68.60%', top: '81.40%' },
       { id: 'c-p6', left: '86.00%', top: '64.00%' },
     ];
   }
@@ -130,7 +130,7 @@ export function getShapeHandlePositions(shape: string | undefined): HandleDefini
       { id: 't-p2', left: '88.20%', top: '61.80%' },
       { id: 't-p3', left: '77.00%', top: '73.00%' },
       { id: 't-p4', left: '23.80%', top: '73.80%' },
-      { id: 't-p5', left: '9.60%', top: '40.40%' },
+      { id: 't-p5', left: '10.20%', top: '39.80%' },
       { id: 't-p6', left: '38.40%', top: '11.60%' },
     ];
   }
