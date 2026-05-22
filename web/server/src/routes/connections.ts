@@ -141,8 +141,8 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       // Check if there's an existing memory entry for this zone and apply its features/handles
       let memoryEntry = null;
       if (isRoads) {
-        const { rows: memoryCheck } = await app.db.query<{ features: any; custom_handles: any }>(
-          'SELECT features, custom_handles FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
+        const { rows: memoryCheck } = await app.db.query<{ features: any; custom_handles: any; rotation: number }>(
+          'SELECT features, custom_handles, rotation FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
           [id, toZoneId]
         );
         memoryEntry = memoryCheck[0];
@@ -150,10 +150,11 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       const baseFeatures = memoryEntry?.features ?? getInitialFeatures(toZoneId);
       const initialFeatures = { ...baseFeatures, slots, lastUpdatedAt: lastUpdateMs };
       let initialHandles = memoryEntry?.custom_handles ?? null;
+      let initialRotation = memoryEntry?.rotation ?? 0;
       // If the zone has a shape, check that the history handles match the expected positions exactly;
       // if any handle has moved (or count differs), replace with fresh shape handles to avoid stale data bugs.
       // Disabled state is intentional user data and is not considered a difference.
-      if (initialHandles && toZone?.mapShape) {
+      if (initialHandles && toZone?.mapShape && toZone.type !== 'roadsHideout') {
         const expectedHandles = getDefaultHandles(toZone.type, toZone.mapShape);
         const handlesMatch = initialHandles.length === expectedHandles.length &&
           expectedHandles.every((expected: { id: string; top: string; left: string }) => {
@@ -168,10 +169,10 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
         }
       }
       await app.db.query(`
-        INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features, custom_handles = EXCLUDED.custom_handles
-      `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(initialFeatures), JSON.stringify(initialHandles)]);
+        INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles, explored, rotation)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        ON CONFLICT (room_id, zone_id) DO UPDATE SET x = EXCLUDED.x, y = EXCLUDED.y, features = EXCLUDED.features, custom_handles = EXCLUDED.custom_handles, rotation = EXCLUDED.rotation
+      `, [id, toZoneId, targetPosition.x, targetPosition.y, JSON.stringify(initialFeatures), JSON.stringify(initialHandles), false, initialRotation]);
 
       // Record room memory for the newly added node (with 3-hour dedup guard)
       // Only for roads zones
@@ -206,8 +207,8 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       }
 
       if (shouldAppend || handlesWereCorrected) {
-        const { rows: updatedMem } = await app.db.query<{ zone_id: string; times_added: string[]; features: any; custom_handles: any; last_updated: string }>(
-          'SELECT zone_id, times_added, features, custom_handles, last_updated FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
+        const { rows: updatedMem } = await app.db.query<{ zone_id: string; times_added: string[]; features: any; custom_handles: any; rotation: number; last_updated: string }>(
+          'SELECT zone_id, times_added, features, custom_handles, rotation, last_updated FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
           [id, toZoneId]
         );
         if (updatedMem[0]) {
@@ -216,6 +217,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
             timesAdded: updatedMem[0].times_added,
             features: updatedMem[0].features ?? undefined,
             customHandles: updatedMem[0].custom_handles ?? undefined,
+            rotation: updatedMem[0].rotation ?? 0,
             lastUpdated: updatedMem[0].last_updated,
           };
           broadcast(id, { type: 'memory_updated', entry });
@@ -240,8 +242,8 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       WHERE room_id = $2 AND zone_id = $3
     `, [JSON.stringify(lastUpdateMs), id, fromZoneId]);
 
-    const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
-      'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
+    const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any; rotation: number }>(
+      'SELECT zone_id, x, y, features, custom_handles, rotation FROM room_node_positions WHERE room_id = $1',
       [id]
     );
     const nodePositions = positions.map(p => ({ 
@@ -249,7 +251,8 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       x: p.x, 
       y: p.y,
       features: p.features,
-      customHandles: p.custom_handles 
+      customHandles: p.custom_handles,
+      rotation: p.rotation,
     }));
     
     broadcast(id, { type: 'node_positions_updated', nodePositions });
@@ -385,8 +388,8 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
         [id, zoneId]
       );
 
-      const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
-        'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
+      const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any; rotation: number }>(
+        'SELECT zone_id, x, y, features, custom_handles, rotation FROM room_node_positions WHERE room_id = $1',
         [id]
       );
       const nodePositions = positions.map(p => ({
@@ -395,6 +398,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
         y: p.y,
         features: p.features,
         customHandles: p.custom_handles,
+        rotation: p.rotation,
       }));
 
       broadcast(id, { type: 'node_positions_updated', nodePositions });
@@ -480,8 +484,8 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
           WHERE room_id = $2 AND zone_id IN ($3, $4)
         `, [JSON.stringify(lastUpdateMs), actualId, conn.from_zone_id, conn.to_zone_id]);
 
-        const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any }>(
-          'SELECT zone_id, x, y, features, custom_handles FROM room_node_positions WHERE room_id = $1',
+        const { rows: positions } = await app.db.query<{ zone_id: string; x: number; y: number; features: any; custom_handles: any; rotation: number }>(
+          'SELECT zone_id, x, y, features, custom_handles, rotation FROM room_node_positions WHERE room_id = $1',
           [actualId]
         );
         const nodePositions = positions.map(p => ({
@@ -490,6 +494,7 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
           y: p.y,
           features: p.features,
           customHandles: p.custom_handles,
+          rotation: p.rotation,
         }));
 
         broadcast(actualId, { type: 'node_positions_updated', nodePositions });

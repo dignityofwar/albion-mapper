@@ -192,10 +192,10 @@ describe('Node features persistence', () => {
     // Verify memory update includes treasures but NOT crystalCreaturePresent or chest/chestTimer
     // The 7th call should be the UPDATE room_node_memory with only treasure fields
     const updateCall = mockDb.query.mock.calls.find(
-      (call: any[]) => typeof call[0] === 'string' && call[0].includes('UPDATE room_node_memory')
+      (call: any[]) => typeof call[0] === 'string' && call[0].includes('room_node_memory') && call[0].includes('UPDATE')
     );
     expect(updateCall).toBeDefined();
-    const savedFeatures = JSON.parse(updateCall[1][0]);
+    const savedFeatures = JSON.parse(updateCall[1][2]);
     expect(savedFeatures).toEqual({ treasuresGreenCount: 3, treasuresBlueCount: 1 });
     expect(savedFeatures).not.toHaveProperty('crystalCreaturePresent');
     expect(savedFeatures).not.toHaveProperty('chest');

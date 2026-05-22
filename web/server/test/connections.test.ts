@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { setupTestApp } from './testApp.js';
 import type { FastifyInstance } from 'fastify';
-import type { Connection } from 'shared';
+import { type Connection, UpdateConnectionBodySchema } from 'shared';
 
 const VALID_ZONE_A = 'qiient-al-nusom';
 const VALID_ZONE_B = 'qiient-al-odesum';
@@ -49,7 +49,7 @@ describe('POST /api/rooms/:id/connections', () => {
       payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_A, secondsRemaining: 1800, slots: 7 },
     });
     expect(res.statusCode).toBe(400);
-    expect(res.json<{ error: string }>().error).toMatch(/different/i);
+    expect(res.json<{ error: string }>().error).toMatch(/same-zone/i);
   });
 
   it('rejects unknown fromZoneId', async () => {
@@ -479,16 +479,178 @@ describe('POST /api/rooms/:id/connections', () => {
     expect(memInsertCall).toBeUndefined();
   });
 
+  it('retains hideout handles and rotation when re-adding the zone', async () => {
+    const customHandles = [
+      { id: 'n', left: '10%', top: '10%' }, // Moved from default 75%, 25%
+      { id: 'e', left: '75%', top: '75%' },
+      { id: 's', left: '25%', top: '75%' },
+      { id: 'w', left: '25%', top: '25%' },
+    ];
+
+    // 1. First addition of the zone (no memory)
+    mockDb.query.mockResolvedValue({ rows: [], rowCount: 0 });
+    mockDb.query
+      .mockResolvedValueOnce({ rows: [{ id: roomId }] }) // SELECT id FROM rooms
+      .mockResolvedValueOnce({ rows: [] }) // SELECT * FROM connections
+      .mockResolvedValueOnce({ rows: [] }) // memoryCheck
+      .mockResolvedValueOnce({ rows: [] }) // INSERT room_node_positions
+      .mockResolvedValueOnce({ rows: [] }) // shouldAppend check
+      .mockResolvedValueOnce({ rows: [] }) // UPDATE room_node_positions (from)
+      .mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_A, x: 0, y: 0, features: {}, custom_handles: null, rotation: 0 }] }) // final broadcast positions
+      .mockResolvedValueOnce({ rows: [] }); // INSERT connections
+
+    await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: {
+        fromZoneId: VALID_ZONE_A,
+        toZoneId: VALID_ZONE_B,
+        secondsRemaining: 1800,
+        slots: 7,
+        targetPosition: { x: 100, y: 100 }
+      }
+    });
+
+    // 2. Re-adding the zone with custom handles in memory
+    mockDb.query.mockReset();
+    mockDb.query.mockResolvedValue({ rows: [], rowCount: 0 });
+    mockDb.query
+      .mockResolvedValueOnce({ rows: [{ id: roomId }] }) // SELECT id FROM rooms
+      .mockResolvedValueOnce({ rows: [] }) // SELECT * FROM connections
+      .mockResolvedValueOnce({ rows: [{
+        features: { resources: ['ore'] },
+        custom_handles: customHandles,
+        rotation: 45
+      }] }) // memoryCheck - RETURN CUSTOM HANDLES AND ROTATION
+      .mockResolvedValueOnce({ rows: [] }) // INSERT room_node_positions
+      .mockResolvedValueOnce({ rows: [{ times_added: [new Date().toISOString()] }] }) // shouldAppend check
+      .mockResolvedValueOnce({ rows: [] }) // UPDATE room_node_positions (from)
+      .mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_A, x: 0, y: 0, features: {}, custom_handles: null, rotation: 0 }] }) // final broadcast positions
+      .mockResolvedValueOnce({ rows: [] }); // INSERT connections
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: {
+        fromZoneId: VALID_ZONE_A,
+        toZoneId: VALID_ZONE_B,
+        secondsRemaining: 1800,
+        slots: 7,
+        targetPosition: { x: 100, y: 100 }
+      }
+    });
+
+    expect(res.statusCode).toBe(201);
+
+    // Verify what was inserted into room_node_positions
+    const insertPosCall = mockDb.query.mock.calls.find(
+      (call: any[]) => typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_positions')
+    );
+
+    const insertedHandles = JSON.parse(insertPosCall[1][5]);
+    const insertedRotation = insertPosCall[1][7];
+
+    // It should retain our custom positions
+    const nHandle = insertedHandles.find((h: any) => h.id === 'n');
+    expect(nHandle.left).toBe('10%');
+    expect(nHandle.top).toBe('10%');
+    expect(insertedRotation).toBe(45);
+  });
+
+  it('does NOT save non-roads zones to memory when creating connections', async () => {
+    const VALID_ROADS_ZONE = 'cases-ugumlos'; // A roads zone
+    const VALID_NON_ROADS_ZONE = 'adrens-hill'; // A royal yellow zone
+
+    // Mock room check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // SELECT id FROM rooms
+    // Mock connections check (no cycles)
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT * FROM connections
+    // Mock memory check (no existing memory)
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT times_added FROM room_node_memory
+
+    // Test through HTTP API
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: {
+        fromZoneId: VALID_ROADS_ZONE,
+        toZoneId: VALID_NON_ROADS_ZONE,
+        secondsRemaining: 1800,
+        slots: 7,
+        targetPosition: { x: 200, y: 200 }
+      }
+    });
+
+    expect(res.statusCode).toBe(201);
+
+    // Verify INSERT INTO room_node_memory was NOT called
+    const insertCall = mockDb.query.mock.calls.find(
+      (call: any[]) => typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_memory')
+    );
+    expect(insertCall).toBeUndefined();
+  });
+});
+
+describe('PATCH /api/rooms/:id/connections/:connId', () => {
+  it('UpdateConnectionBodySchema behavior with null', () => {
+    const result = UpdateConnectionBodySchema.safeParse({ fromHandleId: null });
+    expect(result.success).toBe(true);
+    expect(result.data?.fromHandleId).toBe(null);
+  });
+
+  it('UpdateConnectionBodySchema behavior with empty object', () => {
+    const result = UpdateConnectionBodySchema.safeParse({});
+    expect(result.success).toBe(true);
+  });
+
+  it('returns Required if body is empty', async () => {
+    const connId = 'test-conn';
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room existence check
+
+    const res = await app.inject({
+      method: 'PATCH',
+      url: `/api/rooms/${roomId}/connections/${connId}`,
+      headers: {
+        authorization: `Bearer ${token}`,
+        'content-type': 'application/json'
+      },
+      // No payload
+    });
+
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('returns 404 if connection not found when fromHandleId is null', async () => {
+    const connId = 'test-conn';
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room existence check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connection not found
+
+    const res = await app.inject({
+      method: 'PATCH',
+      url: `/api/rooms/${roomId}/connections/${connId}`,
+      headers: {
+        authorization: `Bearer ${token}`,
+        'content-type': 'application/json'
+      },
+      payload: { fromHandleId: null }
+    });
+
+    expect(res.statusCode).toBe(404);
+  });
+
   it('updates a connection', async () => {
     // PATCH /api/rooms/:id/connections/:connId
     const connId = 'conn-1';
-    
+
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room existence check
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: connId, from_zone_id: VALID_ZONE_A, to_zone_id: VALID_ZONE_B }] }); // connection existence check
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE connections
     mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE room_node_positions
     mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (for broadcast)
-    mockDb.query.mockResolvedValueOnce({ rows: [{ 
+    mockDb.query.mockResolvedValueOnce({ rows: [{
       id: connId, room_id: roomId, from_zone_id: VALID_ZONE_A, to_zone_id: VALID_ZONE_B,
       expires_at: new Date(Date.now() + 120 * 60 * 1000).toISOString(),
       reported_at: new Date().toISOString(), reported_by: null
@@ -500,7 +662,7 @@ describe('POST /api/rooms/:id/connections', () => {
       headers: { authorization: `Bearer ${token}` },
       payload: { secondsRemaining: 7200 },
     });
-    
+
     expect(updateRes.statusCode).toBe(200);
     const updatedConn = updateRes.json<Connection>();
     expect(updatedConn.id).toBe(connId);

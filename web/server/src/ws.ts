@@ -246,24 +246,22 @@ export async function wsRoutes(app: FastifyInstance): Promise<void> {
               ? pos.customHandles
               : null;
 
-            // Only update if a memory entry already exists for this zone
-            const { rows: existing } = await app.db.query<{ zone_id: string }>(
-              'SELECT zone_id FROM room_node_memory WHERE room_id = $1 AND zone_id = $2',
-              [roomId, pos.zoneId]
-            );
-            if (existing.length === 0) continue;
-
+            // Update or create zone memory
             await app.db.query(`
-              UPDATE room_node_memory
-              SET features = $1, custom_handles = $2, rotation = $3, last_updated = $4
-              WHERE room_id = $5 AND zone_id = $6
+              INSERT INTO room_node_memory (room_id, zone_id, features, custom_handles, rotation, last_updated, times_added)
+              VALUES ($1, $2, $3, $4, $5, $6, ARRAY[$6::timestamptz])
+              ON CONFLICT (room_id, zone_id) DO UPDATE SET
+                features = CASE WHEN $3 IS NOT NULL THEN $3 ELSE room_node_memory.features END,
+                custom_handles = CASE WHEN $4 IS NOT NULL THEN $4 ELSE room_node_memory.custom_handles END,
+                rotation = EXCLUDED.rotation,
+                last_updated = EXCLUDED.last_updated
             `, [
-              JSON.stringify(memoryFeatures),
-              JSON.stringify(memoryHandles),
-              pos.rotation ?? 0,
-              now,
               roomId,
               pos.zoneId,
+              memoryFeatures ? JSON.stringify(memoryFeatures) : null,
+              memoryHandles ? JSON.stringify(memoryHandles) : null,
+              pos.rotation ?? 0,
+              now,
             ]);
 
             const { rows: updatedMem } = await app.db.query<{ zone_id: string; times_added: string[]; features: any; custom_handles: any; rotation: number; last_updated: string }>(

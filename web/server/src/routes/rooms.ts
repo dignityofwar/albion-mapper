@@ -88,9 +88,14 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       `, [id, passwordHash, adminPasswordHash, homeZoneId, title || null, createdAt]);
 
       await client.query(`
-        INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles)
-        VALUES ($1, $2, $3, $4, $5, $6)
-      `, [id, homeZoneId, 0, 0, JSON.stringify(getInitialFeatures(homeZoneId)), JSON.stringify(null)]);
+        INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles, rotation)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `, [id, homeZoneId, 0, 0, JSON.stringify(getInitialFeatures(homeZoneId)), JSON.stringify(null), 0]);
+
+      await client.query(`
+        INSERT INTO room_node_memory (room_id, zone_id, features, times_added, rotation)
+        VALUES ($1, $2, $3, ARRAY[$4::timestamptz], $5)
+      `, [id, homeZoneId, JSON.stringify(getInitialFeatures(homeZoneId)), createdAt, 0]);
 
       await client.query('COMMIT');
     } catch (e) {
@@ -293,9 +298,9 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       // Insert new node positions
       for (const node of nodePositions) {
         await client.query(`
-          INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles, rotation, explored)
+          INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles, explored, rotation)
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        `, [id, node.zoneId, node.x, node.y, JSON.stringify(node.features || {}), JSON.stringify(node.customHandles || null), node.rotation ?? 0, !!node.explored]);
+        `, [id, node.zoneId, node.x, node.y, JSON.stringify(node.features || {}), JSON.stringify(node.customHandles || null), !!node.explored, node.rotation ?? 0]);
       }
 
       // Insert new room memory (roads only)

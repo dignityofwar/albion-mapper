@@ -125,6 +125,7 @@ describe('WebSocket authentication', () => {
 
     // Create a second room
     const roomId2 = 'room-2';
+    const token1 = app.jwt.sign({ roomId });
     const token2 = app.jwt.sign({ roomId: roomId2 });
 
     // room 2 sync mocks
@@ -142,7 +143,7 @@ describe('WebSocket authentication', () => {
     ws2.socket.on('message', (d) => room2Messages.push(JSON.parse(d.toString())));
 
     // Authenticate both
-    ws1.socket.send(JSON.stringify({ type: 'auth', token }));
+    ws1.socket.send(JSON.stringify({ type: 'auth', token: token1 }));
     ws2.socket.send(JSON.stringify({ type: 'auth', token: token2 }));
 
     // Wait for auth + sync
@@ -152,17 +153,19 @@ describe('WebSocket authentication', () => {
     const beforeCount2 = room2Messages.length;
 
     // Post a connection to room 1 only
-    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
-    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+    mockDb.query.mockImplementation((q: string) => {
+      if (q.includes('FROM rooms')) return Promise.resolve({ rows: [{ id: roomId }] });
+      return Promise.resolve({ rows: [], rowCount: 1 });
+    });
     
     await app.inject({
       method: 'POST',
       url: `/api/rooms/${roomId}/connections`,
-      headers: { authorization: `Bearer ${token}` },
+      headers: { authorization: `Bearer ${token1}` },
       payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7 },
     });
 
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 500));
 
     // Room 1 client should get connection_added
     const newRoom1 = room1Messages.slice(beforeCount1);
@@ -240,6 +243,56 @@ describe('WebSocket authentication', () => {
 
     // Check if rooms table was updated
     const updateCall = mockClient.query.mock.calls.find(call => call[0].includes('UPDATE rooms SET updated_at'));
+    expect(updateCall).toBeUndefined();
+
+    socket.close();
+  });
+
+  it('does NOT save non-roads zones to memory when updating node positions', async () => {
+    const VALID_ROADS_ZONE = 'cases-ugumlos';
+    const VALID_NON_ROADS_ZONE = 'adrens-hill';
+    
+    await app.listen({ port: 0 });
+
+    const { socket } = await connectWs(roomId);
+
+    // Auth mocks
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId, home_zone_id: VALID_ROADS_ZONE, created_at: new Date().toISOString() }] });
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // node positions
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // memory sync
+
+    socket.send(JSON.stringify({ type: 'auth', token }));
+    await new Promise((r) => setTimeout(r, 100));
+
+    const nodePositions = [
+      {
+        zoneId: VALID_NON_ROADS_ZONE,
+        x: 100,
+        y: 100,
+        features: {
+          treasuresGreenCount: 3
+        }
+      }
+    ];
+
+    const mockClient = await mockDb.connect();
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // BEGIN
+    mockClient.query.mockResolvedValueOnce({ rows: [{ home_zone_id: VALID_ROADS_ZONE }] }); // room lock
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // DELETE room_node_positions
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // INSERT room_node_positions
+    mockClient.query.mockResolvedValueOnce({ rows: [] }); // COMMIT
+
+    // Re-read after save
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_NON_ROADS_ZONE, x: 100, y: 100, features: nodePositions[0].features, custom_handles: null, explored: true, rotation: 0 }] });
+
+    socket.send(JSON.stringify({ type: 'update_node_positions', nodePositions }));
+    await new Promise((r) => setTimeout(r, 200));
+
+    // Verify INSERT/UPDATE room_node_memory was NOT called for non-roads zone
+    const updateCall = mockDb.query.mock.calls.find(
+      (call: any[]) => typeof call[0] === 'string' && (call[0].includes('UPDATE room_node_memory') || call[0].includes('INSERT INTO room_node_memory'))
+    );
     expect(updateCall).toBeUndefined();
 
     socket.close();
