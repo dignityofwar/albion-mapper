@@ -26,8 +26,8 @@ const hasHistory = computed(() => !!props.entry && props.entry.timesAdded.length
 
 const lastSeen = computed(() => {
   const arr = props.entry?.timesAdded;
-  if (!arr || arr.length === 0) return null;
-  return arr[arr.length - 1];
+  if (!arr || arr.length < 2) return null;
+  return arr[arr.length - 2];
 });
 
 const timesSeen = computed(() => props.entry?.timesAdded.length ?? 0);
@@ -56,11 +56,11 @@ function formatDate(iso: string): string {
         <TooltipPortal>
           <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10000] text-center">
             <template v-if="hasHistory">
-              <div v-if="lastSeen">Last added: <b>{{ formatDate(lastSeen) }}</b></div>
+              <div v-if="lastSeen">Last seen: <b>{{ formatDate(lastSeen) }}</b></div>
               <div>Times seen: <b>{{ timesSeen }}</b></div>
             </template>
             <template v-else>
-              <div>First sighting of this zone.<br>Future additions will show a history of sightings, <br> and retain Map Features and portal settings applied to them.</div>
+              <div>First sighting of this zone.<br>Map Features and portal layouts will be saved,<br> and applied automatically in the future.</div>
             </template>
           </TooltipContent>
         </TooltipPortal>
