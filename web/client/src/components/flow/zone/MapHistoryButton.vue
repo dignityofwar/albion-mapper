@@ -7,6 +7,11 @@ import {
   DialogContent,
   DialogTitle,
   DialogClose,
+  TooltipProvider,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipPortal,
 } from 'reka-ui';
 import { useRoomMemoryStore } from '@/stores/useRoomMemoryStore';
 import { useRoomStore } from '@/stores/useRoomStore';
@@ -35,7 +40,9 @@ const historyEntries = computed(() => {
         return b.timesAdded.length - a.timesAdded.length;
       }
       if (sortMode.value === 'recent') {
-        return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+        const lastA = Math.max(...a.timesAdded.map(d => new Date(d).getTime()));
+        const lastB = Math.max(...b.timesAdded.map(d => new Date(d).getTime()));
+        return lastB - lastA;
       }
       const nameA = (ZONE_BY_ID.get(a.zoneId)?.name ?? '').toLowerCase();
       const nameB = (ZONE_BY_ID.get(b.zoneId)?.name ?? '').toLowerCase();
@@ -60,6 +67,14 @@ async function deleteAllHistory() {
   deleteAllConfirmOpen.value = false;
   dialogOpen.value = false;
   showToast?.('Map History fully deleted.');
+}
+
+function formatHistoryTooltip(timesAdded: string[]): string {
+  return timesAdded
+    .slice()
+    .sort((a, b) => new Date(b).getTime() - new Date(a).getTime())
+    .map(d => formatLastSeen(d))
+    .join('\n');
 }
 
 function formatLastSeen(isoDate: string): string {
@@ -207,14 +222,25 @@ function getActiveFeatures(features: NodeFeatures | undefined) {
           >
             <span class="text-gray-400 font-mono text-xs shrink-0">{{ entry.timesAdded.length }}x</span>
             <div class="flex items-center w-28">
-              <span
-              v-if="activeZoneIds.has(entry.zoneId)"
-              class="font-mono text-xs w-full text-center bg-indigo-600/30 border border-indigo-500/60 text-purple-200 rounded px-1.5 py-0.5"
-            >On the map</span>
-            <span
-              v-else
-              class="text-gray-400 font-mono w-full text-center text-xs bg-gray-700/60 border border-gray-600 rounded px-1.5 py-0.5"
-            >{{ formatLastSeen(entry.lastUpdated) }}</span>
+              <TooltipProvider :delay-duration="0">
+                <TooltipRoot>
+                  <TooltipTrigger as-child>
+                    <span
+                      v-if="activeZoneIds.has(entry.zoneId)"
+                      class="font-mono text-xs w-full text-center bg-indigo-600/30 border border-indigo-500/60 hover:bg-indigo-500/40 hover:border-indigo-400/60 transition-colors text-purple-200 rounded px-1.5 py-0.5 cursor-default"
+                    >On the map</span>
+                    <span
+                      v-else
+                      class="text-gray-400 font-mono w-full text-center text-xs bg-gray-700/60 border border-gray-600 hover:bg-gray-600/60 hover:border-gray-400 transition-colors rounded px-1.5 py-0.5 cursor-default"
+                    >{{ formatLastSeen([...entry.timesAdded].sort().at(-1) ?? entry.lastUpdated) }}</span>
+                  </TooltipTrigger>
+                  <TooltipPortal>
+                    <TooltipContent class="bg-black text-white text-xs px-2 py-1 rounded shadow-lg z-[10002] whitespace-pre-line">
+                      {{ formatHistoryTooltip(entry.timesAdded) }}
+                    </TooltipContent>
+                  </TooltipPortal>
+                </TooltipRoot>
+              </TooltipProvider>
             </div>
 
             <span class="font-bold text-white px-1.5 py-0.5 rounded bg-gray-700 text-xs shrink-0">
