@@ -18,7 +18,7 @@ const showToast = inject<(msg: string, type?: 'info' | 'error') => void>('showTo
 const deleteAllConfirmOpen = ref(false);
 const roomStore = useRoomStore();
 const searchQuery = ref('');
-const sortMode = ref<'name' | 'seen'>('name');
+const sortMode = ref<'name' | 'seen' | 'recent'>('name');
 const store = useRoomMemoryStore();
 
 const historyEntries = computed(() => {
@@ -32,6 +32,9 @@ const historyEntries = computed(() => {
     .sort((a, b) => {
       if (sortMode.value === 'seen') {
         return b.timesAdded.length - a.timesAdded.length;
+      }
+      if (sortMode.value === 'recent') {
+        return new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
       }
       const nameA = (ZONE_BY_ID.get(a.zoneId)?.name ?? '').toLowerCase();
       const nameB = (ZONE_BY_ID.get(b.zoneId)?.name ?? '').toLowerCase();
@@ -56,6 +59,13 @@ async function deleteAllHistory() {
   deleteAllConfirmOpen.value = false;
   dialogOpen.value = false;
   showToast?.('Map History fully deleted.');
+}
+
+function formatLastSeen(isoDate: string): string {
+  const d = new Date(isoDate);
+  const day = d.getDate();
+  const month = d.toLocaleString('en-GB', { month: 'short' });
+  return `${day}/${month}`;
 }
 
 function getZoneDisplay(zoneId: string) {
@@ -175,6 +185,15 @@ function getActiveFeatures(features: NodeFeatures | undefined) {
                 : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200'
             ]"
           >Times Seen ↓</button>
+          <button
+            @click="sortMode = 'recent'"
+            :class="[
+              'px-3 py-1 rounded text-xs font-semibold border transition-colors',
+              sortMode === 'recent'
+                ? 'bg-indigo-600/30 border-indigo-500/60 text-indigo-300'
+                : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-400 hover:text-gray-200'
+            ]"
+          >Most Recent ↓</button>
         </div>
         
         <ul class="flex-1 overflow-y-auto space-y-1">
@@ -184,6 +203,7 @@ function getActiveFeatures(features: NodeFeatures | undefined) {
             class="bg-gray-800/50 rounded flex items-center gap-2 px-2 py-1 border border-gray-700 relative group"
           >
             <span class="text-gray-400 font-mono text-xs shrink-0">{{ entry.timesAdded.length }}x</span>
+            <span class="text-gray-400 font-mono text-xs shrink-0 bg-gray-700/60 border border-gray-600 rounded px-1.5 py-0.5">{{ formatLastSeen(entry.lastUpdated) }}</span>
             <span class="font-bold text-white px-1.5 py-0.5 rounded bg-gray-700 text-xs shrink-0">
               T{{ getZoneDisplay(entry.zoneId).tier }}
             </span>
