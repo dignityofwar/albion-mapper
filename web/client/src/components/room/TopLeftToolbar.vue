@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RoomResourcesToolbar from '../flow/zone/RoomResourcesToolbar.vue';
+import MapHistoryButton from '../flow/zone/MapHistoryButton.vue';
 import { Z_INDEX } from '@/constants/Layers';
 
 defineProps<{
@@ -26,6 +27,9 @@ const emit = defineEmits<{
       :wood="wood"
       @select="emit('select', $event)"
     />
+    <div class="pointer-events-auto">
+      <MapHistoryButton />
+    </div>
   </div>
 </template>
 
