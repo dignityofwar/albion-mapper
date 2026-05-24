@@ -20,6 +20,7 @@ const roomStore = useRoomStore();
 const searchQuery = ref('');
 const sortMode = ref<'name' | 'seen' | 'recent'>('name');
 const store = useRoomMemoryStore();
+const activeZoneIds = computed(() => new Set(roomStore.nodePositions.map(n => n.zoneId)));
 
 const historyEntries = computed(() => {
   const query = searchQuery.value.trim().toLowerCase();
@@ -65,7 +66,9 @@ function formatLastSeen(isoDate: string): string {
   const d = new Date(isoDate);
   const day = d.getDate();
   const month = d.toLocaleString('en-GB', { month: 'short' });
-  return `${day}/${month}`;
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  return `${day}/${month} ${hours}:${minutes}`;
 }
 
 function getZoneDisplay(zoneId: string) {
@@ -143,7 +146,7 @@ function getActiveFeatures(features: NodeFeatures | undefined) {
 
     <DialogPortal>
       <DialogOverlay class="fixed inset-0 bg-black/60 z-[9998]" />
-      <DialogContent class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-[9999] p-6 w-[600px] max-w-[90vw] max-h-[80vh] flex flex-col">
+      <DialogContent class="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-[9999] p-6 w-[700px] max-w-[95vw] max-h-[80vh] flex flex-col">
         <div class="flex items-center justify-between mb-4">
           <DialogTitle class="text-white font-semibold text-lg">
             Map History ({{ totalZones }})
@@ -203,7 +206,17 @@ function getActiveFeatures(features: NodeFeatures | undefined) {
             class="bg-gray-800/50 rounded flex items-center gap-2 px-2 py-1 border border-gray-700 relative group"
           >
             <span class="text-gray-400 font-mono text-xs shrink-0">{{ entry.timesAdded.length }}x</span>
-            <span class="text-gray-400 font-mono text-xs shrink-0 bg-gray-700/60 border border-gray-600 rounded px-1.5 py-0.5">{{ formatLastSeen(entry.lastUpdated) }}</span>
+            <div class="flex items-center w-28">
+              <span
+              v-if="activeZoneIds.has(entry.zoneId)"
+              class="font-mono text-xs w-full text-center bg-indigo-600/30 border border-indigo-500/60 text-purple-200 rounded px-1.5 py-0.5"
+            >On the map</span>
+            <span
+              v-else
+              class="text-gray-400 font-mono w-full text-center text-xs bg-gray-700/60 border border-gray-600 rounded px-1.5 py-0.5"
+            >{{ formatLastSeen(entry.lastUpdated) }}</span>
+            </div>
+
             <span class="font-bold text-white px-1.5 py-0.5 rounded bg-gray-700 text-xs shrink-0">
               T{{ getZoneDisplay(entry.zoneId).tier }}
             </span>
