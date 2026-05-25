@@ -348,7 +348,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore",
@@ -365,7 +364,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore",
@@ -382,7 +380,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -396,7 +393,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -408,7 +404,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -422,7 +417,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "largeBlueChest"
@@ -437,7 +431,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -452,7 +445,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -474,7 +466,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -489,7 +480,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -513,7 +503,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -528,7 +517,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -540,7 +528,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -555,7 +542,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -570,7 +556,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -586,7 +571,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "largeBlueChest"
@@ -601,7 +585,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -637,7 +620,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore",
@@ -654,7 +636,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock"
@@ -669,7 +650,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -684,7 +664,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -698,7 +677,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -712,7 +690,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -724,7 +701,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "largeBlueChest"
@@ -739,7 +715,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock"
@@ -754,7 +729,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -768,7 +742,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -790,7 +763,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -804,7 +776,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -818,7 +789,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -832,7 +802,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -846,7 +815,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -862,7 +830,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -877,7 +844,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore",
@@ -894,7 +860,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -908,7 +873,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -920,7 +884,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -935,7 +898,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "largeBlueChest"
@@ -1014,7 +976,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -1026,7 +987,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -1049,7 +1009,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore",
@@ -1065,7 +1024,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -1080,7 +1038,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -1094,7 +1051,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -1106,7 +1062,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -1122,7 +1077,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -1649,7 +1603,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -1664,7 +1617,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -1679,7 +1631,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -1693,7 +1644,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "rock"
@@ -1708,7 +1658,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -1724,7 +1673,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "largeGoldChest"
@@ -1739,7 +1687,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "rock",
@@ -1763,7 +1710,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock"
     ]
@@ -1777,7 +1723,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -1792,7 +1737,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -1814,7 +1758,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "rock"
@@ -1829,7 +1772,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -1843,7 +1785,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock"
     ]
@@ -1857,7 +1798,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -1871,7 +1811,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -1886,7 +1825,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -1898,7 +1836,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -1913,7 +1850,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "rock"
@@ -1928,7 +1864,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGoldChest"
     ]
@@ -1942,7 +1877,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore",
@@ -1958,7 +1892,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -1988,7 +1921,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -2003,7 +1935,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "largeBlueChest"
@@ -2018,7 +1949,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -2033,7 +1963,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "largeBlueChest"
@@ -2048,7 +1977,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -2158,7 +2086,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "largeGoldChest"
@@ -2173,7 +2100,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs"
     ]
@@ -2187,7 +2113,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -2203,7 +2128,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -2225,7 +2149,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -2239,7 +2162,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "rock"
@@ -2254,7 +2176,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore",
@@ -2270,7 +2191,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -2284,7 +2204,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -2298,7 +2217,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -2310,7 +2228,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "rock"
@@ -2325,7 +2242,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs"
     ]
@@ -2411,7 +2327,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "largeBlueChest"
@@ -2426,7 +2341,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGoldChest"
     ]
@@ -2440,7 +2354,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "rock",
@@ -2456,7 +2369,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -2472,7 +2384,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -2487,7 +2398,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -2501,7 +2411,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -2515,7 +2424,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -2527,7 +2435,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -2543,7 +2450,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "rock"
@@ -2558,7 +2464,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "largeBlueChest"
@@ -2573,7 +2478,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs"
     ]
@@ -2819,7 +2723,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -2833,7 +2736,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -2848,7 +2750,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -2864,7 +2765,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -2878,7 +2778,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -2893,7 +2792,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -2908,7 +2806,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -2930,7 +2827,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock",
       "largeGreenChest"
@@ -2945,7 +2841,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock"
@@ -2960,7 +2855,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -2975,7 +2869,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -2990,7 +2883,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -3004,7 +2896,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -3016,7 +2907,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -3031,7 +2921,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -3045,7 +2934,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -3057,7 +2945,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -3069,7 +2956,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -3233,7 +3119,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -3248,7 +3133,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock"
@@ -3263,7 +3147,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore",
@@ -3279,7 +3162,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -3293,7 +3175,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -3307,7 +3188,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -3319,7 +3199,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -3334,7 +3213,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -3348,7 +3226,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -3362,7 +3239,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -3385,7 +3261,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -3400,7 +3275,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -3412,7 +3286,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGoldChest"
     ]
@@ -3426,7 +3299,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock",
       "largeGreenChest"
@@ -3441,7 +3313,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -3456,7 +3327,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -3470,7 +3340,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -3485,7 +3354,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -3500,7 +3368,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -3516,7 +3383,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -3530,7 +3396,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -3544,7 +3409,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -3558,7 +3422,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock"
@@ -3573,7 +3436,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGoldChest"
     ]
@@ -3587,7 +3449,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -3602,7 +3463,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -3616,7 +3476,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -3630,7 +3489,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -3644,7 +3502,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -3659,7 +3516,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -3999,7 +3855,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -4015,7 +3870,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -4030,7 +3884,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -4045,7 +3898,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -4060,7 +3912,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "largeBlueChest"
@@ -4075,7 +3926,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -4087,7 +3937,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4103,7 +3952,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4120,7 +3968,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -4134,7 +3981,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4151,7 +3997,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore"
@@ -4166,7 +4011,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "rock"
@@ -4181,7 +4025,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton"
     ]
@@ -4195,7 +4038,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -4211,7 +4053,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -4225,7 +4066,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "rock"
@@ -4240,7 +4080,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -4252,7 +4091,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4268,7 +4106,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -4289,7 +4126,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore",
@@ -4305,7 +4141,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -4317,7 +4152,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -4331,7 +4165,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -4355,7 +4188,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -4367,7 +4199,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton"
     ]
@@ -4381,7 +4212,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -4396,7 +4226,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -4412,7 +4241,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -4453,7 +4281,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -4467,7 +4294,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton"
     ]
@@ -4521,7 +4347,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -4535,7 +4360,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock",
       "largeGoldChest"
@@ -4550,7 +4374,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock"
     ]
@@ -4564,7 +4387,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -4578,7 +4400,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs"
     ]
@@ -4592,7 +4413,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4608,7 +4428,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4624,7 +4443,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -4638,7 +4456,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4661,7 +4478,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4677,7 +4493,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -4691,7 +4506,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton"
     ]
@@ -4705,7 +4519,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -4721,7 +4534,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -4737,7 +4549,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock",
       "largeGoldChest"
@@ -4752,7 +4563,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "largeBlueChest"
@@ -4767,7 +4577,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -4789,7 +4598,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -4804,7 +4612,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -4818,7 +4625,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -4832,7 +4638,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -4844,7 +4649,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -4859,7 +4663,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -4875,7 +4678,6 @@
     "socketCount": 8,
     "largeSocketCount": 1,
     "smallSocketCount": 7,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton"
     ]
@@ -4890,7 +4692,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore"
     ]
@@ -4905,7 +4706,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -4920,7 +4720,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -4935,7 +4734,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -4948,7 +4746,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -4961,7 +4758,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -4976,7 +4772,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore"
     ]
@@ -4991,7 +4786,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5004,7 +4798,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -5019,7 +4812,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5032,7 +4824,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5045,7 +4836,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5058,7 +4848,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5071,7 +4860,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5084,7 +4872,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5097,7 +4884,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5110,7 +4896,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -5126,7 +4911,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -5142,7 +4926,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5155,7 +4938,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore"
     ]
@@ -5170,7 +4952,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore"
     ]
@@ -5185,7 +4966,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5198,7 +4978,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5211,7 +4990,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5224,7 +5002,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "hide",
       "rock"
@@ -5240,7 +5017,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5253,7 +5029,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -5268,7 +5043,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -5284,7 +5058,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -5300,7 +5073,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5313,7 +5085,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5326,7 +5097,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -5341,7 +5111,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -5356,7 +5125,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5369,7 +5137,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5382,7 +5149,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -5397,7 +5163,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -5412,7 +5177,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5425,7 +5189,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5438,7 +5201,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5451,7 +5213,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore"
     ]
@@ -5466,7 +5227,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5479,7 +5239,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -5494,7 +5253,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -5510,7 +5268,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -5525,7 +5282,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore"
     ]
@@ -5540,7 +5296,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5553,7 +5308,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5566,7 +5320,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -5581,7 +5334,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5594,7 +5346,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "rock"
@@ -5610,7 +5361,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -5916,7 +5666,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -5931,7 +5680,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -5946,7 +5694,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5958,7 +5705,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5970,7 +5716,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore",
@@ -5986,7 +5731,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -5998,7 +5742,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -6015,7 +5758,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock"
@@ -6054,7 +5796,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -6068,7 +5809,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -6085,7 +5825,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6100,7 +5839,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -6115,7 +5853,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -6131,7 +5868,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6144,7 +5880,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6157,7 +5892,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6170,7 +5904,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -6185,7 +5918,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6198,7 +5930,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6211,7 +5942,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -6226,7 +5956,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6239,7 +5968,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6254,7 +5982,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6267,7 +5994,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -6283,7 +6009,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock"
@@ -6299,7 +6024,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6312,7 +6036,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -6328,7 +6051,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -6343,7 +6065,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6356,7 +6077,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6369,7 +6089,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6382,7 +6101,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6397,7 +6115,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6410,7 +6127,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6423,7 +6139,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -6438,7 +6153,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6451,7 +6165,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -6466,7 +6179,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6479,7 +6191,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -6494,7 +6205,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -6509,7 +6219,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -6526,7 +6235,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -6541,7 +6249,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -6557,7 +6264,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6570,7 +6276,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6585,7 +6290,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6598,7 +6302,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -6614,7 +6317,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6629,7 +6331,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6642,7 +6343,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -6658,7 +6358,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6673,7 +6372,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6688,7 +6386,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6701,7 +6398,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -6717,7 +6413,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6732,7 +6427,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -6747,7 +6441,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6760,7 +6453,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -6775,7 +6467,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6788,7 +6479,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6801,7 +6491,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6814,7 +6503,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6827,7 +6515,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -6843,7 +6530,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -6859,7 +6545,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore"
     ]
@@ -6874,7 +6559,6 @@
     "socketCount": 4,
     "largeSocketCount": 2,
     "smallSocketCount": 2,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6909,7 +6593,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -6923,7 +6606,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore"
     ]
@@ -6937,7 +6619,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore",
@@ -6953,7 +6634,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -6965,7 +6645,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -6979,7 +6658,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock",
       "largeGoldChest"
@@ -6994,7 +6672,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -7006,7 +6683,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "largeGreenChest"
@@ -7133,7 +6809,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -7147,7 +6822,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore"
@@ -7162,7 +6836,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs",
       "ore",
@@ -7178,7 +6851,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "logs"
     ]
@@ -7192,7 +6864,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -7204,7 +6875,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -7219,7 +6889,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock"
@@ -7234,7 +6903,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -7251,7 +6919,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -7265,7 +6932,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -7500,7 +7166,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "hide",
@@ -7516,7 +7181,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -7531,7 +7195,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": []
   },
   {
@@ -7543,7 +7206,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "rock"
     ]
@@ -7557,7 +7219,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock",
@@ -7573,7 +7234,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton"
     ]
@@ -7619,7 +7279,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -7634,7 +7293,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -7651,7 +7309,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "cotton",
       "largeGreenChest"
@@ -7666,7 +7323,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -7680,7 +7336,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -7694,7 +7349,6 @@
     "socketCount": 8,
     "largeSocketCount": 2,
     "smallSocketCount": 6,
-    "socketCountIsMinimum": false,
     "knownFeatures": [
       "ore",
       "rock",
@@ -7710,7 +7364,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -7724,7 +7377,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -7739,7 +7391,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "rock",
@@ -7755,7 +7406,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -7767,7 +7417,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -7782,7 +7431,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock"
     ]
@@ -7796,7 +7444,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton"
     ]
@@ -7810,7 +7457,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -7825,7 +7471,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -7911,7 +7556,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -7923,7 +7567,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -7937,7 +7580,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton"
     ]
@@ -7951,7 +7593,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -8029,7 +7670,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -8044,7 +7684,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -8058,7 +7697,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore",
       "rock"
@@ -8073,7 +7711,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -8085,7 +7722,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock"
     ]
@@ -8099,7 +7735,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -8111,7 +7746,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -8125,7 +7759,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "rock",
@@ -8141,7 +7774,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -8155,7 +7787,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -8171,7 +7802,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -8185,7 +7815,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -8199,7 +7828,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -8211,7 +7839,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "ore"
@@ -8226,7 +7853,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock"
     ]
@@ -8248,7 +7874,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -8262,7 +7887,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -8277,7 +7901,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -8289,7 +7912,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock"
     ]
@@ -8744,7 +8366,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -8758,7 +8379,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs"
     ]
@@ -8772,7 +8392,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -8786,7 +8405,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -8798,7 +8416,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -8810,7 +8427,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock",
       "largeBlueChest"
@@ -8825,7 +8441,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -8841,7 +8456,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -8856,7 +8470,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs"
     ]
@@ -8870,7 +8483,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "ore",
@@ -8886,7 +8498,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "hide"
     ]
@@ -8900,7 +8511,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -8914,7 +8524,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -8929,7 +8538,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs",
@@ -8945,7 +8553,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -8959,7 +8566,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -8973,7 +8579,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -8985,7 +8590,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -8999,7 +8603,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "logs"
@@ -9014,7 +8617,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeBlueChest"
     ]
@@ -9028,7 +8630,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -9042,7 +8643,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": []
   },
   {
@@ -9054,7 +8654,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "largeGreenChest"
     ]
@@ -9068,7 +8667,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "logs",
       "largeGreenChest"
@@ -9083,7 +8681,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "cotton",
       "rock"
@@ -9098,7 +8695,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock",
       "largeGreenChest"
@@ -9113,7 +8709,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "ore"
     ]
@@ -9127,7 +8722,6 @@
     "socketCount": 8,
     "largeSocketCount": 3,
     "smallSocketCount": 5,
-    "socketCountIsMinimum": true,
     "knownFeatures": [
       "rock",
       "largeBlueChest"
