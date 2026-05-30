@@ -1,14 +1,11 @@
 const getApiBaseUrl = () => {
   if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname;
-    if (
-      hostname !== 'roadmap.dignityofwar.com' &&
-      hostname !== 'localhost' &&
-      hostname !== '127.0.0.1'
-    ) {
-      return 'https://roadmap-api-testing.dignityofwar.com';
+  const hostname = window.location.hostname;
+  if (hostname === 'testing.albionroads.live') {
+      return 'https://api-testing.albionroads.live';
     }
   }
+
   return import.meta.env.VITE_API_URL || 'http://localhost:3001';
 };
 
