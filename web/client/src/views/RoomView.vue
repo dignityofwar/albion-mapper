@@ -29,7 +29,7 @@ import '@vue-flow/core/dist/theme-default.css';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { formatTime, formatExpiresIn } from '@/utils/formatters';
-import { deleteConnection, updateConnection } from '@/utils/roomOperations';
+import { addConnection, deleteConnection, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
 import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, type ZoneType, wouldCreateCycle, wouldCreateLongerLoop, getDefaultHandles, getHandleFacing } from 'shared';
 
@@ -56,6 +56,8 @@ let routePlottedToastTimeout: ReturnType<typeof setTimeout> | null = null;
 const showConfirmationModal = ref(false);
 const confirmationModalText = ref("");
 const pendingConnection = ref<any>(null);
+const showOccupiedModal = ref(false);
+const pendingOccupiedConnection = ref<{ params: any; occupiedConn: any } | null>(null);
 
 function isRoads(zoneId: string): boolean {
   const zone = ZONE_BY_ID.get(zoneId);
@@ -803,6 +805,24 @@ async function handleConnect(params: any) {
     }
   }
 
+  // Check if target handle is already occupied by ANY connection
+  const targetHandleOccupied = store.connections.find(c =>
+    !c.isExpired && (
+      (c.fromZoneId === params.target && (c.fromHandleId === params.targetHandle || (!c.fromHandleId && params.targetHandle === 'center'))) ||
+      (c.toZoneId === params.target && (c.toHandleId === params.targetHandle || (!c.toHandleId && params.targetHandle === 'center')))
+    )
+  );
+
+  if (targetHandleOccupied) {
+    // Allow if it's the same connection being modified
+    if (!((targetHandleOccupied.fromZoneId === params.source && targetHandleOccupied.toZoneId === params.target) ||
+          (targetHandleOccupied.toZoneId === params.source && targetHandleOccupied.fromZoneId === params.target))) {
+      pendingOccupiedConnection.value = { params, occupiedConn: targetHandleOccupied };
+      showOccupiedModal.value = true;
+      return;
+    }
+  }
+
   // Check for existing connection between these two zones (to update it)
   const existing = store.connections.find(c =>
     !c.isExpired &&
@@ -905,6 +925,58 @@ async function handleConnect(params: any) {
     params.targetHandle,
     isLoop
   );
+}
+
+async function handleConfirmOccupied() {
+  if (!pendingOccupiedConnection.value) return;
+  const { params, occupiedConn } = pendingOccupiedConnection.value;
+  pendingOccupiedConnection.value = null;
+
+  // Also delete any existing connection on the source handle before creating the new one
+  const sourceHandleConn = store.connections.find(c =>
+    !c.isExpired && (
+      (c.fromZoneId === params.source && (c.fromHandleId === params.sourceHandle || (!c.fromHandleId && params.sourceHandle === 'center'))) ||
+      (c.toZoneId === params.source && (c.toHandleId === params.sourceHandle || (!c.toHandleId && params.sourceHandle === 'center')))
+    )
+  );
+
+  try {
+    await deleteConnection(props.id, store.token!, occupiedConn.id);
+  } catch (err: any) {
+    showToast(err.message || 'Failed to delete existing connection.', 'error');
+    return;
+  }
+
+  if (sourceHandleConn && sourceHandleConn.id !== occupiedConn.id) {
+    try {
+      await deleteConnection(props.id, store.token!, sourceHandleConn.id);
+    } catch (err: any) {
+      showToast(err.message || 'Failed to delete existing source connection.', 'error');
+      return;
+    }
+  }
+
+  // Compute secondsRemaining from the occupied connection's expiresAt
+  const secondsRemaining = Math.max(1, Math.round((new Date(occupiedConn.expiresAt).getTime() - Date.now()) / 1000));
+
+  // Get slots from the target node's features, defaulting to 7
+  const targetNodePos = store.nodePositions.find(np => np.zoneId === params.target);
+  const slots: 7 | 20 = (targetNodePos?.features?.slots === 20 ? 20 : 7);
+
+  try {
+    await addConnection(
+      props.id,
+      store.token!,
+      params.source,
+      params.target,
+      secondsRemaining,
+      slots,
+      params.sourceHandle || 'center',
+      params.targetHandle || 'center',
+    );
+  } catch (err: any) {
+    showToast(err.message || 'Failed to add connection.', 'error');
+  }
 }
 
 async function handleConfirmConnection() {
@@ -1391,6 +1463,14 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
       title="Rare Connection"
       :message="confirmationModalText"
       @confirm="handleConfirmConnection"
+    />
+
+    <ConfirmationModal
+      v-model="showOccupiedModal"
+      title="Portal already occupied"
+      message="There is already a portal connection at this location. Do you wish to delete the existing connection and replace it?"
+      :detail="pendingOccupiedConnection ? `${ZONE_BY_ID.get(pendingOccupiedConnection.occupiedConn.fromZoneId)?.name ?? pendingOccupiedConnection.occupiedConn.fromZoneId} -> ${ZONE_BY_ID.get(pendingOccupiedConnection.occupiedConn.toZoneId)?.name ?? pendingOccupiedConnection.occupiedConn.toZoneId} will be deleted!` : undefined"
+      @confirm="handleConfirmOccupied"
     />
   </div>
 </template>

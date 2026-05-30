@@ -129,6 +129,30 @@ describe('POST /api/rooms/:id/connections', () => {
     expect(res.json<{ error: string }>().error).toMatch(/cycle/i);
   });
 
+  it('rejects connection when source handle is already occupied', async () => {
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [{
+      id: 'conn-existing',
+      room_id: roomId,
+      from_zone_id: VALID_ZONE_A,
+      to_zone_id: 'zone-other',
+      from_handle_id: 'handle-1',
+      to_handle_id: null,
+      expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+      reported_at: new Date().toISOString(),
+      reported_by: null
+    }] }); // connections check — handle-1 on VALID_ZONE_A already occupied
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 1800, slots: 7, fromHandleId: 'handle-1' },
+    });
+    expect(res.statusCode).toBe(400);
+    expect(res.json<{ error: string }>().error).toMatch(/already exists on this source handle/i);
+  });
+
   it('rejects connection when fromHandleId is disabled', async () => {
     mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
     mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
@@ -158,6 +182,36 @@ describe('POST /api/rooms/:id/connections', () => {
     });
     expect(res.statusCode).toBe(400);
     expect(res.json<{ error: string }>().error).toMatch(/destination handle is disabled/i);
+  });
+
+  it('instantly creates a connection between two existing nodes using preexisting handle and time details', async () => {
+    // Simulates the "replace occupied" flow: no targetPosition, specific handles, secondsRemaining derived from old connection
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check (old ones already deleted)
+    mockDb.query.mockResolvedValueOnce({ rows: [{ custom_handles: [{ id: 'handle-src', left: '50%', top: '0%' }] }] }); // from-zone handles
+    mockDb.query.mockResolvedValueOnce({ rows: [{ custom_handles: [{ id: 'handle-dst', left: '50%', top: '100%' }] }] }); // to-zone handles
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE source node features
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE target node features
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: VALID_ZONE_B, x: 0, y: 0, features: { slots: 7 }, custom_handles: null }] }); // SELECT positions
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      // No targetPosition — both nodes already exist; secondsRemaining and slots come from the old connection's data
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: VALID_ZONE_B, secondsRemaining: 900, slots: 7, fromHandleId: 'handle-src', toHandleId: 'handle-dst' },
+    });
+    expect(res.statusCode).toBe(201);
+
+    // Verify the INSERT connection query used the correct handle IDs
+    const insertConnCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO connections')
+    );
+    expect(insertConnCall).toBeDefined();
+    const insertParams = insertConnCall[1];
+    expect(insertParams).toContain('handle-src');
+    expect(insertParams).toContain('handle-dst');
   });
 
   it('allows connection when handles exist but are not disabled', async () => {

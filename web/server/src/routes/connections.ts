@@ -105,6 +105,18 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       return reply.status(400).send({ error: 'This connection would create a direct cycle' });
     }
 
+    // Validate that the source handle is not already occupied by another connection
+    const normalizedFromHandle = fromHandleId || 'center';
+    const sourceHandleOccupied = connections.find(c =>
+      !c.isExpired && (
+        (c.fromZoneId === fromZoneId && (c.fromHandleId === normalizedFromHandle || (!c.fromHandleId && normalizedFromHandle === 'center'))) ||
+        (c.toZoneId === fromZoneId && (c.toHandleId === normalizedFromHandle || (!c.toHandleId && normalizedFromHandle === 'center')))
+      )
+    );
+    if (sourceHandleOccupied) {
+      return reply.status(400).send({ error: 'A connection already exists on this source handle' });
+    }
+
     // Validate that neither handle is disabled
     if (fromHandleId) {
       const { rows: fromPos } = await app.db.query<{ custom_handles: any }>(
