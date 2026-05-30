@@ -405,10 +405,10 @@ describe('POST /api/rooms/:id/connections', () => {
     );
     expect(insertCall).toBeDefined();
     const handlesArg = JSON.parse(insertCall[1][5]);
-    // Positions should be reset to defaults
+    // Positions should be reset to defaults (sases-aoarsum shape 's', s-p1 default: left=73.20%, top=23.20%)
     expect(handlesArg).toHaveLength(6);
-    expect(handlesArg[0].left).toBe('90.43%');
-    expect(handlesArg[0].top).toBe('59.57%');
+    expect(handlesArg[0].left).toBe('73.20%');
+    expect(handlesArg[0].top).toBe('23.20%');
 
     // Memory INSERT must also receive the corrected default positions
     const memInsertCall = mockDb.query.mock.calls.find((call: any[]) =>
@@ -417,8 +417,8 @@ describe('POST /api/rooms/:id/connections', () => {
     expect(memInsertCall).toBeDefined();
     const memHandlesArg = JSON.parse(memInsertCall[1][4]);
     expect(memHandlesArg).toHaveLength(6);
-    expect(memHandlesArg[0].left).toBe('90.43%');
-    expect(memHandlesArg[0].top).toBe('59.57%');
+    expect(memHandlesArg[0].left).toBe('73.20%');
+    expect(memHandlesArg[0].top).toBe('23.20%');
   });
 
   it('preserves disabled flags from stale handles when resetting to shape defaults', async () => {
@@ -531,6 +531,52 @@ describe('POST /api/rooms/:id/connections', () => {
       typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_memory')
     );
     expect(memInsertCall).toBeUndefined();
+  });
+
+  it('preserves rotated shape handles from memory when re-adding a zone (rotation bug fix)', async () => {
+    // sases-aoarsum has mapShape 's' — 6 handles. These are the 180°-rotated positions (each coord = 100 - default).
+    const SHAPED_ZONE = 'sases-aoarsum';
+    const rotatedHandles = [
+      { id: 's-p1', top: '76.80%', left: '26.80%' },
+      { id: 's-p2', top: '37.80%', left: '12.20%' },
+      { id: 's-p3', top: '20.80%', left: '29.20%' },
+      { id: 's-p4', top: '27.80%', left: '77.80%' },
+      { id: 's-p5', top: '60.20%', left: '89.80%' },
+      { id: 's-p6', top: '82.20%', left: '67.80%' },
+    ];
+
+    mockDb.query.mockResolvedValueOnce({ rows: [{ id: roomId }] }); // room check
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // connections check
+    mockDb.query.mockResolvedValueOnce({ rows: [{ features: { slots: 7 }, custom_handles: rotatedHandles, rotation: 2 }] }); // memory check
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT node position
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT times_added (no existing — shouldAppend=true)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT/UPDATE memory
+    mockDb.query.mockResolvedValueOnce({ rows: [{ zone_id: SHAPED_ZONE, times_added: [new Date().toISOString()], features: { slots: 7 }, custom_handles: rotatedHandles, rotation: 2, last_updated: new Date().toISOString() }] }); // SELECT updated memory
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // UPDATE source node lastUpdatedAt
+    mockDb.query.mockResolvedValueOnce({ rows: [] }); // SELECT positions (broadcast)
+    mockDb.query.mockResolvedValueOnce({ rowCount: 1, rows: [] }); // INSERT connection
+
+    const res = await app.inject({
+      method: 'POST',
+      url: `/api/rooms/${roomId}/connections`,
+      headers: { authorization: `Bearer ${token}` },
+      payload: { fromZoneId: VALID_ZONE_A, toZoneId: SHAPED_ZONE, secondsRemaining: 1800, slots: 7, targetPosition: { x: 100, y: 200 } },
+    });
+    expect(res.statusCode).toBe(201);
+
+    const insertCall = mockDb.query.mock.calls.find((call: any[]) =>
+      typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_positions')
+    );
+    expect(insertCall).toBeDefined();
+    const handlesArg = JSON.parse(insertCall[1][5]);
+    const rotationArg = insertCall[1][7];
+
+    // Rotated handles must be preserved exactly — not replaced with defaults
+    expect(handlesArg).toHaveLength(6);
+    expect(handlesArg[0].top).toBe('76.80%');
+    expect(handlesArg[0].left).toBe('26.80%');
+    // Rotation must also be preserved
+    expect(rotationArg).toBe(2);
   });
 
   it('retains hideout handles and rotation when re-adding the zone', async () => {

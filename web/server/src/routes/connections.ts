@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'node:crypto';
-import {CreateConnectionBodySchema, getDefaultHandles, UpdateConnectionBodySchema, ZONE_BY_ID} from 'shared';
+import {CreateConnectionBodySchema, getDefaultHandles, inferRotationFromHandles, UpdateConnectionBodySchema, ZONE_BY_ID} from 'shared';
 import * as Shared from 'shared';
 import type { Connection, RoomMemoryEntry } from 'shared';
 import { broadcast } from '../broadcast.js';
@@ -163,22 +163,22 @@ export async function connectionRoutes(app: FastifyInstance): Promise<void> {
       const initialFeatures = { ...baseFeatures, slots, lastUpdatedAt: lastUpdateMs };
       let initialHandles = memoryEntry?.custom_handles ?? null;
       let initialRotation = memoryEntry?.rotation ?? 0;
-      // If the zone has a shape, check that the history handles match the expected positions exactly;
-      // if any handle has moved (or count differs), replace with fresh shape handles to avoid stale data bugs.
-      // Disabled state is intentional user data and is not considered a difference.
+      // If the zone has a shape, validate that the memory handles are consistent with the stored rotation.
+      // If inferRotationFromHandles returns a non-null value, the handles are a valid rotated form of the
+      // default shape and must be kept as-is (they represent intentional rotation by the user).
+      // Only replace with fresh defaults when the handles are truly inconsistent (e.g. corrupted/mismatched).
       if (initialHandles && toZone?.mapShape && toZone.type !== 'roadsHideout') {
         const expectedHandles = getDefaultHandles(toZone.type, toZone.mapShape);
-        const handlesMatch = initialHandles.length === expectedHandles.length &&
-          expectedHandles.every((expected: { id: string; top: string; left: string }) => {
-            const actual = initialHandles.find((h: { id: string }) => h.id === expected.id);
-            return actual && actual.top === expected.top && actual.left === expected.left;
-          });
-        if (!handlesMatch) {
+        const inferredRotation = inferRotationFromHandles(initialHandles, expectedHandles);
+        if (inferredRotation === null) {
+          // Handles are inconsistent with any rotation — replace with fresh defaults at the stored rotation
           initialHandles = expectedHandles.map((expected: { id: string; top: string; left: string }) => {
             const stale = initialHandles.find((h: { id: string; disabled?: boolean }) => h.id === expected.id);
             return stale?.disabled ? { ...expected, disabled: true } : expected;
           });
+          initialRotation = 0;
         }
+        // else: handles are a valid rotation of the shape — keep them and the stored rotation unchanged
       }
       await app.db.query(`
         INSERT INTO room_node_positions (room_id, zone_id, x, y, features, custom_handles, explored, rotation)
