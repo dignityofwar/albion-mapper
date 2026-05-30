@@ -117,46 +117,33 @@ onMounted(() => {
 <template>
   <div class="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center pt-4">
      <div class="w-full max-w-md md:max-w-3xl flex flex-col gap-4 items-center">
-      <h1 class="text-4xl font-bold text-indigo-600 text-center">Albion Roads Mapper</h1>
-      <p class="text-white text-center">Created by <a href="https://discord.gg/t372jvcsZn" class="text-indigo-400 hover:underline" target="_blank">[DIG]</a> Maelstrome</p>
-        <div class="flex gap-4">
-          <button
-            class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
-            @click="openCreateRoom()"
-          >
-            Create Room
-          </button>
-          <a
-            href="https://discord.gg/uFq2PJuZ3r"
-            target="_blank"
-            class="px-6 py-3 rounded-lg bg-[#5865F2] hover:bg-indigo-500 font-medium transition-colors text-center"
-          >
-            Discord
-          </a>
-        </div>
+      <h1 class="text-4xl font-bold text-indigo-600 text-center">Albion Online Roads Mapper</h1>
+      <div class="flex gap-4">
+        <button
+          class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 font-medium transition-colors"
+          @click="openCreateRoom()"
+        >
+          Create Room
+        </button>
+        <a
+          href="https://discord.gg/uFq2PJuZ3r"
+          target="_blank"
+          class="px-6 py-3 rounded-lg bg-[#5865F2] hover:bg-indigo-500 font-medium transition-colors text-center"
+        >
+          Discord
+        </a>
+      </div>
       <RecentlyViewedRooms />
-      <p class="text-gray-400 text-center">
-        Collaborate with your guild <b>real-time</b> to track Roads of Avalon portal zones and map content. Locate and track Cores and Treasure Chests with real time-timers, Map Resources (and sizes), Avalonian Chests, and easily find connections to the Royal Continent, Outlands portals and rest zones.
+      <p class="text-white text-center">
+        Collaborate with your guildmates in <b>real-time</b> to track Roads of Avalon portal zones and map content. Locate and track Cores and Treasure Chests with real time-timers, Map Resources (and sizes), Avalonian Chests, and easily find connections to the Royal Continent, Outlands portals and rest zones.
       </p>
-      <p class="text-gray-400 text-center">
+      <p class="text-white text-center">
         All Rooms are secured with a password, which you can rotate at any time.
       </p>
+       <p class="text-gray-400 text-center">Created by <a href="https://discord.gg/t372jvcsZn" class="text-indigo-400 hover:underline" target="_blank">[DIG]</a> Maelstrome</p>
     </div>
     <div class="w-full max-w-[2000px] mt-4 min-[1200px]:mt-0 min-[1200px]:px-24 min-[1200px]:pt-4 pb-10">
-      <video
-        ref="videoRef"
-        src="/demo2.mp4"
-        autoplay
-        loop
-        muted
-        playsinline
-        controls
-        @play="startAnimation"
-        @pause="stopAnimation"
-        @ended="stopAnimation"
-        class="w-full min-[1200px]:border-2 min-[1200px]:border-gray-500 min-[1200px]:rounded-lg"
-      />
-      <div class="mt-4 w-full px-4 min-[1200px]:px-0 text-center">
+      <div class="mb-4 w-full px-4 min-[1200px]:px-0 text-center">
         <select
           :value="dropdownValue"
           @change="onChapterChange"
@@ -190,6 +177,19 @@ onMounted(() => {
           </button>
         </div>
       </div>
+      <video
+        ref="videoRef"
+        src="/demo2.mp4"
+        autoplay
+        loop
+        muted
+        playsinline
+        controls
+        @play="startAnimation"
+        @pause="stopAnimation"
+        @ended="stopAnimation"
+        class="w-full min-[1200px]:border-2 min-[1200px]:border-gray-500 min-[1200px]:rounded-lg"
+      />
     </div>
   </div>
   <CreateRoomModal v-if="showCreate" @close="showCreate = false" />
