@@ -23,7 +23,7 @@ const emit = defineEmits<{
   </div>
 
   <!-- Mobile: logo + settings (left column) -->
-  <div :class="['md:hidden absolute top-2 left-4 flex flex-col gap-2', Z_INDEX.OVERLAY]">
+  <div :class="['md:hidden absolute top-2 left-2 flex flex-col gap-2', Z_INDEX.OVERLAY]">
     <img src="/images/favicon/android-icon-192x192.png" class="w-8 h-8 ml-2 cursor-pointer" alt="Site Logo" @click="emit('logout')" />
     <RoomSettings :tray="true" />
   </div>

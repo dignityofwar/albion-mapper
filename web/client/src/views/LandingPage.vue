@@ -2,6 +2,7 @@
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import CreateRoomModal from '../components/CreateRoomModal.vue';
+import CopyrightNotice from '../components/CopyrightNotice.vue';
 import RecentlyViewedRooms from '../components/RecentlyViewedRooms.vue';
 
 const route = useRoute();
@@ -141,7 +142,7 @@ onMounted(() => {
         All Rooms are secured with a password, which you can rotate at any time.
       </p>
     </div>
-    <div class="w-full max-w-[2000px] mt-4 min-[1200px]:mt-0 min-[1200px]:px-24 min-[1200px]:py-4">
+    <div class="w-full max-w-[2000px] mt-4 min-[1200px]:mt-0 min-[1200px]:px-24 min-[1200px]:pt-4 pb-10">
       <video
         ref="videoRef"
         src="/demo2.mp4"
@@ -191,6 +192,8 @@ onMounted(() => {
       </div>
     </div>
   </div>
-
-    <CreateRoomModal v-if="showCreate" @close="showCreate = false" />
+  <CreateRoomModal v-if="showCreate" @close="showCreate = false" />
+  <div class="fixed bottom-2 left-0 right-0 text-center pointer-events-none">
+    <CopyrightNotice />
+  </div>
 </template>

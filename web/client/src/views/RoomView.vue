@@ -13,6 +13,7 @@ import NonRoadsNode from '../components/flow/NonRoadsNode.vue';
 import ConnectionEdge from '../components/flow/ConnectionEdge.vue';
 import ConnectionLine from '../components/flow/ConnectionLine.vue';
 import TipButton from '../components/TipButton.vue';
+import CopyrightNotice from '../components/CopyrightNotice.vue';
 import TutorialTooltip from '../components/tutorial/TutorialTooltip.vue';
 import MegaToast from '../components/common/MegaToast.vue';
 import ConfirmationModal from '../components/common/ConfirmationModal.vue';
@@ -1482,6 +1483,10 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
       :detail="pendingOccupiedConnection ? `${ZONE_BY_ID.get(pendingOccupiedConnection.occupiedConn.fromZoneId)?.name ?? pendingOccupiedConnection.occupiedConn.fromZoneId} -> ${ZONE_BY_ID.get(pendingOccupiedConnection.occupiedConn.toZoneId)?.name ?? pendingOccupiedConnection.occupiedConn.toZoneId} will be deleted!` : undefined"
       @confirm="handleConfirmOccupied"
     />
+
+    <div class="fixed bottom-8 left-0 right-0 text-center min-[1200px]:left-4 min-[1200px]:right-auto min-[1200px]:text-left pointer-events-none" :class="Z_INDEX.OVERLAY">
+      <CopyrightNotice />
+    </div>
   </div>
 </template>
 

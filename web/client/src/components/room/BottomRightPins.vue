@@ -27,7 +27,7 @@ function onPlotRouteClick(plotRouteMode?: boolean, hasRoute?: boolean) {
 
 <template>
   <!-- Fixed bottom-right: debug button + mobile summary button + landscape refresh -->
-  <div class="fixed bottom-10 right-4 flex flex-col gap-4" :class="Z_INDEX.UI_OVERLAY">
+  <div class="pins-container fixed bottom-14 right-2 md:right-4 flex flex-col gap-4" :class="Z_INDEX.UI_OVERLAY">
     <!-- Desktop-only debug button -->
     <TooltipProvider :delay-duration="0">
       <TooltipRoot>
@@ -160,5 +160,12 @@ function onPlotRouteClick(plotRouteMode?: boolean, hasRoute?: boolean) {
 .plot-route-active-pulse {
   animation: plot-route-pulse 1.5s infinite ease-in-out;
   border: 1px solid #3b82f6;
+}
+
+/* Small phones: push pins up to bottom-18 */
+@media (max-width: 560px) {
+  .pins-container {
+    bottom: 4.5rem;
+  }
 }
 </style>
