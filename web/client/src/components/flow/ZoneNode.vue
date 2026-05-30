@@ -1144,7 +1144,7 @@ function lockCore(core: string) {
 
       <!-- Room Memory Button (bottom tip) -->
       <div class="absolute left-1/2 -translate-x-1/2 bottom-5 flex items-center justify-center" :class="Z_INDEX.CONTENT_LOW" v-if="!props.data.isHome">
-        <RoomMemoryButton :entry="memoryEntry ?? null" :zone-name="props.data.zoneName || props.id" />
+        <RoomMemoryButton :entry="memoryEntry ?? null" :zone-name="props.data.zoneName || props.id" :zone-id="props.id" :has-rotation-error="store.rotationErrors.includes(props.id)" />
       </div>
       
     </div>

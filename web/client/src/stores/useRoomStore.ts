@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, nextTick } from 'vue';
 import type { Connection, ServerMessage, NodePosition, NodeFeatures, CustomHandle, RoomMemoryEntry } from 'shared';
+import { inferRotationFromHandles, getShapeHandlePositions, ZONE_BY_ID } from 'shared';
 import { API_BASE_URL } from '@/utils/api';
 import { track } from '@vercel/analytics';
 import { treeQuery } from '@/utils/treeQuery';
@@ -75,6 +76,40 @@ export const useRoomStore = defineStore('room', () => {
     }
   }
 
+  const rotationErrors = ref<string[]>([]);
+
+  function validateNodeRotations(positions: NodePosition[]) {
+    const errors: string[] = [];
+    for (const node of positions) {
+      const zone = ZONE_BY_ID.get(node.zoneId);
+      if (!zone || zone.type === 'roadsHideout') continue;
+      const shape = zone.mapShape;
+      if (!shape) continue;
+      const defaultHandles = getShapeHandlePositions(shape);
+      if (defaultHandles.length === 0) continue;
+      const customHandles = node.customHandles;
+      if (!customHandles || customHandles.length === 0) continue;
+
+      const inferred = inferRotationFromHandles(customHandles, defaultHandles);
+      if (inferred === null) continue;
+
+      const stored = node.rotation ?? 0;
+      if (inferred !== stored) {
+        console.warn(
+          `[RotationValidation] Mismatch on zone "${node.zoneId}": ` +
+          `stored rotation=${stored} but handles imply rotation=${inferred}. ` +
+          `The stored rotation value may be stale due to a sync race condition.`
+        );
+        errors.push(node.zoneId);
+      }
+    }
+    rotationErrors.value = errors;
+  }
+
+  function clearRotationError(zoneId: string) {
+    rotationErrors.value = rotationErrors.value.filter(id => id !== zoneId);
+  }
+
   function applyMessage(msg: ServerMessage) {
     const memoryStore = useRoomMemoryStore();
     switch (msg.type) {
@@ -83,6 +118,7 @@ export const useRoomStore = defineStore('room', () => {
         homeZoneId.value = msg.homeZoneId;
         roomTitle.value = msg.title || '';
         nodePositions.value = msg.nodePositions;
+        validateNodeRotations(msg.nodePositions);
         lastUpdate.value = new Date(msg.lastUpdatedAt);
         watchingCount.value = msg.watching;
         totalConnected.value = msg.totalConnected;
@@ -364,6 +400,19 @@ export const useRoomStore = defineStore('room', () => {
     }
   }
 
+  function resetZonePortals(zoneId: string) {
+    const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
+    if (index === -1) return;
+    const newNodePositions = [...nodePositions.value];
+    newNodePositions[index] = { ...newNodePositions[index], rotation: 0, customHandles: [] };
+    nodePositions.value = newNodePositions;
+    lastUpdate.value = new Date();
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'update_node_positions', nodePositions: nodePositions.value, updateLastUpdated: true }));
+      track('reset_zone_portals');
+    }
+  }
+
   function updateNodeRotation(zoneId: string, rotation: number) {
     const index = nodePositions.value.findIndex(n => n.zoneId === zoneId);
     if (index === -1) return;
@@ -452,6 +501,8 @@ export const useRoomStore = defineStore('room', () => {
     lastUpdate,
     lastPing,
     watchingCount,
+    rotationErrors,
+    clearRotationError,
     totalConnected,
     token,
     roomId,
@@ -471,6 +522,7 @@ export const useRoomStore = defineStore('room', () => {
     isNodeRestricted,
     isEdgeIsolated,
     resetNodePositions,
+    resetZonePortals,
     send,
     connect,
     disconnect,
