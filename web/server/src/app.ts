@@ -37,6 +37,7 @@ export async function buildApp(options: AppOptions) {
       'http://10.0.5.2',
       'https://10.0.5.2',
       /^http:\/\/localhost(:\d+)?$/,
+      /^https?:\/\/([a-zA-Z0-9-]+\.)?albionroads\.live$/
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   });

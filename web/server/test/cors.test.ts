@@ -52,4 +52,33 @@ describe('CORS', () => {
 
     await app.close();
   });
+
+  it('allows *.albionroads.live origins', async () => {
+    const mockDb = {
+      query: vi.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+      connect: vi.fn(),
+    };
+    const app = await buildApp({ db: mockDb as any, disableRateLimit: true });
+    await app.ready();
+
+    const testOrigins = [
+      'https://albionroads.live',
+      'https://www.albionroads.live',
+      'https://app.albionroads.live',
+    ];
+
+    for (const origin of testOrigins) {
+      const res = await app.inject({
+        method: 'OPTIONS',
+        url: '/api/rooms',
+        headers: {
+          'Origin': origin,
+          'Access-Control-Request-Method': 'GET',
+        },
+      });
+      expect(res.headers['access-control-allow-origin']).toBe(origin);
+    }
+
+    await app.close();
+  });
 });
