@@ -440,6 +440,13 @@ export const useRoomStore = defineStore('room', () => {
     localStorage.setItem('shapeBackgroundOpacity', String(opacity));
   }
 
+  const arrowAnimationsEnabled = ref<boolean>(localStorage.getItem('arrowAnimationsEnabled') !== 'false');
+
+  function setArrowAnimationsEnabled(enabled: boolean) {
+    arrowAnimationsEnabled.value = enabled;
+    localStorage.setItem('arrowAnimationsEnabled', String(enabled));
+  }
+
   const recentlyViewedRooms = ref<RecentRoom[]>(JSON.parse(localStorage.getItem('recentRooms') || '[]').map((r: any) => ({
     id: r.id,
     vanityUrl: r.vanityUrl || r.id,
@@ -529,6 +536,8 @@ export const useRoomStore = defineStore('room', () => {
     logout,
     shapeBackgroundOpacity,
     setShapeBackgroundOpacity,
+    arrowAnimationsEnabled,
+    setArrowAnimationsEnabled,
     removeFromRecentRooms,
     importData,
   };

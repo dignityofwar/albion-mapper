@@ -246,7 +246,8 @@ defineExpose({
     @mousedown.stop
   />
   
-  <g v-if="!props.data?.isGhost && !isRestricted" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
+  <!-- Animated chevrons -->
+  <g v-if="!props.data?.isGhost && !isRestricted && roomStore.arrowAnimationsEnabled" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
     <path
       v-for="i in numChevrons"
       :key="`${chevronEpoch}-${i}`"
@@ -274,6 +275,31 @@ defineExpose({
         :dur="`${duration}s`"
         :begin="`${(i - 1) * (duration / numChevrons)}s`"
         repeatCount="indefinite"
+      />
+    </path>
+  </g>
+
+  <!-- Static chevrons (animations disabled) -->
+  <g v-if="!props.data?.isGhost && !isRestricted && !roomStore.arrowAnimationsEnabled" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
+    <path
+      v-for="i in numChevrons"
+      :key="`static-${chevronEpoch}-${i}`"
+      :d="isPlotted ? 'M -18 -18 L 0 0 L -18 18' : 'M -6 -6 L 0 0 L -6 6'"
+      fill="none"
+      :stroke-width="isPlotted ? 4 : 3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      :stroke="style.stroke"
+      stroke-opacity="1"
+    >
+      <animateMotion
+        dur="1s"
+        :keyPoints="`${(i - 1) / numChevrons};${(i - 1) / numChevrons}`"
+        keyTimes="0;1"
+        calcMode="linear"
+        fill="freeze"
+        :path="path"
+        rotate="auto"
       />
     </path>
   </g>
