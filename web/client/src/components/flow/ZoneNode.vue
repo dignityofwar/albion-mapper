@@ -919,8 +919,8 @@ function lockCore(core: string) {
           props.data.highlighted ? 'goto-glow-animation' : '',
           isPinged ? 'ping-animation' : '',
           props.data.isGhost || isRestricted ? 'opacity-50 grayscale' : '',
-          isPlotRouteTarget ? 'plot-route-hover' : '',
-          isRouteDestination ? 'plot-route-destination' : ''
+          isPlotRouteTarget && store.animationsEnabled ? 'plot-route-hover' : (isPlotRouteTarget ? 'plot-route-hover-static' : ''),
+          isRouteDestination && store.animationsEnabled ? 'plot-route-destination' : (isRouteDestination ? 'plot-route-destination-static' : '')
         ]"
         @animationend="(e: AnimationEvent) => { if (e.animationName === 'goto-glow') updateNodeData(props.id, { highlighted: false }); if (e.animationName === 'ping-glow' || e.animationName === 'ping-glow-home') isPinged = false; }"
         @mouseenter="isHovered = true"
@@ -1190,6 +1190,11 @@ function lockCore(core: string) {
   animation: plot-route-hover-pulse 1.5s ease-in-out infinite;
 }
 
+/*noinspection ALL*/
+.plot-route-hover-static {
+  filter: drop-shadow(0 0 18px #60a5fa) drop-shadow(0 0 6px #93c5fd);
+}
+
 @keyframes plot-route-hover-pulse {
   0%, 100% { filter: drop-shadow(0 0 18px #60a5fa) drop-shadow(0 0 6px #93c5fd); }
   50% { filter: drop-shadow(0 0 6px #1d4ed8) drop-shadow(0 0 2px #3b82f6); }
@@ -1198,6 +1203,11 @@ function lockCore(core: string) {
 /*noinspection ALL*/
 .plot-route-destination {
   animation: plot-route-destination-pulse 5s ease-in-out infinite;
+}
+
+/*noinspection ALL*/
+.plot-route-destination-static {
+  filter: drop-shadow(0 0 20px #1d4ed8) drop-shadow(0 0 8px #1e40af);
 }
 
 @keyframes plot-route-destination-pulse {

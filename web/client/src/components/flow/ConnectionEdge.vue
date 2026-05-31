@@ -239,15 +239,15 @@ defineExpose({
   <BaseEdge
     :id="id"
     :path="path"
-    :animated="style.animated"
-    :style="{ stroke: style.stroke, strokeDasharray: style.strokeDasharray, strokeWidth: isPlotted ? 3 : 2, opacity: isRestricted ? 0.3 : 1, animation: isPlotted ? 'pulse-blue-stroke 0.75s infinite ease-in-out' : (isRestricted ? 'none' : undefined) }"
+    :animated="false"
+    :style="{ stroke: style.stroke, strokeWidth: isPlotted ? 3 : 2, opacity: isRestricted ? 0.3 : 1, animation: !roomStore.animationsEnabled ? 'none' : (isPlotted ? 'pulse-blue-stroke 0.75s infinite ease-in-out' : (isRestricted ? 'none' : undefined)) }"
     class="cursor-pointer"
     @click.stop="showPopover = !showPopover"
     @mousedown.stop
   />
   
   <!-- Animated chevrons -->
-  <g v-if="!props.data?.isGhost && !isRestricted && roomStore.arrowAnimationsEnabled" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
+  <g v-if="!props.data?.isGhost && !isRestricted && roomStore.animationsEnabled" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
     <path
       v-for="i in numChevrons"
       :key="`${chevronEpoch}-${i}`"
@@ -280,7 +280,7 @@ defineExpose({
   </g>
 
   <!-- Static chevrons (animations disabled) -->
-  <g v-if="!props.data?.isGhost && !isRestricted && !roomStore.arrowAnimationsEnabled" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
+  <g v-if="!props.data?.isGhost && !isRestricted && !roomStore.animationsEnabled" class="pointer-events-none" :style="{ opacity: chevronsVisible ? 1 : 0, transition: 'opacity 0.3s ease' }">
     <path
       v-for="i in numChevrons"
       :key="`static-${chevronEpoch}-${i}`"

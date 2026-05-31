@@ -158,15 +158,15 @@ function logout() {
           </div>
         </div>
 
-        <!-- Arrow Animations -->
+        <!-- Animations -->
         <div class="border-b border-gray-700 p-2">
           <button
             type="button"
             class="w-full text-left px-3 py-2 text-sm rounded text-gray-200 hover:bg-gray-700 flex items-center justify-between"
-            @click="store.setArrowAnimationsEnabled(!store.arrowAnimationsEnabled)"
+            @click="store.setAnimationsEnabled(!store.animationsEnabled)"
           >
-            <span class="inline-flex items-center gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polyline points="9 18 15 12 9 6"/></svg> Arrow animations</span>
-            <span :class="store.arrowAnimationsEnabled ? 'text-green-400' : 'text-gray-500'">{{ store.arrowAnimationsEnabled ? 'On' : 'Off' }}</span>
+            <span class="inline-flex items-center gap-1.5"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg> Animations</span>
+            <span :class="store.animationsEnabled ? 'text-green-400' : 'text-gray-500'">{{ store.animationsEnabled ? 'On' : 'Off' }}</span>
           </button>
         </div>
 
