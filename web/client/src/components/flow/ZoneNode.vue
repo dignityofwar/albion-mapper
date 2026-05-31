@@ -293,7 +293,7 @@ const handleEdgeClass = (handleId: string): string => {
     (c.toZoneId === props.id && c.toHandleId === handleId)
   );
   if (!conn) return '';
-  if (plotRouteStore.plottedConnectionIds.has(conn.id)) return 'handle-edge-plotted';
+  if (plotRouteStore.plottedConnectionIds.has(conn.id)) return store.animationsEnabled ? 'handle-edge-plotted' : 'handle-edge-blue';
   if (isRestricted.value || store.isEdgeIsolated(conn.id, now.value)) return 'handle-edge-grey';
   const remainingMs = new Date(conn.expiresAt).getTime() - now.value;
   const style = connectionStyle(remainingMs, conn.isExpired ?? false);

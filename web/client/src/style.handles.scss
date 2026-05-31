@@ -177,6 +177,15 @@
   &.handle-edge-plotted::before {
     border-top: 2px solid #3b82f6;
   }
+
+  &.handle-edge-blue::after {
+    background-color: rgb(29 78 216);
+    border: 2px solid #3b82f6;
+  }
+
+  &.handle-edge-blue::before {
+    border-top: 2px solid #3b82f6;
+  }
 }
 
 .center-handle {

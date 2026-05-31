@@ -240,7 +240,7 @@ defineExpose({
     :id="id"
     :path="path"
     :animated="false"
-    :style="{ stroke: style.stroke, strokeWidth: isPlotted ? 3 : 2, opacity: isRestricted ? 0.3 : 1, animation: !roomStore.animationsEnabled ? 'none' : (isPlotted ? 'pulse-blue-stroke 0.75s infinite ease-in-out' : (isRestricted ? 'none' : undefined)) }"
+    :style="{ stroke: isPlotted ? '#3b82f6' : style.stroke, strokeWidth: isPlotted ? 3 : 2, opacity: isRestricted ? 0.3 : 1, strokeDasharray: isPlotted ? 'none' : undefined, animation: !roomStore.animationsEnabled ? 'none' : (isPlotted ? 'pulse-blue-stroke 0.75s infinite ease-in-out' : (isRestricted ? 'none' : undefined)) }"
     class="cursor-pointer"
     @click.stop="showPopover = !showPopover"
     @mousedown.stop
