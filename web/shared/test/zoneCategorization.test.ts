@@ -69,19 +69,19 @@ describe('zone categorization', () => {
       });
     });
 
-    describe('Fort Stirling RC', () => {
+    describe('Fort Sterling RC', () => {
       it('categorizes by keywords/prefixes: Fissure, Gorge, Camain, Pen, Creag, Cairn', () => {
-        expect(getZoneCategory('Deadvein Fissure', 'royalRed')).toBe('Fort Stirling RC');
-        expect(getZoneCategory('Bryn Gorge', 'royalBlue')).toBe('Fort Stirling RC');
-        expect(getZoneCategory('Cairn Camain', 'royalYellow')).toBe('Fort Stirling RC');
-        expect(getZoneCategory('Pen Digra', 'royalRed')).toBe('Fort Stirling RC');
-        expect(getZoneCategory('Creag Garr', 'royalRed')).toBe('Fort Stirling RC');
+        expect(getZoneCategory('Deadvein Fissure', 'royalRed')).toBe('Fort Sterling RC');
+        expect(getZoneCategory('Bryn Gorge', 'royalBlue')).toBe('Fort Sterling RC');
+        expect(getZoneCategory('Cairn Camain', 'royalYellow')).toBe('Fort Sterling RC');
+        expect(getZoneCategory('Pen Digra', 'royalRed')).toBe('Fort Sterling RC');
+        expect(getZoneCategory('Creag Garr', 'royalRed')).toBe('Fort Sterling RC');
       });
 
       it('handles exceptions: Cedar Copse, Larchroad', () => {
-        expect(getZoneCategory('Cedar Copse', 'royalBlue')).toBe('Fort Stirling RC');
-        expect(getZoneCategory('Cedarcopse', 'royalBlue')).toBe('Fort Stirling RC');
-        expect(getZoneCategory('Larchroad', 'royalRed')).toBe('Fort Stirling RC');
+        expect(getZoneCategory('Cedar Copse', 'royalBlue')).toBe('Fort Sterling RC');
+        expect(getZoneCategory('Cedarcopse', 'royalBlue')).toBe('Fort Sterling RC');
+        expect(getZoneCategory('Larchroad', 'royalRed')).toBe('Fort Sterling RC');
       });
     });
   });
@@ -89,7 +89,7 @@ describe('zone categorization', () => {
   describe('Outlands Portals', () => {
     it('categorizes portals correctly', () => {
       expect(getZoneCategory('Thetford Portal', 'outlands')).toBe('Thetford Portal');
-      expect(getZoneCategory('Fort Stirling Portal', 'outlands')).toBe('Fort Stirling Portal');
+      expect(getZoneCategory('Fort Sterling Portal', 'outlands')).toBe('Fort Sterling Portal');
       expect(getZoneCategory('Lymhurst Portal', 'outlands')).toBe('Lymhurst Portal');
       expect(getZoneCategory('Bridgewatch Portal', 'outlands')).toBe('Bridgewatch Portal');
       expect(getZoneCategory('Martlock Portal', 'outlands')).toBe('Martlock Portal');
@@ -118,11 +118,11 @@ describe('zone categorization', () => {
       expect(getZoneCategory('Hightree Lake', 'outlands')).toBe('Lymhurst Portal');
       expect(getZoneCategory('Watchwood Grove', 'outlands')).toBe('Lymhurst Portal');
 
-      // Fort Stirling
-      expect(getZoneCategory('Whitebank Wall', 'outlands')).toBe('Fort Stirling Portal');
-      expect(getZoneCategory('Deepwood Gorge', 'outlands')).toBe('Fort Stirling Portal');
-      expect(getZoneCategory('Frostpeak Ascent', 'outlands')).toBe('Fort Stirling Portal');
-      expect(getZoneCategory('Meltwater Delta', 'outlands')).toBe('Fort Stirling Portal');
+      // Fort Sterling
+      expect(getZoneCategory('Whitebank Wall', 'outlands')).toBe('Fort Sterling Portal');
+      expect(getZoneCategory('Deepwood Gorge', 'outlands')).toBe('Fort Sterling Portal');
+      expect(getZoneCategory('Frostpeak Ascent', 'outlands')).toBe('Fort Sterling Portal');
+      expect(getZoneCategory('Meltwater Delta', 'outlands')).toBe('Fort Sterling Portal');
     });
 
     it('categorizes non-portal outlands zones as Outlands', () => {
@@ -130,7 +130,7 @@ describe('zone categorization', () => {
       expect(getZoneCategory('Willowshade Hills', 'outlands')).toBe('Outlands');
       expect(getZoneCategory('Battlebrae Meadow', 'outlands')).toBe('Outlands');
       expect(getZoneCategory('Southgrove Wood', 'outlands')).toBe('Outlands');
-      expect(getZoneCategory('Deepwood Gorge', 'outlands')).toBe('Fort Stirling Portal');
+      expect(getZoneCategory('Deepwood Gorge', 'outlands')).toBe('Fort Sterling Portal');
     });
   });
 
@@ -190,15 +190,15 @@ describe('zone categorization', () => {
       expect(getZoneCategory('Inis Mon', 'royalRed')).toBe('Lymhurst RC');
     });
 
-    it('Fort Stirling', () => {
+    it('Fort Sterling', () => {
       // City
-      expect(getZoneCategory('Pen Gent', 'royalBlue')).toBe('Fort Stirling RC');
-      expect(getZoneCategory('Crose Gorge', 'royalBlue')).toBe('Fort Stirling RC');
-      expect(getZoneCategory('Caulder Fissure', 'royalBlue')).toBe('Fort Stirling RC');
+      expect(getZoneCategory('Pen Gent', 'royalBlue')).toBe('Fort Sterling RC');
+      expect(getZoneCategory('Crose Gorge', 'royalBlue')).toBe('Fort Sterling RC');
+      expect(getZoneCategory('Caulder Fissure', 'royalBlue')).toBe('Fort Sterling RC');
       // Portal
-      expect(getZoneCategory('Whitebank Shore', 'outlands')).toBe('Fort Stirling Portal');
-      expect(getZoneCategory('Deepwood Dell', 'outlands')).toBe('Fort Stirling Portal');
-      expect(getZoneCategory('Meltwater Delta', 'outlands')).toBe('Fort Stirling Portal');
+      expect(getZoneCategory('Whitebank Shore', 'outlands')).toBe('Fort Sterling Portal');
+      expect(getZoneCategory('Deepwood Dell', 'outlands')).toBe('Fort Sterling Portal');
+      expect(getZoneCategory('Meltwater Delta', 'outlands')).toBe('Fort Sterling Portal');
     });
   });
 });

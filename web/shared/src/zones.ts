@@ -20,7 +20,7 @@ export const LYMHURST_PORTAL_MAPS = new Set([
   'Thunderrock Rapids', 'Hightree Lake', 'Hightree Hillock', 'Hightree Pass', 'Hightree Steep', 'Hightree Strand', 'Hightree Levee', 'Hightree Enclave', 'Hightree Cliffs', 'Hightree Glade', 'Hightree Dale', 'Hightree Isle', 'Watchwood Grove', 'Watchwood Bluffs', 'Watchwood Precipice', 'Watchwood Lakeside', 'Skullmarsh Lower'
 ]);
 
-export const FORT_STIRLING_PORTAL_MAPS = new Set([
+export const FORT_STERLING_PORTAL_MAPS = new Set([
   'Whitebank Shore', 'Frostpeak Vista', 'Frostpeak Ascent', 'Deepwood Dell', 'Deepwood Gorge', 'Whitebank Cross', 'Whitebank Wall', 'Whitebank Stream', 'Whitebank Ridge', 'Whitebank Descent', 'Meltwater Delta'
 ]);
 
@@ -31,7 +31,7 @@ export function getZoneCategory(name: string, type: string): string | undefined 
     if (['Curlew Fen', 'Slimehag'].includes(name)) return 'Martlock RC';
     if (['Vixen Tor', 'Goffers Knoll', 'Kilmar Tor', 'Saddle Tor', 'Carns Hill', 'Brons Hill', 'Fractured Ground'].includes(name)) return 'Bridgewatch RC';
     if (['Goldshimmer Plain', 'Steelhide Meadow', 'Dryfield Meadow', 'Cracked Earth'].includes(name)) return 'Lymhurst RC';
-    if (['Cedar Copse', 'Cedarcopse', 'Larchroad'].includes(name)) return 'Fort Stirling RC';
+    if (['Cedar Copse', 'Cedarcopse', 'Larchroad'].includes(name)) return 'Fort Sterling RC';
 
     // Thetford RC: Fen, Marsh, Swamp, Basin
     if (/(Fen|Marsh|Swamp|Basin)/i.test(name)) return 'Thetford RC';
@@ -45,13 +45,13 @@ export function getZoneCategory(name: string, type: string): string | undefined 
     // Lymhurst RC: Wood, Forest, Ferndell, Birchcopse, Redlake, Stagbourne, Flynsdell, Oakcopse, Glen, Inis Mon
     if (/(Wood|Forest|Ferndell|Birchcopse|Redlake|Stagbourne|Flynsdell|Oakcopse|Glen|Inis Mon)/i.test(name)) return 'Lymhurst RC';
 
-    // Fort Stirling RC: Fissure, Gorge, Camain, Pen, Creag, Cairn
-    if (/(Fissure|Gorge|Camain)/i.test(name) || /^(Pen|Creag|Cairn)/i.test(name)) return 'Fort Stirling RC';
+    // Fort Sterling RC: Fissure, Gorge, Camain, Pen, Creag, Cairn
+    if (/(Fissure|Gorge|Camain)/i.test(name) || /^(Pen|Creag|Cairn)/i.test(name)) return 'Fort Sterling RC';
   }
 
   if (name.toLowerCase().endsWith(' portal')) {
     if (name.toLowerCase().startsWith('thetford')) return 'Thetford Portal';
-    if (name.toLowerCase().startsWith('fort stirling')) return 'Fort Stirling Portal';
+    if (name.toLowerCase().startsWith('fort sterling')) return 'Fort Sterling Portal';
     if (name.toLowerCase().startsWith('lymhurst')) return 'Lymhurst Portal';
     if (name.toLowerCase().startsWith('bridgewatch')) return 'Bridgewatch Portal';
     if (name.toLowerCase().startsWith('martlock')) return 'Martlock Portal';
@@ -63,7 +63,7 @@ export function getZoneCategory(name: string, type: string): string | undefined 
     if (MARTLOCK_PORTAL_MAPS.has(name)) return 'Martlock Portal';
     if (BRIDGEWATCH_PORTAL_MAPS.has(name)) return 'Bridgewatch Portal';
     if (LYMHURST_PORTAL_MAPS.has(name)) return 'Lymhurst Portal';
-    if (FORT_STIRLING_PORTAL_MAPS.has(name)) return 'Fort Stirling Portal';
+    if (FORT_STERLING_PORTAL_MAPS.has(name)) return 'Fort Sterling Portal';
 
     return 'Outlands';
   }
