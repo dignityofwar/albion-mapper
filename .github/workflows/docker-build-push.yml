@@ -44,7 +44,7 @@ jobs:
       # would mean loading the image into the local daemon first, which is slower
       # and buys nothing, so the split is in the naming rather than the mechanism.
       - name: ${{ inputs.push && 'Build and push' || 'Build' }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: provisioning/Dockerfile
