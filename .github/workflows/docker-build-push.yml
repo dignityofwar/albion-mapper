@@ -17,6 +17,9 @@ on:
         required: false
         default: production
 
+permissions:
+  contents: read
+
 jobs:
   # Both names are driven off `push` so a run says what it actually did. A
   # validation build that announces itself as "Build & push" reads as though it
