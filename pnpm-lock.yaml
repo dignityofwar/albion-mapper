@@ -38,7 +38,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^1.6.0
-        version: 1.6.1(@types/node@20.19.39)(jsdom@25.0.1(supports-color@8.1.1))(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1)
+        version: 1.6.1(@types/node@20.19.39)(jsdom@25.0.1)(sass-embedded@1.99.0)(sass@1.99.0)
 
   web/client:
     dependencies:
@@ -114,7 +114,7 @@ importers:
         version: 10.5.4(postcss@8.5.19)
       jsdom:
         specifier: ^25.0.1
-        version: 25.0.1(supports-color@8.1.1)
+        version: 25.0.1
       postcss:
         specifier: ^8.4.47
         version: 8.5.19
@@ -132,7 +132,7 @@ importers:
         version: 5.4.21(@types/node@22.19.17)(sass-embedded@1.99.0)(sass@1.99.0)
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.19.17)(jsdom@25.0.1(supports-color@8.1.1))(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1)
+        version: 2.1.9(@types/node@22.19.17)(jsdom@25.0.1)(sass-embedded@1.99.0)(sass@1.99.0)
       vue-tsc:
         specifier: ^2.1.6
         version: 2.2.12(typescript@5.9.3)
@@ -153,7 +153,7 @@ importers:
         version: 11.2.0
       bcrypt:
         specifier: ^5.1.1
-        version: 5.1.1(supports-color@8.1.1)
+        version: 5.1.1
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -193,7 +193,7 @@ importers:
         version: 8.18.1
       supertest:
         specifier: ^7.0.0
-        version: 7.2.2(supports-color@8.1.1)
+        version: 7.2.2
       tsx:
         specifier: ^4.19.1
         version: 4.21.0
@@ -202,10 +202,10 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.19.17)(jsdom@25.0.1(supports-color@8.1.1))(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1)
+        version: 2.1.9(@types/node@22.19.17)(jsdom@25.0.1)(sass-embedded@1.99.0)(sass@1.99.0)
       ws:
-        specifier: ^8.20.0
-        version: 8.21.0
+        specifier: ^8.21.1
+        version: 8.21.1
 
   web/shared:
     dependencies:
@@ -218,7 +218,7 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^2.0.5
-        version: 2.1.9(@types/node@22.19.17)(jsdom@25.0.1(supports-color@8.1.1))(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1)
+        version: 2.1.9(@types/node@22.19.17)(jsdom@25.0.1)(sass-embedded@1.99.0)(sass@1.99.0)
 
 packages:
 
@@ -3383,8 +3383,8 @@ packages:
       utf-8-validate:
         optional: true
 
-  ws@8.21.0:
-    resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
+  ws@8.21.1:
+    resolution: {integrity: sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -3695,7 +3695,7 @@ snapshots:
     dependencies:
       duplexify: 4.1.3
       fastify-plugin: 5.1.0
-      ws: 8.21.0
+      ws: 8.21.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3759,10 +3759,10 @@ snapshots:
 
   '@lukeed/ms@2.0.2': {}
 
-  '@mapbox/node-pre-gyp@1.0.11(supports-color@8.1.1)':
+  '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
       detect-libc: 2.1.2
-      https-proxy-agent: 5.0.1(supports-color@8.1.1)
+      https-proxy-agent: 5.0.1
       make-dir: 3.1.0
       node-fetch: 2.7.0
       nopt: 5.0.0
@@ -4330,9 +4330,9 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  agent-base@6.0.2(supports-color@8.1.1):
+  agent-base@6.0.2:
     dependencies:
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -4435,9 +4435,9 @@ snapshots:
 
   baseline-browser-mapping@2.11.4: {}
 
-  bcrypt@5.1.1(supports-color@8.1.1):
+  bcrypt@5.1.1:
     dependencies:
-      '@mapbox/node-pre-gyp': 1.0.11(supports-color@8.1.1)
+      '@mapbox/node-pre-gyp': 1.0.11
       node-addon-api: 5.1.0
     transitivePeerDependencies:
       - encoding
@@ -4646,11 +4646,9 @@ snapshots:
 
   de-indent@1.0.2: {}
 
-  debug@4.4.3(supports-color@8.1.1):
+  debug@4.4.3:
     dependencies:
       ms: 2.1.3
-    optionalDependencies:
-      supports-color: 8.1.1
 
   decimal.js@10.6.0: {}
 
@@ -5148,24 +5146,24 @@ snapshots:
     dependencies:
       whatwg-encoding: 3.1.1
 
-  http-proxy-agent@7.0.2(supports-color@8.1.1):
+  http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@5.0.1(supports-color@8.1.1):
+  https-proxy-agent@5.0.1:
     dependencies:
-      agent-base: 6.0.2(supports-color@8.1.1)
-      debug: 4.4.3(supports-color@8.1.1)
+      agent-base: 6.0.2
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
-  https-proxy-agent@7.0.6(supports-color@8.1.1):
+  https-proxy-agent@7.0.6:
     dependencies:
       agent-base: 7.1.4
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -5321,15 +5319,15 @@ snapshots:
 
   js-tokens@9.0.1: {}
 
-  jsdom@25.0.1(supports-color@8.1.1):
+  jsdom@25.0.1:
     dependencies:
       cssstyle: 4.6.0
       data-urls: 5.0.0
       decimal.js: 10.6.0
       form-data: 4.0.5
       html-encoding-sniffer: 4.0.0
-      http-proxy-agent: 7.0.2(supports-color@8.1.1)
-      https-proxy-agent: 7.0.6(supports-color@8.1.1)
+      http-proxy-agent: 7.0.2
+      https-proxy-agent: 7.0.6
       is-potential-custom-element-name: 1.0.1
       nwsapi: 2.2.23
       parse5: 7.3.0
@@ -6140,11 +6138,11 @@ snapshots:
       tinyglobby: 0.2.16
       ts-interface-checker: 0.1.13
 
-  superagent@10.3.0(supports-color@8.1.1):
+  superagent@10.3.0:
     dependencies:
       component-emitter: 1.3.1
       cookiejar: 2.1.4
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3
       fast-safe-stringify: 2.1.1
       form-data: 4.0.5
       formidable: 3.5.4
@@ -6154,11 +6152,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  supertest@7.2.2(supports-color@8.1.1):
+  supertest@7.2.2:
     dependencies:
       cookie-signature: 1.2.2
       methods: 1.1.2
-      superagent: 10.3.0(supports-color@8.1.1)
+      superagent: 10.3.0
     transitivePeerDependencies:
       - supports-color
 
@@ -6303,10 +6301,10 @@ snapshots:
 
   varint@6.0.0: {}
 
-  vite-node@1.6.1(@types/node@20.19.39)(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1):
+  vite-node@1.6.1(@types/node@20.19.39)(sass-embedded@1.99.0)(sass@1.99.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3
       pathe: 1.1.2
       picocolors: 1.1.1
       vite: 5.4.21(@types/node@20.19.39)(sass-embedded@1.99.0)(sass@1.99.0)
@@ -6321,10 +6319,10 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@2.1.9(@types/node@22.19.17)(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1):
+  vite-node@2.1.9(@types/node@22.19.17)(sass-embedded@1.99.0)(sass@1.99.0):
     dependencies:
       cac: 6.7.14
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3
       es-module-lexer: 1.7.0
       pathe: 1.1.2
       vite: 5.4.21(@types/node@22.19.17)(sass-embedded@1.99.0)(sass@1.99.0)
@@ -6361,7 +6359,7 @@ snapshots:
       sass: 1.99.0
       sass-embedded: 1.99.0
 
-  vitest@1.6.1(@types/node@20.19.39)(jsdom@25.0.1(supports-color@8.1.1))(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1):
+  vitest@1.6.1(@types/node@20.19.39)(jsdom@25.0.1)(sass-embedded@1.99.0)(sass@1.99.0):
     dependencies:
       '@vitest/expect': 1.6.1
       '@vitest/runner': 1.6.1
@@ -6370,7 +6368,7 @@ snapshots:
       '@vitest/utils': 1.6.1
       acorn-walk: 8.3.5
       chai: 4.5.0
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3
       execa: 8.0.1
       local-pkg: 0.5.1
       magic-string: 0.30.21
@@ -6381,11 +6379,11 @@ snapshots:
       tinybench: 2.9.0
       tinypool: 0.8.4
       vite: 5.4.21(@types/node@20.19.39)(sass-embedded@1.99.0)(sass@1.99.0)
-      vite-node: 1.6.1(@types/node@20.19.39)(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1)
+      vite-node: 1.6.1(@types/node@20.19.39)(sass-embedded@1.99.0)(sass@1.99.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.19.39
-      jsdom: 25.0.1(supports-color@8.1.1)
+      jsdom: 25.0.1
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -6396,7 +6394,7 @@ snapshots:
       - supports-color
       - terser
 
-  vitest@2.1.9(@types/node@22.19.17)(jsdom@25.0.1(supports-color@8.1.1))(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1):
+  vitest@2.1.9(@types/node@22.19.17)(jsdom@25.0.1)(sass-embedded@1.99.0)(sass@1.99.0):
     dependencies:
       '@vitest/expect': 2.1.9
       '@vitest/mocker': 2.1.9(vite@5.4.21(@types/node@22.19.17)(sass-embedded@1.99.0)(sass@1.99.0))
@@ -6406,7 +6404,7 @@ snapshots:
       '@vitest/spy': 2.1.9
       '@vitest/utils': 2.1.9
       chai: 5.3.3
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3
       expect-type: 1.3.0
       magic-string: 0.30.21
       pathe: 1.1.2
@@ -6416,11 +6414,11 @@ snapshots:
       tinypool: 1.1.1
       tinyrainbow: 1.2.0
       vite: 5.4.21(@types/node@22.19.17)(sass-embedded@1.99.0)(sass@1.99.0)
-      vite-node: 2.1.9(@types/node@22.19.17)(sass-embedded@1.99.0)(sass@1.99.0)(supports-color@8.1.1)
+      vite-node: 2.1.9(@types/node@22.19.17)(sass-embedded@1.99.0)(sass@1.99.0)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.19.17
-      jsdom: 25.0.1(supports-color@8.1.1)
+      jsdom: 25.0.1
     transitivePeerDependencies:
       - less
       - lightningcss
@@ -6548,7 +6546,7 @@ snapshots:
 
   ws@8.20.0: {}
 
-  ws@8.21.0: {}
+  ws@8.21.1: {}
 
   xml-name-validator@5.0.0: {}
 
