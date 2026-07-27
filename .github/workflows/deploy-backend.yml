@@ -26,6 +26,9 @@ concurrency:
   group: deploy-backend
   cancel-in-progress: false
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Tests
