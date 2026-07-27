@@ -19,6 +19,9 @@ concurrency:
   group: docker-build-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build:
     uses: ./.github/workflows/docker-build-push.yml
