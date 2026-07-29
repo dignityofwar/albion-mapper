@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- ':/web/client' ':/web/shared' ':/package.json' ':/pnpm-lock.yaml' ':/pnpm-workspace.yaml' && exit 0 || exit 1",
   "git": {
     "deploymentEnabled": {
       "renovate/**": false,
