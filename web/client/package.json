@@ -23,7 +23,7 @@
     "shared": "workspace:*",
     "slug": "^11.0.1",
     "unique-names-generator": "^4.7.1",
-    "vue": "^3.5.12",
+    "vue": "^3.5.40",
     "vue-kofi": "^1.1.1",
     "vue-router": "^4.4.5"
   },
