@@ -33,6 +33,7 @@ import { Controls } from '@vue-flow/controls';
 import { formatExpiresIn } from '@/utils/formatters';
 import { addConnection, deleteConnection, deleteConnections, updateConnection } from '@/utils/roomOperations';
 import { connectionStyle } from '@/utils/connectionStyle';
+import { TYPE_LABELS } from '@/utils/zoneStyles';
 import { ZONE_BY_ID, type Connection, type NodePosition, type NodeFeatures, type ZoneType, wouldCreateLongerLoop, getDefaultHandles, getHandleFacing } from 'shared';
 // v1.2 splash retired with v1.3 (kept for reference / future announcements)
 // import V1dot2SplashModal from "@/components/version-announcements/V1dot2SplashModal.vue";
@@ -57,7 +58,7 @@ provide('goToNode', goToNode);
 
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
-const toastType = ref<'info' | 'error'>('info');
+const toastType = ref<'info' | 'warning' | 'error'>('info');
 const routePlottedToast = ref('');
 let routePlottedToastTimeout: ReturnType<typeof setTimeout> | null = null;
 const showConfirmationModal = ref(false);
@@ -74,6 +75,47 @@ function isRoads(zoneId: string): boolean {
   const zone = ZONE_BY_ID.get(zoneId);
   if (!zone) return false;
   return zone.type === 'roads' || zone.type === 'roadsHideout';
+}
+
+// The four fixed anchors on a non-roads (Royal Continent / Outlands) node — the
+// midpoints of the diamond's edges. Unlike a roads portal these are not portals at
+// all, they are visual attachment points, and each one represents a whole edge of
+// the zone. See NonRoadsNode.vue.
+const NON_ROADS_EDGE_HANDLES = ['nw', 'ne', 'se', 'sw'];
+
+function isNonRoadsEdgeHandle(handleId?: string | null): boolean {
+  return !!handleId && NON_ROADS_EDGE_HANDLES.includes(handleId);
+}
+
+/**
+ * Attaching a roads zone to one of a non-roads zone's edge anchors is allowed — people
+ * use it to lay a chain out neatly — but it consumes that edge, so no RC/Outlands zone
+ * can be connected there afterwards. Warn whenever a roads↔non-roads link lands on one.
+ */
+function warnIfNonRoadsEdgeAttachment(
+  sourceId: string,
+  sourceHandle: string | null | undefined,
+  targetId: string,
+  targetHandle: string | null | undefined,
+) {
+  const sourceIsRoads = isRoads(sourceId);
+  const targetIsRoads = isRoads(targetId);
+  // Only roads↔non-roads links: non-roads↔non-roads is a real world link, roads↔roads
+  // has no edge anchors involved.
+  if (sourceIsRoads === targetIsRoads) return;
+
+  const nonRoadsZoneId = sourceIsRoads ? targetId : sourceId;
+  const nonRoadsHandleId = sourceIsRoads ? targetHandle : sourceHandle;
+  if (!isNonRoadsEdgeHandle(nonRoadsHandleId)) return;
+
+  const zoneType = ZONE_BY_ID.get(nonRoadsZoneId)?.type;
+  // 'other' maps to a combined label, which does not read well mid-sentence.
+  const label = zoneType && zoneType !== 'other' ? TYPE_LABELS[zoneType] : 'Royal Continent / Outlands';
+  showToast(
+    `Roads can be attached to a ${label} edge for visual purposes, but be aware this takes up that entire edge — no other Royal Continent or Outlands zone can be connected there. That's fine if you don't intend to connect anything else to that side.`,
+    'warning',
+    10000,
+  );
 }
 
 const megaToastRegion = ref('');
@@ -167,7 +209,7 @@ async function copyShareUrl() {
   showToast('Copied to clipboard!');
 }
 
-function showToast(msg: string, type: 'info' | 'error' = 'info', duration = 5000) {
+function showToast(msg: string, type: 'info' | 'warning' | 'error' = 'info', duration = 5000) {
   toast.value = msg;
   toastType.value = type;
   if (toastTimeout) clearTimeout(toastTimeout);
@@ -1021,10 +1063,11 @@ async function handleConnect(params: any) {
     const isSourceRoads = isRoads(params.source);
     const isTargetRoads = isRoads(params.target);
 
-    // One roads, one non-roads: Disallowed UNLESS the user is reassigning the handle on the
-    // roads zone side while keeping the non-roads handle the same (rotating which portal on the
-    // roads zone connects to the non-roads destination).
-    if ((isSourceRoads && !isTargetRoads) || (!isSourceRoads && isTargetRoads)) {
+    // One roads, one non-roads. Only the roads side carries real portals; the non-roads
+    // anchors (center plus the four edge midpoints) are visual, so moving one is always a
+    // reassignment of this same link rather than a new entrance. That means the roads-side
+    // handle is what decides whether this is a reassignment or a genuine second portal.
+    if (isSourceRoads !== isTargetRoads) {
       // Identify which handle each zone currently uses in the existing connection
       const nonRoadsZoneIsFrom = existing.fromZoneId === (isSourceRoads ? params.target : params.source);
       const existingNonRoadsHandle = nonRoadsZoneIsFrom
@@ -1033,16 +1076,6 @@ async function handleConnect(params: any) {
       const newNonRoadsHandle = isSourceRoads
         ? (params.targetHandle || 'center')
         : (params.sourceHandle || 'center');
-
-      // Block if the non-roads zone would gain a second portal entrance
-      if (existingNonRoadsHandle !== newNonRoadsHandle) {
-        showToast("A non-roads zone cannot have multiple portal entrances to a roads zone.", "error");
-        return;
-      }
-
-      // Non-roads handle is the same — check if the roads-side handle is also changing to a
-      // genuinely different (non-center) handle, which would create a second portal link from
-      // the roads zone to the same non-roads zone.
       const existingRoadsHandle = nonRoadsZoneIsFrom
         ? (existing.toHandleId || 'center')
         : (existing.fromHandleId || 'center');
@@ -1050,14 +1083,23 @@ async function handleConnect(params: any) {
         ? (params.sourceHandle || 'center')
         : (params.targetHandle || 'center');
 
-      const isReplacingCenter = existingRoadsHandle === 'center' || newRoadsHandle === 'center';
-      const isMovingOtherEnd = existingRoadsHandle === newRoadsHandle;
-      // Reassigning the roads-side portal while keeping the non-roads handle pinned
-      // is just a handle reassignment, not a new portal link.
-      const isReassigningRoadsHandle = existingNonRoadsHandle === newNonRoadsHandle;
+      // A reassignment keeps the same roads portal (the user only dragged the non-roads
+      // end), or swaps 'center' in or out on the roads side — 'center' is a placeholder
+      // anchor, not a real portal, so it can never be the second of two portals.
+      const isReassignment =
+        existingRoadsHandle === newRoadsHandle ||
+        existingRoadsHandle === 'center' ||
+        newRoadsHandle === 'center';
 
-      if (!isReplacingCenter && !isMovingOtherEnd) {
-        const isLoop = wouldCreateLongerLoop(store.connections, params.source, params.target);
+      if (!isReassignment) {
+        // Two genuinely different portals on the roads zone. Pinning the non-roads anchor
+        // makes this the (extremely rare) multiple portal link; moving the anchor as well
+        // would give the non-roads zone a second, separate entrance to the same roads zone.
+        if (existingNonRoadsHandle !== newNonRoadsHandle) {
+          showToast("A non-roads zone cannot have multiple portal entrances to a roads zone.", "error");
+          return;
+        }
+
         reportForm.value?.setConnection(
           params.source,
           params.sourceHandle,
@@ -1066,6 +1108,11 @@ async function handleConnect(params: any) {
           'Adding this connection would create a multiple portal link. This is <b>extremely</b> rare, please double check this is correct!'
         );
         return;
+      }
+
+      // Reassignment onto a different non-roads anchor — allowed, but flag what it costs.
+      if (existingNonRoadsHandle !== newNonRoadsHandle) {
+        warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
       }
     }
 
@@ -1130,6 +1177,9 @@ async function handleConnect(params: any) {
      }
   }
 
+  // Warn before the form opens so the trade-off is known before it is committed.
+  warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
+
   reportForm.value?.setConnection(
     params.source,
     params.sourceHandle,
@@ -1191,6 +1241,7 @@ async function handleConfirmOccupied() {
       undefined,
       isPermanentConn,
     );
+    warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
   } catch (err: any) {
     showToast(err.message || 'Failed to add connection.', 'error');
   }
@@ -1628,10 +1679,12 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
     <Transition name="toast">
       <div
         v-if="toast"
-        class="fixed top-16 left-1/2 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
+        class="fixed top-16 left-1/2 -translate-x-1/2 max-w-[90vw] md:max-w-xl rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
         :class="[
           Z_INDEX.TOAST,
-          toastType === 'error' ? 'bg-red-900 border border-red-500' : 'bg-gray-800 border border-gray-600'
+          toastType === 'error' ? 'bg-red-900 border border-red-500'
+            : toastType === 'warning' ? 'bg-amber-900 border border-amber-500'
+            : 'bg-gray-800 border border-gray-600'
         ]"
       >
         <span>{{ toast }}</span>

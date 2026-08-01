@@ -476,4 +476,150 @@ describe('RoomView - Multiple Connections', () => {
     expect(vm.showConfirmationModal).toBe(false);
     expect(vm.toast).not.toBe("A non-roads zone cannot have multiple portal entrances to a roads zone.");
   });
+
+  const STUBS = {
+    ZoneNode: true,
+    NonRoadsNode: true,
+    ConnectionEdge: true,
+    ConnectionLine: true,
+    ReportForm: true,
+    DebugTray: true,
+    MegaToast: true,
+    TopToolbar: true,
+    TopLeftToolbar: true,
+    TopRightToolbar: true,
+    BottomRightPins: true,
+    MobileRoomSummary: true,
+    Background: true,
+    Controls: true,
+  };
+
+  function mountRoom(pinia: any) {
+    return mount(RoomView, {
+      props: { id: 'test-room' },
+      global: { plugins: [pinia], stubs: STUBS },
+    });
+  }
+
+  it('allows moving the non-roads end of a roads↔non-roads connection onto an edge anchor, with a warning', async () => {
+    const store = useRoomStore();
+    // soros-axaesum is roads, nightcreak-marsh is royal (non-roads).
+    // The connection currently lands on the non-roads zone's center anchor.
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'soros-axaesum',
+        toZoneId: 'nightcreak-marsh',
+        fromHandleId: 's-p2',
+        toHandleId: 'center',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) } as any);
+
+    const wrapper = mountRoom(pinia);
+    const vm = wrapper.vm as any;
+
+    // Same roads portal, dragged onto the NW edge of the royal zone
+    await vm.handleConnect({
+      source: 'soros-axaesum',
+      sourceHandle: 's-p2',
+      target: 'nightcreak-marsh',
+      targetHandle: 'nw',
+    });
+
+    expect(vm.toast).not.toBe("A non-roads zone cannot have multiple portal entrances to a roads zone.");
+    expect(vm.toastType).toBe('warning');
+    expect(vm.toast).toContain('Royal Continent edge');
+
+    // The existing connection is reassigned rather than duplicated
+    const patchCall = (global.fetch as any).mock.calls.find((c: any[]) => c[1]?.method === 'PATCH');
+    expect(patchCall).toBeTruthy();
+    expect(JSON.parse(patchCall[1].body)).toEqual({ fromHandleId: 's-p2', toHandleId: 'nw' });
+  });
+
+  it('does not warn when the non-roads end is moved back onto the center anchor', async () => {
+    const store = useRoomStore();
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'soros-axaesum',
+        toZoneId: 'nightcreak-marsh',
+        fromHandleId: 's-p2',
+        toHandleId: 'nw',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) } as any);
+
+    const wrapper = mountRoom(pinia);
+    const vm = wrapper.vm as any;
+
+    await vm.handleConnect({
+      source: 'soros-axaesum',
+      sourceHandle: 's-p2',
+      target: 'nightcreak-marsh',
+      targetHandle: 'center',
+    });
+
+    expect(vm.toast).toBe('');
+  });
+
+  it('still blocks a genuine duplicate: a different roads portal onto a different non-roads anchor', async () => {
+    const store = useRoomStore();
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'soros-axaesum',
+        toZoneId: 'nightcreak-marsh',
+        fromHandleId: 's-p2',
+        toHandleId: 'nw',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    const wrapper = mountRoom(pinia);
+    const vm = wrapper.vm as any;
+
+    await vm.handleConnect({
+      source: 'soros-axaesum',
+      sourceHandle: 's-p5',
+      target: 'nightcreak-marsh',
+      targetHandle: 'se',
+    });
+
+    expect(vm.toast).toBe("A non-roads zone cannot have multiple portal entrances to a roads zone.");
+    expect(vm.toastType).toBe('error');
+  });
+
+  it('warns when a brand-new roads connection is dropped on a non-roads edge anchor', async () => {
+    const store = useRoomStore();
+    store.connections = [];
+
+    const wrapper = mountRoom(pinia);
+    const vm = wrapper.vm as any;
+
+    const setConnectionMock = vi.fn();
+    vm.reportForm = { setConnection: setConnectionMock, open: vi.fn() };
+
+    // hightree-isle is outlands (non-roads)
+    await vm.handleConnect({
+      source: 'hynitos-ayousum',
+      sourceHandle: 'h-p1',
+      target: 'hightree-isle',
+      targetHandle: 'se',
+    });
+
+    expect(vm.toastType).toBe('warning');
+    expect(vm.toast).toContain('Outlands edge');
+    expect(setConnectionMock).toHaveBeenCalled();
+  });
 });
