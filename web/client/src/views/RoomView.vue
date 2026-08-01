@@ -58,7 +58,7 @@ provide('goToNode', goToNode);
 
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
-const toastType = ref<'info' | 'warning' | 'error'>('info');
+const toastType = ref<'info' | 'error'>('info');
 const routePlottedToast = ref('');
 let routePlottedToastTimeout: ReturnType<typeof setTimeout> | null = null;
 const showConfirmationModal = ref(false);
@@ -66,6 +66,9 @@ const confirmationModalText = ref("");
 const pendingConnection = ref<any>(null);
 const showOccupiedModal = ref(false);
 const pendingOccupiedConnection = ref<{ params: any; occupiedConn: any } | null>(null);
+const showEdgeAttachmentModal = ref(false);
+const edgeAttachmentModalText = ref('');
+const pendingEdgeAttachment = ref<(() => void) | null>(null);
 const showAddChainModal = ref(false);
 watch(() => store.chainManagementOpen, (v) => {
   if (v) { showAddChainModal.value = true; store.chainManagementOpen = false; }
@@ -88,34 +91,51 @@ function isNonRoadsEdgeHandle(handleId?: string | null): boolean {
 }
 
 /**
- * Attaching a roads zone to one of a non-roads zone's edge anchors is allowed — people
- * use it to lay a chain out neatly — but it consumes that edge, so no RC/Outlands zone
- * can be connected there afterwards. Warn whenever a roads↔non-roads link lands on one.
+ * Attaching a roads zone to one of a non-roads zone's edge anchors is allowed — people use
+ * it to lay a chain out neatly — but it consumes that edge, so no RC/Outlands zone can be
+ * connected there afterwards. Gate it behind a confirmation, the same way a rare roads↔roads
+ * multiple portal link is confirmed rather than silently accepted.
+ *
+ * Returns true when confirmation is required and has been queued; the caller must then
+ * return and let `handleConfirmEdgeAttachment` run `onConfirm`.
  */
-function warnIfNonRoadsEdgeAttachment(
+function requireNonRoadsEdgeConfirmation(
   sourceId: string,
   sourceHandle: string | null | undefined,
   targetId: string,
   targetHandle: string | null | undefined,
-) {
+  onConfirm: () => void,
+): boolean {
   const sourceIsRoads = isRoads(sourceId);
   const targetIsRoads = isRoads(targetId);
   // Only roads↔non-roads links: non-roads↔non-roads is a real world link, roads↔roads
   // has no edge anchors involved.
-  if (sourceIsRoads === targetIsRoads) return;
+  if (sourceIsRoads === targetIsRoads) return false;
 
   const nonRoadsZoneId = sourceIsRoads ? targetId : sourceId;
   const nonRoadsHandleId = sourceIsRoads ? targetHandle : sourceHandle;
-  if (!isNonRoadsEdgeHandle(nonRoadsHandleId)) return;
+  if (!isNonRoadsEdgeHandle(nonRoadsHandleId)) return false;
 
   const zoneType = ZONE_BY_ID.get(nonRoadsZoneId)?.type;
   // 'other' maps to a combined label, which does not read well mid-sentence.
   const label = zoneType && zoneType !== 'other' ? TYPE_LABELS[zoneType] : 'Royal Continent / Outlands';
-  showToast(
-    `Roads can be attached to a ${label} edge for visual purposes, but be aware this takes up that entire edge — no other Royal Continent or Outlands zone can be connected there. That's fine if you don't intend to connect anything else to that side.`,
-    'warning',
-    10000,
-  );
+  const zoneName = ZONE_BY_ID.get(nonRoadsZoneId)?.name ?? nonRoadsZoneId;
+
+  edgeAttachmentModalText.value =
+    `For visualisation purposes we let you connect roads to the edge of a ${label} zone. ` +
+    `Be aware that this takes up that entire edge — you will not then be able to connect a ` +
+    `real Royal Continent or Outlands zone to it.<br><br>` +
+    `This is reversible: drag the connection back to the centre of <b>${zoneName}</b> and the edge reopens.<br><br>` +
+    `Do you want to attach to the edge?`;
+  pendingEdgeAttachment.value = onConfirm;
+  showEdgeAttachmentModal.value = true;
+  return true;
+}
+
+function handleConfirmEdgeAttachment() {
+  const onConfirm = pendingEdgeAttachment.value;
+  pendingEdgeAttachment.value = null;
+  onConfirm?.();
 }
 
 const megaToastRegion = ref('');
@@ -209,7 +229,7 @@ async function copyShareUrl() {
   showToast('Copied to clipboard!');
 }
 
-function showToast(msg: string, type: 'info' | 'warning' | 'error' = 'info', duration = 5000) {
+function showToast(msg: string, type: 'info' | 'error' = 'info', duration = 5000) {
   toast.value = msg;
   toastType.value = type;
   if (toastTimeout) clearTimeout(toastTimeout);
@@ -1110,9 +1130,16 @@ async function handleConnect(params: any) {
         return;
       }
 
-      // Reassignment onto a different non-roads anchor — allowed, but flag what it costs.
-      if (existingNonRoadsHandle !== newNonRoadsHandle) {
-        warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
+      // Reassignment onto a different non-roads anchor — allowed, but confirm what it costs
+      // before committing it.
+      if (
+        existingNonRoadsHandle !== newNonRoadsHandle &&
+        requireNonRoadsEdgeConfirmation(
+          params.source, params.sourceHandle, params.target, params.targetHandle,
+          () => { void applyConnectionHandles(existing, params); },
+        )
+      ) {
+        return;
       }
     }
 
@@ -1146,27 +1173,9 @@ async function handleConnect(params: any) {
       }
     }
 
-    // Determine which handle is which based on the existing connection direction
-    let fHandleId = params.sourceHandle;
-    let tHandleId = params.targetHandle;
-
-    if (existing.fromZoneId === params.target) {
-      fHandleId = params.targetHandle;
-      tHandleId = params.sourceHandle;
-    }
-
-    try {
-      await updateConnection(props.id, store.token!, existing.id, {
-        fromHandleId: fHandleId,
-        toHandleId: tHandleId
-      });
-    } catch (err: any) {
-      showToast(err.message || 'Failed to update connection.', 'error');
-    }
+    await applyConnectionHandles(existing, params);
     return;
   }
-
-  const isLoop = wouldCreateLongerLoop(store.connections, params.source, params.target);
 
   const sourceNode = getNode.value(params.source);
   const targetNode = getNode.value(params.target);
@@ -1177,9 +1186,40 @@ async function handleConnect(params: any) {
      }
   }
 
-  // Warn before the form opens so the trade-off is known before it is committed.
-  warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
+  // Confirm before the form opens, so the trade-off is understood before anything is entered.
+  if (requireNonRoadsEdgeConfirmation(
+    params.source, params.sourceHandle, params.target, params.targetHandle,
+    () => openNewConnectionForm(params),
+  )) {
+    return;
+  }
 
+  openNewConnectionForm(params);
+}
+
+// Reassign the handles of an existing connection, mapping source/target onto the
+// connection's own from/to direction.
+async function applyConnectionHandles(existing: Connection, params: any) {
+  let fHandleId = params.sourceHandle;
+  let tHandleId = params.targetHandle;
+
+  if (existing.fromZoneId === params.target) {
+    fHandleId = params.targetHandle;
+    tHandleId = params.sourceHandle;
+  }
+
+  try {
+    await updateConnection(props.id, store.token!, existing.id, {
+      fromHandleId: fHandleId,
+      toHandleId: tHandleId
+    });
+  } catch (err: any) {
+    showToast(err.message || 'Failed to update connection.', 'error');
+  }
+}
+
+function openNewConnectionForm(params: any) {
+  const isLoop = wouldCreateLongerLoop(store.connections, params.source, params.target);
   reportForm.value?.setConnection(
     params.source,
     params.sourceHandle,
@@ -1194,6 +1234,18 @@ async function handleConfirmOccupied() {
   const { params, occupiedConn } = pendingOccupiedConnection.value;
   pendingOccupiedConnection.value = null;
 
+  // Ask about the edge anchor before anything is deleted, so backing out costs nothing.
+  if (requireNonRoadsEdgeConfirmation(
+    params.source, params.sourceHandle, params.target, params.targetHandle,
+    () => { void replaceOccupiedConnection(params, occupiedConn); },
+  )) {
+    return;
+  }
+
+  await replaceOccupiedConnection(params, occupiedConn);
+}
+
+async function replaceOccupiedConnection(params: any, occupiedConn: any) {
   // Also delete any existing connection on the source handle before creating the new one
   const sourceHandleConn = store.connections.find(c =>
     !c.isExpired && (
@@ -1241,7 +1293,6 @@ async function handleConfirmOccupied() {
       undefined,
       isPermanentConn,
     );
-    warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
   } catch (err: any) {
     showToast(err.message || 'Failed to add connection.', 'error');
   }
@@ -1486,7 +1537,7 @@ function isHandleOccupied(nodeId: string, handleId: string | null) {
   );
 }
 
-defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirmationModal, confirmationModalText, toast, toastType, reportForm, lastUpdateFlash });
+defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirmationModal, confirmationModalText, showEdgeAttachmentModal, edgeAttachmentModalText, handleConfirmEdgeAttachment, toast, toastType, reportForm, lastUpdateFlash });
 </script>
 
 <template>
@@ -1679,12 +1730,10 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
     <Transition name="toast">
       <div
         v-if="toast"
-        class="fixed top-16 left-1/2 -translate-x-1/2 max-w-[90vw] md:max-w-xl rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
+        class="fixed top-16 left-1/2 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
         :class="[
           Z_INDEX.TOAST,
-          toastType === 'error' ? 'bg-red-900 border border-red-500'
-            : toastType === 'warning' ? 'bg-amber-900 border border-amber-500'
-            : 'bg-gray-800 border border-gray-600'
+          toastType === 'error' ? 'bg-red-900 border border-red-500' : 'bg-gray-800 border border-gray-600'
         ]"
       >
         <span>{{ toast }}</span>
@@ -1713,6 +1762,15 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
       message="There is already a portal connection at this location. Do you wish to delete the existing connection and replace it?"
       :detail="pendingOccupiedConnection ? `${ZONE_BY_ID.get(pendingOccupiedConnection.occupiedConn.fromZoneId)?.name ?? pendingOccupiedConnection.occupiedConn.fromZoneId} -> ${ZONE_BY_ID.get(pendingOccupiedConnection.occupiedConn.toZoneId)?.name ?? pendingOccupiedConnection.occupiedConn.toZoneId} will be deleted!` : undefined"
       @confirm="handleConfirmOccupied"
+    />
+
+    <ConfirmationModal
+      v-model="showEdgeAttachmentModal"
+      title="Attaching to a zone edge"
+      :message="edgeAttachmentModalText"
+      confirm-text="Attach to edge"
+      cancel-text="Cancel"
+      @confirm="handleConfirmEdgeAttachment"
     />
 
     <div class="fixed bottom-12 md:bottom-8 left-0 right-0 text-center min-[1200px]:left-4 min-[1200px]:right-auto min-[1200px]:text-left pointer-events-none" :class="Z_INDEX.OVERLAY">

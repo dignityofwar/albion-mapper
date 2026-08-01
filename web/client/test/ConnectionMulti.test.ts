@@ -501,7 +501,7 @@ describe('RoomView - Multiple Connections', () => {
     });
   }
 
-  it('allows moving the non-roads end of a roads↔non-roads connection onto an edge anchor, with a warning', async () => {
+  it('asks for confirmation before moving the non-roads end of a connection onto an edge anchor', async () => {
     const store = useRoomStore();
     // soros-axaesum is roads, nightcreak-marsh is royal (non-roads).
     // The connection currently lands on the non-roads zone's center anchor.
@@ -531,17 +531,58 @@ describe('RoomView - Multiple Connections', () => {
       targetHandle: 'nw',
     });
 
+    // Not an error, and nothing is committed until the user says yes
     expect(vm.toast).not.toBe("A non-roads zone cannot have multiple portal entrances to a roads zone.");
-    expect(vm.toastType).toBe('warning');
-    expect(vm.toast).toContain('Royal Continent edge');
+    expect(vm.showEdgeAttachmentModal).toBe(true);
+    expect(vm.edgeAttachmentModalText).toContain('Royal Continent');
+    expect(vm.edgeAttachmentModalText).toContain('Nightcreak Marsh');
+    expect(vm.edgeAttachmentModalText).toMatch(/centre|center/);
+    expect((global.fetch as any).mock.calls.some((c: any[]) => c[1]?.method === 'PATCH')).toBe(false);
 
-    // The existing connection is reassigned rather than duplicated
+    // Confirming reassigns the existing connection rather than duplicating it
+    await vm.handleConfirmEdgeAttachment();
+    await nextTick();
     const patchCall = (global.fetch as any).mock.calls.find((c: any[]) => c[1]?.method === 'PATCH');
     expect(patchCall).toBeTruthy();
     expect(JSON.parse(patchCall[1].body)).toEqual({ fromHandleId: 's-p2', toHandleId: 'nw' });
   });
 
-  it('does not warn when the non-roads end is moved back onto the center anchor', async () => {
+  it('does not touch the connection when the edge attachment is declined', async () => {
+    const store = useRoomStore();
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'soros-axaesum',
+        toZoneId: 'nightcreak-marsh',
+        fromHandleId: 's-p2',
+        toHandleId: 'center',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) } as any);
+
+    const wrapper = mountRoom(pinia);
+    const vm = wrapper.vm as any;
+
+    await vm.handleConnect({
+      source: 'soros-axaesum',
+      sourceHandle: 's-p2',
+      target: 'nightcreak-marsh',
+      targetHandle: 'nw',
+    });
+
+    expect(vm.showEdgeAttachmentModal).toBe(true);
+
+    // Dismissing the modal (no confirm) leaves the connection alone
+    vm.showEdgeAttachmentModal = false;
+    await nextTick();
+    expect((global.fetch as any).mock.calls.some((c: any[]) => c[1]?.method === 'PATCH')).toBe(false);
+  });
+
+  it('does not prompt when the non-roads end is moved back onto the center anchor', async () => {
     const store = useRoomStore();
     store.connections = [
       {
@@ -568,7 +609,13 @@ describe('RoomView - Multiple Connections', () => {
       targetHandle: 'center',
     });
 
+    expect(vm.showEdgeAttachmentModal).toBe(false);
     expect(vm.toast).toBe('');
+
+    // The edge is reopened by simply reassigning the connection back to the centre
+    const patchCall = (global.fetch as any).mock.calls.find((c: any[]) => c[1]?.method === 'PATCH');
+    expect(patchCall).toBeTruthy();
+    expect(JSON.parse(patchCall[1].body)).toEqual({ fromHandleId: 's-p2', toHandleId: 'center' });
   });
 
   it('still blocks a genuine duplicate: a different roads portal onto a different non-roads anchor', async () => {
@@ -600,7 +647,7 @@ describe('RoomView - Multiple Connections', () => {
     expect(vm.toastType).toBe('error');
   });
 
-  it('warns when a brand-new roads connection is dropped on a non-roads edge anchor', async () => {
+  it('confirms before opening the Add Connection form for a brand-new edge attachment', async () => {
     const store = useRoomStore();
     store.connections = [];
 
@@ -618,8 +665,43 @@ describe('RoomView - Multiple Connections', () => {
       targetHandle: 'se',
     });
 
-    expect(vm.toastType).toBe('warning');
-    expect(vm.toast).toContain('Outlands edge');
+    expect(vm.showEdgeAttachmentModal).toBe(true);
+    expect(vm.edgeAttachmentModalText).toContain('Outlands');
+    expect(setConnectionMock).not.toHaveBeenCalled();
+
+    // Opening the modal re-rendered the view, which restores the real template ref
+    await nextTick();
+    vm.reportForm = { setConnection: setConnectionMock, open: vi.fn() };
+
+    await vm.handleConfirmEdgeAttachment();
+    await nextTick();
+    expect(setConnectionMock).toHaveBeenCalledWith(
+      'hynitos-ayousum',
+      'h-p1',
+      'hightree-isle',
+      'se',
+      expect.anything(),
+    );
+  });
+
+  it('does not prompt for a brand-new connection onto the center anchor', async () => {
+    const store = useRoomStore();
+    store.connections = [];
+
+    const wrapper = mountRoom(pinia);
+    const vm = wrapper.vm as any;
+
+    const setConnectionMock = vi.fn();
+    vm.reportForm = { setConnection: setConnectionMock, open: vi.fn() };
+
+    await vm.handleConnect({
+      source: 'hynitos-ayousum',
+      sourceHandle: 'h-p1',
+      target: 'hightree-isle',
+      targetHandle: 'center',
+    });
+
+    expect(vm.showEdgeAttachmentModal).toBe(false);
     expect(setConnectionMock).toHaveBeenCalled();
   });
 });
