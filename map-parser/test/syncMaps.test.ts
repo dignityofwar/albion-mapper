@@ -4,6 +4,8 @@ import { tmpdir } from 'node:os';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { MANUAL_MAPS } from '../scripts/manualMaps.js';
+import { EXCLUDED_MAP_NAMES } from '../scripts/excludedMaps.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SCRIPT = resolve(__dirname, '../scripts/syncMaps.ts');
@@ -63,8 +65,15 @@ function runSync(fixturePath: string, extra: string[] = []): RunResult {
   };
 }
 
-function readOutput(): unknown[] {
+// Manual additions are appended to every run, so fixture assertions filter them
+// out; `readRawOutput` is for the tests that check the additions themselves.
+function readRawOutput(): GameMap[] {
   return JSON.parse(readFileSync(TEST_OUTPUT_PATH, 'utf8'));
+}
+
+function readOutput(): unknown[] {
+  const manual = new Set(MANUAL_MAPS.map((m) => m.mapID));
+  return readRawOutput().filter((m) => !manual.has(m.mapID));
 }
 
 // ── Unit-level helpers (import the pure functions directly) ────────────────────
@@ -76,20 +85,22 @@ type MapType = 'royalBlue' | 'royalYellow' | 'royalRed' | 'outlands' | 'roads' |
 interface RawIcon { alt: string; badge?: number; }
 interface RawEntry { name: string; tier?: unknown; color?: string; icons?: RawIcon[]; }
 
-const EXCLUDED_MAP_NAMES = new Set([
-  'The Lighthouse',
-  'The Cove',
-  'Forgotten Woods',
-  'Mountain Fort',
-]);
-
 const RESOURCE_ICONS = new Set(['rock', 'logs', 'ore', 'cotton', 'hide']);
+const RESOURCE_ALIASES = new Map([
+  ['hire', 'hide'],
+  ['leather', 'hide'],
+  ['fiber', 'cotton'],
+  ['stone', 'rock'],
+]);
 const TWO_HYPHEN_RE = /^[^-\s]+-[^-\s]+-[^-\s]+$/;
 const ONE_HYPHEN_RE = /^[^-\s]+-[^-\s]+$/;
 
 function extractResources(icons: RawIcon[] | undefined): string[] {
   if (!icons) return [];
-  const resources = icons.map((i) => i.alt.toLowerCase()).filter((alt) => RESOURCE_ICONS.has(alt));
+  const resources = icons
+    .map((i) => i.alt.toLowerCase())
+    .map((alt) => RESOURCE_ALIASES.get(alt) ?? alt)
+    .filter((alt) => RESOURCE_ICONS.has(alt));
   return [...new Set(resources)].sort();
 }
 
@@ -196,7 +207,7 @@ describe('knownResources extraction', () => {
       { alt: 'BLUE' }, { alt: 'GREEN' }, { alt: 'ROCK' },
       { alt: 'DUNGEON' }, { alt: 'LOGS' }, { alt: 'ORE' }, { alt: 'HIRE' },
     ];
-    expect(extractResources(icons)).toEqual(['logs', 'ore', 'rock']);
+    expect(extractResources(icons)).toEqual(['hide', 'logs', 'ore', 'rock']);
   });
 
   it('deduplicates repeated resource icons', () => {
@@ -206,12 +217,13 @@ describe('knownResources extraction', () => {
     expect(extractResources(icons)).toEqual(['logs', 'rock']);
   });
 
-  it('discards FIBER, STONE, LEATHER, GROUP, YELLOW', () => {
+  it('aliases FIBER, STONE, LEATHER to their resource; discards GROUP and YELLOW', () => {
     const icons: RawIcon[] = [
       { alt: 'FIBER' }, { alt: 'STONE' }, { alt: 'LEATHER' },
       { alt: 'GROUP' }, { alt: 'YELLOW' }, { alt: 'ORE' },
     ];
-    expect(extractResources(icons)).toEqual(['ore']);
+    // GROUP and YELLOW are a group dungeon and a gold chest, not resources.
+    expect(extractResources(icons)).toEqual(['cotton', 'hide', 'ore', 'rock']);
   });
 });
 
@@ -254,7 +266,7 @@ describe('processEntry — truth table', () => {
       mapName: 'Cases-Ugumlos',
       mapType: 'roads',
       tier: 6,
-      knownFeatures: ['logs', 'ore', 'rock'],
+      knownFeatures: ['hide', 'logs', 'ore', 'rock'],
     });
     expect(result).not.toHaveProperty('isRoadsHideout');
   });
@@ -335,6 +347,18 @@ describe('exclusion filter', () => {
     const result = processEntry({ name: 'Mountain Fort', tier: 1, color: 'blue' });
     expect(result).toHaveProperty('skip', true);
   });
+
+  // Upstream lists these two zones twice, once under a misread letter. The
+  // in-game title bar settles which spelling is real; the other is dropped.
+  it('filters the misspelled duplicate of Hiles-Izizaum', () => {
+    expect(processEntry({ name: 'Files-Izizaum', tier: 8, icons: [] })).toHaveProperty('skip', true);
+    expect(processEntry({ name: 'Hiles-Izizaum', tier: 8, icons: [] })).not.toHaveProperty('skip');
+  });
+
+  it('filters the misspelled duplicate of Secent-Al-Odetis', () => {
+    expect(processEntry({ name: 'Secent-AI-Odetis', tier: 6, icons: [] })).toHaveProperty('skip', true);
+    expect(processEntry({ name: 'Secent-Al-Odetis', tier: 6, icons: [] })).not.toHaveProperty('skip');
+  });
 });
 
 describe('mapID slug', () => {
@@ -366,6 +390,30 @@ describe('script integration (via --source fixture)', () => {
 
     const maps = readOutput() as GameMap[];
     expect(maps.map((m) => m.mapID)).toEqual(['aaa-zone', 'mmm-zone', 'zzz-zone']);
+  });
+
+  it('appends manual maps that upstream does not carry', () => {
+    const fixture = writeFixture('manual.json', [{ name: 'Zzz Zone', tier: 4, color: 'blue' }]);
+    expect(runSync(fixture).exitCode).toBe(0);
+
+    const byId = Object.fromEntries(readRawOutput().map((m) => [m.mapID, m]));
+    for (const manual of MANUAL_MAPS) {
+      expect(byId[manual.mapID], `${manual.mapName} missing from output`).toEqual(manual);
+    }
+  });
+
+  it('warns and keeps upstream when a manual map appears in the feed', () => {
+    const manual = MANUAL_MAPS[0];
+    const fixture = writeFixture('manual-collision.json', [
+      { name: manual.mapName, tier: 7, color: 'blue' },
+    ]);
+    const result = runSync(fixture);
+    expect(result.exitCode).toBe(0);
+    expect(result.stderr).toContain('drop it from manualMaps.ts');
+
+    const entries = readRawOutput().filter((m) => m.mapID === manual.mapID);
+    expect(entries).toHaveLength(1);
+    expect(entries[0].tier).toBe(7);
   });
 
   it('excludes tutorial-island maps before classification', () => {
@@ -439,6 +487,18 @@ describe('script integration (via --source fixture)', () => {
     const second = readFileSync(TEST_OUTPUT_PATH, 'utf8');
 
     expect(first).toBe(second);
+  });
+
+  it('aliases the upstream HIRE spelling to hide', () => {
+    const fixture = writeFixture('hire-alias.json', [
+      { name: 'Cebos-Avemlum', tier: 4, icons: [{ alt: 'HIRE' }, { alt: 'LOGS' }] },
+      { name: 'Cases-Ugumlos', tier: 6, icons: [{ alt: 'LEATHER' }, { alt: 'FIBER' }, { alt: 'STONE' }] },
+    ]);
+    runSync(fixture);
+    const maps = readOutput() as GameMap[];
+    const byId = Object.fromEntries(maps.map((m) => [m.mapID, m]));
+    expect(byId['cebos-avemlum'].knownFeatures).toEqual(['hide', 'logs']);
+    expect(byId['cases-ugumlos'].knownFeatures).toEqual(['cotton', 'hide', 'rock', 'largeGreenChest']);
   });
 
   it('roads entry with no resource icons gets knownFeatures: []', () => {

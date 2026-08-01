@@ -279,7 +279,7 @@ onBeforeUnmount(() => {
         Collaborate with your guildmates in <b>real-time</b> to track Roads of Avalon portal zones and map content. Locate and track Cores and Treasure Chests with real time-timers, Map Resources (and sizes), Avalonian Chests, and easily find connections to the Royal Continent, Outlands portals and rest zones.
       </p>
       <p class="text-white text-center">
-        You are able to set your starting location from a Hideout Zone in the Roads, Royal Continent, Outlands of even Brecillen, and relocate it whenever you choose.
+        You are able to set your starting location from a Hideout Zone in the Roads, Royal Continent, Outlands of even Brecilien, and relocate it whenever you choose.
       </p>
       <p class="text-white text-center">
         All Rooms are secured with a password, which you can rotate at any time.

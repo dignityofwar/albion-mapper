@@ -43,7 +43,7 @@ pnpm workspace (`pnpm-workspace.yaml`): `web/client`, `web/server`, `web/shared`
 - **Chains as isolation boundaries.** Connections carry a `chain_id`; the server rejects cross-chain links. Deleting/relocating a chain cascades to its connections, positions, and memory.
 - **Self-healing rotation.** Zone rotation (0–3 × 90° steps) and custom handle layouts can desync; both server (`update_node_positions`, `rotate_zone`) and client (`validateNodeRotations`) re-infer rotation from handles and repair — handles win over stored rotation.
 - **Expiry with grace.** Connections expire live (`connection_expired` broadcast within ~60 s) but rows are kept for a 6-hour grace window (rendered grey/stale) before a background job deletes them.
-- **Committed data file.** The 817-zone catalogue is a build-time artifact committed to git, so there is no runtime dependency on the upstream source; the Docker image copies `web/shared/data` in.
+- **Committed data file.** The 815-zone catalogue is a build-time artifact committed to git, so there is no runtime dependency on the upstream source; the Docker image copies `web/shared/data` in.
 
 ## Entry points
 

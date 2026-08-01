@@ -168,11 +168,11 @@ function startRoutePlot() {
             <!-- Chain Management -->
             <div v-if="slides[currentSlide].id === 'chains'" class="space-y-4">
               <p class="text-base text-gray-300 leading-relaxed">
-                Chains let you create <strong>multiple independent groups of zones</strong> within a single room — perfect for exploring outwards from Outlands, Royal Continent or Brecillien into Roads of Avalon. Each chain has its own source zone and updatable colour.
+                Chains let you create <strong>multiple independent groups of zones</strong> within a single room — perfect for exploring outwards from Outlands, Royal Continent or Brecilien into Roads of Avalon. Each chain has its own source zone and updatable colour.
               </p>
               <div class="flex flex-col gap-3">
                 <p class="text-base text-gray-300 leading-relaxed">
-                  Rooms can now be created using <strong>Royal Continent, Outlands zones or Brecillien</strong>! You can update your primary zone anytime in the manager.
+                  Rooms can now be created using <strong>Royal Continent, Outlands zones or Brecilien</strong>! You can update your primary zone anytime in the manager.
                   <TooltipProvider :delay-duration="0">
                     <TooltipRoot>
                       <TooltipTrigger as-child>

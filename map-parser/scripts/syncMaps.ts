@@ -3,6 +3,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
 import { EXCLUDED_MAP_NAMES } from './excludedMaps.js';
+import { MANUAL_MAPS, MAP_OVERRIDES } from './manualMaps.js';
 import { GameMapSchema, type GameMap, type MapType } from '../src/types.js';
 import { ZoneNameParser } from '../src/ZoneNameParser.js';
 import { getZoneCategory } from 'shared';
@@ -20,7 +21,22 @@ const OUTPUT_PATH = outputIndex !== -1
   : resolve(__dirname, '../../web/shared/data/maps.json');
 
 const UPSTREAM_URL = 'https://albionroadsmapper.com/avalon-roads-info.json';
+// Upstream misspells the "Al" name joiner on two zones (it uses "Al" on 26 others).
+// Correcting the name here rather than downstream keeps the derived mapID right too.
+const NAME_CORRECTIONS = new Map([
+  ['Settun-AL-Nusis', 'Settun-Al-Nusis'],
+]);
+
 const RESOURCE_ICONS = new Set(['rock', 'logs', 'ore', 'cotton', 'hide']);
+
+// Upstream spells the same resource several ways — "hire" is by far the most
+// common spelling of hide, so unaliased matching drops it on most zones.
+const RESOURCE_ALIASES = new Map([
+  ['hire', 'hide'],
+  ['leather', 'hide'],
+  ['fiber', 'cotton'],
+  ['stone', 'rock'],
+]);
 
 // ── Warning helper ─────────────────────────────────────────────────────────────
 
@@ -88,6 +104,7 @@ function extractResources(icons: RawIcon[] | undefined): string[] {
   if (!icons) return [];
   const resources = icons
     .map((i) => i.alt.toLowerCase())
+    .map((alt) => RESOURCE_ALIASES.get(alt) ?? alt)
     .filter((alt) => RESOURCE_ICONS.has(alt));
   return [...new Set(resources)].sort();
 }
@@ -130,7 +147,7 @@ async function main(): Promise<void> {
     if (mapType === null) continue;
 
     // 4. Build record
-    const mapName = raw.name;
+    const mapName = NAME_CORRECTIONS.get(raw.name) ?? raw.name;
     const mapID = mapName.toLowerCase().replace(/\s+/g, '-');
 
     const buildGameMap = (id: string, name: string, type: MapType, tier: number, icons?: RawIcon[]): GameMap => {
@@ -225,10 +242,37 @@ async function main(): Promise<void> {
     maps.push(parsed.data as GameMap);
   }
 
-  // 8. Sort deterministically by mapID
+  // 8. Manual additions. Upstream winning a collision keeps this list from
+  //    silently shadowing a zone the feed has started carrying.
+  for (const manual of MANUAL_MAPS) {
+    if (seenIDs.has(manual.mapID)) {
+      warn(`Manual map "${manual.mapName}" is now in the upstream feed — drop it from manualMaps.ts.`);
+      continue;
+    }
+    const parsed = GameMapSchema.safeParse(manual);
+    if (!parsed.success) {
+      warn(`Zod validation failed for manual map "${manual.mapName}": ${parsed.error.message}`);
+      continue;
+    }
+    seenIDs.set(manual.mapID, manual.mapName);
+    maps.push(parsed.data as GameMap);
+  }
+
+  // 9. Hand-curated overrides
+  const byID = new Map(maps.map((m) => [m.mapID, m]));
+  for (const [id, patch] of MAP_OVERRIDES) {
+    const target = byID.get(id);
+    if (!target) {
+      warn(`Override for unknown mapID "${id}" — the entry is gone from upstream.`);
+      continue;
+    }
+    Object.assign(target, patch);
+  }
+
+  // 10. Sort deterministically by mapID
   maps.sort((a, b) => a.mapID.localeCompare(b.mapID));
 
-  // 9. Atomic write
+  // 11. Atomic write
   const json = JSON.stringify(maps, null, 2) + '\n';
   mkdirSync(dirname(OUTPUT_PATH), { recursive: true });
   const tmpPath = OUTPUT_PATH + '.tmp';

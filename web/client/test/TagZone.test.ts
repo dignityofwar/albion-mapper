@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, it, expect } from 'vitest'
+import { ZONES } from 'shared'
 import TagZone from '../src/components/common/TagZone.vue'
 
 describe('TagZone', () => {
@@ -41,5 +42,25 @@ describe('TagZone', () => {
     expect(wrapper.text()).toBe("Arthur's Rest")
     const element = wrapper.find('span')
     expect(element.element.style.backgroundColor).toBe('rgb(31, 31, 31)')
+  })
+
+  it('renders "Caerleon RC" from the real zone catalogue, not the generic royal tag', () => {
+    const names = [
+      'Malag Crevasse', 'Creag Morr', 'Domhain Chasm', 'Longtimber Glen', 'Nightbloom Forest',
+      'Wyre Forest', 'Deadvein Gully', 'Roastcorpse Steppe', 'Mardale', 'Birken Fell', 'Murkweald'
+    ]
+
+    for (const name of names) {
+      const zone = ZONES.find((z) => z.name === name)
+      expect(zone, `${name} is missing from the zone catalogue`).toBeDefined()
+
+      const wrapper = mount(TagZone, {
+        props: { type: zone!.type, category: zone!.category, zoneName: zone!.name }
+      })
+
+      expect(wrapper.text(), name).toBe('Caerleon RC')
+      // Caerleon border #c0392b — proves it picked up the faction colour, not a fallback.
+      expect(wrapper.find('span').element.style.borderColor, name).toBe('rgb(192, 57, 43)')
+    }
   })
 })

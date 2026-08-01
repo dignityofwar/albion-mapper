@@ -203,7 +203,7 @@ const handles = computed<CustomHandle[]>(() => {
       <!-- Smaller Diamond Shape Background -->
       <div 
         class="absolute inset-0 diamond-shape transition-colors duration-300 pointer-events-none"
-        :class="[hasReds ? 'bg-red-500' : (props.data.isChainSource ? 'bg-green-500' : (props.data.zoneName === 'Brecillien' ? 'bg-purple-500 border-purple-200' : getBorderBgClass(props.data.type))), Z_INDEX.NODE_BASE]"
+        :class="[hasReds ? 'bg-red-500' : (props.data.isChainSource ? 'bg-green-500' : (props.data.zoneName === 'Brecilien' ? 'bg-purple-500 border-purple-200' : getBorderBgClass(props.data.type))), Z_INDEX.NODE_BASE]"
       ></div>
       <div 
         class="absolute inset-[4px] diamond-shape transition-colors duration-300 pointer-events-none"

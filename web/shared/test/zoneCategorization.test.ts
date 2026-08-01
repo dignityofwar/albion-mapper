@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getZoneCategory } from '../src/zones.js';
+import { CAERLEON_RC_MAPS, getZoneCategory, ZONES } from '../src/zones.js';
 
 describe('zone categorization', () => {
   describe('Royal Continent (RC)', () => {
@@ -23,7 +23,7 @@ describe('zone categorization', () => {
         expect(getZoneCategory('Blackthorn Quarry', 'royalBlue')).toBe('Martlock RC');
         expect(getZoneCategory('Adrens Hill', 'royalYellow')).toBe('Martlock RC');
         expect(getZoneCategory('Haytor', 'royalBlue')).toBe('Martlock RC');
-        expect(getZoneCategory('Birken Fell', 'royalRed')).toBe('Martlock RC');
+        expect(getZoneCategory('Bowscale Fell', 'royalRed')).toBe('Martlock RC');
       });
 
       it('handles exceptions: Curlew Fen, Slimehag', () => {
@@ -53,7 +53,7 @@ describe('zone categorization', () => {
     describe('Lymhurst RC', () => {
       it('categorizes by keywords: Wood, Forest, Ferndell, Glen, Inis Mon, etc.', () => {
         expect(getZoneCategory('Aspenwood', 'royalYellow')).toBe('Lymhurst RC');
-        expect(getZoneCategory('Wyre Forest', 'royalRed')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Forest Burrow', 'royalRed')).toBe('Lymhurst RC');
         expect(getZoneCategory('Ferndell', 'royalRed')).toBe('Lymhurst RC');
         expect(getZoneCategory('Birchcopse', 'royalBlue')).toBe('Lymhurst RC');
         expect(getZoneCategory('Owlsong Glen', 'royalYellow')).toBe('Lymhurst RC');
@@ -82,6 +82,38 @@ describe('zone categorization', () => {
         expect(getZoneCategory('Cedar Copse', 'royalBlue')).toBe('Fort Sterling RC');
         expect(getZoneCategory('Cedarcopse', 'royalBlue')).toBe('Fort Sterling RC');
         expect(getZoneCategory('Larchroad', 'royalRed')).toBe('Fort Sterling RC');
+      });
+    });
+
+    describe('Caerleon RC', () => {
+      it('categorizes the Caerleon red zones', () => {
+        expect(getZoneCategory('Malag Crevasse', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Creag Morr', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Domhain Chasm', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Longtimber Glen', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Nightbloom Forest', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Wyre Forest', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Deadvein Gully', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Roastcorpse Steppe', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Mardale', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Birken Fell', 'royalRed')).toBe('Caerleon RC');
+        expect(getZoneCategory('Murkweald', 'royalRed')).toBe('Caerleon RC');
+      });
+
+      it('wins over the city keyword regexes that used to claim these names', () => {
+        // Forest/Glen → Lymhurst, Fell → Martlock, Steppe → Bridgewatch, Creag → Fort Sterling
+        expect(getZoneCategory('Wyre Forest', 'royalRed')).not.toBe('Lymhurst RC');
+        expect(getZoneCategory('Longtimber Glen', 'royalRed')).not.toBe('Lymhurst RC');
+        expect(getZoneCategory('Birken Fell', 'royalRed')).not.toBe('Martlock RC');
+        expect(getZoneCategory('Roastcorpse Steppe', 'royalRed')).not.toBe('Bridgewatch RC');
+        expect(getZoneCategory('Creag Morr', 'royalRed')).not.toBe('Fort Sterling RC');
+      });
+
+      it('leaves same-keyword zones outside the list on their old category', () => {
+        expect(getZoneCategory('Aspenwood', 'royalYellow')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Owlsong Glen', 'royalYellow')).toBe('Lymhurst RC');
+        expect(getZoneCategory('Drytop Steppe', 'royalBlue')).toBe('Bridgewatch RC');
+        expect(getZoneCategory('Creag Garr', 'royalRed')).toBe('Fort Sterling RC');
       });
     });
   });
@@ -142,6 +174,21 @@ describe('zone categorization', () => {
   it('categorizes non-portal outlands zones as Outlands', () => {
     expect(getZoneCategory('Arthur\'s Rest', 'outlands')).toBe('Outlands');
     expect(getZoneCategory('Highbeech Opening', 'outlands')).toBe('Outlands');
+  });
+
+  describe('maps.json agrees with getZoneCategory', () => {
+    it('every Caerleon RC name exists in maps.json and carries the category', () => {
+      for (const name of CAERLEON_RC_MAPS) {
+        const zone = ZONES.find((z) => z.name === name);
+        expect(zone, `${name} is missing from maps.json`).toBeDefined();
+        expect(zone!.category, name).toBe('Caerleon RC');
+      }
+    });
+
+    it('no other zone claims Caerleon RC', () => {
+      const tagged = ZONES.filter((z) => z.category === 'Caerleon RC').map((z) => z.name);
+      expect(tagged.sort()).toEqual([...CAERLEON_RC_MAPS].sort());
+    });
   });
 
   describe('Spot Checks from User', () => {

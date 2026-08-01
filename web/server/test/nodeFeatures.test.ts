@@ -16,12 +16,12 @@ describe('getInitialFeatures', () => {
   });
 
   it('returns multiple resource features', () => {
-     // cases-ugumlos has [ "logs", "ore", "rock", "largeGreenChest" ]
+     // cases-ugumlos has [ "hide", "logs", "ore", "rock", "largeGreenChest" ]
     const features = getInitialFeatures('cases-ugumlos');
     expect(features).toEqual({
-      resources: [{ type: 'wood' }, { type: 'ore' }, { type: 'stone' }],
+      resources: [{ type: 'leather' }, { type: 'wood' }, { type: 'ore' }, { type: 'stone' }],
       treasuresGreenCount: 0,
-      upstreamFeatures: ['wood', 'ore', 'stone', 'treasuresGreenCount']
+      upstreamFeatures: ['leather', 'wood', 'ore', 'stone', 'treasuresGreenCount']
     });
   });
 

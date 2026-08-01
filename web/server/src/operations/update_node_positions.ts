@@ -132,6 +132,10 @@ export const handleUpdateNodePositions: OperationHandler<Extract<ClientMessage, 
       if (f.treasuresGreenCount !== undefined) result.treasuresGreenCount = f.treasuresGreenCount;
       if (f.treasuresBlueCount !== undefined) result.treasuresBlueCount = f.treasuresBlueCount;
       if (f.treasuresYellowCount !== undefined) result.treasuresYellowCount = f.treasuresYellowCount;
+      if (f.dungeonStatic !== undefined) result.dungeonStatic = f.dungeonStatic;
+      if (f.dungeonGroup !== undefined) result.dungeonGroup = f.dungeonGroup;
+      if (f.dungeonStaticCount !== undefined) result.dungeonStaticCount = f.dungeonStaticCount;
+      if (f.dungeonGroupCount !== undefined) result.dungeonGroupCount = f.dungeonGroupCount;
       if (f.upstreamFeatures && f.upstreamFeatures.length > 0) result.upstreamFeatures = f.upstreamFeatures;
       // crystalCreaturePresent is intentionally excluded (temporary flag)
       // chest/chestTimer are intentionally excluded (timed chest, not permanent)

@@ -38,6 +38,16 @@ describe('ZoneNameParser', () => {
       var zone = { mapName: 'Setitos-Obobrom', mapID: 'setitos-obobrom' } as GameMap;
       expect(ZoneNameParser.parseMapShape(zone)).toBe('s');
     });
+
+    it('should return "s" for Setos-Avamsum despite the Set prefix (not a real hideout)', () => {
+      var zone = { mapName: 'Setos-Avamsum', mapID: 'setos-avamsum' } as GameMap;
+      expect(ZoneNameParser.parseMapShape(zone)).toBe('s');
+    });
+
+    it('should return "o" for the Atatlum maps despite their C names', () => {
+      expect(ZoneNameParser.parseMapShape({ mapName: 'Cieos-Atatlum', mapID: 'cieos-atatlum' } as GameMap)).toBe('o');
+      expect(ZoneNameParser.parseMapShape({ mapName: 'Cynitos-Atatlum', mapID: 'cynitos-atatlum' } as GameMap)).toBe('o');
+    });
   });
 
   describe('parseGuaranteedContent', () => {

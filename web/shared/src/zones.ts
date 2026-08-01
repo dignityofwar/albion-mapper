@@ -24,12 +24,21 @@ export const FORT_STERLING_PORTAL_MAPS = new Set([
   'Whitebank Shore', 'Frostpeak Vista', 'Frostpeak Ascent', 'Deepwood Dell', 'Deepwood Gorge', 'Whitebank Cross', 'Whitebank Wall', 'Whitebank Stream', 'Whitebank Ridge', 'Whitebank Descent', 'Meltwater Delta'
 ]);
 
+// Red zones ringing Caerleon. Listed explicitly because most of their names also
+// match another city's keyword regex below, so this has to win.
+export const CAERLEON_RC_MAPS = new Set([
+  'Malag Crevasse', 'Creag Morr', 'Domhain Chasm', 'Longtimber Glen', 'Nightbloom Forest',
+  'Wyre Forest', 'Deadvein Gully', 'Roastcorpse Steppe', 'Mardale', 'Birken Fell', 'Murkweald'
+]);
+
 export function getZoneCategory(name: string, type: string): string | undefined {
   if (type.startsWith('royal')) {
+    if (CAERLEON_RC_MAPS.has(name)) return 'Caerleon RC';
+
     // Exceptions first
     if (['Pen Fenair', 'Cairn Cloch', 'Cairn Clock', 'Cairn Glascore'].includes(name)) return 'Thetford RC';
     if (['Curlew Fen', 'Slimehag'].includes(name)) return 'Martlock RC';
-    if (['Vixen Tor', 'Goffers Knoll', 'Kilmar Tor', 'Saddle Tor', 'Carns Hill', 'Brons Hill', 'Fractured Ground'].includes(name)) return 'Bridgewatch RC';
+    if (['Vixen Tor', 'Goffers Knoll', 'Kilmar Tor', 'Saddle Tor', 'Carns Hill', 'Brons Hill', 'Fractured Ground', 'Snapshaft Trough'].includes(name)) return 'Bridgewatch RC';
     if (['Goldshimmer Plain', 'Steelhide Meadow', 'Dryfield Meadow', 'Cracked Earth'].includes(name)) return 'Lymhurst RC';
     if (['Cedar Copse', 'Cedarcopse', 'Larchroad'].includes(name)) return 'Fort Sterling RC';
 

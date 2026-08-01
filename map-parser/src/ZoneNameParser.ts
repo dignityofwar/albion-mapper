@@ -9,7 +9,18 @@ export interface ZoneSocketInfo {
 export class ZoneNameParser {
   // Names that match one of the Avalonian Rest prefixes below but are regular
   // roads maps, not roads hideouts.
-  private static readonly NON_HIDEOUT_PREFIX_MATCHES = new Set(['Setos-Aiaitum', 'Setitos-Obobrom']);
+  private static readonly NON_HIDEOUT_PREFIX_MATCHES = new Set([
+    'Setos-Aiaitum',
+    'Setitos-Obobrom',
+    'Setos-Avamsum',
+  ]);
+
+  // Maps whose layout doesn't match their name's first letter, confirmed against
+  // the in-game map. Without this the sync would keep reverting them.
+  private static readonly SHAPE_OVERRIDES = new Map<string, string>([
+    ['Cieos-Atatlum', 'o'],
+    ['Cynitos-Atatlum', 'o'],
+  ]);
 
   public static isAvalonianRest(zone: GameMap): boolean {
     var name = zone.mapName;
@@ -21,6 +32,11 @@ export class ZoneNameParser {
   }
 
   public static parseMapShape(zone: GameMap): string {
+    var override = this.SHAPE_OVERRIDES.get(zone.mapName);
+    if (override) {
+      return override;
+    }
+
     if (this.isAvalonianRest(zone)) {
       return 'rest';
     }
