@@ -1,12 +1,51 @@
 # Proposal: machine-derived map features, confirmed by humans
 
-**Status:** proposed, not started. **Last updated:** 2026-08-01.
+**Status:** phase 1 shipped, phase 2 proposed. **Last updated:** 2026-08-01.
 
 Today a room's map features are whatever a human typed while standing in the zone, usually under
 time pressure in a lethal area. This proposes inverting that: publish a machine-derived baseline
 for every zone we can, and use humans to *confirm or correct* it rather than to author it.
 
+The work splits in two. **Phase 1** corrects the catalogue against the evidence and makes it
+regenerable, so there is something trustworthy to present. **Phase 2** presents it and collects
+confirmations. Phase 1 shipped on 2026-08-01; everything below the "What shipped" section is
+phase 2 and is still a proposal.
+
+## What shipped (2026-08-01, PR #62)
+
+Merged as `010a2e9` and deployed to production the same day.
+
+- **Three duplicate zones resolved.** `Secent-Al-Odetis`/`-AI-`, `Hiles-Izizaum`/`Files-`, and
+  `Brecilien`/`Brecillien` were each in the catalogue twice. Migrations `026` and `027` rewrote the
+  dead ids across rooms, connections, chains, positions and memory.
+- **The catalogue is regenerable again.** Hand-curated data that only existed in the committed file
+  — the `Brecilien` entry, which no feed carries and which is a live room's home zone, and
+  `proximityTo` on 34 outlands zones — now lives in `map-parser/scripts/manualMaps.ts`
+  (`MANUAL_MAPS` for whole entries, `MAP_OVERRIDES` for fields patched onto upstream entries).
+  Before this, a clean sync silently deleted both, so the file had drifted from its own generator.
+- **Shape corrections:** `Setos-Avamsum` is an `s` zone rather than an Avalonian Rest, and
+  `Cynitos-Atatlum` is an `o`. Both moved into `SHAPE_OVERRIDES` in `ZoneNameParser`, where a
+  resync cannot revert them.
+- **Caerleon RC** categorisation for the 11 red zones ringing Caerleon, plus `Snapshaft Trough`,
+  which was losing its Bridgewatch RC category the same way.
+- **113 zones stopped dropping their leather** — the feed's `HIRE` spelling of hide is now aliased.
+- **Dungeon fields were missing from the `room_node_memory` allowlist** and were being silently
+  discarded on every write.
+- **`tools/map-analysis/`** — the shape/rotation reader and the history-vs-reference audit, with
+  the acquisition side stripped out.
+
+Catalogue went 817 → 815 zones. Royal Continent, Outlands and Brecilien unchanged in count and
+type; every difference was in Roads.
+
+### What phase 1 did *not* deliver
+
+The per-zone feature counts — "we believe this zone has 6 green chests and 2 wood" — are still not
+in the catalogue, because they need the icon reader that phase 2 depends on. Phase 1 corrected the
+*identity* of every zone (name, type, shape); it did not add the contextual detail.
+
 ## Tasks
+
+Phase 2, in rough dependency order.
 
 - Build the icon reader: locate the play area, mask overlay noise, identify each icon type, cluster
   icons into sites, classify each resource site as small or large from the clearing around it.
@@ -15,9 +54,6 @@ for every zone we can, and use humans to *confirm or correct* it rather than to 
   power-core icons.
 - Investigate the two under-counts (`Huritos-Oiaelos`, `Tebitos-Odoxlum`) — a missed icon is a
   different failure from an over-count and must be understood before the baseline is trusted.
-- ~~Resolve the shape disagreements.~~ Done: all 23 weak or contested matches were checked against
-  the game and 22 were already labelled correctly. There is no ninth layout. The one failure was a
-  duplicate zone, not a wrong shape — see below.
 - Produce the reviewed per-zone reference dataset and commit it; keep acquisition tooling and
   cached images out of the repo.
 - Add feature counts to `GameMap`, `GameMapSchema`, the `Zone` interface and the shared adapter —
@@ -31,12 +67,14 @@ for every zone we can, and use humans to *confirm or correct* it rather than to 
 - Implement the promotion rule and a review queue for corroborated corrections.
 - *Later session, not now:* derive a corrected value from accumulated deviation data and present it
   as a suggestion. Needs a body of deviation data that does not exist yet.
-- ~~Decide the `maps.json` drift question before any regeneration.~~ Done: hand-curated data the
-  feed cannot supply now lives in `scripts/manualMaps.ts`, so the catalogue is regenerable again.
 - Retire `parseGuaranteedContent`'s chest-suffix rule and the first-letter shape rule once each
-  clears its bar.
-- Stop `syncMaps.test.ts` duplicating the script's logic; its unit tests currently exercise a copy.
+  clears its bar. The shape rule now has a much stronger case for staying — see below.
+- Stop `syncMaps.test.ts` duplicating the script's logic. Partly done: the local copy of
+  `EXCLUDED_MAP_NAMES` is gone, having already drifted and hidden a genuine failure.
+  `extractResources`, `classify` and `processEntry` are still re-implemented in the test file.
 - Research how Avalonian and group dungeons spawn specifically in Roads zones.
+
+Done in phase 1: ~~resolve the shape disagreements~~, ~~decide the `maps.json` drift question~~.
 
 ## Why
 
@@ -98,6 +136,9 @@ This is the counting-under-fire problem the proposal exists to solve.
 
 Hideouts are not a special case: every hideout image that exists yields features, and the baseline
 has never lost to a hideout consensus (48/48).
+
+Coverage was measured before the duplicate removal, against 406 roads zones rather than today's
+404. The two zones removed were duplicates of zones already counted, so the percentages hold.
 
 ## Model
 
@@ -205,6 +246,32 @@ confirm action.
   the tooling and cached images are not.
 - Socket counts are currently written to `maps.json` but **read by nothing at runtime**; the shared
   adapter drops them. Verifying them is informational until something consumes them.
+- **Duplicate zones will recur.** The feed has produced three, each from one ambiguous letter, and
+  the sweep that found them is not automated. A fourth would arrive as a wrong map shape rather
+  than as an obvious duplicate, which is the misleading part. Worth a test over the generated
+  catalogue rather than a memory of having checked once.
+
+## Delivery notes
+
+Phase 2 changes `room_node_memory`, so it will need migrations too. What phase 1 established about
+how those actually reach production:
+
+- **Migrations run themselves.** `initDb()` in `web/server/src/db.ts` runs `node-pg-migrate` on
+  server boot, before the app is built, and exits the process on failure. Nothing in the deploy
+  script or the compose file runs them, and nothing needs to — which is easy to misread as nobody
+  running them at all.
+- **A failed migration fails the deploy** rather than half-applying. The container exits, never
+  passes its healthcheck, and the deploy blocks on that healthcheck.
+- **The rehearsal that is worth repeating:** restore a production dump into the testing database,
+  scrub every room's password hash to one throwaway value, then restart the testing container and
+  let it migrate. A dump carries `pgmigrations`, so the restore rewinds testing to production's
+  exact migration state and the pending migrations then run against real rows. Phase 1 used this to
+  prove `026` and `027` on the actual affected data before merging.
+- **The check that settles it** is an orphan audit: collect every distinct zone id referenced across
+  memory, positions, home zones, chain sources and both ends of every connection, and diff against
+  the catalogue. Phase 1 ran this on production after deploy — 533 ids in use, zero orphans.
+- The catalogue is bundled into the client as well as the server, and the client deploys
+  independently, so a browser tab loaded before a deploy holds the old ids until it reloads.
 
 ## Prior review
 
