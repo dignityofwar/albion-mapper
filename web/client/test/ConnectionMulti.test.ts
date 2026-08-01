@@ -42,8 +42,30 @@ vi.mock('vue-router', () => ({
   }),
 }));
 
+const STUBS = {
+  ZoneNode: true,
+  NonRoadsNode: true,
+  ConnectionEdge: true,
+  ConnectionLine: true,
+  ReportForm: true,
+  DebugTray: true,
+  MegaToast: true,
+  TopToolbar: true,
+  TopLeftToolbar: true,
+  TopRightToolbar: true,
+  BottomRightPins: true,
+  MobileRoomSummary: true,
+  Background: true,
+  Controls: true,
+};
+
 describe('RoomView - Multiple Connections', () => {
   let pinia: any;
+  const mountRoom = () => mount(RoomView, {
+    props: { id: 'test-room' },
+    global: { plugins: [pinia], stubs: STUBS },
+  });
+
   beforeEach(() => {
     pinia = createPinia();
     setActivePinia(pinia);
@@ -475,5 +497,177 @@ describe('RoomView - Multiple Connections', () => {
     // Should NOT show the confirmation modal — one side uses center, this is a handle replacement
     expect(vm.showConfirmationModal).toBe(false);
     expect(vm.toast).not.toBe("A non-roads zone cannot have multiple portal entrances to a roads zone.");
+  });
+
+  it('reassigns the non-roads end of an existing connection onto an edge handle (roads handle pinned)', async () => {
+    const store = useRoomStore();
+    // hynitos-ayousum is roads, nightcreak-marsh is royal (non-roads).
+    // The zone was added by dragging, so the non-roads end sits on `center`; the user now
+    // drags that same roads portal onto the marsh's NW edge to tidy the layout up.
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'hynitos-ayousum',
+        toZoneId: 'nightcreak-marsh',
+        fromHandleId: 'h-p1',
+        toHandleId: 'center',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) } as any);
+    global.fetch = fetchMock as any;
+
+    const wrapper = mountRoom();
+    const vm = wrapper.vm as any;
+
+    await vm.handleConnect({
+      source: 'hynitos-ayousum',
+      sourceHandle: 'h-p1',
+      target: 'nightcreak-marsh',
+      targetHandle: 'nw',
+    });
+
+    // Reassignment, not a second entrance — no error, and the existing connection is patched
+    expect(vm.toastType).not.toBe('error');
+    const patchCall = fetchMock.mock.calls.find(([, init]: any[]) => init?.method === 'PATCH');
+    expect(patchCall).toBeDefined();
+    expect(JSON.parse(patchCall![1].body)).toMatchObject({ fromHandleId: 'h-p1', toHandleId: 'nw' });
+
+    // …but the user is warned that the edge is now spoken for
+    expect(vm.toastType).toBe('warning');
+    expect(vm.toast).toContain('Royal Continent');
+    expect(vm.toast).toContain('entire edge');
+  });
+
+  it('reassigns the non-roads end when the drag starts from the non-roads edge handle', async () => {
+    const store = useRoomStore();
+    // Same reassignment, dragged the other way round: from the Outlands zone's edge handle
+    // back to the roads portal the connection already uses.
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'hynitos-ayousum',
+        toZoneId: 'hightree-isle',
+        fromHandleId: 'h-p1',
+        toHandleId: 'center',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, json: async () => ({}) } as any);
+    global.fetch = fetchMock as any;
+
+    const wrapper = mountRoom();
+    const vm = wrapper.vm as any;
+
+    await vm.handleConnect({
+      source: 'hightree-isle',
+      sourceHandle: 'se',
+      target: 'hynitos-ayousum',
+      targetHandle: 'h-p1',
+    });
+
+    expect(vm.toastType).not.toBe('error');
+    const patchCall = fetchMock.mock.calls.find(([, init]: any[]) => init?.method === 'PATCH');
+    expect(patchCall).toBeDefined();
+    expect(JSON.parse(patchCall![1].body)).toMatchObject({ fromHandleId: 'h-p1', toHandleId: 'se' });
+
+    // hightree-isle is an Outlands zone — the warning names the right region
+    expect(vm.toastType).toBe('warning');
+    expect(vm.toast).toContain('Outlands');
+  });
+
+  it('still blocks a second entrance when both ends of a roads↔non-roads connection move', async () => {
+    const store = useRoomStore();
+    // Existing connection already sits on the marsh's NW edge; the user now drags a
+    // different roads portal onto a different edge — a genuine second entrance.
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'hynitos-ayousum',
+        toZoneId: 'nightcreak-marsh',
+        fromHandleId: 'h-p1',
+        toHandleId: 'nw',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    const wrapper = mountRoom();
+    const vm = wrapper.vm as any;
+
+    await vm.handleConnect({
+      source: 'hynitos-ayousum',
+      sourceHandle: 'h-p4',
+      target: 'nightcreak-marsh',
+      targetHandle: 'se',
+    });
+
+    expect(vm.toast).toBe("A non-roads zone cannot have multiple portal entrances to a roads zone.");
+    expect(vm.toastType).toBe('error');
+  });
+
+  it('warns about the blocked edge when a brand-new connection targets a non-roads edge handle', async () => {
+    const store = useRoomStore();
+    // No connection between this pair yet — the drag opens the Add Connection form,
+    // and the edge warning rides along with it.
+    store.connections = [
+      {
+        id: 'conn1',
+        roomId: 'test-room',
+        fromZoneId: 'xerites-oxoulum',
+        toZoneId: 'hynitos-ayousum',
+        fromHandleId: 'x-p4',
+        toHandleId: 'h-p3',
+        expiresAt: new Date(Date.now() + 1000000).toISOString(),
+        reportedAt: new Date().toISOString(),
+      }
+    ];
+
+    const wrapper = mountRoom();
+    const vm = wrapper.vm as any;
+
+    const setConnectionMock = vi.fn();
+    vm.reportForm = { setConnection: setConnectionMock, open: vi.fn() };
+
+    await vm.handleConnect({
+      source: 'hynitos-ayousum',
+      sourceHandle: 'h-p1',
+      target: 'nightcreak-marsh',
+      targetHandle: 'ne',
+    });
+
+    expect(setConnectionMock).toHaveBeenCalledWith(
+      'hynitos-ayousum', 'h-p1', 'nightcreak-marsh', 'ne', expect.anything()
+    );
+    expect(vm.toastType).toBe('warning');
+    expect(vm.toast).toContain('entire edge');
+  });
+
+  it('does not warn when a roads connection lands on the non-roads centre handle', async () => {
+    const store = useRoomStore();
+    store.connections = [];
+
+    const wrapper = mountRoom();
+    const vm = wrapper.vm as any;
+
+    const setConnectionMock = vi.fn();
+    vm.reportForm = { setConnection: setConnectionMock, open: vi.fn() };
+
+    await vm.handleConnect({
+      source: 'hynitos-ayousum',
+      sourceHandle: 'h-p1',
+      target: 'nightcreak-marsh',
+      targetHandle: 'center',
+    });
+
+    expect(setConnectionMock).toHaveBeenCalled();
+    expect(vm.toast).toBe('');
   });
 });

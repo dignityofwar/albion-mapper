@@ -57,7 +57,7 @@ provide('goToNode', goToNode);
 
 // ── Toast ────────────────────────────────────────────────────────────────────
 const toast = ref('');
-const toastType = ref<'info' | 'error'>('info');
+const toastType = ref<'info' | 'error' | 'warning'>('info');
 const routePlottedToast = ref('');
 let routePlottedToastTimeout: ReturnType<typeof setTimeout> | null = null;
 const showConfirmationModal = ref(false);
@@ -74,6 +74,40 @@ function isRoads(zoneId: string): boolean {
   const zone = ZONE_BY_ID.get(zoneId);
   if (!zone) return false;
   return zone.type === 'roads' || zone.type === 'roadsHideout';
+}
+
+// The four fixed handles at the midpoints of a non-roads (Royal Continent /
+// Outlands) node's edges. Hanging a roads portal off one of them is purely
+// cosmetic — it consumes that whole edge, so the neighbouring RC/Outlands zone
+// that would sit on that side can no longer be attached there.
+const NON_ROADS_EDGE_HANDLES = ['nw', 'ne', 'se', 'sw'];
+
+function nonRoadsRegionName(zoneId: string): string {
+  return ZONE_BY_ID.get(zoneId)?.type === 'outlands' ? 'Outlands' : 'Royal Continent';
+}
+
+// Warn (but don't block) when a roads↔non-roads connection is pinned to one of
+// the non-roads zone's edge handles rather than its centre.
+function warnIfNonRoadsEdgeAttachment(
+  sourceZoneId: string,
+  sourceHandleId: string | null | undefined,
+  targetZoneId: string,
+  targetHandleId: string | null | undefined
+) {
+  const sourceIsRoads = isRoads(sourceZoneId);
+  const targetIsRoads = isRoads(targetZoneId);
+  if (sourceIsRoads === targetIsRoads) return;
+
+  const nonRoadsZoneId = sourceIsRoads ? targetZoneId : sourceZoneId;
+  const nonRoadsHandleId = (sourceIsRoads ? targetHandleId : sourceHandleId) || 'center';
+  if (!NON_ROADS_EDGE_HANDLES.includes(nonRoadsHandleId)) return;
+
+  const region = nonRoadsRegionName(nonRoadsZoneId);
+  showToast(
+    `Attaching a road to a ${region} edge is allowed for visual purposes, but be aware it takes up that entire edge — no other Royal Continent / Outlands zone can be connected there. If you don't intend to map a neighbouring zone on that side, this is fine.`,
+    'warning',
+    12000
+  );
 }
 
 const megaToastRegion = ref('');
@@ -167,7 +201,7 @@ async function copyShareUrl() {
   showToast('Copied to clipboard!');
 }
 
-function showToast(msg: string, type: 'info' | 'error' = 'info', duration = 5000) {
+function showToast(msg: string, type: 'info' | 'error' | 'warning' = 'info', duration = 5000) {
   toast.value = msg;
   toastType.value = type;
   if (toastTimeout) clearTimeout(toastTimeout);
@@ -1020,10 +1054,13 @@ async function handleConnect(params: any) {
   if (existing) {
     const isSourceRoads = isRoads(params.source);
     const isTargetRoads = isRoads(params.target);
+    // Set when the drag moves the non-roads end of an existing connection; the warning
+    // only fires once the reassignment has actually gone through.
+    let nonRoadsEndMoved = false;
 
-    // One roads, one non-roads: Disallowed UNLESS the user is reassigning the handle on the
-    // roads zone side while keeping the non-roads handle the same (rotating which portal on the
-    // roads zone connects to the non-roads destination).
+    // One roads, one non-roads: a second portal entrance into the non-roads zone is
+    // disallowed, but reassigning either end of the connection that already links this
+    // zone pair is fine.
     if ((isSourceRoads && !isTargetRoads) || (!isSourceRoads && isTargetRoads)) {
       // Identify which handle each zone currently uses in the existing connection
       const nonRoadsZoneIsFrom = existing.fromZoneId === (isSourceRoads ? params.target : params.source);
@@ -1033,16 +1070,6 @@ async function handleConnect(params: any) {
       const newNonRoadsHandle = isSourceRoads
         ? (params.targetHandle || 'center')
         : (params.sourceHandle || 'center');
-
-      // Block if the non-roads zone would gain a second portal entrance
-      if (existingNonRoadsHandle !== newNonRoadsHandle) {
-        showToast("A non-roads zone cannot have multiple portal entrances to a roads zone.", "error");
-        return;
-      }
-
-      // Non-roads handle is the same — check if the roads-side handle is also changing to a
-      // genuinely different (non-center) handle, which would create a second portal link from
-      // the roads zone to the same non-roads zone.
       const existingRoadsHandle = nonRoadsZoneIsFrom
         ? (existing.toHandleId || 'center')
         : (existing.fromHandleId || 'center');
@@ -1050,11 +1077,22 @@ async function handleConnect(params: any) {
         ? (params.sourceHandle || 'center')
         : (params.targetHandle || 'center');
 
+      // Only a drag that moves BOTH ends is a genuine second entrance. If either end
+      // stays pinned to the handle the existing connection already uses, the user is
+      // reassigning that connection — most commonly dragging the non-roads end off
+      // `center` onto one of the zone's edge handles — which must be allowed.
+      if (existingNonRoadsHandle !== newNonRoadsHandle && existingRoadsHandle !== newRoadsHandle) {
+        showToast("A non-roads zone cannot have multiple portal entrances to a roads zone.", "error");
+        return;
+      }
+
+      nonRoadsEndMoved = existingNonRoadsHandle !== newNonRoadsHandle;
+
+      // The non-roads handle is unchanged — check whether the roads-side handle is moving
+      // to a genuinely different (non-center) handle, which would create a second portal
+      // link from the roads zone to the same non-roads zone.
       const isReplacingCenter = existingRoadsHandle === 'center' || newRoadsHandle === 'center';
       const isMovingOtherEnd = existingRoadsHandle === newRoadsHandle;
-      // Reassigning the roads-side portal while keeping the non-roads handle pinned
-      // is just a handle reassignment, not a new portal link.
-      const isReassigningRoadsHandle = existingNonRoadsHandle === newNonRoadsHandle;
 
       if (!isReplacingCenter && !isMovingOtherEnd) {
         const isLoop = wouldCreateLongerLoop(store.connections, params.source, params.target);
@@ -1113,6 +1151,9 @@ async function handleConnect(params: any) {
         fromHandleId: fHandleId,
         toHandleId: tHandleId
       });
+      if (nonRoadsEndMoved) {
+        warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
+      }
     } catch (err: any) {
       showToast(err.message || 'Failed to update connection.', 'error');
     }
@@ -1129,6 +1170,8 @@ async function handleConnect(params: any) {
         updateNodeHandlePosition(params.target, 'center', 'bottom');
      }
   }
+
+  warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
 
   reportForm.value?.setConnection(
     params.source,
@@ -1191,6 +1234,7 @@ async function handleConfirmOccupied() {
       undefined,
       isPermanentConn,
     );
+    warnIfNonRoadsEdgeAttachment(params.source, params.sourceHandle, params.target, params.targetHandle);
   } catch (err: any) {
     showToast(err.message || 'Failed to add connection.', 'error');
   }
@@ -1628,12 +1672,17 @@ defineExpose({ flowNodes, onNodeDragStop, showToast, handleConnect, showConfirma
     <Transition name="toast">
       <div
         v-if="toast"
-        class="fixed top-16 left-1/2 -translate-x-1/2 rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
+        class="fixed top-16 left-1/2 -translate-x-1/2 max-w-[min(36rem,calc(100vw-2rem))] rounded-lg px-4 py-2 text-sm text-white shadow-lg flex items-center gap-3 transition-colors"
         :class="[
           Z_INDEX.TOAST,
-          toastType === 'error' ? 'bg-red-900 border border-red-500' : 'bg-gray-800 border border-gray-600'
+          toastType === 'error'
+            ? 'bg-red-900 border border-red-500'
+            : toastType === 'warning'
+              ? 'bg-amber-900 border border-amber-500'
+              : 'bg-gray-800 border border-gray-600'
         ]"
       >
+        <span v-if="toastType === 'warning'" class="text-lg leading-none">⚠️</span>
         <span>{{ toast }}</span>
         <button
           v-if="isShareUrl"
