@@ -121,7 +121,7 @@ Phase 2, in rough dependency order.
   keep acquisition tooling and cached images out of the repo. The reader's own output is not the
   dataset — every zone where it disagrees with the tabulated reference needs a human to say which
   of the two is right, and the dungeon disagreements are the bulk of them.
-- Decide what the baseline says for the 3 zones the reader cannot read at all and the 21 that have
+- Decide what the baseline says for the 2 zones the reader cannot read at all and the 21 that have
   no data of any kind.
 - Add feature counts to `GameMap`, `GameMapSchema`, the `Zone` interface and the shared adapter —
   all four, since the adapter currently drops everything the runtime does not already use.
