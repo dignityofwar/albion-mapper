@@ -55,7 +55,6 @@ MERGE_GAP = 6         # fragments this close are one sprite ...
 MERGE_CAP = 50        # ... unless merging them would exceed a sprite's size
 
 CHESTS = {'treasuresGreen', 'treasuresBlue', 'treasuresYellow'}
-NOISE = {'portal', 'hideout'}
 RESOURCES = ('wood', 'ore', 'stone', 'fibre', 'leather')
 
 # Tuned by sweeping each against the tabulated reference; see the module docstring.
@@ -246,8 +245,9 @@ def build_templates(labels, corpus, iters=3):
                         if sc > best[0]:
                             best = (sc, (dx, dy))
                 offs[i] = best[1]
-        # each exemplar sits on its own terrain, so subtract its own background
-        # before averaging: the floor cancels and only the sprite survives
+        # The mask, not the template, is what has to know where the sprite ends.
+        # Subtracting each exemplar's own background before averaging cancels the
+        # varied terrain and leaves the sprite, which is where the mask comes from.
         dev = np.array([p - _ring_median(p) for p in stack]).mean(0)
         w = np.clip((np.linalg.norm(dev, axis=2) - 0.04) / 0.12, 0, 1) * radial
         out[t] = {'mean': stack.mean(0), 'w': w}
@@ -308,7 +308,12 @@ def shape_class(t):
 # ── reading one map ───────────────────────────────────────────────────────────
 
 def lid_hue(corpus, mask, zone, x, y):
-    """Hue of a chest's most saturated pixels - the lid is what carries the colour."""
+    """Hue of a chest's most saturated pixels - the lid is what carries the colour.
+
+    The lid is not masked out explicitly; it is simply the most saturated thing
+    under the chest mask. That holds while the lid is visible, and fails quietly
+    when it is not, which is why an unreadable hue returns None rather than a guess.
+    """
     p = corpus.patch(zone, x, y, TPL)
     px = p[mask > 0.5]
     if len(px) < 20:
@@ -316,14 +321,20 @@ def lid_hue(corpus, mask, zone, x, y):
     mx, mn = px.max(1), px.min(1)
     sat = np.where(mx > 1e-6, (mx - mn) / np.maximum(mx, 1e-6), 0)
     sel = px[np.argsort(-sat * mx)[:max(8, len(px) // 8)]]
-    return float(np.median([colorsys.rgb_to_hsv(*c)[0] * 360 for c in sel]))
+    hs = np.array([colorsys.rgb_to_hsv(*c)[0] for c in sel]) * 2 * np.pi
+    if sat[np.argsort(-sat * mx)[:len(sel)]].mean() < 0.25:
+        return None                       # nothing coloured enough to call a lid
+    # hue is circular, so average as unit vectors rather than as numbers
+    ang = np.arctan2(np.sin(hs).mean(), np.cos(hs).mean())
+    return float(np.degrees(ang) % 360)
 
 
 def chest_colour(h):
+    """(colour, certain). An unreadable lid is reported, never guessed away."""
     if h is None:
-        return 'treasuresGreen'
+        return 'treasuresGreen', False
     return ('treasuresYellow' if h < HUE_YELLOW_GREEN
-            else 'treasuresGreen' if h < HUE_GREEN_BLUE else 'treasuresBlue')
+            else 'treasuresGreen' if h < HUE_GREEN_BLUE else 'treasuresBlue'), True
 
 
 def _brown(a):
@@ -333,14 +344,16 @@ def _brown(a):
 
 def clearing(brown, base, scale, x, y):
     """Cleared ground around a node, less what this map has everywhere anyway."""
-    r = int(28 * scale)
+    r = max(1, int(28 * scale))
     y0, y1 = max(0, y - r), min(brown.shape[0], y + r)
     x0, x1 = max(0, x - r), min(brown.shape[1], x + r)
-    local = brown[y0:y1, x0:x1].mean()
-    return float((local - base) * (2 * r) ** 2 / (scale * scale))
+    crop = brown[y0:y1, x0:x1]
+    if crop.size == 0:
+        return 0.0
+    return float((crop.mean() - base) * crop.size / (scale * scale))
 
 
-def read_map(path, corpus, matcher, chest_mask, floor=0.55):
+def read_map(path, corpus, matcher, chest_mask):
     det = detect(path)
     if det is None:
         return None
@@ -348,6 +361,7 @@ def read_map(path, corpus, matcher, chest_mask, floor=0.55):
     n = matcher.n
     w, h = int(im.width / scale / MATCH_Q), int(im.height / scale / MATCH_Q)
     img = np.ascontiguousarray(np.asarray(im.resize((w, h), Image.BILINEAR)).astype(np.float32) / 255.0)
+    bar = np.array([THRESHOLDS[shape_class(t)] for t in matcher.types])
 
     raw = []
     for bx in boxes:
@@ -360,10 +374,14 @@ def read_map(path, corpus, matcher, chest_mask, floor=0.55):
             continue
         S = matcher.score(X)
         (shape, ox, oy) = info
-        best, arg = S.max(1), S.argmax(1)
+        # Only a position that clears some type's own threshold is a peak. Suppressing
+        # by raw score first would let a high-scoring reject shadow a real icon and
+        # then drop out itself, and types differ by 0.2 in what counts as a match.
+        eligible = np.where(S >= bar, S, -np.inf)
+        best, arg = eligible.max(1), eligible.argmax(1)
         taken = []
         for idx in np.argsort(-best):
-            if best[idx] < floor:
+            if not np.isfinite(best[idx]):
                 break
             py, px = divmod(int(idx), shape[1])
             px_ref = (ox + px + n / 2) * MATCH_Q
@@ -372,11 +390,14 @@ def read_map(path, corpus, matcher, chest_mask, floor=0.55):
                 continue
             taken.append((px_ref, py_ref))
             row = S[idx]
+            i = int(arg[idx])
+            other = [row[j] - bar[j] for j in range(len(row))
+                     if shape_class(matcher.types[j]) != shape_class(matcher.types[i])]
             raw.append({'ref': (px_ref, py_ref), 'at': [round(px_ref * scale), round(py_ref * scale)],
-                        'cands': [(matcher.types[i], float(row[i]))
-                                  for i in np.argsort(-row)[:4]]})
+                        'type': matcher.types[i], 'score': float(row[i]),
+                        'margin': float(row[i] - bar[i] - max(other, default=-9.0))})
 
-    raw.sort(key=lambda r: -r['cands'][0][1])
+    raw.sort(key=lambda r: -r['score'])
     kept = []
     for r in raw:
         if any((r['ref'][0] - k['ref'][0]) ** 2 + (r['ref'][1] - k['ref'][1]) ** 2 < SEP * SEP
@@ -386,19 +407,19 @@ def read_map(path, corpus, matcher, chest_mask, floor=0.55):
 
     brown = _brown(a)
     base = brown[play].mean() if play.any() else 0.0
-    icons, ambiguous = [], 0
+    zone = os.path.basename(path)[:-4]
+    icons, ambiguous, unlit = [], 0, 0
     for r in kept:
-        chosen = next(((t, sc) for t, sc in r['cands'] if sc >= THRESHOLDS[shape_class(t)]), None)
-        if chosen is None:
-            continue
-        t, sc = chosen
-        runner = next((s for ty, s in r['cands'] if shape_class(ty) != shape_class(t)), 0.0)
-        if sc - runner < 0.05:
+        t = r['type']
+        if r['margin'] < 0.05:
             ambiguous += 1
-        icon = {'type': t, 'score': round(sc, 3), 'at': r['at']}
+        icon = {'type': t, 'score': round(r['score'], 3), 'at': r['at']}
         if shape_class(t) == 'chest':
-            icon['type'] = chest_colour(lid_hue(corpus, chest_mask, os.path.basename(path)[:-4],
-                                                *r['at']))
+            colour, certain = chest_colour(lid_hue(corpus, chest_mask, zone, *r['at']))
+            icon['type'] = colour
+            if not certain:
+                icon['lidUnreadable'] = True
+                unlit += 1
         elif t in RESOURCES:
             area = clearing(brown, base, scale, *r['at'])
             icon['size'] = 'large' if area >= LARGE_CLEARING else 'small'
@@ -411,6 +432,8 @@ def read_map(path, corpus, matcher, chest_mask, floor=0.55):
     edge = panel_edge(a, play, scale)
     if edge > PANEL_EDGE:
         review.append(f'a {edge:.0f}px panel covers part of the map')
+    if unlit:
+        review.append(f'{unlit} chest(s) had an unreadable lid and were counted as green')
     if ambiguous:
         review.append(f'{ambiguous} icon(s) matched two types within 0.05')
     return {'icons': icons, 'needsReview': review or None}
@@ -449,7 +472,13 @@ def read_count(features, t):
 
 
 def compare(results, reference):
-    """Per-type agreement, and the zones that disagree."""
+    """Per-type agreement, and the zones that disagree.
+
+    Agreement is counted only over zones where one side or the other says the
+    feature is present. Counting all 325 would score every zone that has no ore
+    as an ore success, which most of them are, and flatter the reader by 60
+    points on the rarer features.
+    """
     tally = collections.defaultdict(collections.Counter)
     disagree = collections.defaultdict(list)
     for zone, v in results.items():
@@ -460,20 +489,24 @@ def compare(results, reference):
             want = e[sec] if key is None else e[sec].get(key, 0)
             got = read_count(v['features'], t)
             c = tally[t]
-            c['zones'] += 1
             c['ref'] += want
             c['read'] += got
+            if not (want or got):
+                continue
+            c['zones'] += 1
             if got == want:
                 c['exact'] += 1
             else:
                 c['over'] += max(0, got - want)
                 c['under'] += max(0, want - got)
                 disagree[zone].append(f'{t}: read {got}, reference {want}')
-    print('\n%-16s %6s %6s %9s %7s %7s' % ('type', 'ref', 'read', 'exact', 'over', 'under'))
+    print('\n%-16s %6s %6s %14s %7s %7s'
+          % ('type', 'ref', 'read', 'agree/present', 'over', 'under'))
     for t in REF_KEYS:
         c = tally[t]
-        print('%-16s %6d %6d %5d/%3d %7d %7d'
-              % (t, c['ref'], c['read'], c['exact'], c['zones'], c['over'], c['under']))
+        print('%-16s %6d %6d %6d/%3d %3.0f%% %7d %7d'
+              % (t, c['ref'], c['read'], c['exact'], c['zones'],
+                 100 * c['exact'] / max(1, c['zones']), c['over'], c['under']))
     return disagree
 
 
