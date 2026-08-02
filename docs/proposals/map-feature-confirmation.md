@@ -1,6 +1,6 @@
 # Proposal: machine-derived map features, confirmed by humans
 
-**Status:** phase 1 shipped, phase 2 proposed. **Last updated:** 2026-08-01.
+**Status:** phase 1 shipped, phase 2 started. **Last updated:** 2026-08-02.
 
 Today a room's map features are whatever a human typed while standing in the zone, usually under
 time pressure in a lethal area. This proposes inverting that: publish a machine-derived baseline
@@ -43,19 +43,59 @@ The per-zone feature counts — "we believe this zone has 6 green chests and 2 w
 in the catalogue, because they need the icon reader that phase 2 depends on. Phase 1 corrected the
 *identity* of every zone (name, type, shape); it did not add the contextual detail.
 
+## Phase 2 so far: the icon reader (2026-08-02)
+
+`tools/map-analysis/map_icons.py` reads chests, resource nodes and dungeon entrances off a map
+screenshot. It located all 325 cached maps and read 3,365 icons. Against the tabulated reference,
+per-zone counts agree exactly on:
+
+| feature | zones agreeing (of 325) | | feature | zones agreeing |
+|---|---|---|---|---|
+| ore | 321 | | stone | 320 |
+| leather | 318 | | wood | 315 |
+| fibre | 313 | | blue chests | 311 |
+| green chests | 304 | | yellow chests | 288 |
+| dungeons | 244 | | | |
+
+239 zones agree on all eight non-dungeon types at once. **This supersedes "icon detection is
+unproven"** — the risk that most worried the plan is now measured rather than assumed.
+
+Four things it established that the plan did not know:
+
+- **The small/large resource split is readable after all,** and it is the clearing the node stands
+  in, not the sprite. Normalised against each map's own terrain coverage the two populations are
+  disjoint: on 79 nodes where two or more rooms agreed the split, small tops out at 548 and large
+  starts at 1329, against a threshold of 900. That is a **100% match on corroborated human
+  observation**, and it means the confirmation schema's per-line small/large numbers have a machine
+  baseline rather than only a human one.
+- **Correlation alone cannot tell the three chests apart.** They share one sprite body and differ
+  only in lid colour, which normalised cross-correlation removes along with the mean. Matching the
+  shape once and taking the colour from lid hue — gold 42°, green 88°, blue 190°, tightly clustered
+  and far apart — took blue chests from 32 read to 198 and yellow from 6 to 147.
+- **The reference over-reports dungeons.** The 69 dungeon shortfalls are not a threshold problem —
+  the count is flat from 0.60 to 0.85 — and spot checks show why: `Casos-Aximam` is tabulated at 2
+  and its map draws 1. This is the same reference-versus-image split already recorded for chest
+  colours, running the other way.
+- **Both under-counts were occlusion, not detection.** `Huritos-Oiaelos` has a hover tooltip drawn
+  over the map hiding icons; `Tebitos-Odoxlum` is zoomed far enough that the frame runs off the
+  screenshot and cannot be located. Both are now flagged automatically — a straight horizontal edge
+  longer than 70 reference pixels is a UI panel, since terrain has none. Three zones read nothing
+  at all, all for the second reason.
+
+The reader stays out of the build, like the rest of `tools/map-analysis`. Templates are averaged
+from labelled exemplar coordinates in `icon-labels.json` rather than committed sprite images, the
+same arrangement `road_shapes.py` uses for its shape baselines.
+
 ## Tasks
 
 Phase 2, in rough dependency order.
 
-- Build the icon reader: locate the play area, mask overlay noise, identify each icon type, cluster
-  icons into sites, classify each resource site as small or large from the clearing around it.
-- Filter overlay noise from icon detection: the toolbar legend outside the play area, player dots
-  and glow-backed icons, the hunt-tracking ring, red/black rings, the Brecilien portal icon, and
-  power-core icons.
-- Investigate the two under-counts (`Huritos-Oiaelos`, `Tebitos-Odoxlum`) — a missed icon is a
-  different failure from an over-count and must be understood before the baseline is trusted.
-- Produce the reviewed per-zone reference dataset and commit it; keep acquisition tooling and
-  cached images out of the repo.
+- Review the 149 flagged zones and produce the reviewed per-zone reference dataset, then commit it;
+  keep acquisition tooling and cached images out of the repo. The reader's own output is not the
+  dataset — every zone where it disagrees with the tabulated reference needs a human to say which
+  of the two is right, and the dungeon disagreements are the bulk of them.
+- Decide what the baseline says for the 3 zones the reader cannot read at all and the 21 that have
+  no data of any kind.
 - Add feature counts to `GameMap`, `GameMapSchema`, the `Zone` interface and the shared adapter —
   all four, since the adapter currently drops everything the runtime does not already use.
 - Re-run the human-history audit without collapsing `dungeonStatic`/`dungeonGroup` into one count
@@ -82,6 +122,8 @@ Phase 2, in rough dependency order.
 - Research how Avalonian and group dungeons spawn specifically in Roads zones.
 
 Done in phase 1: ~~resolve the shape disagreements~~, ~~decide the `maps.json` drift question~~.
+Done in phase 2: ~~build the icon reader~~, ~~filter overlay noise from icon detection~~,
+~~investigate the two under-counts~~.
 
 ## Why
 
@@ -317,9 +359,11 @@ correction to the catalogue.
   baseline — only corroborated corrections do. *Optional, not agreed:* withhold the prefill on a
   small random fraction of zone loads to measure blind-vs-prefilled disagreement rather than
   assuming it is small.
-- **Icon detection is unproven** beyond a colour-matching spike (91% on green chests, all errors
-  over-counts from visually similar icons). This is the step most likely to go wrong.
-- **21 zones have no data of any kind** and stay blind-entry.
+- ~~**Icon detection is unproven**~~ — measured on 2026-08-02, see the phase 2 section. What
+  remains is that the reader is only as reproducible as the screenshots it learned from: the
+  exemplar coordinates in `icon-labels.json` point into specific cached images, so re-acquiring
+  them can silently invalidate the templates.
+- **21 zones have no data of any kind** and stay blind-entry, plus 3 the reader cannot locate.
 - **Acquisition is not reproducible in CI** by design — the reviewed reference dataset is committed,
   the tooling and cached images are not.
 - Socket counts are currently written to `maps.json` but **read by nothing at runtime**; the shared

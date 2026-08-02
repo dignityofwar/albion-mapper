@@ -1,7 +1,7 @@
 # Map analysis tools
 
-Two throwaway-but-kept Python scripts for checking zone data against evidence
-rather than assumption. Neither is part of the build; run them by hand when a
+Three throwaway-but-kept Python scripts for checking zone data against evidence
+rather than assumption. None is part of the build; run them by hand when a
 question comes up.
 
 Requires `numpy` and `pillow`.
@@ -25,8 +25,38 @@ Output per zone: shape, rotation in 90° clockwise steps, a 0–1 match score, t
 runner-up shape, and a `needsReview` note when the match is weak, a close call, or
 disagrees with the supplied label.
 
-Known limitation: it identifies the road network only. Resource sockets, chests
-and dungeon markers are not read.
+Known limitation: it identifies the road network only. For the icons on top of
+it, see `map_icons.py`.
+
+## `map_icons.py` — chests, resources and dungeons from a screenshot
+
+Finds every permanent feature sprite on a map and names it, giving the per-zone
+counts the confirmation model needs as its baseline.
+
+```bash
+python3 map_icons.py --maps ./screenshots --labels ./icon-labels.json \
+                     --reference ./reference.json
+```
+
+`icon-labels.json` holds exemplar coordinates per feature type; templates are
+averaged from those rather than hardcoded, the same arrangement `road_shapes.py`
+uses for its shape baselines. The coordinates point into the screenshots, so
+re-acquiring the images can invalidate them — check a handful by eye if the
+counts move.
+
+`--reference` is optional. Supplying it prints a per-type agreement table and
+adds every disagreement to that zone's review notes.
+
+Output per zone: the feature summary (`chests`, `resources` with a small/large
+split, `dungeonCount`), every icon with its position and match score, and a
+`needsReview` list. Zones are flagged when the frame could not be located
+cleanly, when a UI panel covers part of the map, or when an icon matched two
+types too closely to call.
+
+Two things it deliberately does not do. Transient state — power cores, timed
+chests, the crystal creature — is detected only well enough to be ignored, since
+none of it is baseline-able. And the four exit portals, the hideout marker and
+the player arrow are matched purely so they stop being mistaken for features.
 
 ## `feature_audit.py` — human map history vs a reference set
 
