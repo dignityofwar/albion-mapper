@@ -71,9 +71,12 @@ export const handleRotateZone: OperationHandler<Extract<ClientMessage, { type: '
     // so a future re-add of the same zone restores the rotated layout.
     // Upsert rather than UPDATE: a first-time hideout configuration has no
     // memory row yet, and an UPDATE would silently no-op.
+    // Must use dbClient, not the pool: the room row is held FOR UPDATE above,
+    // and this insert's FK check needs a lock on it — a second connection here
+    // waits on a transaction that only commits once this query returns.
     if (zone.type === 'roads' || zone.type === 'roadsHideout') {
       const now = new Date().toISOString();
-      await ctx.app.db.query(`
+      await dbClient.query(`
         INSERT INTO room_node_memory (room_id, zone_id, features, custom_handles, rotation, last_updated, times_added)
         VALUES ($1, $2, NULL, $3, $4, $5, ARRAY[$5::timestamptz])
         ON CONFLICT (room_id, zone_id) DO UPDATE SET

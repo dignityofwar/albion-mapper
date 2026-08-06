@@ -7,4 +7,6 @@
 - [Duplicate zones in the catalogue](albionroads-catalogue-duplicates.md) — upstream lists some zones twice under one-letter spelling variants; a wrong first letter silently becomes a wrong map shape
 - [Metrics conventions](albionroads-metrics-conventions.md) — /metrics output grouped by topic sections; live-state gauges over day buckets; counters for monotonic totals; global/per-room naming pairs
 
+- [Pool query inside a transaction self-deadlocks](albionroads-pool-transaction-deadlock.md) — the 2026-08-06 outage; use the checked-out client, never the pool, between BEGIN and COMMIT; health must not fail on the new counters
+
 Note: this memory lives in the repo at `.claude/memory/` (wired via `autoMemoryDirectory` in `.claude/settings.json`) so it's shared via git across machines and collaborators.

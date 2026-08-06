@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { ROOM_SERVERS } from 'shared';
 import { londonDateString } from '../analytics.js';
 import { getTotalSocketCount, getAllRoomSockets } from '../broadcast.js';
+import { getDbIncidents } from '../db_incidents.js';
 
 /**
  * Formats a single Prometheus metric block (HELP + TYPE + value line).
@@ -600,6 +601,18 @@ export async function metricsRoutes(app: FastifyInstance): Promise<void> {
     if (eventTodaySeries.length > 0) {
       lines.push(metricLabeled('albionmapper_events_today', 'Occurrences of each client analytics event today (Europe/London)', 'gauge', eventTodaySeries));
     }
+
+    // === Database health ===
+    // Alert on these rather than on the container healthcheck: a discarded
+    // transaction is worth investigating but must not take the service down.
+    const incidents = getDbIncidents();
+    lines.push(metric('albionmapper_db_discarded_transactions_total', 'Transactions the database discarded (timeout, termination, deadlock) since process start', 'counter', incidents.total));
+    lines.push(metricLabeled('albionmapper_db_discarded_transactions_by_reason_total', 'Discarded transactions by reason since process start', 'counter',
+      Object.entries(incidents.byReason).map(([reason, value]) => ({ labels: { reason }, value }))));
+    const pool = app.db as { totalCount?: number; idleCount?: number; waitingCount?: number };
+    lines.push(metric('albionmapper_db_pool_connections', 'Connections currently held by the pg pool', 'gauge', pool.totalCount ?? 0));
+    lines.push(metric('albionmapper_db_pool_idle', 'Idle connections in the pg pool', 'gauge', pool.idleCount ?? 0));
+    lines.push(metric('albionmapper_db_pool_waiting', 'Queries queued waiting for a free pool connection; sustained non-zero means the pool is exhausted', 'gauge', pool.waitingCount ?? 0));
 
     return reply
       .header('Content-Type', 'text/plain; version=0.0.4; charset=utf-8')

@@ -245,10 +245,18 @@ describe('hideout portal save (rotate_zone with customHandles)', () => {
 
     // The memory mirror must be an INSERT ... ON CONFLICT upsert (an UPDATE
     // would no-op for a first-time hideout and lose the configuration).
-    const upsertCall = mockDb.query.mock.calls.find(
+    const upsertCall = mockClient.query.mock.calls.find(
       (call: any[]) => typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_memory'),
     );
     expect(upsertCall).toBeDefined();
+
+    // And it must run on the transaction's client, never the pool: the room row
+    // is held FOR UPDATE, so a second connection here blocks on the FK check and
+    // deadlocks against the transaction that is waiting for it to return.
+    const pooledUpsert = mockDb.query.mock.calls.find(
+      (call: any[]) => typeof call[0] === 'string' && call[0].includes('INSERT INTO room_node_memory'),
+    );
+    expect(pooledUpsert).toBeUndefined();
     const upsertParams = upsertCall![1] as any[];
     expect(upsertParams[0]).toBe(roomId);
     expect(upsertParams[1]).toBe(HIDEOUT_ZONE);

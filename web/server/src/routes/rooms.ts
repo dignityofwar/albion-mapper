@@ -456,10 +456,10 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       await client.query('COMMIT');
     } catch (e) {
       await client.query('ROLLBACK');
-      client.release();
       throw e;
+    } finally {
+      client.release();
     }
-    client.release();
 
     broadcast(id, { type: 'chain_added', chain: { id: chainId, sourceZoneId, chainNumber, chainColor } });
 
@@ -665,10 +665,10 @@ export async function roomRoutes(app: FastifyInstance): Promise<void> {
       await client.query('COMMIT');
     } catch (e) {
       await client.query('ROLLBACK');
-      client.release();
       throw e;
+    } finally {
+      client.release();
     }
-    client.release();
 
     const updatedChain = {
       id: chain.id,
