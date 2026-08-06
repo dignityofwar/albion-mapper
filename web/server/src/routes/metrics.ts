@@ -606,9 +606,10 @@ export async function metricsRoutes(app: FastifyInstance): Promise<void> {
     // Alert on these rather than on the container healthcheck: a discarded
     // transaction is worth investigating but must not take the service down.
     const incidents = getDbIncidents();
-    lines.push(metric('albionmapper_db_discarded_transactions_total', 'Transactions the database discarded (timeout, termination, deadlock) since process start', 'counter', incidents.total));
+    lines.push(metric('albionmapper_db_discarded_transactions_total', 'Transactions the database discarded (cancellation, timeout, termination, deadlock) since process start', 'counter', incidents.total));
     lines.push(metricLabeled('albionmapper_db_discarded_transactions_by_reason_total', 'Discarded transactions by reason since process start', 'counter',
       Object.entries(incidents.byReason).map(([reason, value]) => ({ labels: { reason }, value }))));
+    lines.push(metric('albionmapper_db_pool_acquisition_timeouts_total', 'Failures to check a connection out of the pool since process start; saturation rather than discarded work, so counted apart from discarded transactions', 'counter', incidents.poolAcquisitionTimeouts));
     const pool = app.db as { totalCount?: number; idleCount?: number; waitingCount?: number };
     lines.push(metric('albionmapper_db_pool_connections', 'Connections currently held by the pg pool', 'gauge', pool.totalCount ?? 0));
     lines.push(metric('albionmapper_db_pool_idle', 'Idle connections in the pg pool', 'gauge', pool.idleCount ?? 0));

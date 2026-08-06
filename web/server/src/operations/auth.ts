@@ -4,6 +4,7 @@ import { addSocket, broadcast, getTotalSocketCount } from '../broadcast.js';
 import { getWatchingCount } from '../marcopolo.js';
 import type { OperationHandler } from './types.js';
 import type { ClientMessage } from 'shared';
+import { safeRollback } from '../db_tx.js';
 
 interface DbRoom {
   id: string;
@@ -88,7 +89,7 @@ export const handleAuth: OperationHandler<Extract<ClientMessage, { type: 'auth' 
         );
         await migrationClient.query('COMMIT');
       } catch (err) {
-        await migrationClient.query('ROLLBACK');
+        await safeRollback(migrationClient);
         throw err;
       } finally {
         migrationClient.release();

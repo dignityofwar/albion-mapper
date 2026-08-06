@@ -3,6 +3,7 @@ import { broadcast } from '../broadcast.js';
 import { trackRoomModified } from '../routes/rooms_analytics.js';
 import type { OperationHandler } from './types.js';
 import type { ClientMessage } from 'shared';
+import { safeRollback } from '../db_tx.js';
 
 export const handleRotateZone: OperationHandler<Extract<ClientMessage, { type: 'rotate_zone' }>> = async (
   ctx,
@@ -105,7 +106,7 @@ export const handleRotateZone: OperationHandler<Extract<ClientMessage, { type: '
       chainId: existing.chain_id ?? undefined,
     };
   } catch (e) {
-    await dbClient.query('ROLLBACK');
+    await safeRollback(dbClient);
     throw e;
   } finally {
     dbClient.release();

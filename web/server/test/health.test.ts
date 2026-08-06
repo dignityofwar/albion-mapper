@@ -41,8 +41,8 @@ test('discarded transactions are reported but never make the endpoint unhealthy'
   expect(body.status).toBe('ok');
   expect(body.discardedTransactions.total).toBe(2);
   expect(body.discardedTransactions.byReason.idle_in_transaction_timeout).toBe(1);
-  expect(body.discardedTransactions.byReason.statement_timeout).toBe(1);
-  expect(body.discardedTransactions.lastReason).toBe('statement_timeout');
+  expect(body.discardedTransactions.byReason.query_canceled).toBe(1);
+  expect(body.discardedTransactions.lastReason).toBe('query_canceled');
 });
 
 test('ordinary query errors are not counted as discarded transactions', async () => {

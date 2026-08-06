@@ -3,6 +3,7 @@ import { broadcast } from '../broadcast.js';
 import { trackRoomModified } from '../routes/rooms_analytics.js';
 import type { OperationHandler } from './types.js';
 import type { ClientMessage } from 'shared';
+import { safeRollback } from '../db_tx.js';
 
 export const handleUpdateNodePositions: OperationHandler<Extract<ClientMessage, { type: 'update_node_positions' }>> = async (
   ctx,
@@ -89,7 +90,7 @@ export const handleUpdateNodePositions: OperationHandler<Extract<ClientMessage, 
     }
     await client.query('COMMIT');
   } catch (e) {
-    await client.query('ROLLBACK');
+    await safeRollback(client);
     throw e;
   } finally {
     client.release();
