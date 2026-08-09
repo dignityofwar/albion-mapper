@@ -107,6 +107,7 @@ export interface NodeFeatures {
   powercoreTimerPurple?: number; // Expiration timestamp in ms
   powercoreTimerYellow?: number; // Expiration timestamp in ms
   crystalCreaturePresent?: boolean;
+  brazilianPortalPresent?: boolean;
   dungeonStatic?: boolean;
   dungeonGroup?: boolean;
   timedChest?: TimedChest;
@@ -413,6 +414,7 @@ export const NodeFeaturesSchema = z.object({
   powercoreTimerPurple: z.number().optional(),
   powercoreTimerYellow: z.number().optional(),
   crystalCreaturePresent: z.boolean().optional(),
+  brazilianPortalPresent: z.boolean().optional(),
   dungeonStatic: z.boolean().optional(),
   dungeonGroup: z.boolean().optional(),
   timedChest: z.object({
