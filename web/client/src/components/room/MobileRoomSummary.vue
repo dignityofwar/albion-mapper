@@ -159,7 +159,7 @@ function navigateTo(zoneId: string) {
               <img src="/images/crystal.png" class="w-6 h-6 object-contain" alt="Crystal" />
               <span class="text-sm font-bold text-gray-300">{{ activeCrystals.length }}</span>
             </button>
-            <!-- Brazilian portals button -->
+            <!-- Brecilien portals button -->
             <button
               :disabled="activePortals.length === 0"
               :class="[
@@ -168,10 +168,10 @@ function navigateTo(zoneId: string) {
                   ? 'bg-indigo-600/20 border-indigo-500/50'
                   : 'bg-gray-700/50 border-gray-600'
               ]"
-              title="Brazilian Portals"
+              title="Brecilien Portals"
               @click="toggleMobileFeatureTab('portals')"
             >
-              <img src="/images/brazilian-portal.png" class="w-6 h-6 object-contain" alt="Brazilian Portal" />
+              <img src="/images/brecilien-portal.png" class="w-6 h-6 object-contain" alt="Brecilien Portal" />
               <span class="text-sm font-bold text-gray-300">{{ activePortals.length }}</span>
             </button>
             <!-- Dungeons button -->
@@ -249,7 +249,7 @@ function navigateTo(zoneId: string) {
                 @click="navigateTo(item.zoneId)"
                 class="w-full flex items-center gap-2 px-2.5 py-2 text-sm text-white bg-gray-800/50 hover:bg-gray-700/50 transition-colors text-left rounded border border-gray-700"
               >
-                <img src="/images/brazilian-portal.png" class="w-5 h-5 object-contain" alt="Brazilian Portal" />
+                <img src="/images/brecilien-portal.png" class="w-5 h-5 object-contain" alt="Brecilien Portal" />
                 <span class="truncate flex-1 font-medium">{{ item.zoneName }}</span>
                 <ChainIdPill :zone-id="item.zoneId" small />
               </button>

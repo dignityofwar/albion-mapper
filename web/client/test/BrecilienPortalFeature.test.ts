@@ -13,9 +13,9 @@ vi.mock('../src/utils/roomOperations', () => ({
   addConnection: vi.fn(),
 }))
 
-const ICON = '/images/brazilian-portal.png'
+const ICON = '/images/brecilien-portal.png'
 
-describe('Brazilian portal map feature', () => {
+describe('Brecilien portal map feature', () => {
   const mountNode = (features: Record<string, unknown>) =>
     mount(ZoneNode as any, {
       props: {
@@ -39,7 +39,7 @@ describe('Brazilian portal map feature', () => {
     })
 
   it('shows the portal icon on the node when the flag is set', () => {
-    const wrapper = mountNode({ brazilianPortalPresent: true })
+    const wrapper = mountNode({ brecilienPortalPresent: true })
     expect(wrapper.findAll(`img[src="${ICON}"]`).length).toBeGreaterThan(0)
   })
 
@@ -53,10 +53,10 @@ describe('Brazilian portal map feature', () => {
       props: { isOpen: true, hasReds: false, features: {} },
     })
 
-    const button = wrapper.findAll('button').find(b => b.attributes('title') === 'Brazilian Portal')
+    const button = wrapper.findAll('button').find(b => b.attributes('title') === 'Brecilien Portal')
     expect(button).toBeDefined()
 
     await button!.trigger('click')
-    expect(wrapper.emitted('toggle')?.[0]).toEqual(['brazilianPortalPresent'])
+    expect(wrapper.emitted('toggle')?.[0]).toEqual(['brecilienPortalPresent'])
   })
 })

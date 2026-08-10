@@ -132,14 +132,14 @@ const currentList = computed(() => {
 const viewTitles: Record<ViewType, string> = {
   cores: 'Active Cores',
   crystals: 'Crystals',
-  portals: 'Brazilian Portals',
+  portals: 'Brecilien Portals',
   dungeons: 'Dungeons',
   chests: 'Treasures',
 };
 
 function getItemIcon(item: ZoneFeatureInfo) {
   if (activeView.value === 'crystals') return '/images/crystal.png';
-  if (activeView.value === 'portals') return '/images/brazilian-portal.png';
+  if (activeView.value === 'portals') return '/images/brecilien-portal.png';
   if (activeView.value === 'dungeons') {
     return item.type === 'static' ? '/images/dungeon-static.png' : '/images/dungeon-group.png';
   }
@@ -221,7 +221,7 @@ function handleSelect(zoneId: string) {
               <span class="text-lg font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.crystals }}</span>
             </button>
 
-            <!-- Brazilian Portals Button -->
+            <!-- Brecilien Portals Button -->
             <button
               @click="toggleView('portals')"
               :disabled="totalCount.portals === 0"
@@ -231,10 +231,10 @@ function handleSelect(zoneId: string) {
                 activeView === 'portals' ? 'bg-indigo-600/20 border-indigo-500/50 hover:bg-indigo-600/30 hover:border-indigo-400/60' : (totalCount.portals > 0 ? 'bg-gray-700/50 border-gray-600 hover:bg-gray-600/60 hover:border-gray-500' : 'bg-gray-800/50 border-transparent'),
                 userExpanded ? 'px-4 py-2' : 'p-2',
               ]"
-              title="Brazilian Portals"
+              title="Brecilien Portals"
             >
               <span v-if="flash.portals > 0" :key="flash.portals" class="btn-flash-overlay" />
-              <img src="/images/brazilian-portal.png" class="w-6 h-6 object-contain" alt="Brazilian Portal" />
+              <img src="/images/brecilien-portal.png" class="w-6 h-6 object-contain" alt="Brecilien Portal" />
               <span class="text-lg font-bold text-gray-300 min-w-[12px] text-center">{{ totalCount.portals }}</span>
             </button>
 

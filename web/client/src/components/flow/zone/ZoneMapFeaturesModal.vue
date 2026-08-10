@@ -41,7 +41,7 @@ const DUNGEONS = [
 // Boolean toggles — no count, and never written to room memory (transient state)
 const TOGGLES = [
   { type: 'crystalCreaturePresent', title: 'Crystal Creature', icon: '/images/crystal.png' },
-  { type: 'brazilianPortalPresent', title: 'Brazilian Portal', icon: '/images/brazilian-portal.png' },
+  { type: 'brecilienPortalPresent', title: 'Brecilien Portal', icon: '/images/brecilien-portal.png' },
 ] as const;
 
 // --- Draft input state ---

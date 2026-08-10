@@ -786,7 +786,7 @@ const activeCrystals = computed(() => {
 
 const activePortals = computed(() => {
   return flowNodes.value
-    .filter(node => node.data.features?.brazilianPortalPresent)
+    .filter(node => node.data.features?.brecilienPortalPresent)
     .map(node => ({ zoneId: node.id, zoneName: node.data.zoneName }))
     .sort((a, b) => a.zoneName.localeCompare(b.zoneName));
 });

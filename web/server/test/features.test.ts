@@ -168,7 +168,7 @@ describe('Node features persistence', () => {
           treasuresGreenCount: 3,
           treasuresBlueCount: 1,
           crystalCreaturePresent: true, // should NOT be saved to memory
-          brazilianPortalPresent: true, // should NOT be saved to memory
+          brecilienPortalPresent: true, // should NOT be saved to memory
           chest: true,                  // should NOT be saved to memory (timed)
           chestTimer: 9999999,          // should NOT be saved to memory (timed)
         }
@@ -202,7 +202,7 @@ describe('Node features persistence', () => {
     const savedFeatures = JSON.parse(updateCall[1][2]);
     expect(savedFeatures).toEqual({ treasuresGreenCount: 3, treasuresBlueCount: 1 });
     expect(savedFeatures).not.toHaveProperty('crystalCreaturePresent');
-    expect(savedFeatures).not.toHaveProperty('brazilianPortalPresent');
+    expect(savedFeatures).not.toHaveProperty('brecilienPortalPresent');
     expect(savedFeatures).not.toHaveProperty('chest');
     expect(savedFeatures).not.toHaveProperty('chestTimer');
 
