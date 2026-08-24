@@ -11,7 +11,8 @@ metadata:
 The upstream zone feed carries a handful of zones **twice**, under spellings that differ by a
 single letter which is ambiguous in the game's font — capital `I` versus lowercase `l`, `F`
 versus `H`. Found on 2026-08-01: `Secent-Al-Odetis`/`Secent-AI-Odetis`,
-`Hiles-Izizaum`/`Files-Izizaum`, plus `Brecilien`/`Brecillien`.
+`Hiles-Izizaum`/`Files-Izizaum`, plus `Brecilien`/`Brecillien`. Found on 2026-08-24:
+`Tonitos-Uxavrom`/`Tonitos-Uxavrtom` (an extra "t" before the "om" suffix).
 
 **Why:** each duplicate splits rooms' history across two `zone_id`s, so a zone looks less
 observed than it is. Worse, a wrong first letter silently produces a wrong **map shape**, because

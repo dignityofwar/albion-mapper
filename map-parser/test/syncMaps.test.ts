@@ -359,6 +359,11 @@ describe('exclusion filter', () => {
     expect(processEntry({ name: 'Secent-AI-Odetis', tier: 6, icons: [] })).toHaveProperty('skip', true);
     expect(processEntry({ name: 'Secent-Al-Odetis', tier: 6, icons: [] })).not.toHaveProperty('skip');
   });
+
+  it('filters the misspelled duplicate of Tonitos-Uxavrom', () => {
+    expect(processEntry({ name: 'Tonitos-Uxavrtom', tier: 6, icons: [] })).toHaveProperty('skip', true);
+    expect(processEntry({ name: 'Tonitos-Uxavrom', tier: 6, icons: [] })).not.toHaveProperty('skip');
+  });
 });
 
 describe('mapID slug', () => {

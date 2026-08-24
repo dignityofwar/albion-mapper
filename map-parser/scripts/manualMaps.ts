@@ -19,6 +19,9 @@ export const MAP_OVERRIDES = new Map<string, Partial<GameMap>>([
   // carries icons, so its resources are restored here.
   ['secent-al-odetis', { knownFeatures: ['rock'] }],
 
+  // Same again: the excluded "Tonitos-Uxavrtom" spelling carries the icon.
+  ['tonitos-uxavrom', { knownFeatures: ['rock'] }],
+
   // Outlands zones bordering each Avalonian Rest city.
   ...(['battlebrae-flatland', 'battlebrae-grassland', 'battlebrae-lake', 'battlebrae-meadow',
     'battlebrae-peaks', 'battlebrae-plain', 'deathreach-priory', 'dryvein-cross', 'farshore-esker',

@@ -7439,17 +7439,6 @@
     "mapName": "Tonitos-Uxavrom",
     "mapType": "roads",
     "tier": 6,
-    "knownFeatures": [],
-    "mapShape": "t",
-    "socketCount": 8,
-    "largeSocketCount": 3,
-    "smallSocketCount": 5
-  },
-  {
-    "mapID": "tonitos-uxavrtom",
-    "mapName": "Tonitos-Uxavrtom",
-    "mapType": "roads",
-    "tier": 6,
     "knownFeatures": [
       "rock"
     ],

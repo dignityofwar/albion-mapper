@@ -10,4 +10,7 @@ export const EXCLUDED_MAP_NAMES = new Set([
   // Same again: upstream lists Hiles-Izizaum a second time under an F. The
   // in-game title bar says Hiles, and no room has ever used the F spelling.
   'Files-Izizaum',
+  // And again: upstream lists this zone a second time with an extra "t" before
+  // the "om" suffix. The in-game title bar spells it "Tonitos-Uxavrom".
+  'Tonitos-Uxavrtom',
 ]);
