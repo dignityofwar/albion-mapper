@@ -10,6 +10,44 @@ export const MANUAL_MAPS: GameMap[] = [
     tier: 1,
     knownFeatures: [],
   },
+  // The five royal continent capitals. The upstream feed only carries farmable
+  // zones, not cities, so these are chain-start points that would otherwise
+  // have no entry in the zone catalogue.
+  {
+    mapID: 'bridgewatch',
+    mapName: 'Bridgewatch',
+    mapType: 'royalBlue',
+    tier: 1,
+    knownFeatures: [],
+  },
+  {
+    mapID: 'fort-sterling',
+    mapName: 'Fort Sterling',
+    mapType: 'royalBlue',
+    tier: 1,
+    knownFeatures: [],
+  },
+  {
+    mapID: 'lymhurst',
+    mapName: 'Lymhurst',
+    mapType: 'royalBlue',
+    tier: 1,
+    knownFeatures: [],
+  },
+  {
+    mapID: 'martlock',
+    mapName: 'Martlock',
+    mapType: 'royalBlue',
+    tier: 1,
+    knownFeatures: [],
+  },
+  {
+    mapID: 'thetford',
+    mapName: 'Thetford',
+    mapType: 'royalBlue',
+    tier: 1,
+    knownFeatures: [],
+  },
 ];
 
 // Hand-curated fields patched onto upstream entries after they are built. The

@@ -215,6 +215,13 @@
     "tier": 3
   },
   {
+    "mapID": "bridgewatch",
+    "mapName": "Bridgewatch",
+    "mapType": "royalBlue",
+    "tier": 1,
+    "knownFeatures": []
+  },
+  {
     "mapID": "broken-fell",
     "mapName": "Broken Fell",
     "mapType": "royalRed",
@@ -2056,6 +2063,13 @@
     "smallSocketCount": 6
   },
   {
+    "mapID": "fort-sterling",
+    "mapName": "Fort Sterling",
+    "mapType": "royalBlue",
+    "tier": 1,
+    "knownFeatures": []
+  },
+  {
     "mapID": "foues-aeaosum",
     "mapName": "Foues-Aeaosum",
     "mapType": "roads",
@@ -3478,6 +3492,13 @@
     "category": "Caerleon RC"
   },
   {
+    "mapID": "lymhurst",
+    "mapName": "Lymhurst",
+    "mapType": "royalBlue",
+    "tier": 1,
+    "knownFeatures": []
+  },
+  {
     "mapID": "malag-crevasse",
     "mapName": "Malag Crevasse",
     "mapType": "royalRed",
@@ -3490,6 +3511,13 @@
     "mapType": "royalRed",
     "tier": 6,
     "category": "Caerleon RC"
+  },
+  {
+    "mapID": "martlock",
+    "mapName": "Martlock",
+    "mapType": "royalBlue",
+    "tier": 1,
+    "knownFeatures": []
   },
   {
     "mapID": "mase-knoll",
@@ -7234,6 +7262,13 @@
     "mapName": "The Underway",
     "mapType": "royalRed",
     "tier": 7
+  },
+  {
+    "mapID": "thetford",
+    "mapName": "Thetford",
+    "mapType": "royalBlue",
+    "tier": 1,
+    "knownFeatures": []
   },
   {
     "mapID": "thirstwater-gully",
