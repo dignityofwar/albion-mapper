@@ -228,7 +228,7 @@ describe('zone categorization', () => {
       // Portal
       expect(getZoneCategory('Hightree Cliffs', 'outlands')).toBe('Lymhurst Portal');
       expect(getZoneCategory('Watchwood Precipice', 'outlands')).toBe('Lymhurst Portal');
-      expect(getZoneCategory('Munten Rise', 'outlands')).toBe('Outlands');
+      expect(getZoneCategory('Munten Rise', 'outlands')).toBe('Lymhurst Portal');
       // City
       expect(getZoneCategory('Ferndell', 'royalRed')).toBe('Lymhurst RC');
       expect(getZoneCategory('Yew Wood', 'royalYellow')).toBe('Lymhurst RC');

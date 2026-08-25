@@ -17,7 +17,7 @@ export const BRIDGEWATCH_PORTAL_MAPS = new Set([
 ]);
 
 export const LYMHURST_PORTAL_MAPS = new Set([
-  'Thunderrock Rapids', 'Hightree Lake', 'Hightree Hillock', 'Hightree Pass', 'Hightree Steep', 'Hightree Strand', 'Hightree Levee', 'Hightree Enclave', 'Hightree Cliffs', 'Hightree Glade', 'Hightree Dale', 'Hightree Isle', 'Watchwood Grove', 'Watchwood Bluffs', 'Watchwood Precipice', 'Watchwood Lakeside', 'Skullmarsh Lower'
+  'Thunderrock Rapids', 'Hightree Lake', 'Hightree Hillock', 'Hightree Pass', 'Hightree Steep', 'Hightree Strand', 'Hightree Levee', 'Hightree Enclave', 'Hightree Cliffs', 'Hightree Glade', 'Hightree Dale', 'Hightree Isle', 'Watchwood Grove', 'Watchwood Bluffs', 'Watchwood Precipice', 'Watchwood Lakeside', 'Skullmarsh Lower', 'Munten Rise'
 ]);
 
 export const FORT_STERLING_PORTAL_MAPS = new Set([
